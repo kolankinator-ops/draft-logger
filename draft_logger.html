@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <title>Draft Logger</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -326,12 +324,12 @@
   <button onclick="show('bets');closeDrawer()">Bets</button>
   <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
-  <button onclick="show('settings');closeDrawer()">⚙ Sync</button>
+  <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
 </div>
 
 
 <nav>
-  <button class="active" onclick="show('log')">Log Game</button>
+  <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
@@ -339,18 +337,49 @@
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
-  <button onclick="show('settings')">⚙ Sync</button>
+  <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
 <!-- LOG GAME -->
-<div class="screen active" id="screen-log">
+<div class="screen" id="screen-log">
+
+  <!-- Mode toggle -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button id="mode-live-btn" class="btn btn-primary" style="flex:1;" onclick="setLogMode('live')">📡 Live game</button>
+    <button id="mode-vod-btn" class="btn btn-ghost" style="flex:1;" onclick="setLogMode('vod')">🎬 VOD review</button>
+  </div>
+
+  <!-- Live games section -->
   <div id="live-games-section" class="card" style="margin-bottom:14px;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames()">↺ Refresh</button>
     </div>
     <div id="live-pills">
-      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
+      <div class="live-pill" onclick="loadLiveGame(0)">
+        <span class="live-dot"></span>
+        <span><b>7D</b> vs <b>MVG</b> <span style="color:var(--muted);">LRS · Game 2</span></span>
+      </div></div>
+  </div>
+
+  <!-- VOD browser section -->
+  <div id="vod-section" style="display:none;margin-bottom:14px;">
+    <div class="card" style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div class="card-title" style="margin-bottom:0;">Browse past games</div>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadVodSchedule()">↺ Refresh</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <select id="vod-league-filter" onchange="renderVodList()" style="flex:1;">
+          <option value="all">All leagues</option>
+        </select>
+      </div>
+      <div id="vod-pills">
+        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
+      </div>
+    </div>
+    <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
+      VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
     </div>
   </div>
 
@@ -359,27 +388,27 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>Blue side team</label>
-        <input type="text" id="blue-team" placeholder="e.g. T1" />
+        <input type="text" id="blue-team" placeholder="e.g. T1">
       </div>
       <div>
         <label>Red side team</label>
-        <input type="text" id="red-team" placeholder="e.g. GEN" />
+        <input type="text" id="red-team" placeholder="e.g. GEN">
       </div>
     </div>
     <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
-        <input type="text" id="league" placeholder="e.g. LCK" />
+        <input type="text" id="league" placeholder="e.g. LCK">
       </div>
       <div>
         <label>Date</label>
-        <input type="date" id="game-date" />
+        <input type="date" id="game-date">
       </div>
     </div>
     <div>
       <label>Event context <span style="color:var(--muted);font-weight:400;">(auto-filled from live picker)</span></label>
-      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3" />
+      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3">
     </div>
   </div>
 
@@ -388,25 +417,115 @@
     <div class="draft-grid">
       <div class="draft-col blue-col">
         <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
-        <div id="blue-picks"></div>
+        <div id="blue-picks">
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">TOP</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">JNG</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">MID</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">BOT</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">SUP</span>
+              
+            </div>
+          </div>
+        </div></div>
       </div>
       <div class="draft-col red-col">
         <div class="draft-col-title" id="red-col-title">RED SIDE</div>
-        <div id="red-picks"></div>
+        <div id="red-picks">
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">TOP</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">JNG</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">MID</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">BOT</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="champ-row">
+          <div class="champ-row-top">
+            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <div style="display:flex;flex-direction:column;min-width:0;">
+              <span class="champ-name">SUP</span>
+              
+            </div>
+          </div>
+        </div></div>
       </div>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" id="prediction-card">
     <div class="card-title">Prediction</div>
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
       <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
       <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
-      <button class="three-btn even" onclick="setDraftPref(0)"  id="dpref-0">Even</button>
-      <button class="three-btn red"  onclick="setDraftPref(1)"  id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red"  onclick="setDraftPref(2)"  id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
@@ -433,7 +552,7 @@
     <div class="three-way" id="skill-adv-row">
       <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red"  onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -495,19 +614,32 @@
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
           <div>
             <label>Decimal odds</label>
-            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" />
+            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85">
           </div>
           <div>
             <label>Stake</label>
-            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00" />
+            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00">
           </div>
 
         </div>
       </div>
     </div>
 
+    <!-- VOD mode: actual result (hidden in live mode) -->
+    <div id="vod-result-section" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+      <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
+      <div class="pred-grid" style="margin-top:6px;">
+        <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
+          <span id="vod-result-blue-label">Blue side won</span>
+        </button>
+        <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
+          <span id="vod-result-red-label">Red side won</span>
+        </button>
+      </div>
+    </div>
+
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="saveEntry()">Save prediction</button>
+      <button class="btn btn-primary" id="save-btn" onclick="saveEntry()">Save prediction</button>
       <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
     </div>
   </div>
@@ -557,7 +689,7 @@
     </select>
   </div>
   <div style="margin-bottom:12px;">
-    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()" />
+    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
   </div>
   <div id="player-profiles-list"></div>
 </div>
@@ -632,7 +764,7 @@
 </div>
 
 <!-- SETTINGS / SYNC -->
-<div class="screen" id="screen-settings">
+<div class="screen active" id="screen-settings">
 
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">☁ JSONBin cloud sync</div>
@@ -648,20 +780,20 @@
     </div>
     <label>JSONBin secret access key</label>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <input type="password" id="jsonbin-key" placeholder="$2a$10$..." style="flex:1;" />
+      <input type="password" id="jsonbin-key" placeholder="$2a$10$..." style="flex:1;">
     </div>
     <label style="margin-top:10px;">Bin ID <span style="color:var(--muted);font-weight:400;">(leave blank to create a new one, or paste from your other device)</span></label>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <input type="text" id="jsonbin-bin-input" placeholder="e.g. 64a3f2..." style="flex:1;" />
+      <input type="text" id="jsonbin-bin-input" placeholder="e.g. 64a3f2..." style="flex:1;">
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectJsonBin()">Connect</button>
     </div>
-    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
+    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--green);">✓ Auto-synced on startup</span></div>
 
-    <div id="jsonbin-connected" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+    <div id="jsonbin-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;">
         <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Your Bin ID — copy this to connect other devices</div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <code id="bin-id-display" style="font-size:13px;color:var(--blue);flex:1;word-break:break-all;"></code>
+          <code id="bin-id-display" style="font-size:13px;color:var(--blue);flex:1;word-break:break-all;">6a485868f5f4af5e295cd194</code>
           <button class="btn btn-ghost" style="padding:5px 10px;font-size:12px;flex-shrink:0;" onclick="copyBinId()">Copy</button>
         </div>
       </div>
@@ -674,7 +806,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;"></div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/10/2026, 5:40:04 PM</div>
     </div>
   </div>
 
@@ -687,9 +819,33 @@
   <div class="card">
     <div class="card-title">↑ Import data</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Load a previously exported JSON file. <b style="color:#ff4d5e;">This will merge with your current data</b> — existing entries with the same ID won't be duplicated.</p>
-    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)" />
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
     <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">Choose file</button>
     <div id="import-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">🚀 GitHub Pages deploy</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+      Push this file directly to your GitHub repo so changes go live automatically — no manual uploading needed.
+    </p>
+    <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">
+      <b style="color:var(--text);">One-time setup:</b><br>
+      1. Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--blue);">github.com/settings/tokens/new</a><br>
+      2. Give it a name, set expiry, tick <b>repo</b> scope → Generate<br>
+      3. Copy the token (starts with <code>ghp_</code>) and paste below
+    </div>
+    <label>GitHub personal access token</label>
+    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;">
+    <label>Repository (owner/repo)</label>
+    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;">
+    <label>File path in repo</label>
+    <input type="text" id="gh-path" value="draft_logger.html" style="margin-bottom:10px;">
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
+      <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
+    </div>
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Encoding and pushing…</span></div>
   </div>
 
 </div>
@@ -1254,6 +1410,11 @@ function updateColTitles() {
   // Skill adv labels
   const sbl = document.getElementById("skill-adv-blue-lbl"); if (sbl) sbl.textContent = blue;
   const srl = document.getElementById("skill-adv-red-lbl");  if (srl) srl.textContent = red;
+  // VOD result labels
+  const vbl = document.getElementById("vod-result-blue-label");
+  const vrl = document.getElementById("vod-result-red-label");
+  if (vbl) vbl.textContent = blue + " won";
+  if (vrl) vrl.textContent = red  + " won";
   refreshBetSelects();
   updateDraftRatingIndicator();
   runPredictionModel();
@@ -1306,6 +1467,38 @@ function saveEntry() {
   const blueTeam = document.getElementById("blue-team").value.trim();
   const redTeam  = document.getElementById("red-team").value.trim();
   if (!blueTeam || !redTeam) { alert("Enter both team names first."); return; }
+
+  if (logMode === "vod") {
+    if (!vodResult) { alert("Select the actual result first."); return; }
+    const entry = {
+      id: Date.now().toString(),
+      date: document.getElementById("game-date").value || localDateStr(),
+      league: document.getElementById("league").value.trim(),
+      eventContext: document.getElementById("event-context").value.trim(),
+      gameNumber: currentGameNumber,
+      blueTeam, redTeam,
+      champions: JSON.parse(JSON.stringify(pickedChamps)),
+      players:   JSON.parse(JSON.stringify(pickedPlayers)),
+      draftPref,
+      skillAdv,
+      execDemand: JSON.parse(JSON.stringify(execDemand)),
+      notes: document.getElementById("notes").value.trim(),
+      isVod: true,
+      actualWinner: vodResult,
+      watched: true,
+      predWinner: null,
+      predConf: null,
+      bet: null
+    };
+    const entries = loadEntries();
+    entries.unshift(entry);
+    saveEntries(entries);
+    autoSync();
+    clearForm();
+    alert("VOD review saved!");
+    return;
+  }
+
   if (!predWinner) { alert("Pick a predicted winner first."); return; }
 
   const entry = {
@@ -1324,7 +1517,7 @@ function saveEntry() {
     execDemand: JSON.parse(JSON.stringify(execDemand)),
     notes: document.getElementById("notes").value.trim(),
     bet: getBetData(),
-    actualWinner: null // filled in later
+    actualWinner: null
   };
 
   const entries = loadEntries();
@@ -1340,12 +1533,12 @@ function clearForm() {
   ["blue-team","red-team","league","event-context","notes"].forEach(id => {
     document.getElementById(id).value = "";
   });
-  document.getElementById("game-date").value = new Date().toISOString().slice(0,10);
+  document.getElementById("game-date").value = localDateStr();
   currentGameNumber = null;
   execDemand = { blue: null, red: null };
-  draftPref = null;
+  draftPref = null; vodResult = null;
   predWinner = null; predConf = null; skillAdv = null;
-  document.querySelectorAll(".pred-btn, .conf-btn, .three-btn, #draft-pref-row button").forEach(b => b.classList.remove("sel"));
+  document.querySelectorAll(".pred-btn, .conf-btn, .three-btn, #draft-pref-row button, #vod-result-section button").forEach(b => b.classList.remove("sel"));
   resetBetForm();
   updateColTitles();
   initPickInputs();
@@ -1773,11 +1966,13 @@ function renderHistory() {
       : correct
         ? `<span class="outcome-badge correct">✓ Correct</span>`
         : `<span class="outcome-badge wrong">✗ Wrong</span>`;
-    const watchedBadge = e.actualWinner && e.watched === false
-      ? `<span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">${e.autoResolved ? "auto-resolved" : "didn't watch"}</span>`
-      : e.actualWinner && e.watched === null
-        ? `<span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">watch status unknown</span>`
-        : "";
+    const watchedBadge = e.isVod
+      ? `<span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">VOD</span>`
+      : e.actualWinner && e.watched === false
+        ? `<span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">${e.autoResolved ? "auto-resolved" : "didn't watch"}</span>`
+        : e.actualWinner && e.watched === null
+          ? `<span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">watch status unknown</span>`
+          : "";
 
     const prefLabel = e.draftPref !== undefined && e.draftPref !== null
       ? (e.draftPref === 0 ? "Even" : e.draftPref < 0 ? `${e.blueTeam} +${Math.abs(e.draftPref)}` : `${e.redTeam} +${e.draftPref}`)
@@ -1832,7 +2027,9 @@ function deleteEntry(id) {
 // ── Stats screen ──────────────────────────────────────────────────────────────
 function renderStats() {
   const entries = loadEntries();
-  const completed = entries.filter(e => e.actualWinner);
+  const allCompleted = entries.filter(e => e.actualWinner);
+  const completed  = allCompleted.filter(e => !e.isVod); // exclude VODs from prediction accuracy
+  const vodEntries = allCompleted.filter(e => e.isVod);
   const correct = completed.filter(e => e.predWinner === e.actualWinner);
   const pct = completed.length ? Math.round(correct.length / completed.length * 100) : null;
 
@@ -1844,9 +2041,10 @@ function renderStats() {
     <div class="stat-box"><div class="val ${pct===null?"":(pct>=60?"green":pct>=50?"yellow":"red")}">${pct===null?"—":pct+"%"}</div><div class="lbl">Accuracy</div></div>
     <div class="stat-box"><div class="val green">${correct.length}</div><div class="lbl">Correct</div></div>
     <div class="stat-box"><div class="val red">${completed.length - correct.length}</div><div class="lbl">Wrong</div></div>
-    <div class="stat-box"><div class="val yellow">${entries.length - completed.length}</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val yellow">${entries.length - allCompleted.length}</div><div class="lbl">Pending</div></div>
     <div class="stat-box"><div class="val">${watched.length}</div><div class="lbl">Watched</div></div>
     <div class="stat-box"><div class="val" style="color:var(--muted);">${unwatched.length}</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">${vodEntries.length}</div><div class="lbl">VOD reviews</div></div>
   `;
 
   // Rolling prediction accuracy (last 10 games sliding window)
@@ -2031,6 +2229,163 @@ function livePlayerSearch() {}
 function selectPlayerAutocomplete() {}
 function deletePlayer() {}
 
+// ── VOD review mode ──────────────────────────────────────────────────────────
+let logMode    = "live"; // "live" or "vod"
+let vodResult  = null;   // actual winner in VOD mode
+let vodScheduleCache = [];
+
+function setLogMode(mode) {
+  logMode = mode;
+  document.getElementById("mode-live-btn").className = mode === "live" ? "btn btn-primary" : "btn btn-ghost";
+  document.getElementById("mode-vod-btn").className  = mode === "vod"  ? "btn btn-primary" : "btn btn-ghost";
+  document.getElementById("live-games-section").style.display = mode === "live" ? "block" : "none";
+  document.getElementById("vod-section").style.display         = mode === "vod"  ? "block" : "none";
+  document.getElementById("prediction-card").style.display     = mode === "live" ? "block" : "none";
+  document.getElementById("vod-result-section").style.display  = mode === "vod"  ? "block" : "none";
+  const saveBtn = document.getElementById("save-btn");
+  if (saveBtn) saveBtn.textContent = mode === "vod" ? "Save VOD review" : "Save prediction";
+  if (mode === "vod" && !vodScheduleCache.length) loadVodSchedule();
+}
+
+function setVodResult(side) {
+  vodResult = side;
+  document.getElementById("vod-result-blue").classList.toggle("sel", side === "blue");
+  document.getElementById("vod-result-red").classList.toggle("sel",  side === "red");
+}
+
+async function loadVodSchedule() {
+  const el = document.getElementById("vod-pills");
+  el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Loading past games…</div>';
+  try {
+    // Pull recent completed games from schedule — paginate back a few pages
+    let events = [];
+    let pageToken = null;
+    for (let i = 0; i < 4; i++) {
+      const params = pageToken ? { pageToken } : {};
+      const data = await apiGet("/getSchedule", params);
+      const schedule = data.data && data.data.schedule;
+      if (!schedule) break;
+      const completed = (schedule.events || []).filter(e => e.type === "match" && e.state === "completed");
+      events = events.concat(completed);
+      pageToken = schedule.pages && schedule.pages.older;
+      if (!pageToken) break;
+    }
+    vodScheduleCache = events;
+    // Populate league filter
+    const leagues = [...new Set(events.map(e => e.league && e.league.name).filter(Boolean))].sort();
+    const sel = document.getElementById("vod-league-filter");
+    const cur = sel.value;
+    sel.innerHTML = '<option value="all">All leagues</option>' +
+      leagues.map(l => `<option value="${l}" ${l===cur?"selected":""}>${l}</option>`).join("");
+    renderVodList();
+  } catch(e) {
+    document.getElementById("vod-pills").innerHTML =
+      `<div style="color:var(--muted);font-size:13px;">Couldn't load schedule: ${e.message}</div>`;
+  }
+}
+
+function renderVodList() {
+  const filter = (document.getElementById("vod-league-filter") || {}).value || "all";
+  const el = document.getElementById("vod-pills");
+  let events = vodScheduleCache;
+  if (filter !== "all") events = events.filter(e => e.league && e.league.name === filter);
+  // Show most recent 30
+  events = events.slice(0, 30);
+  if (!events.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;">No past games found.</div>';
+    return;
+  }
+  el.innerHTML = events.map((ev, idx) => {
+    const teams = (ev.match && ev.match.teams) || [];
+    const winner = teams.find(t => t.result && t.result.outcome === "win");
+    const teamNames = teams.map(t => t.code || t.name || "TBD").join(" vs ");
+    const winnerName = winner ? (winner.code || winner.name) : "?";
+    const date = (ev.startTime || "").slice(0, 10);
+    const league = ev.league ? ev.league.name : "";
+    return `<div class="live-pill" onclick="loadVodGame(${idx})">
+      <span style="font-size:16px;margin-right:2px;">🎬</span>
+      <span style="flex:1;min-width:0;">
+        <b>${teamNames}</b>
+        <span style="color:var(--muted);"> · ${league} · ${date}</span>
+        <span style="color:var(--green);font-size:11px;display:block;">Winner: ${winnerName}</span>
+      </span>
+    </div>`;
+  }).join("");
+}
+
+async function loadVodGame(idx) {
+  const filter = (document.getElementById("vod-league-filter") || {}).value || "all";
+  let events = vodScheduleCache;
+  if (filter !== "all") events = events.filter(e => e.league && e.league.name === filter);
+  const ev = events[idx];
+  if (!ev) return;
+
+  try {
+    const det = await apiGet("/getEventDetails", { id: ev.id });
+    const event = det.data && det.data.event;
+    if (!event) return;
+
+    const games   = (event.match && event.match.games) || [];
+    const matchTeams = (event.match && event.match.teams) || [];
+    const teamById = {};
+    matchTeams.forEach(t => { teamById[t.id] = t.code || t.name || ""; });
+    const winner = matchTeams.find(t => t.result && t.result.outcome === "win");
+
+    // Use the last completed game in the series
+    const targetGame = games.filter(g => g.state === "completed").slice(-1)[0] || games[0];
+    if (!targetGame) return;
+
+    const sides   = targetGame.teams || [];
+    const blueEntry = sides.find(t => t.side === "blue");
+    const redEntry  = sides.find(t => t.side === "red");
+    const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
+    const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+
+    // Determine actual winner side
+    const winnerCode = winner ? (winner.code || winner.name || "") : "";
+    const actualSide = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                     : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+
+    // Fill form
+    document.getElementById("blue-team").value     = blueCode;
+    document.getElementById("red-team").value      = redCode;
+    document.getElementById("league").value        = event.league ? event.league.name : "";
+    document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10);
+    document.getElementById("event-context").value = buildContextLabel(
+      event.league ? event.league.name : "", ev.blockName || "", ev.startTime || ""
+    );
+    currentGameNumber = targetGame.number || null;
+    updateColTitles();
+
+    // Auto-set VOD result
+    if (actualSide) {
+      setVodResult(actualSide);
+      // Update button labels
+      document.getElementById("vod-result-blue-label").textContent = blueCode + " won";
+      document.getElementById("vod-result-red-label").textContent  = redCode  + " won";
+    }
+
+    // Fetch picks
+    try {
+      const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
+      if (res.ok) {
+        const text = await res.text();
+        const fd   = text ? JSON.parse(text) : null;
+        const meta = fd && fd.gameMetadata;
+        if (meta) {
+          const blue = (meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata) || [];
+          const red  = (meta.redTeamMetadata  && meta.redTeamMetadata.participantMetadata)  || [];
+          renderPickInputs(blue, red);
+        }
+      }
+    } catch(e) {}
+
+    runPredictionModel();
+  } catch(e) {
+    console.error("loadVodGame error:", e);
+  }
+}
+
 // ── Prediction model ─────────────────────────────────────────────────────────
 // A transparent weighted-odds model built from your own logged data.
 // For each input on the log form, it looks up the historical win rate
@@ -2047,6 +2402,7 @@ function historicalRate(subset, winCondition) {
 }
 
 function runPredictionModel() {
+  // Use all completed games (including VODs) for model training — VODs have real outcomes
   const completed = loadEntries().filter(e => e.actualWinner);
   const blueTeam  = (document.getElementById("blue-team")  || {}).value || "";
   const redTeam   = (document.getElementById("red-team")   || {}).value || "";
@@ -2704,6 +3060,72 @@ function importData(event) {
   reader.readAsText(file);
 }
 
+// ── GitHub Pages deploy ───────────────────────────────────────────────────────
+const GH_TOKEN_KEY = "draftlogger_gh_token";
+const GH_REPO_KEY  = "draftlogger_gh_repo";
+const GH_PATH_KEY  = "draftlogger_gh_path";
+
+function loadGitHubConfig() {
+  const tField = document.getElementById("gh-token");
+  const rField = document.getElementById("gh-repo");
+  const pField = document.getElementById("gh-path");
+  if (tField) tField.value = localStorage.getItem(GH_TOKEN_KEY) || "";
+  if (rField) rField.value = localStorage.getItem(GH_REPO_KEY)  || "kolankinator-ops/draft-logger";
+  if (pField) pField.value = localStorage.getItem(GH_PATH_KEY)  || "draft_logger.html";
+}
+
+function saveGitHubConfig() {
+  const token = (document.getElementById("gh-token") || {}).value || "";
+  const repo  = (document.getElementById("gh-repo")  || {}).value || "";
+  const path  = (document.getElementById("gh-path")  || {}).value || "";
+  if (token) localStorage.setItem(GH_TOKEN_KEY, token);
+  if (repo)  localStorage.setItem(GH_REPO_KEY,  repo);
+  if (path)  localStorage.setItem(GH_PATH_KEY,  path);
+  setGhStatus("✓ Config saved.", "var(--green)");
+}
+
+function setGhStatus(msg, color) {
+  const el = document.getElementById("gh-status");
+  if (el) el.innerHTML = `<span style="color:${color||"var(--muted)"};">${msg}</span>`;
+}
+
+async function pushToGitHub() {
+  const token = (document.getElementById("gh-token")||{}).value.trim() || localStorage.getItem(GH_TOKEN_KEY) || "";
+  const repo  = (document.getElementById("gh-repo") ||{}).value.trim() || localStorage.getItem(GH_REPO_KEY)  || "";
+  const path  = (document.getElementById("gh-path") ||{}).value.trim() || localStorage.getItem(GH_PATH_KEY)  || "draft_logger.html";
+  if (!token) { setGhStatus("Paste your GitHub token first.", "#ff4d5e"); return; }
+  if (!repo)  { setGhStatus("Enter your repo (e.g. username/draft-logger).", "#ff4d5e"); return; }
+  setGhStatus("Fetching current file SHA…", "var(--muted)");
+  try {
+    const apiBase = `https://api.github.com/repos/${repo}/contents/${path}`;
+    const headers = { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" };
+    let sha = null;
+    const getRes = await fetch(apiBase, { headers });
+    if (getRes.ok) { sha = (await getRes.json()).sha; }
+    else if (getRes.status !== 404) throw new Error("GitHub API error " + getRes.status);
+    setGhStatus("Encoding and pushing…", "var(--muted)");
+    const html    = document.documentElement.outerHTML;
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+    const putRes  = await fetch(apiBase, {
+      method: "PUT",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ message: `Update draft logger — ${new Date().toLocaleString()}`, content: encoded, ...(sha ? { sha } : {}) })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || "Push failed: " + putRes.status);
+    }
+    localStorage.setItem(GH_TOKEN_KEY, token);
+    localStorage.setItem(GH_REPO_KEY,  repo);
+    localStorage.setItem(GH_PATH_KEY,  path);
+    const owner   = repo.split("/")[0];
+    const repoName = repo.split("/")[1];
+    setGhStatus(`✓ Pushed! Live at <a href="https://${owner}.github.io/${repoName}/${path}" target="_blank" style="color:var(--blue);">your GitHub Pages URL</a> in ~30 seconds.`, "var(--green)");
+  } catch(e) {
+    setGhStatus("Failed: " + e.message, "#ff4d5e");
+  }
+}
+
 function openDrawer() {
   document.getElementById("nav-drawer").classList.add("open");
   document.getElementById("nav-overlay").classList.add("open");
@@ -2727,7 +3149,7 @@ function show(screen) {
   if (screen === "stats")    renderStats();
   if (screen === "bets")     renderBets();
   if (screen === "betstats") renderBetStats();
-  if (screen === "settings") updateSyncConnectedUI();
+  if (screen === "settings") { updateSyncConnectedUI(); loadGitHubConfig(); }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -2750,5 +3172,6 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
