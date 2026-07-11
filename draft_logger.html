@@ -355,11 +355,7 @@
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames()">↺ Refresh</button>
     </div>
-    <div id="live-pills">
-      <div class="live-pill" onclick="loadLiveGame(0)">
-        <span class="live-dot"></span>
-        <span><b>7D</b> vs <b>MVG</b> <span style="color:var(--muted);">LRS · Game 2</span></span>
-      </div></div>
+    <div id="live-pills"><div style="color:var(--muted);font-size:13px;">No live games right now — fill in manually below.</div></div>
   </div>
 
   <!-- VOD browser section -->
@@ -806,7 +802,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/10/2026, 5:40:04 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/10/2026, 9:27:12 PM</div>
     </div>
   </div>
 
@@ -2233,6 +2229,7 @@ function deletePlayer() {}
 let logMode    = "live"; // "live" or "vod"
 let vodResult  = null;   // actual winner in VOD mode
 let vodScheduleCache = [];
+let vodVisibleCount  = 30; // how many games currently shown, increases with Load More
 
 function setLogMode(mode) {
   logMode = mode;
@@ -2256,31 +2253,30 @@ function setVodResult(side) {
 async function loadVodSchedule() {
   const el = document.getElementById("vod-pills");
   el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Loading past games…</div>';
+  vodScheduleCache = [];
+  vodVisibleCount  = 30;
   try {
-    // Pull recent completed games from schedule — paginate back a few pages
-    let events = [];
+    // Paginate back far enough to cover a full split (~15 pages)
     let pageToken = null;
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 15; i++) {
       const params = pageToken ? { pageToken } : {};
       const data = await apiGet("/getSchedule", params);
       const schedule = data.data && data.data.schedule;
       if (!schedule) break;
       const completed = (schedule.events || []).filter(e => e.type === "match" && e.state === "completed");
-      events = events.concat(completed);
+      vodScheduleCache = vodScheduleCache.concat(completed);
       pageToken = schedule.pages && schedule.pages.older;
       if (!pageToken) break;
     }
-    vodScheduleCache = events;
     // Populate league filter
-    const leagues = [...new Set(events.map(e => e.league && e.league.name).filter(Boolean))].sort();
+    const leagues = [...new Set(vodScheduleCache.map(e => e.league && e.league.name).filter(Boolean))].sort();
     const sel = document.getElementById("vod-league-filter");
     const cur = sel.value;
     sel.innerHTML = '<option value="all">All leagues</option>' +
       leagues.map(l => `<option value="${l}" ${l===cur?"selected":""}>${l}</option>`).join("");
     renderVodList();
   } catch(e) {
-    document.getElementById("vod-pills").innerHTML =
-      `<div style="color:var(--muted);font-size:13px;">Couldn't load schedule: ${e.message}</div>`;
+    el.innerHTML = `<div style="color:var(--muted);font-size:13px;">Couldn't load schedule: ${e.message}</div>`;
   }
 }
 
@@ -2289,20 +2285,21 @@ function renderVodList() {
   const el = document.getElementById("vod-pills");
   let events = vodScheduleCache;
   if (filter !== "all") events = events.filter(e => e.league && e.league.name === filter);
-  // Show most recent 30
-  events = events.slice(0, 30);
   if (!events.length) {
     el.innerHTML = '<div style="color:var(--muted);font-size:13px;">No past games found.</div>';
     return;
   }
-  el.innerHTML = events.map((ev, idx) => {
-    const teams = (ev.match && ev.match.teams) || [];
-    const winner = teams.find(t => t.result && t.result.outcome === "win");
-    const teamNames = teams.map(t => t.code || t.name || "TBD").join(" vs ");
+  const visible = events.slice(0, vodVisibleCount);
+  el.innerHTML = visible.map((ev, idx) => {
+    const teams      = (ev.match && ev.match.teams) || [];
+    const winner     = teams.find(t => t.result && t.result.outcome === "win");
+    const teamNames  = teams.map(t => t.code || t.name || "TBD").join(" vs ");
     const winnerName = winner ? (winner.code || winner.name) : "?";
-    const date = (ev.startTime || "").slice(0, 10);
-    const league = ev.league ? ev.league.name : "";
-    return `<div class="live-pill" onclick="loadVodGame(${idx})">
+    const date       = (ev.startTime || "").slice(0, 10);
+    const league     = ev.league ? ev.league.name : "";
+    // Use the correct ID: schedule events store match ID at ev.match.id
+    const eventId    = ev.match?.id || ev.id || "";
+    return `<div class="live-pill" onclick="loadVodGame('${eventId}','${ev.startTime||''}','${ev.blockName||''}','${league}')">
       <span style="font-size:16px;margin-right:2px;">🎬</span>
       <span style="flex:1;min-width:0;">
         <b>${teamNames}</b>
@@ -2310,38 +2307,41 @@ function renderVodList() {
         <span style="color:var(--green);font-size:11px;display:block;">Winner: ${winnerName}</span>
       </span>
     </div>`;
-  }).join("");
+  }).join("") + (events.length > vodVisibleCount
+    ? `<button class="btn btn-ghost" style="width:100%;margin-top:8px;" onclick="vodVisibleCount+=30;renderVodList()">Load more (${events.length - vodVisibleCount} remaining)</button>`
+    : "");
 }
 
-async function loadVodGame(idx) {
-  const filter = (document.getElementById("vod-league-filter") || {}).value || "all";
-  let events = vodScheduleCache;
-  if (filter !== "all") events = events.filter(e => e.league && e.league.name === filter);
-  const ev = events[idx];
-  if (!ev) return;
-
+async function loadVodGame(eventId, startTime, blockName, leagueName) {
+  if (!eventId) { console.error("No event ID"); return; }
+  const el = document.getElementById("vod-pills");
+  const prevHtml = el.innerHTML;
+  // Show loading state without clearing the list
+  const pills = document.querySelectorAll(".live-pill");
+  pills.forEach(p => p.style.opacity = "0.5");
   try {
-    const det = await apiGet("/getEventDetails", { id: ev.id });
+    const det   = await apiGet("/getEventDetails", { id: eventId });
     const event = det.data && det.data.event;
-    if (!event) return;
+    if (!event) { console.error("No event in response"); pills.forEach(p => p.style.opacity = ""); return; }
 
-    const games   = (event.match && event.match.games) || [];
+    const games      = (event.match && event.match.games) || [];
     const matchTeams = (event.match && event.match.teams) || [];
-    const teamById = {};
+    const teamById   = {};
     matchTeams.forEach(t => { teamById[t.id] = t.code || t.name || ""; });
     const winner = matchTeams.find(t => t.result && t.result.outcome === "win");
 
-    // Use the last completed game in the series
-    const targetGame = games.filter(g => g.state === "completed").slice(-1)[0] || games[0];
-    if (!targetGame) return;
+    // For a series, log each game individually — default to the first completed
+    // (user can tap multiple games from the list for each game in the series)
+    const completedGames = games.filter(g => g.state === "completed");
+    const targetGame     = completedGames[0] || games[0];
+    if (!targetGame) { pills.forEach(p => p.style.opacity = ""); return; }
 
-    const sides   = targetGame.teams || [];
+    const sides    = targetGame.teams || [];
     const blueEntry = sides.find(t => t.side === "blue");
     const redEntry  = sides.find(t => t.side === "red");
     const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
     const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
 
-    // Determine actual winner side
     const winnerCode = winner ? (winner.code || winner.name || "") : "";
     const actualSide = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
                      : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
@@ -2349,23 +2349,40 @@ async function loadVodGame(idx) {
     // Fill form
     document.getElementById("blue-team").value     = blueCode;
     document.getElementById("red-team").value      = redCode;
-    document.getElementById("league").value        = event.league ? event.league.name : "";
-    document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10);
+    document.getElementById("league").value        = leagueName || (event.league ? event.league.name : "");
+    document.getElementById("game-date").value     = (startTime || event.startTime || "").slice(0, 10);
     document.getElementById("event-context").value = buildContextLabel(
-      event.league ? event.league.name : "", ev.blockName || "", ev.startTime || ""
+      leagueName || (event.league ? event.league.name : ""), blockName || "", startTime || ""
     );
     currentGameNumber = targetGame.number || null;
     updateColTitles();
 
-    // Auto-set VOD result
     if (actualSide) {
       setVodResult(actualSide);
-      // Update button labels
       document.getElementById("vod-result-blue-label").textContent = blueCode + " won";
       document.getElementById("vod-result-red-label").textContent  = redCode  + " won";
     }
 
-    // Fetch picks
+    // Collect VOD links from game.vods
+    const vodLinks = (targetGame.vods || []).map(v =>
+      v.parameter ? `<a href="https://www.youtube.com/watch?v=${v.parameter}" target="_blank" style="color:var(--blue);font-size:12px;display:block;margin-top:4px;">▶ Watch VOD${v.locale ? " ("+v.locale+")" : ""}</a>` : ""
+    ).filter(Boolean).join("");
+    if (vodLinks) {
+      const notesEl = document.getElementById("notes");
+      if (notesEl && !notesEl.value) {
+        // Show link separately — don't cram it into notes
+        let linkEl = document.getElementById("vod-link-bar");
+        if (!linkEl) {
+          linkEl = document.createElement("div");
+          linkEl.id = "vod-link-bar";
+          linkEl.style.cssText = "margin-top:8px;padding:8px 12px;background:var(--surface2);border-radius:6px;";
+          notesEl.parentNode.insertBefore(linkEl, notesEl);
+        }
+        linkEl.innerHTML = vodLinks;
+      }
+    }
+
+    // Fetch picks from feed
     try {
       const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
       if (res.ok) {
@@ -2378,11 +2395,15 @@ async function loadVodGame(idx) {
           renderPickInputs(blue, red);
         }
       }
-    } catch(e) {}
+    } catch(e) { console.warn("Feed fetch failed:", e); }
 
     runPredictionModel();
+    // Scroll form into view
+    document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch(e) {
     console.error("loadVodGame error:", e);
+  } finally {
+    pills.forEach(p => p.style.opacity = "");
   }
 }
 
@@ -2402,8 +2423,14 @@ function historicalRate(subset, winCondition) {
 }
 
 function runPredictionModel() {
-  // Use all completed games (including VODs) for model training — VODs have real outcomes
-  const completed = loadEntries().filter(e => e.actualWinner);
+  // Use all completed games for training, with recency decay
+  // Games older than 90 days count progressively less
+  const now = Date.now();
+  const completed = loadEntries().filter(e => e.actualWinner).map(e => {
+    const ageDays = (now - new Date(e.date).getTime()) / 86400000;
+    const weight  = Math.pow(0.995, ageDays); // ~50% weight after 140 days
+    return { ...e, _weight: weight };
+  });
   const blueTeam  = (document.getElementById("blue-team")  || {}).value || "";
   const redTeam   = (document.getElementById("red-team")   || {}).value || "";
   const el        = document.getElementById("model-prediction");
@@ -2419,58 +2446,47 @@ function runPredictionModel() {
   let   logOdds  = 0; // log-odds contribution accumulator (0 = 50/50)
   let   minGames = Infinity;
 
-  // ── Factor 1: Team win rates ────────────────────────────────────────────────
+  // ── Factor 1: Team win rates (recency-weighted) ──────────────────────────────
   if (blueTeam) {
     const blueAsBlue = completed.filter(e => e.blueTeam.toUpperCase() === blueTeam.toUpperCase());
     const blueAsRed  = completed.filter(e => e.redTeam.toUpperCase()  === blueTeam.toUpperCase());
     const total = blueAsBlue.length + blueAsRed.length;
     if (total >= 3) {
-      const wins = blueAsBlue.filter(e => e.actualWinner === "blue").length
-                 + blueAsRed.filter(e => e.actualWinner === "red").length;
-      const wr = wins / total;
-      const contribution = (wr - 0.5) * 1.5; // weight: moderate
-      logOdds += contribution;
-      minGames = Math.min(minGames, total);
-      const dir = contribution > 0.05 ? "↑" : contribution < -0.05 ? "↓" : "→";
-      factors.push(`${dir} ${blueTeam} win rate: ${Math.round(wr*100)}% (${total}g)`);
+      const wTotal = [...blueAsBlue,...blueAsRed].reduce((s,e)=>s+e._weight,0);
+      const wWins  = blueAsBlue.filter(e=>e.actualWinner==="blue").reduce((s,e)=>s+e._weight,0)
+                   + blueAsRed.filter(e=>e.actualWinner==="red").reduce((s,e)=>s+e._weight,0);
+      const wr = wWins/wTotal;
+      const contribution = (wr-0.5)*1.5;
+      logOdds += contribution; minGames = Math.min(minGames,total);
+      factors.push(`${contribution>0.05?"↑":contribution<-0.05?"↓":"→"} ${blueTeam} win rate: ${Math.round(wr*100)}% (${total}g)`);
     }
   }
-
   if (redTeam) {
-    const redAsRed   = completed.filter(e => e.redTeam.toUpperCase()  === redTeam.toUpperCase());
-    const redAsBlue  = completed.filter(e => e.blueTeam.toUpperCase() === redTeam.toUpperCase());
+    const redAsRed  = completed.filter(e => e.redTeam.toUpperCase()  === redTeam.toUpperCase());
+    const redAsBlue = completed.filter(e => e.blueTeam.toUpperCase() === redTeam.toUpperCase());
     const total = redAsRed.length + redAsBlue.length;
     if (total >= 3) {
-      const wins = redAsRed.filter(e => e.actualWinner === "red").length
-                 + redAsBlue.filter(e => e.actualWinner === "blue").length;
-      const wr = wins / total;
-      const contribution = -(wr - 0.5) * 1.5; // inverted: red win rate hurts blue
-      logOdds += contribution;
-      minGames = Math.min(minGames, total);
-      const dir = contribution < -0.05 ? "↑ for red" : contribution > 0.05 ? "↓ for red" : "→";
-      factors.push(`${dir} ${redTeam} win rate: ${Math.round(wr*100)}% (${total}g)`);
+      const wTotal = [...redAsRed,...redAsBlue].reduce((s,e)=>s+e._weight,0);
+      const wWins  = redAsRed.filter(e=>e.actualWinner==="red").reduce((s,e)=>s+e._weight,0)
+                   + redAsBlue.filter(e=>e.actualWinner==="blue").reduce((s,e)=>s+e._weight,0);
+      const wr = wWins/wTotal;
+      const contribution = -(wr-0.5)*1.5;
+      logOdds += contribution; minGames = Math.min(minGames,total);
+      factors.push(`${contribution<-0.05?"↑ for red":contribution>0.05?"↓ for red":"→"} ${redTeam} win rate: ${Math.round(wr*100)}% (${total}g)`);
     }
   }
 
   // ── Factor 2: Draft preference ──────────────────────────────────────────────
   if (draftPref !== null && draftPref !== undefined) {
     const level = Math.abs(draftPref);
-    const prefGames = completed.filter(e =>
-      e.draftPref !== null && e.draftPref !== undefined &&
-      Math.abs(e.draftPref) === level && e.draftPref !== 0
-    );
+    const prefGames = completed.filter(e => e.draftPref!==null&&e.draftPref!==undefined&&Math.abs(e.draftPref)===level&&e.draftPref!==0);
     if (prefGames.length >= 3) {
-      const prefWins = prefGames.filter(e =>
-        (e.draftPref < 0 && e.actualWinner === "blue") ||
-        (e.draftPref > 0 && e.actualWinner === "red")
-      ).length;
-      const wr = prefWins / prefGames.length;
-      const direction = draftPref < 0 ? 1 : -1; // -=blue preferred, +=red preferred
-      const contribution = direction * (wr - 0.5) * 2.0; // weight: important
-      logOdds += contribution;
-      minGames = Math.min(minGames, prefGames.length);
-      const prefLabel = draftPref < 0 ? (blueTeam||"Blue") : (redTeam||"Red");
-      factors.push(`${contribution > 0 ? "↑" : "↓"} Draft ±${level} preferred side wins: ${Math.round(wr*100)}% (${prefGames.length}g)`);
+      const wTotal = prefGames.reduce((s,e)=>s+e._weight,0);
+      const wWins  = prefGames.filter(e=>(e.draftPref<0&&e.actualWinner==="blue")||(e.draftPref>0&&e.actualWinner==="red")).reduce((s,e)=>s+e._weight,0);
+      const wr = wWins/wTotal;
+      const contribution = (draftPref<0?1:-1)*(wr-0.5)*2.0;
+      logOdds += contribution; minGames = Math.min(minGames,prefGames.length);
+      factors.push(`${contribution>0?"↑":"↓"} Draft ±${level} preferred side wins: ${Math.round(wr*100)}% (${prefGames.length}g)`);
     }
   }
 
@@ -2478,28 +2494,25 @@ function runPredictionModel() {
   if (skillAdv && skillAdv !== "unsure") {
     const skillGames = completed.filter(e => e.skillAdv === skillAdv);
     if (skillGames.length >= 3) {
-      const skillWins = skillGames.filter(e => e.actualWinner === skillAdv).length;
-      const wr = skillWins / skillGames.length;
-      const direction = skillAdv === "blue" ? 1 : -1;
-      const contribution = direction * (wr - 0.5) * 2.5; // weight: high
-      logOdds += contribution;
-      minGames = Math.min(minGames, skillGames.length);
-      factors.push(`${contribution > 0 ? "↑" : "↓"} Skill edge (${skillAdv}): ${Math.round(wr*100)}% win rate (${skillGames.length}g)`);
+      const wTotal = skillGames.reduce((s,e)=>s+e._weight,0);
+      const wWins  = skillGames.filter(e=>e.actualWinner===skillAdv).reduce((s,e)=>s+e._weight,0);
+      const wr = wWins/wTotal;
+      const contribution = (skillAdv==="blue"?1:-1)*(wr-0.5)*2.5;
+      logOdds += contribution; minGames = Math.min(minGames,skillGames.length);
+      factors.push(`${contribution>0?"↑":"↓"} Skill edge (${skillAdv}): ${Math.round(wr*100)}% win rate (${skillGames.length}g)`);
     }
   }
 
   // ── Factor 4: Execution demand ──────────────────────────────────────────────
   if (execDemand.blue && execDemand.red && execDemand.blue !== execDemand.red) {
-    const execGames = completed.filter(e =>
-      e.execDemand && e.execDemand.blue === execDemand.blue && e.execDemand.red === execDemand.red
-    );
+    const execGames = completed.filter(e => e.execDemand&&e.execDemand.blue===execDemand.blue&&e.execDemand.red===execDemand.red);
     if (execGames.length >= 3) {
-      const blueWins = execGames.filter(e => e.actualWinner === "blue").length;
-      const wr = blueWins / execGames.length;
-      const contribution = (wr - 0.5) * 1.0;
-      logOdds += contribution;
-      minGames = Math.min(minGames, execGames.length);
-      factors.push(`${contribution > 0 ? "↑" : "↓"} Exec ${execDemand.blue}/${execDemand.red}: blue wins ${Math.round(wr*100)}% (${execGames.length}g)`);
+      const wTotal = execGames.reduce((s,e)=>s+e._weight,0);
+      const wWins  = execGames.filter(e=>e.actualWinner==="blue").reduce((s,e)=>s+e._weight,0);
+      const wr = wWins/wTotal;
+      const contribution = (wr-0.5)*1.0;
+      logOdds += contribution; minGames = Math.min(minGames,execGames.length);
+      factors.push(`${contribution>0?"↑":"↓"} Exec ${execDemand.blue}/${execDemand.red}: blue wins ${Math.round(wr*100)}% (${execGames.length}g)`);
     }
   }
 
@@ -2507,22 +2520,21 @@ function runPredictionModel() {
   const blueChamps = pickedChamps.blue.filter(Boolean);
   const redChamps  = pickedChamps.red.filter(Boolean);
   let champContrib = 0, champCount = 0;
-  [...blueChamps.map(c=>({c,side:"blue"})), ...redChamps.map(c=>({c,side:"red"}))].forEach(({c,side}) => {
-    const cGames = completed.filter(e => (e.champions?.blue||[]).includes(c) || (e.champions?.red||[]).includes(c));
+  [...blueChamps.map(c=>({c,side:"blue"})),...redChamps.map(c=>({c,side:"red"}))].forEach(({c,side}) => {
+    const cGames = completed.filter(e=>(e.champions?.blue||[]).includes(c)||(e.champions?.red||[]).includes(c));
     if (cGames.length < 3) return;
-    const blueWins = cGames.filter(e => e.actualWinner === "blue").length;
-    const wr = blueWins / cGames.length;
-    // If champion is on blue side, higher wr = more blue; on red side, inverted
-    champContrib += (side === "blue" ? 1 : -1) * (wr - 0.5) * 0.5;
+    const wTotal = cGames.reduce((s,e)=>s+e._weight,0);
+    const wWins  = cGames.filter(e=>e.actualWinner==="blue").reduce((s,e)=>s+e._weight,0);
+    const wr = wWins/wTotal;
+    champContrib += (side==="blue"?1:-1)*(wr-0.5)*0.5;
     champCount++;
   });
   if (champCount >= 3) {
     logOdds += champContrib;
-    const dir = champContrib > 0.05 ? "↑" : champContrib < -0.05 ? "↓" : "→";
-    factors.push(`${dir} Champion patterns (${champCount} champs with data)`);
+    factors.push(`${champContrib>0.05?"↑":champContrib<-0.05?"↓":"→"} Champion patterns (${champCount} champs with data)`);
   }
 
-  // ── Convert to probability and display ─────────────────────────────────────
+    // ── Convert to probability and display ─────────────────────────────────────
   if (factors.length === 0) {
     el.style.display = "none";
     return;
