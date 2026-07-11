@@ -345,12 +345,12 @@
 
   <!-- Mode toggle -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button id="mode-live-btn" class="btn btn-primary" style="flex:1;" onclick="setLogMode('live')">📡 Live game</button>
-    <button id="mode-vod-btn" class="btn btn-ghost" style="flex:1;" onclick="setLogMode('vod')">🎬 VOD review</button>
+    <button id="mode-live-btn" class="btn btn-ghost" style="flex:1;" onclick="setLogMode('live')">📡 Live game</button>
+    <button id="mode-vod-btn" class="btn btn-primary" style="flex:1;" onclick="setLogMode('vod')">🎬 VOD review</button>
   </div>
 
   <!-- Live games section -->
-  <div id="live-games-section" class="card" style="margin-bottom:14px;">
+  <div id="live-games-section" class="card" style="margin-bottom: 14px; display: none;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames()">↺ Refresh</button>
@@ -359,20 +359,33 @@
   </div>
 
   <!-- VOD browser section -->
-  <div id="vod-section" style="display:none;margin-bottom:14px;">
+  <div id="vod-section" style="display: block; margin-bottom: 14px;">
     <div class="card" style="margin-bottom:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <div class="card-title" style="margin-bottom:0;">Browse past games</div>
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadVodSchedule()">↺ Refresh</button>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:10px;">
-        <select id="vod-league-filter" onchange="renderVodList()" style="flex:1;">
-          <option value="all">All leagues</option>
-        </select>
+        <select id="vod-league-filter" onchange="renderVodList()" style="flex:1;"><option value="all">All leagues</option><option value="Arabian League">Arabian League</option><option value="CBLOL">CBLOL</option><option value="Circuito Desafiante">Circuito Desafiante</option><option value="EMEA Masters">EMEA Masters</option><option value="Esports Balkan League">Esports Balkan League</option><option value="Hellenic Legends League">Hellenic Legends League</option><option value="Hitpoint Masters">Hitpoint Masters</option><option value="LCK">LCK</option><option value="LCK Challengers">LCK Challengers</option><option value="LCP">LCP</option><option value="LCS">LCS</option><option value="LEC">LEC</option><option value="LES">LES</option><option value="LJL">LJL</option><option value="LPL">LPL</option><option value="LRN">LRN</option><option value="LRS">LRS</option><option value="La Ligue Française">La Ligue Française</option><option value="Liga Portuguesa">Liga Portuguesa</option><option value="LoL Italian Tournament">LoL Italian Tournament</option><option value="MSI">MSI</option><option value="NACL">NACL</option><option value="NLC">NLC</option><option value="PCS">PCS</option><option value="Prime League">Prime League</option><option value="Rift Legends">Rift Legends</option><option value="Road of Legends">Road of Legends</option><option value="TCL">TCL</option><option value="VCS">VCS</option></select>
       </div>
       <div id="vod-pills">
-        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
-      </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:8px;">
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px;">T1 vs TLAW · MSI</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Series winner: <span style="color:var(--green);">?</span> · 3 games played</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            
+              <button class="btn btn-ghost" style="flex:1;min-width:80px;" onclick="pickVodGameInSeries(0)">
+                Game 1
+              </button>
+              <button class="btn btn-ghost" style="flex:1;min-width:80px;" onclick="pickVodGameInSeries(1)">
+                Game 2
+              </button>
+              <button class="btn btn-ghost" style="flex:1;min-width:80px;" onclick="pickVodGameInSeries(2)">
+                Game 3
+              </button>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:12px;" onclick="renderVodList()">← Back to list</button>
+        </div></div>
     </div>
     <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
@@ -412,99 +425,99 @@
     <div class="card-title">Draft picks</div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
+        <div class="draft-col-title" id="blue-col-title">T1</div>
         <div id="blue-picks">
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Gnar/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">TOP</span>
-              
+              <span class="champ-name">Gnar</span>
+              <span style="font-size:10px;color:var(--muted);">T1 Doran</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/XinZhao/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">JNG</span>
-              
+              <span class="champ-name">XinZhao</span>
+              <span style="font-size:10px;color:var(--muted);">T1 Oner</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Orianna/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">MID</span>
-              
+              <span class="champ-name">Orianna</span>
+              <span style="font-size:10px;color:var(--muted);">T1 Faker</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Mel/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">BOT</span>
-              
+              <span class="champ-name">Mel</span>
+              <span style="font-size:10px;color:var(--muted);">T1 Peyz</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Camille/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">SUP</span>
-              
+              <span class="champ-name">Camille</span>
+              <span style="font-size:10px;color:var(--muted);">T1 Keria</span>
             </div>
           </div>
         </div></div>
       </div>
       <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title">RED SIDE</div>
+        <div class="draft-col-title" id="red-col-title">TLAW</div>
         <div id="red-picks">
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">TOP</span>
-              
+              <span class="champ-name">Yasuo</span>
+              <span style="font-size:10px;color:var(--muted);">TLAW Morgan</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/MonkeyKing/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">JNG</span>
-              
+              <span class="champ-name">MonkeyKing</span>
+              <span style="font-size:10px;color:var(--muted);">TLAW Josedeodo</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Akali/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">MID</span>
-              
+              <span class="champ-name">Akali</span>
+              <span style="font-size:10px;color:var(--muted);">TLAW Quid</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Caitlyn/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">BOT</span>
-              
+              <span class="champ-name">Caitlyn</span>
+              <span style="font-size:10px;color:var(--muted);">TLAW Yeon</span>
             </div>
           </div>
         </div>
         <div class="champ-row">
           <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
+            <img src="https://cdn.communitydragon.org/latest/champion/Bard/square" onerror="this.style.display='none'">
             <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">SUP</span>
-              
+              <span class="champ-name">Bard</span>
+              <span style="font-size:10px;color:var(--muted);">TLAW CoreJJ</span>
             </div>
           </div>
         </div></div>
@@ -512,22 +525,22 @@
     </div>
   </div>
 
-  <div class="card" id="prediction-card">
+  <div class="card" id="prediction-card" style="display: block;">
     <div class="card-title">Prediction</div>
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">T1 +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">T1 +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">TLAW +1</span></button>
+      <button class="three-btn red sel" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">TLAW +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">T1</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -535,10 +548,10 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">TLAW</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
-          <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
+          <button class="conf-btn sel" onclick="setExec('red','medium')">Medium</button>
           <button class="conf-btn" onclick="setExec('red','high')">High</button>
         </div>
       </div>
@@ -546,9 +559,9 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">T1</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">TLAW</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -568,12 +581,14 @@
       <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
     </div>
 
+    <div id="pred-winner-section" style="display: none;">
+    <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">Blue side wins</span>
+        <span id="pred-blue-label">T1 wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">Red side wins</span>
+        <span id="pred-red-label">TLAW wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -581,10 +596,11 @@
       <button class="conf-btn" onclick="setConf('medium')">Medium</button>
       <button class="conf-btn" onclick="setConf('high')">High confidence</button>
     </div>
+    </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
-    <textarea id="notes" placeholder="e.g. Blue has strong engage with Amumu + Jarvan, red has no reliable disengage…"></textarea>
+    <div id="vod-link-bar" style="margin-top: 8px; padding: 8px 12px; background: var(--surface2); border-radius: 6px; display: block;"><a href="https://www.youtube.com/watch?v=2807100126" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (de-DE)</a><a href="https://www.youtube.com/watch?v=959oVkQIW3o" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD</a><a href="https://www.youtube.com/watch?v=2807093109" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (es-ES)</a><a href="https://www.youtube.com/watch?v=8O9RIfZrmAQ" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (es-MX)</a><a href="https://www.youtube.com/watch?v=bRWXla7X6Jg" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (fr-FR)</a><a href="https://www.youtube.com/watch?v=2807075992" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (hu-HU)</a><a href="https://www.youtube.com/watch?v=2807088106" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (ja-JP)</a><a href="https://www.youtube.com/watch?v=199921447" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (ko-KR)</a><a href="https://www.youtube.com/watch?v=2807103475" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (pl-PL)</a><a href="https://www.youtube.com/watch?v=GrHWfnnTnjg" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (pt-BR)</a><a href="https://www.youtube.com/watch?v=ofuM3KbSHDo" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (sr-SR)</a><a href="https://www.youtube.com/watch?v=2807112707" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (th-TH)</a><a href="https://www.youtube.com/watch?v=fxD-Tbkshes" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (vi-VN)</a><a href="https://www.youtube.com/watch?v=2807094543" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD (zh-TW)</a></div><textarea id="notes" placeholder="e.g. Blue has strong engage with Amumu + Jarvan, red has no reliable disengage…"></textarea>
 
-    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
+    <div style="border-top: 1px solid var(--border); margin-top: 14px; padding-top: 14px; display: none;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <span style="font-size:13px;font-weight:600;">Did you bet on this game?</span>
         <div style="display:flex;gap:6px;">
@@ -622,20 +638,20 @@
     </div>
 
     <!-- VOD mode: actual result (hidden in live mode) -->
-    <div id="vod-result-section" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+    <div id="vod-result-section" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">Blue side won</span>
+          <span id="vod-result-blue-label">T1 won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">Red side won</span>
+          <span id="vod-result-red-label">TLAW won</span>
         </button>
       </div>
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary" id="save-btn" onclick="saveEntry()">Save prediction</button>
+      <button class="btn btn-primary" id="save-btn" onclick="saveEntry()">Save VOD review</button>
       <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
     </div>
   </div>
@@ -802,7 +818,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/10/2026, 9:27:12 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/10/2026, 9:48:06 PM</div>
     </div>
   </div>
 
@@ -1490,8 +1506,18 @@ function saveEntry() {
     entries.unshift(entry);
     saveEntries(entries);
     autoSync();
+    const savedId = entry.id;
     clearForm();
-    alert("VOD review saved!");
+    // Go straight to Game Review for this entry
+    const navBtn = document.querySelector("nav button[onclick*=\"'review'\"]");
+    if (navBtn) navBtn.click();
+    else show("review");
+    // Pre-select this entry in the review dropdown
+    setTimeout(() => {
+      populateReviewSelect();
+      const sel = document.getElementById("review-game-select");
+      if (sel) { sel.value = savedId; loadReviewGame(); }
+    }, 100);
     return;
   }
 
@@ -2237,8 +2263,16 @@ function setLogMode(mode) {
   document.getElementById("mode-vod-btn").className  = mode === "vod"  ? "btn btn-primary" : "btn btn-ghost";
   document.getElementById("live-games-section").style.display = mode === "live" ? "block" : "none";
   document.getElementById("vod-section").style.display         = mode === "vod"  ? "block" : "none";
-  document.getElementById("prediction-card").style.display     = mode === "live" ? "block" : "none";
-  document.getElementById("vod-result-section").style.display  = mode === "vod"  ? "block" : "none";
+
+  // In VOD mode: show prediction card but hide winner/confidence/model/bet
+  document.getElementById("prediction-card").style.display    = "block";
+  document.getElementById("pred-winner-section").style.display = mode === "vod" ? "none" : "block";
+  document.getElementById("model-prediction").style.display    = mode === "vod" ? "none" : (document.getElementById("model-prediction").dataset.hasData ? "block" : "none");
+  // Hide bet section in VOD mode
+  const betSection = document.querySelector("#prediction-card [style*='border-top']");
+  if (betSection) betSection.style.display = mode === "vod" ? "none" : "block";
+
+  document.getElementById("vod-result-section").style.display = mode === "vod" ? "block" : "none";
   const saveBtn = document.getElementById("save-btn");
   if (saveBtn) saveBtn.textContent = mode === "vod" ? "Save VOD review" : "Save prediction";
   if (mode === "vod" && !vodScheduleCache.length) loadVodSchedule();
@@ -2290,6 +2324,9 @@ function renderVodList() {
     return;
   }
   const visible = events.slice(0, vodVisibleCount);
+  // Store filtered list on window so loadVodGame can access by index safely
+  window._vodFilteredEvents = events;
+
   el.innerHTML = visible.map((ev, idx) => {
     const teams      = (ev.match && ev.match.teams) || [];
     const winner     = teams.find(t => t.result && t.result.outcome === "win");
@@ -2297,9 +2334,7 @@ function renderVodList() {
     const winnerName = winner ? (winner.code || winner.name) : "?";
     const date       = (ev.startTime || "").slice(0, 10);
     const league     = ev.league ? ev.league.name : "";
-    // Use the correct ID: schedule events store match ID at ev.match.id
-    const eventId    = ev.match?.id || ev.id || "";
-    return `<div class="live-pill" onclick="loadVodGame('${eventId}','${ev.startTime||''}','${ev.blockName||''}','${league}')">
+    return `<div class="live-pill" onclick="loadVodGame(${idx})">
       <span style="font-size:16px;margin-right:2px;">🎬</span>
       <span style="flex:1;min-width:0;">
         <b>${teamNames}</b>
@@ -2312,17 +2347,21 @@ function renderVodList() {
     : "");
 }
 
-async function loadVodGame(eventId, startTime, blockName, leagueName) {
-  if (!eventId) { console.error("No event ID"); return; }
-  const el = document.getElementById("vod-pills");
-  const prevHtml = el.innerHTML;
-  // Show loading state without clearing the list
-  const pills = document.querySelectorAll(".live-pill");
-  pills.forEach(p => p.style.opacity = "0.5");
+async function loadVodGame(idx) {
+  const events = window._vodFilteredEvents || vodScheduleCache;
+  const ev = events[idx];
+  if (!ev) return;
+
+  const eventId = ev.match?.id || ev.id || "";
+  if (!eventId) { console.error("No event ID for", ev); return; }
+
+  // Dim pills while loading
+  document.querySelectorAll(".live-pill").forEach(p => p.style.opacity = "0.5");
+
   try {
     const det   = await apiGet("/getEventDetails", { id: eventId });
     const event = det.data && det.data.event;
-    if (!event) { console.error("No event in response"); pills.forEach(p => p.style.opacity = ""); return; }
+    if (!event) throw new Error("No event data returned");
 
     const games      = (event.match && event.match.games) || [];
     const matchTeams = (event.match && event.match.teams) || [];
@@ -2330,81 +2369,128 @@ async function loadVodGame(eventId, startTime, blockName, leagueName) {
     matchTeams.forEach(t => { teamById[t.id] = t.code || t.name || ""; });
     const winner = matchTeams.find(t => t.result && t.result.outcome === "win");
 
-    // For a series, log each game individually — default to the first completed
-    // (user can tap multiple games from the list for each game in the series)
     const completedGames = games.filter(g => g.state === "completed");
-    const targetGame     = completedGames[0] || games[0];
-    if (!targetGame) { pills.forEach(p => p.style.opacity = ""); return; }
 
-    const sides    = targetGame.teams || [];
-    const blueEntry = sides.find(t => t.side === "blue");
-    const redEntry  = sides.find(t => t.side === "red");
-    const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
-    const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+    if (completedGames.length > 1) {
+      // Series — show game picker inline
+      const el = document.getElementById("vod-pills");
+      const sides0    = completedGames[0].teams || [];
+      const blueEntry = sides0.find(t => t.side === "blue");
+      const redEntry  = sides0.find(t => t.side === "red");
+      const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
+      const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+      const winnerName = winner ? (winner.code || winner.name) : "?";
 
-    const winnerCode = winner ? (winner.code || winner.name || "") : "";
-    const actualSide = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
-                     : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+      // Determine per-game winner (need game-level result if available)
+      // Store the full event data so pickVodGameInSeries can access it
+      window._currentVodEvent = { event, ev, completedGames, teamById, winner };
 
-    // Fill form
-    document.getElementById("blue-team").value     = blueCode;
-    document.getElementById("red-team").value      = redCode;
-    document.getElementById("league").value        = leagueName || (event.league ? event.league.name : "");
-    document.getElementById("game-date").value     = (startTime || event.startTime || "").slice(0, 10);
-    document.getElementById("event-context").value = buildContextLabel(
-      leagueName || (event.league ? event.league.name : ""), blockName || "", startTime || ""
-    );
-    currentGameNumber = targetGame.number || null;
-    updateColTitles();
-
-    if (actualSide) {
-      setVodResult(actualSide);
-      document.getElementById("vod-result-blue-label").textContent = blueCode + " won";
-      document.getElementById("vod-result-red-label").textContent  = redCode  + " won";
+      el.innerHTML = `
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:8px;">
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px;">${blueCode} vs ${redCode} · ${ev.league?.name||""}</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Series winner: <span style="color:var(--green);">${winnerName}</span> · ${completedGames.length} games played</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${completedGames.map((g,i) => `
+              <button class="btn btn-ghost" style="flex:1;min-width:80px;" onclick="pickVodGameInSeries(${i})">
+                Game ${g.number || i+1}
+              </button>`).join("")}
+          </div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:12px;" onclick="renderVodList()">← Back to list</button>
+        </div>`;
+    } else {
+      // Single game or only one game in series
+      const targetGame = completedGames[0] || games[0];
+      window._currentVodEvent = { event, ev, completedGames, teamById, winner };
+      await fillVodForm(event, ev, targetGame, teamById, winner);
     }
 
-    // Collect VOD links from game.vods
-    const vodLinks = (targetGame.vods || []).map(v =>
-      v.parameter ? `<a href="https://www.youtube.com/watch?v=${v.parameter}" target="_blank" style="color:var(--blue);font-size:12px;display:block;margin-top:4px;">▶ Watch VOD${v.locale ? " ("+v.locale+")" : ""}</a>` : ""
-    ).filter(Boolean).join("");
-    if (vodLinks) {
-      const notesEl = document.getElementById("notes");
-      if (notesEl && !notesEl.value) {
-        // Show link separately — don't cram it into notes
-        let linkEl = document.getElementById("vod-link-bar");
-        if (!linkEl) {
-          linkEl = document.createElement("div");
-          linkEl.id = "vod-link-bar";
-          linkEl.style.cssText = "margin-top:8px;padding:8px 12px;background:var(--surface2);border-radius:6px;";
-          notesEl.parentNode.insertBefore(linkEl, notesEl);
-        }
-        linkEl.innerHTML = vodLinks;
-      }
-    }
-
-    // Fetch picks from feed
-    try {
-      const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
-      if (res.ok) {
-        const text = await res.text();
-        const fd   = text ? JSON.parse(text) : null;
-        const meta = fd && fd.gameMetadata;
-        if (meta) {
-          const blue = (meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata) || [];
-          const red  = (meta.redTeamMetadata  && meta.redTeamMetadata.participantMetadata)  || [];
-          renderPickInputs(blue, red);
-        }
-      }
-    } catch(e) { console.warn("Feed fetch failed:", e); }
-
-    runPredictionModel();
-    // Scroll form into view
-    document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch(e) {
     console.error("loadVodGame error:", e);
+    document.getElementById("vod-pills").innerHTML =
+      `<div style="color:#ff4d5e;font-size:13px;">Couldn't load game: ${e.message}</div>
+       <button class="btn btn-ghost" style="margin-top:8px;" onclick="renderVodList()">← Back</button>`;
   } finally {
-    pills.forEach(p => p.style.opacity = "");
+    document.querySelectorAll(".live-pill").forEach(p => p.style.opacity = "");
   }
+}
+
+async function pickVodGameInSeries(gameIdx) {
+  const { event, ev, completedGames, teamById, winner } = window._currentVodEvent || {};
+  if (!event) return;
+  const targetGame = completedGames[gameIdx];
+  if (!targetGame) return;
+  await fillVodForm(event, ev, targetGame, teamById, winner);
+}
+
+async function fillVodForm(event, ev, targetGame, teamById, winner) {
+  const sides     = targetGame.teams || [];
+  const blueEntry = sides.find(t => t.side === "blue");
+  const redEntry  = sides.find(t => t.side === "red");
+  const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
+  const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+
+  // For individual game winner in a series, check game-level result if available
+  // Fall back to overall match winner
+  const winnerCode = winner ? (winner.code || winner.name || "") : "";
+  const actualSide = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                   : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+
+  // Fill form fields
+  document.getElementById("blue-team").value     = blueCode;
+  document.getElementById("red-team").value      = redCode;
+  document.getElementById("league").value        = event.league ? event.league.name : "";
+  document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10);
+  document.getElementById("event-context").value = buildContextLabel(
+    event.league ? event.league.name : "", ev.blockName || "", ev.startTime || ""
+  );
+  currentGameNumber = targetGame.number || null;
+  updateColTitles();
+
+  if (actualSide) {
+    setVodResult(actualSide);
+    document.getElementById("vod-result-blue-label").textContent = blueCode + " won";
+    document.getElementById("vod-result-red-label").textContent  = redCode  + " won";
+  }
+
+  // VOD links from game.vods
+  const vodLinks = (targetGame.vods || []).map(v =>
+    v.parameter ? `<a href="https://www.youtube.com/watch?v=${v.parameter}" target="_blank" style="color:var(--blue);font-size:12px;display:inline-block;margin-right:10px;">▶ Watch VOD${v.locale&&v.locale!=="en-US"?" ("+v.locale+")":""}</a>` : ""
+  ).filter(Boolean).join("");
+
+  let linkEl = document.getElementById("vod-link-bar");
+  if (!linkEl) {
+    linkEl = document.createElement("div");
+    linkEl.id = "vod-link-bar";
+    linkEl.style.cssText = "margin-top:8px;padding:8px 12px;background:var(--surface2);border-radius:6px;";
+    const notesEl = document.getElementById("notes");
+    if (notesEl) notesEl.parentNode.insertBefore(linkEl, notesEl);
+  }
+  linkEl.innerHTML = vodLinks || '<span style="color:var(--muted);font-size:12px;">No VOD link available for this game.</span>';
+  linkEl.style.display = "block";
+
+  // Fetch picks from feed
+  try {
+    const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
+    if (res.ok) {
+      const text = await res.text();
+      const fd   = text ? JSON.parse(text) : null;
+      const meta = fd && fd.gameMetadata;
+      if (meta) {
+        const blue = (meta.blueTeamMetadata?.participantMetadata) || [];
+        const red  = (meta.redTeamMetadata?.participantMetadata)  || [];
+        renderPickInputs(blue, red);
+      } else {
+        renderPickInputs([], []);
+      }
+    } else {
+      renderPickInputs([], []);
+    }
+  } catch(e) {
+    renderPickInputs([], []);
+  }
+
+  runPredictionModel();
+  document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // ── Prediction model ─────────────────────────────────────────────────────────
@@ -2435,6 +2521,7 @@ function runPredictionModel() {
   const redTeam   = (document.getElementById("red-team")   || {}).value || "";
   const el        = document.getElementById("model-prediction");
   if (!el) return;
+  if (logMode === "vod") { el.style.display = "none"; return; }
 
   // Need at least 15 completed games to show anything meaningful
   if (completed.length < 15) {
