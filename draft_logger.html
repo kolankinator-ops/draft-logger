@@ -368,7 +368,7 @@
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
   <button onclick="show('bets');closeDrawer()">Bets</button>
-  <button onclick="show('betstats');closeDrawer()" class="">Bet Stats</button>
+  <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
   <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
 </div>
@@ -383,7 +383,7 @@
   <button onclick="show('players')">Players</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
-  <button onclick="show('betstats')" class="">Bet Stats</button>
+  <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
@@ -416,14 +416,17 @@
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
     </div>
-    <div id="live-pills">
-      <div class="live-pill" onclick="loadLiveGame(0)">
-        <span class="live-dot"></span>
-        <span><b>VFB</b> vs <b>BIG</b> <span style="color:var(--muted);">Prime League · Game 1</span></span>
-      </div></div>
+    <div id="live-pills"><div style="color:var(--muted);font-size:13px;">No live games right now — fill in manually below.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills"><div style="color:var(--muted);font-size:12px;">No unlogged games today yet.</div></div>
+      <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
+        <span style="font-size:14px;margin-right:4px;">⏱</span>
+        <span style="flex:1;min-width:0;">
+          <b>VFB vs BIG</b>
+          <span style="color:var(--muted);"> · Prime League</span>
+          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
+        </span>
+      </div></div>
     </div>
   </div>
 
@@ -485,100 +488,150 @@
       <div class="draft-col blue-col">
         <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
         <div id="blue-picks">
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">TOP</span>
-              
-            </div>
-          </div>
+    <div class="champ-row" id="pick-row-blue-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
+          <span class="champ-name">TOP</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">JNG</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
+        <div id="pick-list-blue-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
+          <span class="champ-name">JNG</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">MID</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
+        <div id="pick-list-blue-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
+          <span class="champ-name">MID</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">BOT</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
+        <div id="pick-list-blue-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
+          <span class="champ-name">BOT</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">SUP</span>
-              
-            </div>
-          </div>
-        </div></div>
+        
+      </div>
+      <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
+        <div id="pick-list-blue-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
+        <div id="pick-list-blue-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
       <div class="draft-col red-col">
         <div class="draft-col-title" id="red-col-title">RED SIDE</div>
         <div id="red-picks">
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">TOP</span>
-              
-            </div>
-          </div>
+    <div class="champ-row" id="pick-row-red-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
+          <span class="champ-name">TOP</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">JNG</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
+        <div id="pick-list-red-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
+          <span class="champ-name">JNG</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">MID</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
+        <div id="pick-list-red-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
+          <span class="champ-name">MID</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">BOT</span>
-              
-            </div>
-          </div>
+        
+      </div>
+      <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
+        <div id="pick-list-red-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
+          <span class="champ-name">BOT</span>
+          
         </div>
-        <div class="champ-row">
-          <div class="champ-row-top">
-            <div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">SUP</span>
-              
-            </div>
-          </div>
-        </div></div>
+        
+      </div>
+      <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
+        <div id="pick-list-red-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
+        <div id="pick-list-red-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
     </div>
   </div>
@@ -799,848 +852,36 @@
 
 <!-- BET STATS -->
 <div class="screen" id="screen-betstats">
-  <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;">
-    <div class="stat-box"><div class="val">11</div><div class="lbl">Total bets</div></div>
-    <div class="stat-box"><div class="val green">+510.00</div><div class="lbl">Net profit</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--green)">51.0%</div><div class="lbl">ROI</div></div>
-    <div class="stat-box"><div class="val">8/11</div><div class="lbl">W/L</div></div>
-    <div class="stat-box"><div class="val yellow">0</div><div class="lbl">Open bets</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">0.00</div><div class="lbl">At stake</div></div>
-  </div>
+  <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;"></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Profit by league</div>
-    <div id="bet-by-league">
-      <div class="bet-stat-row">
-        <div>
-          <div>MSI</div>
-          <div class="bet-stat-sub">4 bets · staked 300.00 · 2W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+45.00</div>
-          <div style="color:var(--green);font-size:12px;">15.0% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Prime League</div>
-          <div class="bet-stat-sub">7 bets · staked 700.00 · 6W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+465.00</div>
-          <div style="color:var(--green);font-size:12px;">66.4% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-league"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Profit by month</div>
-    <div id="bet-by-month">
-      <div class="bet-stat-row">
-        <div>
-          <div>July 2026</div>
-          <div class="bet-stat-sub">11 bets · staked 1000.00 · 8W/3L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+510.00</div>
-          <div style="color:var(--green);font-size:12px;">51.0% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-month"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI by confidence level</div>
-    <div id="bet-by-conf">
-      <div class="bet-stat-row">
-        <div>
-          <div>High confidence</div>
-          <div class="bet-stat-sub">1 bet · staked 100.00 · 1W/0L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+35.00</div>
-          <div style="color:var(--green);font-size:12px;">35.0% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Medium confidence</div>
-          <div class="bet-stat-sub">8 bets · staked 775.00 · 7W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+600.00</div>
-          <div style="color:var(--green);font-size:12px;">77.4% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Low confidence</div>
-          <div class="bet-stat-sub">2 bets · staked 125.00 · 0W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#ff4d5e;font-weight:700;">-125.00</div>
-          <div style="color:#ff4d5e;font-size:12px;">-100.0% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-conf"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI when draft read matches bet</div>
-    <div id="bet-by-draft-match">
-      <div class="bet-stat-row">
-        <div>
-          <div>Bet matches draft advantage</div>
-          <div class="bet-stat-sub">6 bets · staked 600.00 · 5W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+215.00</div>
-          <div style="color:var(--green);font-size:12px;">35.8% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>No clear draft advantage</div>
-          <div class="bet-stat-sub">5 bets · staked 400.00 · 3W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+295.00</div>
-          <div style="color:var(--green);font-size:12px;">73.8% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-draft-match"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI by execution demand of team bet on</div>
-    <div id="bet-by-exec">
-      <div class="bet-stat-row">
-        <div>
-          <div>Low execution draft</div>
-          <div class="bet-stat-sub">4 bets · staked 325.00 · 3W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+360.00</div>
-          <div style="color:var(--green);font-size:12px;">110.8% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Medium execution draft</div>
-          <div class="bet-stat-sub">5 bets · staked 475.00 · 4W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+182.00</div>
-          <div style="color:var(--green);font-size:12px;">38.3% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>High execution draft</div>
-          <div class="bet-stat-sub">2 bets · staked 200.00 · 1W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#ff4d5e;font-weight:700;">-32.00</div>
-          <div style="color:#ff4d5e;font-size:12px;">-16.0% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-exec"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Champion betting performance</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Minimum 2 bets to appear. Green = profitable, red = losing.</div>
-    <div id="bet-by-champ">
-      <div style="font-size:11px;color:var(--muted);padding:6px 0 10px;line-height:1.6;border-bottom:1px solid var(--border);margin-bottom:4px;">
-        <b style="color:var(--text);">Backed:</b> games where you bet on the team this champion was on. &nbsp;
-        <b style="color:var(--text);">Faded:</b> games where you bet against that team.<br>
-      </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Bard/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Bard</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+600.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">5 bets involving Bard</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">4 games · 4W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+575.00 <span style="font-weight:400;color:var(--muted);">(+143.75 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Vi/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Vi</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+320.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Vi</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed</div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">4 games · 3W 1L · 75% wins</div>
-          <div style="color:var(--green);font-weight:600;">+320.00 <span style="font-weight:400;color:var(--muted);">(+80.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/KSante/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">KSante</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+318.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving KSante</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Cassiopeia/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Cassiopeia</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+310.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Cassiopeia</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+60.00 <span style="font-weight:400;color:var(--muted);">(+30.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/XinZhao/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">XinZhao</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+275.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving XinZhao</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Aurora/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Aurora</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+270.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Aurora</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+135.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+67.50 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ziggs/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ziggs</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+217.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Ziggs</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-          <div style="color:var(--green);font-weight:600;">+182.00 <span style="font-weight:400;color:var(--muted);">(+60.67 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Rumble/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Rumble</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+203.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Rumble</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+135.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Yorick/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Yorick</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+190.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Yorick</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+100.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Jayce/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Jayce</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+168.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Jayce</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-          <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+33.33 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Viktor/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Viktor</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+168.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Viktor</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+100.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/JarvanIV/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">JarvanIV</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+158.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">6 bets involving JarvanIV</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 3W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+215.00 <span style="font-weight:400;color:var(--muted);">(+71.67 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 1W 2L · 33% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-57.00 <span style="font-weight:400;color:var(--muted);">(-19.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Naafiri/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Naafiri</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+142.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Naafiri</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-          <div style="color:var(--green);font-weight:600;">+142.00 <span style="font-weight:400;color:var(--muted);">(+47.33 avg)</span></div>
-        </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Anivia/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Anivia</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Anivia</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+115.00 <span style="font-weight:400;color:var(--muted);">(+57.50 avg)</span></div>
-        </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Hwei/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Hwei</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Hwei</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Nautilus/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Nautilus</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Nautilus</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Rell/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Rell</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+103.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Rell</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-          <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+11.67 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ezreal/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ezreal</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+22.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">5 bets involving Ezreal</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-          <div style="color:var(--green);font-weight:600;">+22.00 <span style="font-weight:400;color:var(--muted);">(+7.33 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:var(--muted);font-weight:600;">+0.00 <span style="font-weight:400;color:var(--muted);">(+0.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Aatrox/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Aatrox</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--muted);">+0.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Aatrox</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed</div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:var(--muted);font-weight:600;">+0.00 <span style="font-weight:400;color:var(--muted);">(+0.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ryze/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ryze</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-3.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Ryze</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 1W 2L · 33% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-93.00 <span style="font-weight:400;color:var(--muted);">(-31.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Qiyana/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Qiyana</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Qiyana</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Jhin/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Jhin</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Jhin</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 1W 2L · 33% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-33.33 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Poppy/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Poppy</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Poppy</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Camille/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Camille</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-33.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Camille</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-68.00 <span style="font-weight:400;color:var(--muted);">(-34.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ambessa/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ambessa</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-65.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Ambessa</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-          <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/MonkeyKing/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">MonkeyKing</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-65.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving MonkeyKing</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-        </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Leona/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Leona</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-68.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Leona</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-68.00 <span style="font-weight:400;color:var(--muted);">(-34.00 avg)</span></div>
-        </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Sion/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Sion</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-93.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Sion</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed</div>
-          <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-          <div style="color:var(--green);font-weight:600;">+7.00 <span style="font-weight:400;color:var(--muted);">(+3.50 avg)</span></div>
-        </div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-        </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Syndra/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Syndra</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-225.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Syndra</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed</div>
-            
-        <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded</div>
-          <div style="color:var(--muted);margin-bottom:3px;">3 games · 0W 3L · 0% wins</div>
-          <div style="color:#ff4d5e;font-weight:600;">-225.00 <span style="font-weight:400;color:var(--muted);">(-75.00 avg)</span></div>
-        </div>
-          </div>
-        </div></div>
+    <div id="bet-by-champ"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Team betting performance</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&amp;L from bets placed on each team, sorted by total profit.</div>
-    <div id="bet-by-team">
-        <div class="bet-stat-row">
-          <div>
-            <div style="font-size:13px;font-weight:600;">USE</div>
-            <div class="bet-stat-sub">2 bets · 2W 0L · 100% wins</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-weight:700;color:var(--green);">+340.00</div>
-            <div style="font-size:11px;color:var(--muted);">+170.00 avg</div>
-          </div>
-        </div>
-        <div class="bet-stat-row">
-          <div>
-            <div style="font-size:13px;font-weight:600;">LYON</div>
-            <div class="bet-stat-sub">2 bets · 1W 1L · 50% wins</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-weight:700;color:#ff4d5e;">-65.00</div>
-            <div style="font-size:11px;color:var(--muted);">-32.50 avg</div>
-          </div>
-        </div>
-        <div class="bet-stat-row">
-          <div>
-            <div style="font-size:13px;font-weight:600;">EWI</div>
-            <div class="bet-stat-sub">2 bets · 1W 1L · 50% wins</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-weight:700;color:#ff4d5e;">-68.00</div>
-            <div style="font-size:11px;color:var(--muted);">-34.00 avg</div>
-          </div>
-        </div></div>
+    <div id="bet-by-team"></div>
   </div>
 
 </div>
@@ -1688,7 +929,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 3:02:46 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 6:09:03 PM</div>
     </div>
   </div>
 
@@ -2046,6 +1287,23 @@ const ROLE_ABBR = { top:"TOP", jungle:"JNG", mid:"MID", bottom:"BOT", support:"S
 let pickedChamps  = { blue: ["","","","",""], red: ["","","","",""] };
 let pickedPlayers = { blue: ["","","","",""], red: ["","","","",""] };
 
+// Champion list cache for autocomplete (fetched from DataDragon on first use)
+let _champList = null;
+async function getChampList() {
+  if (_champList) return _champList;
+  try {
+    const verRes = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
+    const versions = await verRes.json();
+    const ver = versions[0];
+    const res  = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ver}/data/en_US/champion.json`);
+    const data = await res.json();
+    _champList = Object.keys(data.data).sort(); // e.g. ["Aatrox","Ahri",...]
+  } catch(e) {
+    _champList = []; // fail silently — manual typing still works
+  }
+  return _champList;
+}
+
 function initPickInputs() {
   renderPickInputs([], []);
 }
@@ -2059,7 +1317,7 @@ function renderPickInputs(bluePicks, redPicks) {
   pickedPlayers = { blue: ["","","","",""], red: ["","","","",""] };
 
   ["blue","red"].forEach(side => {
-    const picks = side === "blue" ? blue : red;
+    const picks    = side === "blue" ? blue : red;
     const container = document.getElementById(side + "-picks");
     if (!container) return;
     container.innerHTML = ROLES.map((role, i) => {
@@ -2068,22 +1326,123 @@ function renderPickInputs(bluePicks, redPicks) {
       const playerName = pick.summonerName || "";
       pickedChamps[side][i]  = champId;
       pickedPlayers[side][i] = playerName;
-      const imgHtml = champId
-        ? `<img src="${championImg(champId)}" onerror="this.style.display='none'" />`
-        : `<div style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;"></div>`;
-      return `
-        <div class="champ-row">
-          <div class="champ-row-top">
-            ${imgHtml}
-            <div style="display:flex;flex-direction:column;min-width:0;">
-              <span class="champ-name">${champId || ROLE_ABBR[role]}</span>
-              ${playerName ? `<span style="font-size:10px;color:var(--muted);">${playerName}</span>` : ""}
-            </div>
-          </div>
-        </div>`;
+      return renderPickRow(side, i, role, champId, playerName);
     }).join("");
   });
+
+  // Pre-fetch champion list in background so autocomplete is ready
+  getChampList();
 }
+
+function renderPickRow(side, i, role, champId, playerName) {
+  const imgHtml = champId
+    ? `<img src="${championImg(champId)}" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('${side}',${i})" />`
+    : `<div onclick="openPickEditor('${side}',${i})" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>`;
+  return `
+    <div class="champ-row" id="pick-row-${side}-${i}">
+      <div class="champ-row-top">
+        ${imgHtml}
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('${side}',${i})">
+          <span class="champ-name">${champId || ROLE_ABBR[role]}</span>
+          ${playerName ? `<span style="font-size:10px;color:var(--muted);">${playerName}</span>` : ""}
+        </div>
+        ${champId ? `<button onclick="clearPick('${side}',${i})" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>` : ""}
+      </div>
+      <div id="pick-editor-${side}-${i}" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-${side}-${i}" type="text" placeholder="Type champion name…"
+          style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;"
+          oninput="filterPickList('${side}',${i})"
+          onkeydown="pickKeyNav(event,'${side}',${i})"
+          autocomplete="off" />
+        <div id="pick-list-${side}-${i}"
+          style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>`;
+}
+
+async function openPickEditor(side, i) {
+  const editorEl = document.getElementById(`pick-editor-${side}-${i}`);
+  const inputEl  = document.getElementById(`pick-input-${side}-${i}`);
+  if (!editorEl || !inputEl) return;
+  // Close any other open editors first
+  document.querySelectorAll('[id^="pick-editor-"]').forEach(el => {
+    if (el !== editorEl) { el.style.display = "none"; }
+  });
+  editorEl.style.display = "block";
+  inputEl.value = pickedChamps[side][i] || "";
+  inputEl.focus();
+  inputEl.select();
+  await getChampList(); // ensure list is ready
+  filterPickList(side, i);
+}
+
+function filterPickList(side, i) {
+  const inputEl  = document.getElementById(`pick-input-${side}-${i}`);
+  const listEl   = document.getElementById(`pick-list-${side}-${i}`);
+  if (!inputEl || !listEl) return;
+  const q = inputEl.value.toLowerCase().trim();
+  const champs = (_champList || []).filter(c => c.toLowerCase().startsWith(q) || c.toLowerCase().includes(q)).slice(0, 12);
+  if (!champs.length) { listEl.style.display = "none"; return; }
+  listEl.style.display = "block";
+  listEl.innerHTML = champs.map((c, idx) => `
+    <div data-idx="${idx}" onclick="selectPick('${side}',${i},'${c}')"
+      style="padding:7px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <img src="${championImg(c)}" style="width:20px;height:20px;border-radius:4px;" onerror="this.style.display='none'" />
+      ${c}
+    </div>`).join("");
+}
+
+function pickKeyNav(e, side, i) {
+  const listEl = document.getElementById(`pick-list-${side}-${i}`);
+  const items  = listEl ? [...listEl.querySelectorAll("div[data-idx]")] : [];
+  if (e.key === "Escape") { closePick(side, i); return; }
+  if (e.key === "Enter") {
+    const active = listEl && listEl.querySelector("[data-active]");
+    if (active) active.click();
+    else if (items.length === 1) items[0].click();
+    return;
+  }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && items.length) {
+    e.preventDefault();
+    const cur = items.findIndex(el => el.hasAttribute("data-active"));
+    items.forEach(el => el.removeAttribute("data-active"));
+    const next = e.key === "ArrowDown" ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
+    items[next].setAttribute("data-active", "1");
+    items[next].style.background = "var(--surface2)";
+    items[next].scrollIntoView({ block: "nearest" });
+  }
+}
+
+function selectPick(side, i, champName) {
+  pickedChamps[side][i] = champName;
+  closePick(side, i);
+  // Re-render just this row
+  const role = ROLES[i];
+  const rowEl = document.getElementById(`pick-row-${side}-${i}`);
+  if (rowEl) rowEl.outerHTML = renderPickRow(side, i, role, champName, pickedPlayers[side][i] || "");
+  runPredictionModel();
+}
+
+function clearPick(side, i) {
+  pickedChamps[side][i] = "";
+  const role  = ROLES[i];
+  const rowEl = document.getElementById(`pick-row-${side}-${i}`);
+  if (rowEl) rowEl.outerHTML = renderPickRow(side, i, role, "", pickedPlayers[side][i] || "");
+  runPredictionModel();
+}
+
+function closePick(side, i) {
+  const editorEl = document.getElementById(`pick-editor-${side}-${i}`);
+  if (editorEl) editorEl.style.display = "none";
+}
+
+// Close pick editors when clicking outside
+document.addEventListener("click", e => {
+  if (!e.target.closest('[id^="pick-row-"]') && !e.target.closest('[id^="pick-editor-"]')) {
+    document.querySelectorAll('[id^="pick-editor-"]').forEach(el => el.style.display = "none");
+  }
+});
 
 // ── Team name helpers ─────────────────────────────────────────────────────────
 // ── Player impact rankings ───────────────────────────────────────────────────
