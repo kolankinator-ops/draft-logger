@@ -360,7 +360,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -377,7 +377,7 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
+  <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -414,13 +414,24 @@
   <div id="live-games-section" class="card" style="margin-bottom:14px;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Live games</div>
-      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames()">↺ Refresh</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
     </div>
     <div id="live-pills">
       <div class="live-pill" onclick="loadLiveGame(0)">
         <span class="live-dot"></span>
         <span><b>SGE</b> vs <b>KHK</b> <span style="color:var(--muted);">Prime League · Game 1</span></span>
       </div></div>
+    <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
+      <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
+        <span style="font-size:14px;margin-right:4px;">⏱</span>
+        <span style="flex:1;min-width:0;">
+          <b>EWI vs USE</b>
+          <span style="color:var(--muted);"> · Prime League</span>
+          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
+        </span>
+      </div></div>
+    </div>
   </div>
 
   <!-- VOD browser section -->
@@ -443,6 +454,8 @@
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
     </div>
   </div>
+
+  <div id="retroactive-banner" style="display:none;background:rgba(224,178,63,.1);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;line-height:1.5;"></div>
 
   <div class="card">
     <div class="card-title">Match info</div>
@@ -716,64 +729,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
-    <div id="pending-list">
-      <div class="pending-entry" id="pending-1783958966715">
-        <div class="pending-entry-header">
-          <div>
-            <div style="font-weight:600;font-size:13px;">SGE vs KHK</div>
-            <div class="pending-pred" style="color:var(--muted);">
-              2026-07-13 · Prime League ·
-              Predicted: <span style="color:var(--red)">
-                KHK
-              </span>
-            </div>
-            <span style="color:var(--muted);font-size:11px;margin-top:2px;display:block;">
-           Bet: KHK @ 1.25 · Stake: 100.00
-           <button onclick="openEditBet('1783958966715')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
-         </span>
-          </div>
-          <div class="result-btns">
-            <button class="win-btn" onclick="openPerfForm('1783958966715','blue')">🔵 SGE won</button>
-            <button class="loss-btn" onclick="openPerfForm('1783958966715','red')">🔴 KHK won</button>
-          </div>
-        </div>
-        <div class="perf-form" id="perf-form-1783958966715"></div>
-        <div id="edit-bet-1783958966715" style="display:none;padding:12px;border-top:1px solid var(--border);">
-          <div class="card-title" style="margin-bottom:10px;">Edit bet</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-            <div>
-              <label>Bet on</label>
-              <select id="edit-bet-on-1783958966715">
-                <option value="blue">SGE</option>
-                <option value="red" selected="">KHK</option>
-              </select>
-            </div>
-            <div>
-              <label>Bet against</label>
-              <select id="edit-bet-against-1783958966715">
-                <option value="blue" selected="">SGE</option>
-                <option value="red">KHK</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-            <div>
-              <label>Decimal odds</label>
-              <input type="number" id="edit-bet-odds-1783958966715" step="0.01" min="1.01" value="1.25">
-            </div>
-            <div>
-              <label>Stake</label>
-              <input type="number" id="edit-bet-stake-1783958966715" step="0.01" min="0.01" value="100">
-            </div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="saveEditBet('1783958966715')">Save bet</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-1783958966715').style.display='none'">Cancel</button>
-            <button class="btn btn-danger" onclick="removeBet('1783958966715')">Remove bet</button>
-          </div>
-        </div>
-      </div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 </div>
 
@@ -816,163 +773,26 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid">
-    <div class="stat-box"><div class="val">19</div><div class="lbl">Games logged</div></div>
-    <div class="stat-box"><div class="val green">73%</div><div class="lbl">Accuracy</div></div>
-    <div class="stat-box"><div class="val green">11</div><div class="lbl">Correct</div></div>
-    <div class="stat-box"><div class="val red">4</div><div class="lbl">Wrong</div></div>
-    <div class="stat-box"><div class="val yellow">1</div><div class="lbl">Pending</div></div>
-    <div class="stat-box"><div class="val">3</div><div class="lbl">Watched</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">12</div><div class="lbl">Didn't watch</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
-  </div>
+  <div class="stat-grid" id="stat-grid"></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy">
-      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 0%" style="flex:1;height:4px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 67%" style="flex:1;height:40px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 89%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
-        <span>Game 1</span>
-        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">70% ▼ 20pp</b></span>
-        <span>Game 15</span>
-      </div></div>
+    <div id="rolling-accuracy"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Strong preference (±2)</div>
-          <div style="font-size:11px;color:var(--muted);">0 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--muted);">no data</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Slight preference (±1)</div>
-          <div style="font-size:11px;color:var(--muted);">2 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--yellow);">50%</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Even (0)</div>
-          <div style="font-size:11px;color:var(--muted);">0 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--muted);">no data</span>
-      </div>
-    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
-      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
-      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
-        <span style="color:var(--green);">Draft won: 2</span>
-        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
-        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
-        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
-      </div>
-    </div></div>
+    <div id="draft-pref-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          5 games ·
-          <span style="color:var(--red);">
-            40% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          6 games ·
-          <span style="color:var(--green);">
-            83% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          4 games ·
-          <span style="color:var(--green);">
-            100% accurate
-          </span>
-        </span>
-      </div></div>
+    <div id="conf-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 18 total games.</div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft &amp; skill agree → correct</span>
-        <span style="color:var(--green);">
-          100% (2 games)
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft beats skill (upset)</span>
-        <span style="color:var(--muted);">
-          0% of 2 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Skill overcomes draft</span>
-        <span style="color:var(--muted);">
-          100% of 2 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
-    </div>
-    <div style="padding:8px 0;">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Predicted correctly when skill was "Not sure"</span>
-        <span style="color:var(--muted);">
-          75% of 4 games
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
-    </div>
-  </div>
+    <div id="skew-stats"></div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          80% (5 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (2 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (1 games)
-        </span>
-      </div></div>
+    <div id="exec-stats"></div>
   </div>
 </div>
 
@@ -1063,7 +883,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 12:26:03 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 12:36:27 PM</div>
     </div>
   </div>
 
@@ -1160,7 +980,109 @@ function championImg(id) {
 }
 
 // ── Live game loader ──────────────────────────────────────────────────────────
-let liveGameData = []; // [{matchLabel, blueTeam, redTeam, league, gameId, picks}]
+let liveGameData     = [];
+let retroactiveWinner = null; // actual winner stored silently for retroactive entries
+
+async function loadRecentGames() {
+  const el = document.getElementById("recent-pills");
+  if (!el) return;
+  try {
+    const today = localDateStr();
+    const data  = await apiGet("/getSchedule");
+    const events = (data.data?.schedule?.events || [])
+      .filter(e => e.type === "match" && e.state === "completed" &&
+                   (e.startTime || "").slice(0, 10) === today)
+      .sort((a,b) => (b.startTime||"") > (a.startTime||"") ? 1 : -1)
+      .slice(0, 10);
+
+    if (!events.length) {
+      el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No completed games today yet.</div>';
+      return;
+    }
+    window._recentEvents = events;
+    el.innerHTML = events.map((ev, idx) => {
+      const teams     = (ev.match?.teams || []);
+      const winner    = teams.find(t => t.result?.outcome === "win");
+      const teamNames = teams.map(t => t.code || t.name || "TBD").join(" vs ");
+      const league    = ev.league?.name || "";
+      return `<div class="live-pill" onclick="loadRecentGame(${idx})" style="opacity:0.85;">
+        <span style="font-size:14px;margin-right:4px;">⏱</span>
+        <span style="flex:1;min-width:0;">
+          <b>${teamNames}</b>
+          <span style="color:var(--muted);"> · ${league}</span>
+          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
+        </span>
+      </div>`;
+    }).join("");
+  } catch(e) {
+    if (el) el.innerHTML = '<div style="color:var(--muted);font-size:12px;">Couldn\'t load recent games.</div>';
+  }
+}
+
+async function loadRecentGame(idx) {
+  const events = window._recentEvents || [];
+  const ev     = events[idx];
+  if (!ev) return;
+
+  // Show a banner so the user knows not to peek at the result
+  const banner = document.getElementById("retroactive-banner");
+  if (banner) {
+    banner.style.display = "block";
+    banner.innerHTML = `<span style="color:var(--yellow);">⏱ Retroactive log — fill in your prediction as you remembered it. The result is hidden until you save.</span>`;
+  }
+
+  try {
+    const det    = await apiGet("/getEventDetails", { id: ev.match?.id || ev.id });
+    const event  = det.data?.event;
+    if (!event) return;
+
+    const games      = (event.match?.games || []).filter(g => g.state === "completed");
+    const matchTeams = event.match?.teams || [];
+    const tById      = {};
+    matchTeams.forEach(t => { tById[t.id] = t.code || t.name || ""; });
+    const winner     = matchTeams.find(t => t.result?.outcome === "win");
+
+    const targetGame = games[0];
+    if (!targetGame) return;
+
+    const sides    = targetGame.teams || [];
+    const blueEntry = sides.find(t => t.side === "blue");
+    const redEntry  = sides.find(t => t.side === "red");
+    const blueCode  = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
+    const redCode   = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
+
+    // Store winner silently — don't show in UI
+    const winnerCode  = winner ? (winner.code || winner.name || "") : "";
+    retroactiveWinner = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                      : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+
+    document.getElementById("blue-team").value     = blueCode;
+    document.getElementById("red-team").value      = redCode;
+    document.getElementById("league").value        = event.league?.name || "";
+    document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10);
+    document.getElementById("event-context").value = buildContextLabel(event.league?.name || "", ev.blockName || "", ev.startTime || "");
+    currentGameNumber = targetGame.number || null;
+    updateColTitles();
+
+    try {
+      const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
+      if (res.ok) {
+        const text = await res.text();
+        const fd   = text ? JSON.parse(text) : null;
+        const meta = fd?.gameMetadata;
+        if (meta) {
+          renderPickInputs(meta.blueTeamMetadata?.participantMetadata || [], meta.redTeamMetadata?.participantMetadata || []);
+        }
+      }
+    } catch(e) {}
+
+    runPredictionModel();
+    document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch(e) {
+    console.error("loadRecentGame error:", e);
+  }
+}
+
 
 async function loadLiveGames() {
   const el = document.getElementById("live-pills");
@@ -1784,7 +1706,7 @@ function saveEntry() {
     execDemand: JSON.parse(JSON.stringify(execDemand)),
     notes: document.getElementById("notes").value.trim(),
     bet: getBetData(),
-    actualWinner: null
+    actualWinner: retroactiveWinner || null  // auto-resolve if retroactive
   };
 
   const entries = loadEntries();
@@ -1792,8 +1714,16 @@ function saveEntry() {
   saveEntries(entries);
   autoSync();
 
+  const wasRetroactive = !!retroactiveWinner;
   clearForm();
-  alert("Prediction saved! Log the result when the game ends.");
+
+  if (wasRetroactive) {
+    const correct = entry.predWinner === entry.actualWinner;
+    const winner  = entry.actualWinner === "blue" ? blueTeam : redTeam;
+    alert(`Prediction saved!\n\n${winner} won — you were ${correct ? "✓ correct" : "✗ wrong"}.`);
+  } else {
+    alert("Prediction saved! Log the result when the game ends.");
+  }
 }
 
 function clearForm() {
@@ -1803,9 +1733,11 @@ function clearForm() {
   document.getElementById("game-date").value = localDateStr();
   currentGameNumber = null;
   execDemand = { blue: null, red: null };
-  draftPref = null; vodResult = null;
+  draftPref = null; vodResult = null; retroactiveWinner = null;
   predWinner = null; predConf = null; skillAdv = null;
   document.querySelectorAll(".pred-btn, .conf-btn, .three-btn, #draft-pref-row button, #vod-result-section button").forEach(b => b.classList.remove("sel"));
+  const banner = document.getElementById("retroactive-banner");
+  if (banner) banner.style.display = "none";
   resetBetForm();
   updateColTitles();
   initPickInputs();
@@ -3914,6 +3846,7 @@ function show(screen) {
 document.getElementById("game-date").value = localDateStr();
 initPickInputs();
 loadLiveGames();
+loadRecentGames();
 
 // Restore API key field display if previously connected
 const _savedKey = getJsonBinKey();
