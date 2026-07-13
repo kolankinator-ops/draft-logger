@@ -360,7 +360,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -368,7 +368,7 @@
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
   <button onclick="show('bets');closeDrawer()">Bets</button>
-  <button onclick="show('betstats');closeDrawer()" class="">Bet Stats</button>
+  <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
   <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
 </div>
@@ -377,13 +377,13 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
-  <button onclick="show('betstats')" class="">Bet Stats</button>
+  <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
@@ -419,7 +419,7 @@
     <div id="live-pills">
       <div class="live-pill" onclick="loadLiveGame(0)">
         <span class="live-dot"></span>
-        <span><b>SGE</b> vs <b>EWI</b> <span style="color:var(--muted);">Prime League · Game 1</span></span>
+        <span><b>EWI</b> vs <b>SGE</b> <span style="color:var(--muted);">Prime League · Game 1</span></span>
       </div></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
@@ -743,8 +743,64 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
+    <div id="pending-list">
+      <div class="pending-entry" id="pending-1783965991091">
+        <div class="pending-entry-header">
+          <div>
+            <div style="font-weight:600;font-size:13px;">EWI vs SGE</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-13 · Prime League ·
+              Predicted: <span style="color:var(--blue)">
+                EWI
+              </span>
+            </div>
+            <span style="color:var(--muted);font-size:11px;margin-top:2px;display:block;">
+           Bet: EWI @ 1.32 · Stake: 100.00
+           <button onclick="openEditBet('1783965991091')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
+         </span>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1783965991091','blue')">🔵 EWI won</button>
+            <button class="loss-btn" onclick="openPerfForm('1783965991091','red')">🔴 SGE won</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1783965991091"></div>
+        <div id="edit-bet-1783965991091" style="display:none;padding:12px;border-top:1px solid var(--border);">
+          <div class="card-title" style="margin-bottom:10px;">Edit bet</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div>
+              <label>Bet on</label>
+              <select id="edit-bet-on-1783965991091">
+                <option value="blue" selected="">EWI</option>
+                <option value="red">SGE</option>
+              </select>
+            </div>
+            <div>
+              <label>Bet against</label>
+              <select id="edit-bet-against-1783965991091">
+                <option value="blue">EWI</option>
+                <option value="red" selected="">SGE</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div>
+              <label>Decimal odds</label>
+              <input type="number" id="edit-bet-odds-1783965991091" step="0.01" min="1.01" value="1.32">
+            </div>
+            <div>
+              <label>Stake</label>
+              <input type="number" id="edit-bet-stake-1783965991091" step="0.01" min="0.01" value="100">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveEditBet('1783965991091')">Save bet</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-1783965991091').style.display='none'">Cancel</button>
+            <button class="btn btn-danger" onclick="removeBet('1783965991091')">Remove bet</button>
+          </div>
+        </div>
+      </div></div>
   </div>
 </div>
 
@@ -787,26 +843,163 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid"></div>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-box"><div class="val">22</div><div class="lbl">Games logged</div></div>
+    <div class="stat-box"><div class="val green">78%</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="val green">14</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="val red">4</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="val yellow">1</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val">5</div><div class="lbl">Watched</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">13</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy"></div>
+    <div id="rolling-accuracy">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 78%" style="flex:1;height:47px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span>Game 1</span>
+        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">70% ▼ 10pp</b></span>
+        <span>Game 18</span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats"></div>
+    <div id="draft-pref-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Strong preference (±2)</div>
+          <div style="font-size:11px;color:var(--muted);">1 game — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--green);">100%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Slight preference (±1)</div>
+          <div style="font-size:11px;color:var(--muted);">4 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--green);">75%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Even (0)</div>
+          <div style="font-size:11px;color:var(--muted);">0 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--muted);">no data</span>
+      </div>
+    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <span style="color:var(--green);">Draft won: 2</span>
+        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
+        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
+        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats"></div>
+    <div id="conf-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          5 games ·
+          <span style="color:var(--red);">
+            40% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          9 games ·
+          <span style="color:var(--green);">
+            89% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          4 games ·
+          <span style="color:var(--green);">
+            100% accurate
+          </span>
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats"></div>
+    <div id="skew-stats">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 21 total games.</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft &amp; skill agree → correct</span>
+        <span style="color:var(--green);">
+          100% (3 games)
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft beats skill (upset)</span>
+        <span style="color:var(--muted);">
+          0% of 2 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Skill overcomes draft</span>
+        <span style="color:var(--muted);">
+          100% of 2 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
+    </div>
+    <div style="padding:8px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Predicted correctly when skill was "Not sure"</span>
+        <span style="color:var(--muted);">
+          83% of 6 games
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats"></div>
+    <div id="exec-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          80% (5 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (2 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (1 games)
+        </span>
+      </div></div>
   </div>
 </div>
 
@@ -820,1324 +1013,36 @@
 
 <!-- BET STATS -->
 <div class="screen" id="screen-betstats">
-  <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;">
-    <div class="stat-box"><div class="val">10</div><div class="lbl">Total bets</div></div>
-    <div class="stat-box"><div class="val green">+478.00</div><div class="lbl">Net profit</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--green)">53.1%</div><div class="lbl">ROI</div></div>
-    <div class="stat-box"><div class="val">7/10</div><div class="lbl">W/L</div></div>
-    <div class="stat-box"><div class="val yellow">0</div><div class="lbl">Open bets</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">0.00</div><div class="lbl">At stake</div></div>
-  </div>
+  <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;"></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Profit by league</div>
-    <div id="bet-by-league">
-      <div class="bet-stat-row">
-        <div>
-          <div>MSI</div>
-          <div class="bet-stat-sub">4 bets · staked 300.00 · 2W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+45.00</div>
-          <div style="color:var(--green);font-size:12px;">15.0% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Prime League</div>
-          <div class="bet-stat-sub">6 bets · staked 600.00 · 5W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+433.00</div>
-          <div style="color:var(--green);font-size:12px;">72.2% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-league"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Profit by month</div>
-    <div id="bet-by-month">
-      <div class="bet-stat-row">
-        <div>
-          <div>July 2026</div>
-          <div class="bet-stat-sub">10 bets · staked 900.00 · 7W/3L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+478.00</div>
-          <div style="color:var(--green);font-size:12px;">53.1% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-month"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI by confidence level</div>
-    <div id="bet-by-conf">
-      <div class="bet-stat-row">
-        <div>
-          <div>High confidence</div>
-          <div class="bet-stat-sub">1 bet · staked 100.00 · 1W/0L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+35.00</div>
-          <div style="color:var(--green);font-size:12px;">35.0% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Medium confidence</div>
-          <div class="bet-stat-sub">7 bets · staked 675.00 · 6W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+568.00</div>
-          <div style="color:var(--green);font-size:12px;">84.1% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Low confidence</div>
-          <div class="bet-stat-sub">2 bets · staked 125.00 · 0W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#ff4d5e;font-weight:700;">-125.00</div>
-          <div style="color:#ff4d5e;font-size:12px;">-100.0% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-conf"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI when draft read matches bet</div>
-    <div id="bet-by-draft-match">
-      <div class="bet-stat-row">
-        <div>
-          <div>Bet matches draft advantage</div>
-          <div class="bet-stat-sub">5 bets · staked 500.00 · 4W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+183.00</div>
-          <div style="color:var(--green);font-size:12px;">36.6% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>No clear draft advantage</div>
-          <div class="bet-stat-sub">5 bets · staked 400.00 · 3W/2L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+295.00</div>
-          <div style="color:var(--green);font-size:12px;">73.8% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-draft-match"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">ROI by execution demand of team bet on</div>
-    <div id="bet-by-exec">
-      <div class="bet-stat-row">
-        <div>
-          <div>Low execution draft</div>
-          <div class="bet-stat-sub">4 bets · staked 325.00 · 3W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+360.00</div>
-          <div style="color:var(--green);font-size:12px;">110.8% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>Medium execution draft</div>
-          <div class="bet-stat-sub">4 bets · staked 375.00 · 3W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:var(--green);font-weight:700;">+150.00</div>
-          <div style="color:var(--green);font-size:12px;">40.0% ROI</div>
-        </div>
-      </div>
-      <div class="bet-stat-row">
-        <div>
-          <div>High execution draft</div>
-          <div class="bet-stat-sub">2 bets · staked 200.00 · 1W/1L</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="color:#ff4d5e;font-weight:700;">-32.00</div>
-          <div style="color:#ff4d5e;font-size:12px;">-16.0% ROI</div>
-        </div>
-      </div></div>
+    <div id="bet-by-exec"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Champion betting performance</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Minimum 2 bets to appear. Green = profitable, red = losing.</div>
-    <div id="bet-by-champ">
-      <div style="font-size:11px;color:var(--muted);padding:6px 0 10px;line-height:1.6;border-bottom:1px solid var(--border);margin-bottom:4px;">
-        Both panels show your bet results — positive profit means you made money in those games.<br>
-        <b style="color:var(--text);">Backed:</b> games where you bet on the team this champion was on.<br>
-        <b style="color:var(--text);">Faded:</b> games where you bet against the team this champion was on.
-      </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Bard/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Bard</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+600.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">5 bets involving Bard</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">4 games · 4W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+575.00 <span style="font-weight:400;color:var(--muted);">(+143.75 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Vi/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Vi</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+320.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Vi</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">4 games · 3W 1L · 75% wins</div>
-              <div style="color:var(--green);font-weight:600;">+320.00 <span style="font-weight:400;color:var(--muted);">(+80.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/KSante/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">KSante</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+318.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving KSante</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Cassiopeia/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Cassiopeia</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+310.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Cassiopeia</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+60.00 <span style="font-weight:400;color:var(--muted);">(+30.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/XinZhao/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">XinZhao</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+275.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving XinZhao</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+250.00 <span style="font-weight:400;color:var(--muted);">(+250.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Aurora/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Aurora</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+270.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Aurora</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+135.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+67.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Rumble/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Rumble</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+203.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Rumble</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+135.00 <span style="font-weight:400;color:var(--muted);">(+135.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Yorick/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Yorick</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+190.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Yorick</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ziggs/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ziggs</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+185.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Ziggs</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:var(--green);font-weight:600;">+150.00 <span style="font-weight:400;color:var(--muted);">(+75.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Viktor/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Viktor</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+168.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Viktor</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Jayce/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Jayce</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+168.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Jayce</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-              <div style="color:var(--green);font-weight:600;">+100.00 <span style="font-weight:400;color:var(--muted);">(+33.33 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/JarvanIV/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">JarvanIV</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+158.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">6 bets involving JarvanIV</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 3W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+215.00 <span style="font-weight:400;color:var(--muted);">(+71.67 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 1W 2L · 33% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-57.00 <span style="font-weight:400;color:var(--muted);">(-19.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Hwei/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Hwei</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Hwei</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Nautilus/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Nautilus</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Nautilus</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+25.00 <span style="font-weight:400;color:var(--muted);">(+25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Anivia/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Anivia</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+115.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Anivia</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+115.00 <span style="font-weight:400;color:var(--muted);">(+57.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Naafiri/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Naafiri</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+110.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Naafiri</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:var(--green);font-weight:600;">+110.00 <span style="font-weight:400;color:var(--muted);">(+55.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Rell/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Rell</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+103.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Rell</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 2W 1L · 67% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+11.67 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Aatrox/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Aatrox</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--muted);">+0.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Aatrox</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:var(--muted);font-weight:600;">+0.00 <span style="font-weight:400;color:var(--muted);">(+0.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Qiyana/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Qiyana</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Qiyana</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ezreal/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ezreal</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Ezreal</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-10.00 <span style="font-weight:400;color:var(--muted);">(-5.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:var(--muted);font-weight:600;">+0.00 <span style="font-weight:400;color:var(--muted);">(+0.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Jhin/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Jhin</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">4 bets involving Jhin</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 1W 2L · 33% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-33.33 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Poppy/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Poppy</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Poppy</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ryze/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ryze</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-35.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Ryze</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 0W 2L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-125.00 <span style="font-weight:400;color:var(--muted);">(-62.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Ambessa/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Ambessa</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-65.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Ambessa</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Camille/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Camille</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-65.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Camille</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/MonkeyKing/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">MonkeyKing</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-65.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving MonkeyKing</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Sion/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Sion</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving Sion</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <img src="https://cdn.communitydragon.org/latest/champion/Syndra/square" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;" onerror="this.style.display='none'">
-            <span style="font-size:13px;font-weight:600;flex:1;">Syndra</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-225.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving Syndra</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">3 games · 0W 3L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-225.00 <span style="font-weight:400;color:var(--muted);">(-75.00 avg)</span></div>
-            </div>
-          </div>
-        </div></div>
+    <div id="bet-by-champ"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Player betting performance</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Minimum 2 bets to appear. Based on which team the player was on.</div>
-    <div id="bet-by-player">
-      <div style="font-size:11px;color:var(--muted);padding:6px 0 10px;line-height:1.6;border-bottom:1px solid var(--border);margin-bottom:4px;">
-        Both panels show your bet results — positive profit means you made money in those games.<br>
-        <b style="color:var(--text);">Backed:</b> games where you bet on the team this player was on.<br>
-        <b style="color:var(--text);">Faded:</b> games where you bet against the team this player was on.
-      </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">USE FornoReason</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+340.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving USE FornoReason</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+340.00 <span style="font-weight:400;color:var(--muted);">(+170.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">USE White</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+340.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving USE White</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+340.00 <span style="font-weight:400;color:var(--muted);">(+170.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">USE Kanin</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+340.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving USE Kanin</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+340.00 <span style="font-weight:400;color:var(--muted);">(+170.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">USE DenVoksne</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+340.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving USE DenVoksne</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+340.00 <span style="font-weight:400;color:var(--muted);">(+170.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">USE Twiizt</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+340.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving USE Twiizt</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+340.00 <span style="font-weight:400;color:var(--muted);">(+170.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never faded their team</div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">SGE Addusto</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving SGE Addusto</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+125.00 <span style="font-weight:400;color:var(--muted);">(+62.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">SGE D4nKa</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving SGE D4nKa</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+125.00 <span style="font-weight:400;color:var(--muted);">(+62.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">SGE Sencux</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving SGE Sencux</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+125.00 <span style="font-weight:400;color:var(--muted);">(+62.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">SGE Devn</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving SGE Devn</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+125.00 <span style="font-weight:400;color:var(--muted);">(+62.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">SGE Richu</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+125.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving SGE Richu</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;color:var(--muted);">Never backed their team</div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 2W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+125.00 <span style="font-weight:400;color:var(--muted);">(+62.50 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">FUR Guigo</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving FUR Guigo</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">FUR Tatu</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving FUR Tatu</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">FUR Tutsz</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving FUR Tutsz</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">FUR Ayu</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving FUR Ayu</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">FUR JoJo</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:var(--green);">+10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving FUR JoJo</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+35.00 <span style="font-weight:400;color:var(--muted);">(+35.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">EWI Vizicsacsi</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving EWI Vizicsacsi</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">EWI Afroboi</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving EWI Afroboi</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">EWI Relative</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving EWI Relative</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">EWI Wildenbruch</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-10.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving EWI Wildenbruch</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+90.00 <span style="font-weight:400;color:var(--muted);">(+90.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">TOG Zorenous</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving TOG Zorenous</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">TOG Woldjo</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving TOG Woldjo</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">TOG Sajator</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving TOG Sajator</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">TOG Ryuk</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving TOG Ryuk</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">TOG Lilipp</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-32.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">2 bets involving TOG Lilipp</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 1W 0L · 100% wins</div>
-              <div style="color:var(--green);font-weight:600;">+68.00 <span style="font-weight:400;color:var(--muted);">(+68.00 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-100.00 <span style="font-weight:400;color:var(--muted);">(-100.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">LYON Dhokla</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-90.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving LYON Dhokla</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">LYON Inspired</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-90.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving LYON Inspired</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">LYON Saint</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-90.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving LYON Saint</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">LYON Berserker</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-90.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving LYON Berserker</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-          </div>
-        </div>
-        <div style="border-bottom:1px solid var(--border);padding:8px 0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span style="font-size:13px;font-weight:600;flex:1;">LYON Isles</span>
-            <div style="text-align:right;">
-              <div style="font-weight:700;color:#ff4d5e;">-90.00 total</div>
-              <div style="font-size:10px;color:var(--muted);">3 bets involving LYON Isles</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📈 Backed their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">2 games · 1W 1L · 50% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-65.00 <span style="font-weight:400;color:var(--muted);">(-32.50 avg)</span></div>
-            </div>
-            <div style="background:var(--surface2);border-radius:6px;padding:8px;">
-              <div style="font-weight:600;color:var(--text);margin-bottom:4px;">📉 Faded their team</div>
-              <div style="color:var(--muted);margin-bottom:3px;">1 game · 0W 1L · 0% wins</div>
-              <div style="color:#ff4d5e;font-weight:600;">-25.00 <span style="font-weight:400;color:var(--muted);">(-25.00 avg)</span></div>
-            </div>
-          </div>
-        </div></div>
+    <div id="bet-by-player"></div>
   </div>
 
 </div>
@@ -2166,7 +1071,7 @@
       <input type="text" id="jsonbin-bin-input" placeholder="e.g. 64a3f2..." style="flex:1;">
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectJsonBin()">Connect</button>
     </div>
-    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--green);">✓ Auto-synced on startup</span></div>
+    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
 
     <div id="jsonbin-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;">
@@ -2185,7 +1090,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 1:54:06 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 2:13:13 PM</div>
     </div>
   </div>
 
@@ -4682,13 +3587,36 @@ async function syncFromCloud() {
     const data = await res.json();
     const bundle = data.record;
     if (!bundle || !bundle.entries) throw new Error("No data found in bin");
-    applyDataBundle(bundle, false); // full overwrite from cloud
+    applyDataBundle(bundle, false); // manual pull = full overwrite (user-initiated)
     const ts = new Date().toLocaleString();
     localStorage.setItem(JSONBIN_SYNC_STORE, ts);
     setJsonBinStatus("✓ Pulled at " + ts + " — " + bundle.entries.length + " entries loaded.", "var(--green)");
     updateSyncConnectedUI();
   } catch(e) {
     setJsonBinStatus("Pull failed: " + e.message, "#ff4d5e");
+  }
+}
+
+async function syncFromCloudOnStartup() {
+  // Startup uses MERGE mode so local entries are never wiped by a stale cloud version.
+  const key = getJsonBinKey(), bin = getJsonBinBin();
+  if (!key || !bin) return;
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${bin}/latest`, {
+      headers: { "X-Master-Key": key }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const bundle = data.record;
+    if (!bundle || !bundle.entries) return;
+    const localCount = loadEntries().length;
+    applyDataBundle(bundle, true); // MERGE — never wipe local data on startup
+    const mergedCount = loadEntries().length;
+    localStorage.setItem(JSONBIN_SYNC_STORE, new Date().toLocaleString());
+    if (mergedCount > localCount) syncToCloud(true); // push merged result back
+    updateSyncConnectedUI();
+  } catch(e) {
+    console.warn("Startup sync failed silently:", e);
   }
 }
 
@@ -4700,9 +3628,14 @@ function disconnectJsonBin() {
   updateSyncConnectedUI();
 }
 
-// Auto-push after every save if connected
+// Auto-push after every save if connected. Shows a visible warning on failure.
 function autoSync() {
-  if (getJsonBinKey() && getJsonBinBin()) syncToCloud(true);
+  if (!getJsonBinKey() || !getJsonBinBin()) return;
+  syncToCloud(true).catch(e => {
+    console.warn("Auto-sync failed:", e);
+    const el = document.getElementById("jsonbin-status");
+    if (el) el.innerHTML = '<span style="color:#ff4d5e;">⚠ Cloud sync failed — data saved locally. Go to ⚙ Sync → Push to retry.</span>';
+  });
 }
 
 // ── Export / Import ───────────────────────────────────────────────────────────
@@ -5176,10 +4109,8 @@ const _savedKey = getJsonBinKey();
 if (_savedKey) {
   const _kField = document.getElementById("jsonbin-key");
   if (_kField) _kField.value = _savedKey;
-  // Pull latest from cloud silently on startup so data is always fresh
-  syncFromCloud().then(() => {
-    setJsonBinStatus("✓ Auto-synced on startup", "var(--green)");
-  }).catch(() => {});
+  // Pull from cloud on startup using merge mode — never overwrites local data
+  syncFromCloudOnStartup();
 }
 // Register service worker for PWA / offline support
 if ("serviceWorker" in navigator) {
