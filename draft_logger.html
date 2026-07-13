@@ -360,7 +360,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -377,7 +377,7 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
+  <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -423,28 +423,7 @@
       </div></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
-          <b>ROSS vs TOG</b>
-          <span style="color:var(--muted);"> · Prime League</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-      </div><div class="live-pill" onclick="loadRecentGame(1)" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
-          <b>SGE vs KHK</b>
-          <span style="color:var(--muted);"> · Prime League</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-      </div><div class="live-pill" onclick="loadRecentGame(2)" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
-          <b>EWI vs USE</b>
-          <span style="color:var(--muted);"> · Prime League</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-      </div></div>
+      <div id="recent-pills"><div style="color:var(--muted);font-size:12px;">No unlogged games today yet.</div></div>
     </div>
   </div>
 
@@ -743,64 +722,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
-    <div id="pending-list">
-      <div class="pending-entry" id="pending-1783965991091">
-        <div class="pending-entry-header">
-          <div>
-            <div style="font-weight:600;font-size:13px;">EWI vs SGE</div>
-            <div class="pending-pred" style="color:var(--muted);">
-              2026-07-13 · Prime League ·
-              Predicted: <span style="color:var(--blue)">
-                EWI
-              </span>
-            </div>
-            <span style="color:var(--muted);font-size:11px;margin-top:2px;display:block;">
-           Bet: EWI @ 1.32 · Stake: 100.00
-           <button onclick="openEditBet('1783965991091')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
-         </span>
-          </div>
-          <div class="result-btns">
-            <button class="win-btn" onclick="openPerfForm('1783965991091','blue')">🔵 EWI won</button>
-            <button class="loss-btn" onclick="openPerfForm('1783965991091','red')">🔴 SGE won</button>
-          </div>
-        </div>
-        <div class="perf-form" id="perf-form-1783965991091"></div>
-        <div id="edit-bet-1783965991091" style="display:none;padding:12px;border-top:1px solid var(--border);">
-          <div class="card-title" style="margin-bottom:10px;">Edit bet</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-            <div>
-              <label>Bet on</label>
-              <select id="edit-bet-on-1783965991091">
-                <option value="blue" selected="">EWI</option>
-                <option value="red">SGE</option>
-              </select>
-            </div>
-            <div>
-              <label>Bet against</label>
-              <select id="edit-bet-against-1783965991091">
-                <option value="blue">EWI</option>
-                <option value="red" selected="">SGE</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-            <div>
-              <label>Decimal odds</label>
-              <input type="number" id="edit-bet-odds-1783965991091" step="0.01" min="1.01" value="1.32">
-            </div>
-            <div>
-              <label>Stake</label>
-              <input type="number" id="edit-bet-stake-1783965991091" step="0.01" min="0.01" value="100">
-            </div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="saveEditBet('1783965991091')">Save bet</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-1783965991091').style.display='none'">Cancel</button>
-            <button class="btn btn-danger" onclick="removeBet('1783965991091')">Remove bet</button>
-          </div>
-        </div>
-      </div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 </div>
 
@@ -843,163 +766,26 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid">
-    <div class="stat-box"><div class="val">22</div><div class="lbl">Games logged</div></div>
-    <div class="stat-box"><div class="val green">78%</div><div class="lbl">Accuracy</div></div>
-    <div class="stat-box"><div class="val green">14</div><div class="lbl">Correct</div></div>
-    <div class="stat-box"><div class="val red">4</div><div class="lbl">Wrong</div></div>
-    <div class="stat-box"><div class="val yellow">1</div><div class="lbl">Pending</div></div>
-    <div class="stat-box"><div class="val">5</div><div class="lbl">Watched</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">13</div><div class="lbl">Didn't watch</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
-  </div>
+  <div class="stat-grid" id="stat-grid"></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy">
-      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 78%" style="flex:1;height:47px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
-        <span>Game 1</span>
-        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">70% ▼ 10pp</b></span>
-        <span>Game 18</span>
-      </div></div>
+    <div id="rolling-accuracy"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Strong preference (±2)</div>
-          <div style="font-size:11px;color:var(--muted);">1 game — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--green);">100%</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Slight preference (±1)</div>
-          <div style="font-size:11px;color:var(--muted);">4 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--green);">75%</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Even (0)</div>
-          <div style="font-size:11px;color:var(--muted);">0 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--muted);">no data</span>
-      </div>
-    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
-      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
-      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
-        <span style="color:var(--green);">Draft won: 2</span>
-        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
-        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
-        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
-      </div>
-    </div></div>
+    <div id="draft-pref-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          5 games ·
-          <span style="color:var(--red);">
-            40% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          9 games ·
-          <span style="color:var(--green);">
-            89% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          4 games ·
-          <span style="color:var(--green);">
-            100% accurate
-          </span>
-        </span>
-      </div></div>
+    <div id="conf-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 21 total games.</div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft &amp; skill agree → correct</span>
-        <span style="color:var(--green);">
-          100% (3 games)
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft beats skill (upset)</span>
-        <span style="color:var(--muted);">
-          0% of 2 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Skill overcomes draft</span>
-        <span style="color:var(--muted);">
-          100% of 2 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
-    </div>
-    <div style="padding:8px 0;">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Predicted correctly when skill was "Not sure"</span>
-        <span style="color:var(--muted);">
-          83% of 6 games
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
-    </div>
-  </div>
+    <div id="skew-stats"></div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          80% (5 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (2 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (1 games)
-        </span>
-      </div></div>
+    <div id="exec-stats"></div>
   </div>
 </div>
 
@@ -1090,7 +876,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 2:13:13 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 2:20:13 PM</div>
     </div>
   </div>
 
@@ -1197,13 +983,19 @@ async function loadRecentGames() {
     const today = localDateStr();
     const data  = await apiGet("/getSchedule");
     const events = (data.data?.schedule?.events || [])
-      .filter(e => e.type === "match" && e.state === "completed" &&
-                   (e.startTime || "").slice(0, 10) === today)
+      .filter(e => {
+        if (e.type !== "match" || e.state !== "completed") return false;
+        if ((e.startTime || "").slice(0, 10) !== today) return false;
+        // Hide games already logged in any form
+        const teams = (e.match?.teams || []).map(t => t.code || t.name || "");
+        if (teams.length >= 2 && isGameLogged(teams[0], teams[1], today)) return false;
+        return true;
+      })
       .sort((a,b) => (b.startTime||"") > (a.startTime||"") ? 1 : -1)
       .slice(0, 10);
 
     if (!events.length) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No completed games today yet.</div>';
+      el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No unlogged games today yet.</div>';
       return;
     }
     window._recentEvents = events;
@@ -2743,6 +2535,18 @@ async function loadVodSchedule() {
   } catch(e) {
     el.innerHTML = `<div style="color:var(--muted);font-size:13px;">Couldn't load schedule: ${e.message}</div>`;
   }
+}
+
+function isGameLogged(teamA, teamB, date, gameNumber) {
+  return loadEntries().some(e => {
+    const teamsMatch = (
+      (e.blueTeam?.toUpperCase() === teamA?.toUpperCase() && e.redTeam?.toUpperCase() === teamB?.toUpperCase()) ||
+      (e.blueTeam?.toUpperCase() === teamB?.toUpperCase() && e.redTeam?.toUpperCase() === teamA?.toUpperCase())
+    );
+    const dateMatch = e.date === date;
+    const gameMatch = gameNumber == null || e.gameNumber == null || e.gameNumber === gameNumber;
+    return teamsMatch && dateMatch && gameMatch;
+  });
 }
 
 function isGameReviewed(teamA, teamB, date, gameNumber) {
