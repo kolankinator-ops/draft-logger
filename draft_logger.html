@@ -373,7 +373,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -392,7 +392,7 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
+  <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -803,8 +803,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
-    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 </div>
 
@@ -990,7 +990,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 11:58:49 AM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 11:59:41 AM</div>
     </div>
   </div>
 
