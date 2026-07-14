@@ -371,7 +371,7 @@
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
@@ -390,7 +390,7 @@
 
 
 <nav>
-  <button onclick="show('dashboard')">📡 Live</button>
+  <button onclick="show('dashboard')" class="">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
@@ -410,12 +410,12 @@
     <div style="font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;">
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
-    <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
+    <div id="db-last-updated" style="font-size:12px;color:var(--muted);">No live matches — 10:46:32 AM</div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
     <div class="empty">Loading live matches…</div>
   </div>
-  <div id="db-upcoming-wrap"></div>
+  <div id="db-upcoming-wrap"><div class="db-upcoming"><h2>Upcoming</h2><div class="db-upcoming-row"><span>LUA vs FLK <span style="color:var(--muted);">(LES)</span></span><span class="when">Tue 11:00 AM</span></div><div class="db-upcoming-row"><span>MCON vs DYN <span style="color:var(--muted);">(Road of Legends)</span></span><span class="when">Tue 1:00 PM</span></div><div class="db-upcoming-row"><span>UCAM vs HRTS <span style="color:var(--muted);">(LES)</span></span><span class="when">Tue 1:30 PM</span></div><div class="db-upcoming-row"><span>ZNT vs SNSH <span style="color:var(--muted);">(Road of Legends)</span></span><span class="when">Tue 2:00 PM</span></div><div class="db-upcoming-row"><span>GLE vs MAZ <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 4:00 PM</span></div><div class="db-upcoming-row"><span>Z3N vs DEC <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 4:00 PM</span></div><div class="db-upcoming-row"><span>VTC vs 7D <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 7:00 PM</span></div><div class="db-upcoming-row"><span>9ZG vs MVG <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 7:00 PM</span></div></div></div>
 </div>
 
 <!-- LOG GAME -->
@@ -987,7 +987,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 10:05:07 AM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 10:46:33 AM</div>
     </div>
   </div>
 
@@ -4653,6 +4653,7 @@ function closeDrawer() {
 }
 
 function show(screen) {
+  localStorage.setItem("draftlogger_last_screen", screen);
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.querySelectorAll("nav button, .nav-drawer button").forEach(b => b.classList.remove("active"));
   const screenEl = document.getElementById("screen-" + screen);
@@ -4683,6 +4684,10 @@ document.getElementById("game-date").value = localDateStr();
 initPickInputs();
 loadLiveGames();
 loadRecentGames();
+
+// Restore last visited screen (default to dashboard)
+const _lastScreen = localStorage.getItem("draftlogger_last_screen") || "dashboard";
+show(_lastScreen);
 
 // Restore API key field display if previously connected
 const _savedKey = getJsonBinKey();
