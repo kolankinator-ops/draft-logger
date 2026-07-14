@@ -365,6 +365,7 @@
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
+  <button onclick="show('tiers');closeDrawer()" class="">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
   <button onclick="show('bets');closeDrawer()">Bets</button>
@@ -384,6 +385,7 @@
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
+  <button onclick="show('tiers')" class="">⚖ Tiers</button>
   <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
@@ -416,7 +418,11 @@
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
     </div>
-    <div id="live-pills"><div style="color:var(--muted);font-size:13px;">No live games right now — fill in manually below.</div></div>
+    <div id="live-pills">
+      <div class="live-pill" onclick="loadLiveGame(0)">
+        <span class="live-dot"></span>
+        <span><b>3V</b> vs <b>Z5</b> <span style="color:var(--muted);">LRN · Game 2</span></span>
+      </div></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
       <div id="recent-pills"><div style="color:var(--muted);font-size:12px;">No unlogged games today yet.</div></div>
@@ -800,14 +806,1390 @@
 <div class="screen" id="screen-players">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Player profiles</div>
-    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
-      <option value="all">All leagues</option>
-    </select>
+    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;"><option value="all">All leagues</option><option value="LRN">LRN</option><option value="MSI">MSI</option><option value="Prime League">Prime League</option></select>
   </div>
   <div style="margin-bottom:12px;">
     <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
   </div>
-  <div id="player-profiles-list"></div>
+  <div id="player-profiles-list">
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">USE DenVoksne</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">10.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">10</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">10.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">KHK Unforgiven</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">10.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">10</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">10.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TOG Ryuk</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">10.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">10</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">10.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">T1 Peyz</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">9.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">10</span> · <span style="font-size:11px;color:var(--muted);">10</span> · <span style="font-size:11px;color:var(--muted);">9</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--green);">9.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">USE FornoReason</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">9.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">9</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">9.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">KHK Doss</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">9.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">9</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">9.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TOG Woldjo</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">9.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">9</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">9.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">USE Kanin</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">8.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">8</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">8.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">KHK Densi</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">8.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">8</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">8.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TOG Zorenous</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">8.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">8</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--green);">8.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">T1 Faker</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--green);">7.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">7</span> · <span style="font-size:11px;color:var(--muted);">9</span> · <span style="font-size:11px;color:var(--muted);">7</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--green);">7.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">G2N Markoon</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">7.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">7</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">7.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">T1 Keria</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">7.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">9</span> · <span style="font-size:11px;color:var(--muted);">7</span> · <span style="font-size:11px;color:var(--muted);">5</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">7.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">KHK Abbedagge</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">7.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">7</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">7.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TOG Sajator</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">7.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">7</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">7.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TLAW Morgan</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">6.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">4</span> · <span style="font-size:11px;color:var(--muted);">8</span> · <span style="font-size:11px;color:var(--muted);">8</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">6.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">T1 Oner</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">6.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">8</span> · <span style="font-size:11px;color:var(--muted);">2</span> · <span style="font-size:11px;color:var(--muted);">10</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">6.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">G2N Tockimo</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">6.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">6</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">6.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">KHK Boda</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">6.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">6</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">6.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TOG Lilipp</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">6.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">6</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">6.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">T1 Doran</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">5.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">6</span> · <span style="font-size:11px;color:var(--muted);">3</span> · <span style="font-size:11px;color:var(--muted);">6</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">5.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">G2N Toasty</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">5.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">5</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">5.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">SGE D4nKa</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">5.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">5</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">5.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">ROSS jokaa</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:var(--yellow);">5.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">5</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:var(--yellow);">5.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">G2N rin</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">4.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">4</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">4.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TLAW Josedeodo</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">4.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">5</span> · <span style="font-size:11px;color:var(--muted);">6</span> · <span style="font-size:11px;color:var(--muted);">1</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">4.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">SGE Addusto</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">4.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">4</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">4.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">ROSS Infoneral</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">4.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">4</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">4.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TLAW Yeon</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">3.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">1</span> · <span style="font-size:11px;color:var(--muted);">5</span> · <span style="font-size:11px;color:var(--muted);">3</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">3.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">USE White</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">3.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">3</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">3.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">SGE Sencux</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">3.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">3</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">3.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">ROSS Leks</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">3.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">3</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">3.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TLAW Quid</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">2.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">2</span> · <span style="font-size:11px;color:var(--muted);">4</span> · <span style="font-size:11px;color:var(--muted);">2</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">2.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">TLAW CoreJJ</div>
+            <div style="font-size:11px;color:var(--muted);">3 games rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">2.67</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">3</span> · <span style="font-size:11px;color:var(--muted);">1</span> · <span style="font-size:11px;color:var(--muted);">4</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>MSI <span style="color:var(--muted);">(3g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">2.67</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">USE Twiizt</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">2.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">2</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">2.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">SGE Richu</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">2.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">2</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">2.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">ROSS c0st0m</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">2.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">2</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">2.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">G2N Shelfmade</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">1.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">1</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">1.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">SGE Devn</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">1.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">1</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">1.00</span>
+      </div></div>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div style="flex:1;">
+            <div class="profile-name">ROSS Hazel</div>
+            <div style="font-size:11px;color:var(--muted);">1 game rated</div>
+          </div>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:#ff4d5e;">1.00</div>
+            
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
+        </div>
+        <div class="profile-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Recent (last 5 games):</div>
+            <span style="font-size:11px;color:var(--muted);">1</span>
+          </div>
+          <div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+        <span>Prime League <span style="color:var(--muted);">(1g)</span></span>
+        <span style="font-weight:700;color:#ff4d5e;">1.00</span>
+      </div></div>
+        </div>
+      </div></div>
+</div>
+
+<!-- TIERS -->
+<div class="screen" id="screen-tiers">
+  <div style="font-size:15px;font-weight:600;margin-bottom:6px;">League tier weights</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+    Tier weights scale player impact rankings across leagues. International games use the average weight of both teams' home leagues — good performances from weaker leagues are rewarded more, poor performances from stronger leagues penalised more.
+  </div>
+
+  <!-- Tier legend -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px;" id="tier-legend">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:#e0b23f;">S</div>
+        <div style="font-size:10px;color:var(--muted);">Base 1.00</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:#7adb8c;">A</div>
+        <div style="font-size:10px;color:var(--muted);">Base 0.85</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:#5b8cff;">B</div>
+        <div style="font-size:10px;color:var(--muted);">Base 0.70</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:#c17cff;">C</div>
+        <div style="font-size:10px;color:var(--muted);">Base 0.55</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:#8b93a7;">D</div>
+        <div style="font-size:10px;color:var(--muted);">Base 0.40</div>
+      </div></div>
+
+  <!-- League list -->
+  <div id="tier-league-list">
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:#e0b23f;margin-bottom:6px;letter-spacing:.5px;">
+          S — Elite · base 1.00
+        </div>
+        
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LCK</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">1.00</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LCK',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#e0b23f;border-radius:5px;font-weight:700;">
+                <option value="S" selected="">S</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LCK', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LCK', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LCK',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LPL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.90</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LPL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#e0b23f;border-radius:5px;font-weight:700;">
+                <option value="S" selected="">S</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LPL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:#ff4d5e;">-0.10</span>
+                <button onclick="adjustLeague('LPL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LPL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:#7adb8c;margin-bottom:6px;letter-spacing:.5px;">
+          A — Strong · base 0.85
+        </div>
+        
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">CBLOL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.80</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('CBLOL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#7adb8c;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A" selected="">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('CBLOL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:#ff4d5e;">-0.05</span>
+                <button onclick="adjustLeague('CBLOL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('CBLOL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LCS</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.85</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LCS',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#7adb8c;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A" selected="">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LCS', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LCS', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LCS',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LEC</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.85</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LEC',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#7adb8c;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A" selected="">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LEC', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LEC', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LEC',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">PCS</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.80</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('PCS',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#7adb8c;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A" selected="">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('PCS', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:#ff4d5e;">-0.05</span>
+                <button onclick="adjustLeague('PCS', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('PCS',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:#5b8cff;margin-bottom:6px;letter-spacing:.5px;">
+          B — Standard · base 0.70
+        </div>
+        
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LCO</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LCO',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LCO', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LCO', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LCO',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LJL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LJL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LJL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LJL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LJL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LLA</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LLA',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LLA', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LLA', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LLA',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LRN</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LRN',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LRN', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LRN', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LRN',true)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">MSI</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.65</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('MSI',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('MSI', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:#ff4d5e;">-0.05</span>
+                <button onclick="adjustLeague('MSI', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('MSI',true)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">TCL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('TCL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('TCL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('TCL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('TCL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">VCS</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.70</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('VCS',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#5b8cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B" selected="">B</option><option value="C">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('VCS', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('VCS', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('VCS',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:#c17cff;margin-bottom:6px;letter-spacing:.5px;">
+          C — Regional · base 0.55
+        </div>
+        
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">EBL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('EBL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('EBL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('EBL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('EBL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">Elements League</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('Elements League',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('Elements League', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('Elements League', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('Elements League',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">GLL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('GLL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('GLL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('GLL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('GLL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">Honor Division</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('Honor Division',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('Honor Division', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('Honor Division', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('Honor Division',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LFL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LFL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LFL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LFL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LFL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">LPLOL</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('LPLOL',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('LPLOL', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('LPLOL', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('LPLOL',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">NLC</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('NLC',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('NLC', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('NLC', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('NLC',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">PRM</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('PRM',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('PRM', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('PRM', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('PRM',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">Prime League</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('Prime League',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('Prime League', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('Prime League', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('Prime League',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">SuperLiga</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">0.55</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('SuperLiga',this.value)" style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:#c17cff;border-radius:5px;font-weight:700;">
+                <option value="S">S</option><option value="A">A</option><option value="B">B</option><option value="C" selected="">C</option><option value="D">D</option>
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('SuperLiga', -0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:var(--muted);">0.00</span>
+                <button onclick="adjustLeague('SuperLiga', +0.05)" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('SuperLiga',false)" style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>
+      </div></div>
+
+  <!-- Add unrecognised league manually -->
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">Add a league</div>
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;">
+      <button class="btn btn-ghost" onclick="addTierLeague()">Add</button>
+    </div>
+  </div>
 </div>
 
 <!-- STATS -->
@@ -922,7 +2304,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 6:10:29 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 8:33:53 PM</div>
     </div>
   </div>
 
@@ -1438,6 +2820,175 @@ document.addEventListener("click", e => {
 });
 
 // ── Team name helpers ─────────────────────────────────────────────────────────
+// ── League tier weights ───────────────────────────────────────────────────────
+const TIER_KEY = "draftlogger_tier_weights_v1";
+
+const TIER_BASES = { S: 1.0, A: 0.85, B: 0.70, C: 0.55, D: 0.40 };
+const TIER_LABELS = { S: "S — Elite", A: "A — Strong", B: "B — Standard", C: "C — Regional", D: "D — Developing" };
+const TIER_COLORS = { S: "#e0b23f", A: "#7adb8c", B: "#5b8cff", C: "#c17cff", D: "#8b93a7" };
+
+const DEFAULT_TIER_ASSIGNMENTS = {
+  "LCK": "S", "LPL": "S",
+  "LEC": "A", "LCS": "A", "PCS": "A",
+  "CBLOL": "B", "LLA": "B", "VCS": "B", "LCO": "B", "TCL": "B", "LJL": "B",
+  "NLC": "C", "LFL": "C", "PRM": "C", "SuperLiga": "C", "Prime League": "C",
+  "Honor Division": "C", "GLL": "C", "EBL": "C", "LPLOL": "C", "Elements League": "C",
+};
+
+const INTL_KEYWORDS = ["msi", "worlds", "first stand", "international", "all-star", "allstar", "cwl", "ewc"];
+
+function loadTierConfig() {
+  try { return JSON.parse(localStorage.getItem(TIER_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveTierConfig(cfg) {
+  localStorage.setItem(TIER_KEY, JSON.stringify(cfg));
+  autoSync();
+}
+
+function getLeagueWeight(league) {
+  if (!league) return TIER_BASES["B"];
+  const cfg = loadTierConfig();
+  const lc  = (league || "").trim();
+  const entry = cfg[lc] || { tier: DEFAULT_TIER_ASSIGNMENTS[lc] || "B", adjust: 0 };
+  return Math.max(0.10, Math.min(1.0, TIER_BASES[entry.tier || "B"] + (entry.adjust || 0)));
+}
+
+function isInternationalGame(entry) {
+  const l = (entry.league || "").toLowerCase();
+  const e = (entry.eventContext || "").toLowerCase();
+  return INTL_KEYWORDS.some(k => l.includes(k) || e.includes(k));
+}
+
+// For international games, weight = average of both teams' home league weights
+function getTeamHomeLeague(teamCode) {
+  const entries = loadEntries().filter(e =>
+    !isInternationalGame(e) && e.league &&
+    (e.blueTeam?.toUpperCase() === teamCode?.toUpperCase() ||
+     e.redTeam?.toUpperCase()  === teamCode?.toUpperCase())
+  );
+  if (!entries.length) return null;
+  const counts = {};
+  entries.forEach(e => { counts[e.league] = (counts[e.league] || 0) + 1; });
+  return Object.entries(counts).sort((a,b) => b[1]-a[1])[0]?.[0] || null;
+}
+
+function getGameWeight(entry) {
+  if (isInternationalGame(entry)) {
+    const blueHome = getTeamHomeLeague(entry.blueTeam);
+    const redHome  = getTeamHomeLeague(entry.redTeam);
+    const bw = blueHome ? getLeagueWeight(blueHome) : getLeagueWeight(entry.league);
+    const rw = redHome  ? getLeagueWeight(redHome)  : getLeagueWeight(entry.league);
+    return (bw + rw) / 2;
+  }
+  return getLeagueWeight(entry.league);
+}
+
+// ── Tiers screen ──────────────────────────────────────────────────────────────
+function renderTiers() {
+  const cfg = loadTierConfig();
+
+  // Collect all leagues from logs + defaults
+  const loggedLeagues = [...new Set(loadEntries().map(e => e.league).filter(Boolean))];
+  const allLeagues    = [...new Set([...Object.keys(DEFAULT_TIER_ASSIGNMENTS), ...loggedLeagues])].sort();
+
+  // Tier legend
+  const legendEl = document.getElementById("tier-legend");
+  if (legendEl) {
+    legendEl.innerHTML = Object.entries(TIER_BASES).map(([tier, base]) => `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+        <div style="font-size:18px;font-weight:800;color:${TIER_COLORS[tier]};">${tier}</div>
+        <div style="font-size:10px;color:var(--muted);">Base ${base.toFixed(2)}</div>
+      </div>`).join("");
+  }
+
+  // Group leagues by tier
+  const byTier = { S:[], A:[], B:[], C:[], D:[] };
+  allLeagues.forEach(league => {
+    const entry = cfg[league] || { tier: DEFAULT_TIER_ASSIGNMENTS[league] || "B", adjust: 0 };
+    const tier  = entry.tier || "B";
+    byTier[tier].push({ league, entry });
+  });
+
+  const listEl = document.getElementById("tier-league-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = Object.entries(byTier).map(([tier, leagues]) => {
+    if (!leagues.length) return "";
+    return `
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:${TIER_COLORS[tier]};margin-bottom:6px;letter-spacing:.5px;">
+          ${TIER_LABELS[tier]} · base ${TIER_BASES[tier].toFixed(2)}
+        </div>
+        ${leagues.map(({ league, entry }) => {
+          const adj    = entry.adjust || 0;
+          const weight = Math.max(0.10, Math.min(1.0, TIER_BASES[entry.tier||"B"] + adj));
+          const intl   = isInternationalGame({ league });
+          return `
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:500;">${league}</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Final weight: <b style="color:var(--text);">${weight.toFixed(2)}</b></div>
+              </div>
+              <!-- Tier selector -->
+              <select onchange="setLeagueTier('${league.replace(/'/g,"\\'")}',this.value)"
+                style="font-size:11px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);color:${TIER_COLORS[tier]};border-radius:5px;font-weight:700;">
+                ${Object.keys(TIER_BASES).map(t => `<option value="${t}" ${t===entry.tier?"selected":""}>${t}</option>`).join("")}
+              </select>
+              <!-- Fine-tune -->
+              <div style="display:flex;align-items:center;gap:3px;">
+                <button onclick="adjustLeague('${league.replace(/'/g,"\\'")}', -0.05)"
+                  style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">−</button>
+                <span style="font-size:11px;width:36px;text-align:center;color:${adj>0?"var(--green)":adj<0?"#ff4d5e":"var(--muted)"};">${adj>0?"+":""}${adj.toFixed(2)}</span>
+                <button onclick="adjustLeague('${league.replace(/'/g,"\\'")}', +0.05)"
+                  style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:13px;line-height:1;">+</button>
+              </div>
+              <button onclick="removeLeague('${league.replace(/'/g,"\\'")}',${JSON.stringify(!DEFAULT_TIER_ASSIGNMENTS[league])})"
+                style="background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 2px;">✕</button>
+            </div>`;
+        }).join("")}
+      </div>`;
+  }).join("");
+}
+
+function setLeagueTier(league, tier) {
+  const cfg = loadTierConfig();
+  if (!cfg[league]) cfg[league] = { tier: DEFAULT_TIER_ASSIGNMENTS[league] || "B", adjust: 0 };
+  cfg[league].tier = tier;
+  saveTierConfig(cfg);
+  renderTiers();
+  renderPlayerProfiles();
+}
+
+function adjustLeague(league, delta) {
+  const cfg = loadTierConfig();
+  if (!cfg[league]) cfg[league] = { tier: DEFAULT_TIER_ASSIGNMENTS[league] || "B", adjust: 0 };
+  const base = TIER_BASES[cfg[league].tier || "B"];
+  cfg[league].adjust = Math.max(-0.15, Math.min(0.15, +((cfg[league].adjust || 0) + delta).toFixed(2)));
+  saveTierConfig(cfg);
+  renderTiers();
+  renderPlayerProfiles();
+}
+
+function addTierLeague() {
+  const input = document.getElementById("tier-new-league");
+  const name  = (input?.value || "").trim();
+  if (!name) return;
+  const cfg = loadTierConfig();
+  if (!cfg[name]) { cfg[name] = { tier: "B", adjust: 0 }; saveTierConfig(cfg); }
+  if (input) input.value = "";
+  renderTiers();
+}
+
+function removeLeague(league, isCustom) {
+  if (!isCustom && !confirm(`Reset ${league} to default? It will reappear with default tier.`)) return;
+  if (isCustom && !confirm(`Remove ${league} from the tier list?`)) return;
+  const cfg = loadTierConfig();
+  delete cfg[league];
+  saveTierConfig(cfg);
+  renderTiers();
+}
+
 // ── Player impact rankings ───────────────────────────────────────────────────
 // Each game, you assign a unique 1-10 impact rank to all 10 players.
 // 10 = highest game impact, 1 = lowest. No two players share a rank.
@@ -1472,14 +3023,22 @@ function playerImpactRating(playerName, leagueFilter) {
     return true;
   });
   const reviews = loadReviews();
-  const ranked = entries.map(e => {
+  const ranked  = entries.map(e => {
     const ranks = reviews[e.id] || {};
     const rank  = ranks[playerName];
-    return rank ? { rank, date: e.date, league: e.league, entryId: e.id } : null;
+    if (!rank) return null;
+    const weight = getGameWeight(e); // tier weight for this game
+    return { rank, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
   }).filter(Boolean);
   if (!ranked.length) return null;
-  const avg = ranked.reduce((s,x) => s+x.rank, 0) / ranked.length;
-  return { avg, games: ranked.length, ranked };
+
+  // Weighted average: international weight already accounts for league differential
+  const totalWeight  = ranked.reduce((s,x) => s + x.weight, 0);
+  const weightedSum  = ranked.reduce((s,x) => s + x.rank * x.weight, 0);
+  const avg          = weightedSum / totalWeight;
+  const rawAvg       = ranked.reduce((s,x) => s + x.rank, 0) / ranked.length;
+
+  return { avg, rawAvg, games: ranked.length, ranked };
 }
 
 // ── Game Review ───────────────────────────────────────────────────────────────
@@ -1661,8 +3220,11 @@ function renderPlayerProfiles() {
             <div class="profile-name">${name}</div>
             <div style="font-size:11px;color:var(--muted);">${r.games} game${r.games!==1?"s":""} rated</div>
           </div>
-          <div class="profile-overall" style="color:${impactColor(r.avg)};">${r.avg.toFixed(2)}</div>
-          <span style="color:var(--muted);font-size:11px;margin-left:8px;">▾</span>
+          <div style="text-align:right;margin-right:8px;">
+            <div class="profile-overall" style="color:${impactColor(r.avg)};">${r.avg.toFixed(2)}</div>
+            ${Math.abs(r.avg - r.rawAvg) >= 0.05 ? `<div style="font-size:10px;color:var(--muted);">raw ${r.rawAvg.toFixed(2)}</div>` : ""}
+          </div>
+          <span style="color:var(--muted);font-size:11px;">▾</span>
         </div>
         <div class="profile-body">
           <div style="margin-bottom:10px;">
@@ -3457,10 +5019,11 @@ function copyBinId() {
 
 function fullDataBundle() {
   return {
-    entries: loadEntries(),
-    players: loadPlayers(),
-    reviews: loadReviews(),
-    rosters: loadRosters(),
+    entries:   loadEntries(),
+    players:   loadPlayers(),
+    reviews:   loadReviews(),
+    tierConfig: loadTierConfig(),
+    rosters:   loadRosters(),
     exportedAt: new Date().toISOString()
   };
 }
@@ -3481,8 +5044,9 @@ function applyDataBundle(bundle, merge = false) {
       saveEntries(bundle.entries);
     }
   }
-  if (bundle.players) savePlayers(bundle.players);
-  if (bundle.reviews) saveReviews(bundle.reviews);
+  if (bundle.players)    savePlayers(bundle.players);
+  if (bundle.reviews)    saveReviews(bundle.reviews);
+  if (bundle.tierConfig) saveTierConfig(bundle.tierConfig);
 }
 
 async function connectJsonBin() {
@@ -4069,6 +5633,7 @@ function show(screen) {
   if (screen === "results")  { renderPending(); autoCheckResults(); }
   if (screen === "history")  renderHistory();
   if (screen === "review")   { populateReviewSelect(); if (document.getElementById("review-game-select").value) loadReviewGame(); }
+  if (screen === "tiers")    renderTiers();
   if (screen === "players")  renderPlayerProfiles();
   if (screen === "stats")    renderStats();
   if (screen === "bets")     renderBets();
