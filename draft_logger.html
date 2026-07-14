@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8">
 <title>Draft Logger</title>
@@ -412,9 +413,7 @@
     </div>
     <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
   </div>
-  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
-    <div class="empty">Loading live matches…</div>
-  </div>
+  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
   <div id="db-upcoming-wrap"></div>
 </div>
 
@@ -433,24 +432,10 @@
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
     </div>
-    <div id="live-pills"><div class="live-pill" onclick="loadLiveGame(0)"><span class="live-dot"></span><span><b>FLK</b> vs <b>LUA</b> <span style="color:var(--muted);">LES · Game 2</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116793933805935744" data-t0="MCON" data-t1="DYN" data-lg="Road of Legends" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>MCON vs DYN</b> <span style="color:var(--muted);">· Road of Legends</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116833506932128107" data-t0="UCAM" data-t1="HRTS" data-lg="LES" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>UCAM vs HRTS</b> <span style="color:var(--muted);">· LES</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116793933806066924" data-t0="ZNT" data-t1="SNSH" data-lg="Road of Legends" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>ZNT vs SNSH</b> <span style="color:var(--muted);">· Road of Legends</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367186" data-t0="GLE" data-t1="MAZ" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>GLE vs MAZ</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367134" data-t0="Z3N" data-t1="DEC" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>Z3N vs DEC</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367226" data-t0="VTC" data-t1="7D" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>VTC vs 7D</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367238" data-t0="9ZG" data-t1="MVG" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>9ZG vs MVG</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div></div>
+    <div id="live-pills"></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
-          <b>PLS vs SDM</b>
-          <span style="color:var(--muted);"> · LRN</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-      </div><div class="live-pill" onclick="loadRecentGame(1)" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
-          <b>NCG vs FUE</b>
-          <span style="color:var(--muted);"> · LRN</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-      </div></div>
+      <div id="recent-pills"></div>
     </div>
   </div>
 
@@ -466,9 +451,7 @@
           <option value="all">All leagues</option>
         </select>
       </div>
-      <div id="vod-pills">
-        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
-      </div>
+      <div id="vod-pills"></div>
     </div>
     <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
@@ -990,7 +973,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 11:59:41 AM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 12:10:35 PM</div>
     </div>
   </div>
 
@@ -1029,7 +1012,10 @@
       <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
-    <div class="card" style="margin-top:14px;">
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Encoding and pushing…</span></div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
     <div class="card-title">📅 Manual schedule</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Add games not on Riot's API — EWC, offline events, or any match you want to appear in the live pill section on the day it's played.
@@ -1048,7 +1034,7 @@
     </div>
     <button class="btn btn-primary" onclick="addManualScheduleGame()" style="width:100%;">Add to schedule</button>
     <div id="ms-sched-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
-    <div id="ms-sched-list" style="margin-top:10px;"><div style="color:var(--muted);font-size:12px;">No manually scheduled games yet.</div></div>
+    <div id="ms-sched-list" style="margin-top:10px;"></div>
   </div>
 
 </div>
@@ -4480,14 +4466,27 @@ async function pushToGitHub() {
   try {
     const apiBase = `https://api.github.com/repos/${repo}/contents/${path}`;
     const headers = { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" };
+
+    // Get current SHA (required for updates)
     let sha = null;
     const getRes = await fetch(apiBase, { headers });
     if (getRes.ok) { sha = (await getRes.json()).sha; }
     else if (getRes.status !== 404) throw new Error("GitHub API error " + getRes.status);
+
     setGhStatus("Encoding and pushing…", "var(--muted)");
-    const html    = document.documentElement.outerHTML;
+
+    // Use outerHTML but strip any dynamically injected runtime elements
+    // to keep the pushed file as close to source as possible
+    const clone = document.documentElement.cloneNode(true);
+    // Clear any dynamically populated content that shouldn't be in source
+    ["db-live-grid","db-upcoming-wrap","live-pills","recent-pills","vod-pills",
+     "player-profiles-list","standings-content","standings-league-tabs",
+     "tier-legend","tier-league-list","ms-sched-list","model-market-compare"]
+      .forEach(id => { const el = clone.querySelector("#" + id); if (el) el.innerHTML = ""; });
+    const html    = "<!DOCTYPE html>\n" + clone.outerHTML;
     const encoded = btoa(unescape(encodeURIComponent(html)));
-    const putRes  = await fetch(apiBase, {
+
+    const putRes = await fetch(apiBase, {
       method: "PUT",
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({ message: `Update draft logger — ${new Date().toLocaleString()}`, content: encoded, ...(sha ? { sha } : {}) })
@@ -4499,7 +4498,7 @@ async function pushToGitHub() {
     localStorage.setItem(GH_TOKEN_KEY, token);
     localStorage.setItem(GH_REPO_KEY,  repo);
     localStorage.setItem(GH_PATH_KEY,  path);
-    const owner   = repo.split("/")[0];
+    const owner    = repo.split("/")[0];
     const repoName = repo.split("/")[1];
     setGhStatus(`✓ Pushed! Live at <a href="https://${owner}.github.io/${repoName}/${path}" target="_blank" style="color:var(--blue);">your GitHub Pages URL</a> in ~30 seconds.`, "var(--green)");
   } catch(e) {
@@ -4900,4 +4899,4 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-</div></body></html>
+</body></html>
