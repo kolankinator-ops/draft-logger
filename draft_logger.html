@@ -222,7 +222,20 @@
 
   .empty { color: var(--muted); text-align: center; padding: 40px 20px; font-size: 13px; }
 
-  /* Dashboard */
+  /* Standings */
+  .standings-table { width:100%;border-collapse:collapse;font-size:13px; }
+  .standings-table th { font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border); }
+  .standings-table th.num { text-align:right; }
+  .standings-table td { padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle; }
+  .standings-table tr:last-child td { border-bottom:none; }
+  .standings-table tr:hover td { background:var(--surface2); }
+  .standings-table td.num { text-align:right;font-weight:600; }
+  .src-badge { font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:middle; }
+  .src-api    { background:rgba(91,140,255,.15);color:var(--blue); }
+  .src-logged { background:rgba(63,191,111,.12);color:var(--green); }
+  .src-manual { background:rgba(224,178,63,.12);color:var(--yellow); }
+  .standings-tab { padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer; }
+  .standings-tab.active { background:var(--blue);color:#fff;border-color:var(--blue); }
   .db-status-dot { width:9px;height:9px;border-radius:50%;background:#ff4d5e;display:inline-block;box-shadow:0 0 0 0 rgba(255,77,94,.6);animation:dbpulse 1.6s infinite; }
   @keyframes dbpulse { 0%{box-shadow:0 0 0 0 rgba(255,77,94,.5);}70%{box-shadow:0 0 0 8px rgba(255,77,94,0);}100%{box-shadow:0 0 0 0 rgba(255,77,94,0);} }
   .match-card { background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:0; }
@@ -365,6 +378,7 @@
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
+  <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
@@ -382,6 +396,7 @@
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
+  <button onclick="show('standings')">Standings</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
@@ -424,7 +439,14 @@
       <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
         <span style="font-size:14px;margin-right:4px;">⏱</span>
         <span style="flex:1;min-width:0;">
-          <b>KITS vs LYON</b>
+          <b>PLS vs SDM</b>
+          <span style="color:var(--muted);"> · LRN</span>
+          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
+        </span>
+      </div><div class="live-pill" onclick="loadRecentGame(1)" style="opacity:0.85;">
+        <span style="font-size:14px;margin-right:4px;">⏱</span>
+        <span style="flex:1;min-width:0;">
+          <b>NCG vs FUE</b>
           <span style="color:var(--muted);"> · LRN</span>
           <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
         </span>
@@ -820,6 +842,16 @@
   <div id="player-profiles-list"></div>
 </div>
 
+<!-- STANDINGS -->
+<div class="screen" id="screen-standings">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <div style="font-size:15px;font-weight:600;">Standings</div>
+    <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="renderStandings(true)">↺ Refresh</button>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="standings-league-tabs"></div>
+  <div id="standings-content"></div>
+</div>
+
 <!-- TIERS -->
 <div class="screen" id="screen-tiers">
   <div style="font-size:15px;font-weight:600;margin-bottom:6px;">League tier weights</div>
@@ -955,7 +987,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/13/2026, 11:11:51 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 10:05:07 AM</div>
     </div>
   </div>
 
@@ -1501,6 +1533,8 @@ const LEAGUE_ALIASES = {
   "LTA North": "LCS", "LTA South": "CBLOL",
 };
 
+const INTL_KEYWORDS = ["msi", "worlds", "first stand", "international", "all-star", "allstar", "cwl", "ewc"];
+
 function resolveLeague(league) {
   return LEAGUE_ALIASES[(league||"").trim()] || (league||"").trim();
 }
@@ -1651,7 +1685,8 @@ function renderTiers() {
   const cfg = loadTierConfig();
 
   // Only show: defaults + anything in logs (resolved) + anything user added via cfg
-  const loggedLeagues = [...new Set(loadEntries().map(e => resolveLeague(e.league)).filter(Boolean))];
+  const loggedLeagues = [...new Set(loadEntries().map(e => resolveLeague(e.league)).filter(Boolean))]
+    .filter(l => !INTL_KEYWORDS.some(k => l.toLowerCase().includes(k)));
   const userAdded     = Object.keys(cfg).filter(l => !DEFAULT_TIER_ASSIGNMENTS[l]);
   const allLeagues    = [...new Set([...Object.keys(DEFAULT_TIER_ASSIGNMENTS), ...loggedLeagues, ...userAdded])].sort();
 
@@ -1717,7 +1752,8 @@ function renderTiers() {
   // Load standings for each league asynchronously after rendering
   allLeagues.forEach(league => {
     const elId = "tier-leader-" + league.replace(/\s+/g, "-");
-    fetchLeagueStandings(league).then(teams => {
+    const timeout = new Promise(resolve => setTimeout(() => resolve(null), 8000));
+    Promise.race([fetchLeagueStandings(league), timeout]).then(teams => {
       const el = document.getElementById(elId);
       if (!el) return;
       if (!teams || !teams.length) { el.textContent = ""; return; }
@@ -1769,6 +1805,203 @@ function removeLeague(league) {
   renderTiers();
 }
 
+// ── Standings ─────────────────────────────────────────────────────────────────
+const STANDINGS_KEY = "draftlogger_standings_v1";
+
+function loadManualStandings() {
+  try { return JSON.parse(localStorage.getItem(STANDINGS_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveManualStandings(data) {
+  localStorage.setItem(STANDINGS_KEY, JSON.stringify(data));
+  autoSync();
+}
+
+// Derive win/loss records for a league from logged entries
+function standingsFromLogs(league) {
+  const teams = {};
+  loadEntries()
+    .filter(e => resolveLeague(e.league) === resolveLeague(league) && e.actualWinner && !isInternationalGame(e))
+    .forEach(e => {
+      ["blue","red"].forEach(side => {
+        const code = side === "blue" ? e.blueTeam : e.redTeam;
+        if (!code) return;
+        if (!teams[code]) teams[code] = { wins: 0, losses: 0 };
+        if (e.actualWinner === side) teams[code].wins++;
+        else teams[code].losses++;
+      });
+    });
+  return teams;
+}
+
+// Merge API + manual + logged into one ranked list
+async function getLeagueStandingsDisplay(league, bustCache) {
+  if (bustCache && _standingsCache[resolveLeague(league)]) {
+    delete _standingsCache[resolveLeague(league)];
+  }
+  const [apiTeams, manual, logged] = await Promise.all([
+    fetchLeagueStandings(league).catch(() => null),
+    Promise.resolve(loadManualStandings()[resolveLeague(league)] || {}),
+    Promise.resolve(standingsFromLogs(league))
+  ]);
+
+  const merged = {}; // code -> { wins, losses, name, source, rank }
+
+  // 1. Logged (lowest priority — incomplete)
+  Object.entries(logged).forEach(([code, r]) => {
+    merged[code] = { ...r, code, source: "logged" };
+  });
+
+  // 2. Manual (overrides logged)
+  Object.entries(manual).forEach(([code, r]) => {
+    merged[code] = { ...(merged[code]||{}), ...r, code, source: "manual" };
+  });
+
+  // 3. API (highest priority)
+  if (apiTeams) {
+    apiTeams.forEach(t => {
+      merged[t.code] = { ...t, source: "api" };
+    });
+  }
+
+  return Object.values(merged)
+    .sort((a,b) => b.wins - a.wins || a.losses - b.losses)
+    .map((t, i) => ({ ...t, rank: t.rank || i + 1 }));
+}
+
+let _currentStandingsLeague = null;
+
+async function renderStandings(refresh = false) {
+  const leagues = Object.keys(DEFAULT_TIER_ASSIGNMENTS)
+    .filter(l => !INTL_KEYWORDS.some(k => l.toLowerCase().includes(k)));
+
+  // Build league tabs
+  const tabsEl = document.getElementById("standings-league-tabs");
+  if (tabsEl && (!tabsEl.children.length || refresh)) {
+    if (!_currentStandingsLeague) _currentStandingsLeague = leagues[0];
+    tabsEl.innerHTML = leagues.map(l => `
+      <button class="standings-tab ${l === _currentStandingsLeague ? "active" : ""}"
+        onclick="switchStandingsLeague('${l.replace(/'/g,"\\'")}')">
+        ${l}
+      </button>`).join("");
+  }
+
+  showStandingsLeague(_currentStandingsLeague || leagues[0], refresh);
+}
+
+async function switchStandingsLeague(league) {
+  _currentStandingsLeague = league;
+  document.querySelectorAll(".standings-tab").forEach(b => {
+    b.classList.toggle("active", b.textContent.trim() === league);
+  });
+  showStandingsLeague(league, false);
+}
+
+async function showStandingsLeague(league, refresh) {
+  const el = document.getElementById("standings-content");
+  if (!el) return;
+  el.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center;">Loading ${league} standings…</div>`;
+
+  try {
+    const teams = await getLeagueStandingsDisplay(league, refresh);
+    const manual = loadManualStandings()[resolveLeague(league)] || {};
+
+    if (!teams.length) {
+      el.innerHTML = `
+        <div style="color:var(--muted);font-size:13px;padding:16px 0;text-align:center;">No data yet for ${league}.<br><br>
+        Standings will build automatically from your logged games, or you can add them manually below.</div>
+        ${manualEntryForm(league)}`;
+      return;
+    }
+
+    const srcBadge = s => `<span class="src-badge src-${s}">${s}</span>`;
+    const rows = teams.map((t, i) => `
+      <tr>
+        <td style="color:var(--muted);width:28px;">${i+1}</td>
+        <td><b>${t.name || t.code}</b>${t.name && t.name !== t.code ? ` <span style="color:var(--muted);font-size:11px;">(${t.code})</span>` : ""} ${srcBadge(t.source)}</td>
+        <td class="num" style="color:var(--green);">${t.wins}</td>
+        <td class="num" style="color:#ff4d5e;">${t.losses}</td>
+        <td class="num" style="color:var(--muted);">${t.wins + t.losses}</td>
+        <td class="num" style="color:var(--muted);">${(t.wins+t.losses)>0 ? Math.round(t.wins/(t.wins+t.losses)*100)+"%" : "—"}</td>
+        <td style="width:28px;text-align:right;">
+          <button onclick="editTeamRecord('${resolveLeague(league)}','${t.code}',${t.wins},${t.losses})"
+            style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 4px;">✏</button>
+        </td>
+      </tr>`).join("");
+
+    el.innerHTML = `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;">
+        <table class="standings-table">
+          <thead><tr>
+            <th>#</th><th>Team</th>
+            <th class="num">W</th><th class="num">L</th><th class="num">G</th><th class="num">Win%</th>
+            <th></th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.8;">
+        <span class="src-badge src-api">api</span> Riot API &nbsp;
+        <span class="src-badge src-logged">logged</span> From your logs &nbsp;
+        <span class="src-badge src-manual">manual</span> Manually entered
+      </div>
+      ${manualEntryForm(league)}`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:#ff4d5e;font-size:13px;padding:12px 0;">Error loading: ${e.message}</div>${manualEntryForm(league)}`;
+  }
+}
+
+function manualEntryForm(league) {
+  const safeLeague = league.replace(/'/g,"\\'");
+  return `
+    <div class="card">
+      <div class="card-title">Add / correct a team</div>
+      <div style="display:grid;grid-template-columns:1fr 60px 60px auto;gap:6px;align-items:end;">
+        <div>
+          <label>Team code</label>
+          <input type="text" id="ms-code" placeholder="e.g. SK" />
+        </div>
+        <div>
+          <label>W</label>
+          <input type="number" id="ms-wins" min="0" placeholder="0" />
+        </div>
+        <div>
+          <label>L</label>
+          <input type="number" id="ms-losses" min="0" placeholder="0" />
+        </div>
+        <button class="btn btn-primary" style="align-self:end;" onclick="saveManualTeam('${safeLeague}')">Save</button>
+      </div>
+      <div id="ms-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
+    </div>`;
+}
+
+function saveManualTeam(league) {
+  const code   = (document.getElementById("ms-code")?.value || "").trim().toUpperCase();
+  const wins   = parseInt(document.getElementById("ms-wins")?.value || "0");
+  const losses = parseInt(document.getElementById("ms-losses")?.value || "0");
+  if (!code) { document.getElementById("ms-status").textContent = "Enter a team code."; return; }
+  const data = loadManualStandings();
+  const key  = resolveLeague(league);
+  if (!data[key]) data[key] = {};
+  data[key][code] = { wins: wins||0, losses: losses||0, name: code };
+  saveManualStandings(data);
+  document.getElementById("ms-status").innerHTML = `<span style="color:var(--green);">✓ ${code} saved</span>`;
+  ["ms-code","ms-wins","ms-losses"].forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
+  showStandingsLeague(league, false);
+}
+
+function editTeamRecord(league, code, wins, losses) {
+  const codeEl = document.getElementById("ms-code");
+  const wEl    = document.getElementById("ms-wins");
+  const lEl    = document.getElementById("ms-losses");
+  if (codeEl) codeEl.value = code;
+  if (wEl)    wEl.value    = wins;
+  if (lEl)    lEl.value    = losses;
+  codeEl?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  codeEl?.focus();
+}
+
+
 // ── Player impact rankings ───────────────────────────────────────────────────
 // Each game, you assign a unique 1-10 impact rank to all 10 players.
 // 10 = highest game impact, 1 = lowest. No two players share a rank.
@@ -1796,28 +2029,20 @@ function setGameRanks(entryId, ranks) {
 
 // Player average impact across games (higher = more impactful)
 function playerImpactRating(playerName, leagueFilter) {
-  const entries = loadEntries().filter(e => {
-    const inGame = (e.players?.blue||[]).includes(playerName) || (e.players?.red||[]).includes(playerName);
-    if (!inGame) return false;
-    if (leagueFilter && leagueFilter !== "all" && e.league !== leagueFilter) return false;
-    return true;
-  });
   const reviews = loadReviews();
-  const ranked  = entries.map(e => {
+  const ranked  = loadEntries().map(e => {
     const ranks = reviews[e.id] || {};
     const rank  = ranks[playerName];
     if (!rank) return null;
-    const weight = getGameWeight(e); // tier weight for this game
+    if (leagueFilter && leagueFilter !== "all" && e.league !== leagueFilter) return null;
+    const weight = getGameWeight(e);
     return { rank, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
   }).filter(Boolean);
   if (!ranked.length) return null;
-
-  // Weighted average: international weight already accounts for league differential
-  const totalWeight  = ranked.reduce((s,x) => s + x.weight, 0);
-  const weightedSum  = ranked.reduce((s,x) => s + x.rank * x.weight, 0);
-  const avg          = weightedSum / totalWeight;
-  const rawAvg       = ranked.reduce((s,x) => s + x.rank, 0) / ranked.length;
-
+  const totalWeight = ranked.reduce((s,x) => s + x.weight, 0);
+  const weightedSum = ranked.reduce((s,x) => s + x.rank * x.weight, 0);
+  const avg    = weightedSum / totalWeight;
+  const rawAvg = ranked.reduce((s,x) => s + x.rank, 0) / ranked.length;
   return { avg, rawAvg, games: ranked.length, ranked };
 }
 
@@ -3826,7 +4051,8 @@ function fullDataBundle() {
     entries:   loadEntries(),
     players:   loadPlayers(),
     reviews:   loadReviews(),
-    tierConfig: loadTierConfig(),
+    tierConfig:      loadTierConfig(),
+    manualStandings: loadManualStandings(),
     rosters:   loadRosters(),
     exportedAt: new Date().toISOString()
   };
@@ -3850,7 +4076,8 @@ function applyDataBundle(bundle, merge = false) {
   }
   if (bundle.players)    savePlayers(bundle.players);
   if (bundle.reviews)    saveReviews(bundle.reviews);
-  if (bundle.tierConfig) saveTierConfig(bundle.tierConfig);
+  if (bundle.tierConfig)      saveTierConfig(bundle.tierConfig);
+  if (bundle.manualStandings) saveManualStandings(bundle.manualStandings);
 }
 
 async function connectJsonBin() {
@@ -4428,21 +4655,27 @@ function closeDrawer() {
 function show(screen) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.querySelectorAll("nav button, .nav-drawer button").forEach(b => b.classList.remove("active"));
-  document.getElementById("screen-" + screen).classList.add("active");
+  const screenEl = document.getElementById("screen-" + screen);
+  if (!screenEl) { console.error("No screen element for:", screen); return; }
+  screenEl.classList.add("active");
   document.querySelectorAll(`nav button[onclick*="'${screen}'"], .nav-drawer button[onclick*="'${screen}'"]`)
     .forEach(b => b.classList.add("active"));
-  // Dashboard polling: start when entering, stop when leaving
   if (screen === "dashboard") { dbStartPolling(); }
   else { dbStopPolling(); }
-  if (screen === "results")  { renderPending(); autoCheckResults(); }
-  if (screen === "history")  renderHistory();
-  if (screen === "review")   { populateReviewSelect(); if (document.getElementById("review-game-select").value) loadReviewGame(); }
-  if (screen === "tiers")    renderTiers();
-  if (screen === "players")  renderPlayerProfiles();
-  if (screen === "stats")    renderStats();
-  if (screen === "bets")     renderBets();
-  if (screen === "betstats") renderBetStats();
-  if (screen === "settings") { updateSyncConnectedUI(); loadGitHubConfig(); }
+  try {
+    if (screen === "results")   { renderPending(); autoCheckResults(); }
+    if (screen === "history")   renderHistory();
+    if (screen === "review")    { populateReviewSelect(); if (document.getElementById("review-game-select").value) loadReviewGame(); }
+    if (screen === "standings") renderStandings();
+    if (screen === "players")   renderPlayerProfiles();
+    if (screen === "tiers")     renderTiers();
+    if (screen === "stats")     renderStats();
+    if (screen === "bets")      renderBets();
+    if (screen === "betstats")  renderBetStats();
+    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); }
+  } catch(e) {
+    console.error("Error rendering screen", screen, ":", e);
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
