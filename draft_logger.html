@@ -371,9 +371,9 @@
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -390,9 +390,9 @@
 
 
 <nav>
-  <button onclick="show('dashboard')" class="">📡 Live</button>
+  <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -410,12 +410,12 @@
     <div style="font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;">
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
-    <div id="db-last-updated" style="font-size:12px;color:var(--muted);">No live matches — 10:46:32 AM</div>
+    <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
     <div class="empty">Loading live matches…</div>
   </div>
-  <div id="db-upcoming-wrap"><div class="db-upcoming"><h2>Upcoming</h2><div class="db-upcoming-row"><span>LUA vs FLK <span style="color:var(--muted);">(LES)</span></span><span class="when">Tue 11:00 AM</span></div><div class="db-upcoming-row"><span>MCON vs DYN <span style="color:var(--muted);">(Road of Legends)</span></span><span class="when">Tue 1:00 PM</span></div><div class="db-upcoming-row"><span>UCAM vs HRTS <span style="color:var(--muted);">(LES)</span></span><span class="when">Tue 1:30 PM</span></div><div class="db-upcoming-row"><span>ZNT vs SNSH <span style="color:var(--muted);">(Road of Legends)</span></span><span class="when">Tue 2:00 PM</span></div><div class="db-upcoming-row"><span>GLE vs MAZ <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 4:00 PM</span></div><div class="db-upcoming-row"><span>Z3N vs DEC <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 4:00 PM</span></div><div class="db-upcoming-row"><span>VTC vs 7D <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 7:00 PM</span></div><div class="db-upcoming-row"><span>9ZG vs MVG <span style="color:var(--muted);">(LRS)</span></span><span class="when">Tue 7:00 PM</span></div></div></div>
+  <div id="db-upcoming-wrap"></div>
 </div>
 
 <!-- LOG GAME -->
@@ -433,7 +433,7 @@
       <div class="card-title" style="margin-bottom:0;">Live games</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
     </div>
-    <div id="live-pills"><div style="color:var(--muted);font-size:13px;">No live games right now — fill in manually below.</div></div>
+    <div id="live-pills"><div class="live-pill" onclick="loadLiveGame(0)"><span class="live-dot"></span><span><b>FLK</b> vs <b>LUA</b> <span style="color:var(--muted);">LES · Game 2</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116793933805935744" data-t0="MCON" data-t1="DYN" data-lg="Road of Legends" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>MCON vs DYN</b> <span style="color:var(--muted);">· Road of Legends</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116833506932128107" data-t0="UCAM" data-t1="HRTS" data-lg="LES" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>UCAM vs HRTS</b> <span style="color:var(--muted);">· LES</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116793933806066924" data-t0="ZNT" data-t1="SNSH" data-lg="Road of Legends" data-bn="Week 1" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>ZNT vs SNSH</b> <span style="color:var(--muted);">· Road of Legends</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367186" data-t0="GLE" data-t1="MAZ" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>GLE vs MAZ</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367134" data-t0="Z3N" data-t1="DEC" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>Z3N vs DEC</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367226" data-t0="VTC" data-t1="7D" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>VTC vs 7D</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116520721101367238" data-t0="9ZG" data-t1="MVG" data-lg="LRS" data-bn="Week 5" data-dt="2026-07-14" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>9ZG vs MVG</b> <span style="color:var(--muted);">· LRS</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
       <div id="recent-pills"><div class="live-pill" onclick="loadRecentGame(0)" style="opacity:0.85;">
@@ -761,14 +761,17 @@
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
           <div>
-            <label>Decimal odds</label>
-            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85">
+            <label>Your odds</label>
+            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
+          </div>
+          <div>
+            <label>Opponent odds</label>
+            <input type="number" id="bet-opp-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
           </div>
           <div>
             <label>Stake</label>
             <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00">
           </div>
-
         </div>
       </div>
     </div>
@@ -800,8 +803,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
+    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
   </div>
 </div>
 
@@ -987,7 +990,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 10:46:33 AM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 11:58:49 AM</div>
     </div>
   </div>
 
@@ -1026,7 +1029,26 @@
       <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
-    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Encoding and pushing…</span></div>
+    <div class="card" style="margin-top:14px;">
+    <div class="card-title">📅 Manual schedule</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+      Add games not on Riot's API — EWC, offline events, or any match you want to appear in the live pill section on the day it's played.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1"></div>
+      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC"></div>
+      <div><label>Date</label><input type="date" id="ms-date"></div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label>Block / Round <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals">
+    </div>
+    <button class="btn btn-primary" onclick="addManualScheduleGame()" style="width:100%;">Add to schedule</button>
+    <div id="ms-sched-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
+    <div id="ms-sched-list" style="margin-top:10px;"><div style="color:var(--muted);font-size:12px;">No manually scheduled games yet.</div></div>
   </div>
 
 </div>
@@ -1196,15 +1218,12 @@ async function loadRecentGame(idx) {
 
 async function loadLiveGames() {
   const el = document.getElementById("live-pills");
+  el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Checking for live games…</div>';
   try {
-    const data = await apiGet("/getLive");
+    const data   = await apiGet("/getLive");
     const events = (data.data && data.data.schedule && data.data.schedule.events) || [];
-    const live = events.filter(e => e.state === "inProgress" && e.type === "match");
-
-    if (!live.length) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:13px;">No live games right now — fill in manually below.</div>';
-      return;
-    }
+    const live   = events.filter(e => e.state === "inProgress" && e.type === "match");
+    const liveIds = new Set(live.map(e => e.id));
 
     liveGameData = [];
     for (const ev of live) {
@@ -1226,7 +1245,6 @@ async function loadLiveGames() {
           const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
           const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
 
-          // Fetch picks
           let picks = { blue: [], red: [] };
           try {
             const res = await fetch(`${FEED_BASE}/window/${g.id}`);
@@ -1245,19 +1263,85 @@ async function loadLiveGames() {
       } catch(e) { console.warn("Error loading event", ev.id, e); }
     }
 
-    if (!liveGameData.length) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:13px;">No live games right now.</div>';
-      return;
-    }
+    const livePills = liveGameData.map((g, i) =>
+      '<div class="live-pill" onclick="loadLiveGame(' + i + ')">' +
+      '<span class="live-dot"></span>' +
+      '<span><b>' + g.blueTeam + '</b> vs <b>' + g.redTeam + '</b> ' +
+      '<span style="color:var(--muted);">' + g.league + (g.gameNumber ? ' \xb7 Game ' + g.gameNumber : '') + '</span></span></div>'
+    ).join("");
 
-    el.innerHTML = liveGameData.map((g, i) => `
-      <div class="live-pill" onclick="loadLiveGame(${i})">
-        <span class="live-dot"></span>
-        <span><b>${g.blueTeam}</b> vs <b>${g.redTeam}</b> <span style="color:var(--muted);">${g.league}${g.gameNumber ? ` · Game ${g.gameNumber}` : ""}</span></span>
-      </div>`).join("");
+    // Also check today's schedule for ERLs not in Riot's live feed (e.g. LES)
+    // Deduplicate by both event ID and team codes in case the APIs use different IDs
+    let scheduledPills = "";
+    try {
+      const today    = localDateStr();
+      const liveTeamPairs = new Set(liveGameData.map(g => [g.blueTeam, g.redTeam].sort().join("|")));
+      const sData    = await apiGet("/getSchedule");
+      const todayEvs = ((sData.data && sData.data.schedule && sData.data.schedule.events) || [])
+        .filter(function(e) {
+          if (e.type !== "match") return false;
+          if (e.state !== "inProgress" && e.state !== "unstarted") return false;
+          if ((e.startTime || "").slice(0, 10) !== today) return false;
+          if (liveIds.has(e.id)) return false;
+          const teams = ((e.match && e.match.teams) || []).map(function(t) { return t.code || t.name || ""; });
+          if (teams.length >= 2 && liveTeamPairs.has(teams.slice().sort().join("|"))) return false;
+          return true;
+        });
+      scheduledPills = todayEvs.map(function(ev) {
+        const teams  = ((ev.match && ev.match.teams) || []).map(function(t) { return t.code || t.name || "TBD"; });
+        const league = (ev.league && ev.league.name) || "";
+        const matchId = (ev.match && ev.match.id) || ev.id || "";
+        const isLive  = ev.state === "inProgress";
+        const label   = isLive ? "LIVE" : "Today";
+        const note    = isLive ? "Live \u2014 no Riot feed, enter picks manually" : "Scheduled today \u2014 enter picks manually";
+        const bgColor = isLive ? "#ff4d5e" : "var(--blue)";
+        return '<div class="live-pill" onclick="loadScheduledGame(this)" ' +
+          'data-eid="' + matchId + '" data-t0="' + (teams[0]||"") + '" data-t1="' + (teams[1]||"") + '" ' +
+          'data-lg="' + league + '" data-bn="' + (ev.blockName||"") + '" data-dt="' + (ev.startTime||"").slice(0,10) + '" ' +
+          'style="opacity:0.85;">' +
+          '<span style="background:' + bgColor + ';color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">' + label + '</span>' +
+          '<span style="flex:1;min-width:0;"><b>' + teams.join(" vs ") + '</b> <span style="color:var(--muted);">\xb7 ' + league + '</span>' +
+          '<span style="color:var(--muted);font-size:11px;display:block;">' + note + '</span></span></div>';
+      }).join("");
+    } catch(e) {}
+
+    // Manual schedule games for today
+    const manualToday = loadManualSchedule().filter(function(g) { return g.date === localDateStr(); });
+    const manualPills = manualToday.map(function(g) {
+      return '<div class="live-pill" onclick="loadScheduledGame(this)" ' +
+        'data-t0="' + g.blueTeam + '" data-t1="' + g.redTeam + '" ' +
+        'data-lg="' + g.league + '" data-bn="' + (g.blockName||"") + '" data-dt="' + g.date + '" ' +
+        'style="opacity:0.85;">' +
+        '<span style="background:var(--yellow);color:#000;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Manual</span>' +
+        '<span style="flex:1;min-width:0;"><b>' + g.blueTeam + ' vs ' + g.redTeam + '</b> <span style="color:var(--muted);">\xb7 ' + g.league + '</span>' +
+        '<span style="color:var(--muted);font-size:11px;display:block;">Enter picks manually</span></span></div>';
+    }).join("");
+
+    el.innerHTML = (livePills + scheduledPills + manualPills) ||
+      '<div style="color:var(--muted);font-size:13px;">No live or scheduled games today \u2014 fill in manually below.</div>';
+
   } catch(e) {
     el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Couldn\'t load live games.</div>';
   }
+}
+
+function loadScheduledGame(el) {
+  const eid    = el.dataset.eid;
+  const blue   = el.dataset.t0 || "";
+  const red    = el.dataset.t1 || "";
+  const league = el.dataset.lg || "";
+  const block  = el.dataset.bn || "";
+  const date   = el.dataset.dt || localDateStr();
+  document.getElementById("blue-team").value     = blue;
+  document.getElementById("red-team").value      = red;
+  document.getElementById("league").value        = league;
+  document.getElementById("game-date").value     = date;
+  document.getElementById("event-context").value = buildContextLabel(league, block, date);
+  currentGameNumber = null;
+  updateColTitles();
+  initPickInputs();
+  runPredictionModel();
+  document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 let currentGameNumber = null;
@@ -3716,6 +3800,61 @@ function runPredictionModel() {
   } else {
     warnEl.style.display = "none";
   }
+
+  // ── Market vs Model comparison ───────────────────────────────────────────────
+  const yourOdds = parseFloat((document.getElementById("bet-odds")     || {}).value) || null;
+  const oppOdds  = parseFloat((document.getElementById("bet-opp-odds") || {}).value) || null;
+  const betOn    = (document.getElementById("bet-team-on") || {}).value || null;
+
+  let mktEl = document.getElementById("model-market-compare");
+  if (!mktEl) {
+    mktEl = document.createElement("div");
+    mktEl.id = "model-market-compare";
+    mktEl.style.cssText = "margin-top:8px;padding-top:8px;border-top:1px solid var(--border);";
+    el.appendChild(mktEl);
+  }
+
+  if (yourOdds && oppOdds && betOn) {
+    // Determine which odds belong to blue vs red, then normalise to remove vig
+    const blueOdds = betOn === "blue" ? yourOdds : oppOdds;
+    const redOdds  = betOn === "red"  ? yourOdds : oppOdds;
+    const rawBlue  = 1 / blueOdds;
+    const rawRed   = 1 / redOdds;
+    const total    = rawBlue + rawRed;
+    const mktBlue  = Math.round((rawBlue / total) * 100);
+    const mktRed   = 100 - mktBlue;
+
+    const divergence = bluePct - mktBlue; // positive = model more bullish on blue than market
+    const absDiff    = Math.abs(divergence);
+    const edgeSide   = divergence > 0 ? blueLabel : redLabel;
+    const edgeColor  = absDiff >= 10 ? "var(--green)" : absDiff >= 5 ? "var(--yellow)" : "var(--muted)";
+    const edgeNote   = absDiff >= 15 ? "Strong edge signal" : absDiff >= 10 ? "Moderate edge signal" : absDiff >= 5 ? "Slight divergence" : "Model and market agree";
+
+    mktEl.innerHTML =
+      '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Market vs Model</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;margin-bottom:6px;">' +
+        '<div style="background:var(--bg);border-radius:5px;padding:6px 8px;">' +
+          '<div style="color:var(--muted);font-size:10px;margin-bottom:2px;">MARKET IMPLIED</div>' +
+          '<span style="color:var(--blue);font-weight:700;">' + blueLabel + ' ' + mktBlue + '%</span>' +
+          ' <span style="color:var(--muted);">·</span> ' +
+          '<span style="color:var(--red);font-weight:700;">' + mktRed + '% ' + redLabel + '</span>' +
+        '</div>' +
+        '<div style="background:var(--bg);border-radius:5px;padding:6px 8px;">' +
+          '<div style="color:var(--muted);font-size:10px;margin-bottom:2px;">MODEL</div>' +
+          '<span style="color:var(--blue);font-weight:700;">' + blueLabel + ' ' + bluePct + '%</span>' +
+          ' <span style="color:var(--muted);">·</span> ' +
+          '<span style="color:var(--red);font-weight:700;">' + redPct + '% ' + redLabel + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:11px;color:' + edgeColor + ';">' +
+        (absDiff >= 5
+          ? '→ Model is +' + absDiff + '% on ' + edgeSide + ' vs market · ' + edgeNote
+          : '→ ' + edgeNote) +
+      '</div>';
+    mktEl.style.display = "block";
+  } else {
+    mktEl.style.display = "none";
+  }
 }
 
 // ── Bet tracking ──────────────────────────────────────────────────────────────
@@ -3757,9 +3896,10 @@ function getBetData() {
   const on      = document.getElementById("bet-team-on").value;
   const against = document.getElementById("bet-team-against").value;
   const odds    = parseFloat(document.getElementById("bet-odds").value);
+  const oppOdds = parseFloat(document.getElementById("bet-opp-odds").value) || null;
   const stake   = parseFloat(document.getElementById("bet-stake").value);
   if (!on || !odds || !stake) return null;
-  return { on, against, odds, stake };
+  return { on, against, odds, oppOdds, stake };
 }
 
 function resetBetForm() {
@@ -3767,7 +3907,7 @@ function resetBetForm() {
   document.getElementById("bet-form").style.display = "none";
   document.getElementById("bet-yes-btn").classList.remove("sel");
   document.getElementById("bet-no-btn").classList.add("sel");
-  ["bet-team-on","bet-team-against","bet-odds","bet-stake"]
+  ["bet-team-on","bet-team-against","bet-odds","bet-opp-odds","bet-stake"]
     .forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
 }
 
@@ -4245,6 +4385,62 @@ function importData(event) {
   reader.readAsText(file);
 }
 
+// ── Manual schedule ───────────────────────────────────────────────────────────
+const MANUAL_SCHED_KEY = "draftlogger_manual_schedule_v1";
+
+function loadManualSchedule() {
+  try { return JSON.parse(localStorage.getItem(MANUAL_SCHED_KEY) || "[]"); }
+  catch(e) { return []; }
+}
+function saveManualSchedule(arr) {
+  localStorage.setItem(MANUAL_SCHED_KEY, JSON.stringify(arr));
+  autoSync();
+}
+
+function addManualScheduleGame() {
+  const blue   = (document.getElementById("ms-blue")   || {}).value.trim();
+  const red    = (document.getElementById("ms-red")    || {}).value.trim();
+  const league = (document.getElementById("ms-league") || {}).value.trim();
+  const date   = (document.getElementById("ms-date")   || {}).value;
+  const block  = (document.getElementById("ms-block")  || {}).value.trim();
+  const status = document.getElementById("ms-sched-status");
+
+  if (!blue || !red)   { if (status) status.innerHTML = '<span style="color:#ff4d5e;">Enter both team names.</span>'; return; }
+  if (!league)         { if (status) status.innerHTML = '<span style="color:#ff4d5e;">Enter a league / event name.</span>'; return; }
+  if (!date)           { if (status) status.innerHTML = '<span style="color:#ff4d5e;">Pick a date.</span>'; return; }
+
+  const games = loadManualSchedule();
+  games.push({ id: "manual_" + Date.now(), blueTeam: blue, redTeam: red, league, date, blockName: block });
+  saveManualSchedule(games);
+
+  ["ms-blue","ms-red","ms-block"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+
+  if (status) status.innerHTML = '<span style="color:var(--green);">✓ Added — will appear in live pills on ' + date + '.</span>';
+  renderManualScheduleList();
+}
+
+function removeManualScheduleGame(id) {
+  saveManualSchedule(loadManualSchedule().filter(g => g.id !== id));
+  renderManualScheduleList();
+}
+
+function renderManualScheduleList() {
+  const el = document.getElementById("ms-sched-list");
+  if (!el) return;
+  const games = loadManualSchedule().sort((a,b) => a.date > b.date ? 1 : -1);
+  if (!games.length) { el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No manually scheduled games yet.</div>'; return; }
+  el.innerHTML = games.map(g => {
+    const isPast = g.date < localDateStr();
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);opacity:' + (isPast ? "0.5" : "1") + ';">' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:13px;font-weight:500;">' + g.blueTeam + ' vs ' + g.redTeam + '</div>' +
+        '<div style="font-size:11px;color:var(--muted);">' + g.league + (g.blockName ? ' \xb7 ' + g.blockName : '') + ' \xb7 ' + g.date + (isPast ? ' (past)' : '') + '</div>' +
+      '</div>' +
+      '<button onclick="removeManualScheduleGame(\'' + g.id + '\')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 4px;">✕</button>' +
+    '</div>';
+  }).join("");
+}
+
 // ── GitHub Pages deploy ───────────────────────────────────────────────────────
 const GH_TOKEN_KEY = "draftlogger_gh_token";
 const GH_REPO_KEY  = "draftlogger_gh_repo";
@@ -4673,7 +4869,7 @@ function show(screen) {
     if (screen === "stats")     renderStats();
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
-    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); }
+    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
@@ -4704,4 +4900,4 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-</body></html>
+</div></body></html>
