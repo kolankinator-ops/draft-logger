@@ -378,7 +378,7 @@
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
-  <button onclick="show('players');closeDrawer()">Players</button>
+  <button onclick="show('players');closeDrawer()" class="">Players</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
@@ -396,7 +396,7 @@
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
-  <button onclick="show('players')">Players</button>
+  <button onclick="show('players')" class="">Players</button>
   <button onclick="show('standings')">Standings</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
@@ -818,9 +818,7 @@
 <div class="screen" id="screen-players">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Player profiles</div>
-    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
-      <option value="all">All leagues</option>
-    </select>
+    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;"><option value="all">All leagues</option><option value="LES" selected="">LES</option><option value="LRN">LRN</option><option value="MSI">MSI</option><option value="Prime League">Prime League</option></select>
   </div>
   <div style="margin-bottom:12px;">
     <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
@@ -973,7 +971,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 12:10:35 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 2:11:55 PM</div>
     </div>
   </div>
 
@@ -1013,6 +1011,30 @@
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
     <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Encoding and pushing…</span></div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">🔔 Game notifications</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+      Get notified when a game starts or the draft is complete. Only fires while this tab is open.
+    </p>
+    <div id="notif-permission-row" style="margin-bottom:12px;"><div style="color:#ff4d5e;font-size:12px;">Notifications blocked — enable them in your browser settings for this site.</div></div>
+    <div id="notif-settings" style="display:none;">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;">
+          Game started
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;">
+          Draft complete (shows picks)
+        </label>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Leagues to watch:</div>
+      <div id="notif-league-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+      <div style="font-size:11px;color:var(--muted);">Leagues update from your tier list. Toggle any you want notifications for.</div>
+    </div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -4187,11 +4209,9 @@ function fullDataBundle() {
 function applyDataBundle(bundle, merge = false) {
   if (bundle.entries) {
     if (merge) {
-      // Merge: keep local entries not in bundle, add bundle entries not local
-      const local = loadEntries();
-      const localIds = new Set(local.map(e => e.id));
+      const local    = loadEntries();
       const bundleIds = new Set(bundle.entries.map(e => e.id));
-      const merged = [
+      const merged   = [
         ...local.filter(e => !bundleIds.has(e.id)),
         ...bundle.entries
       ].sort((a,b) => a.date < b.date ? 1 : -1);
@@ -4200,10 +4220,41 @@ function applyDataBundle(bundle, merge = false) {
       saveEntries(bundle.entries);
     }
   }
-  if (bundle.players)    savePlayers(bundle.players);
-  if (bundle.reviews)    saveReviews(bundle.reviews);
-  if (bundle.tierConfig)      saveTierConfig(bundle.tierConfig);
-  if (bundle.manualStandings) saveManualStandings(bundle.manualStandings);
+  if (bundle.players) savePlayers(bundle.players);
+  if (bundle.reviews) {
+    if (merge) {
+      // Merge reviews: keep local entry rankings that aren't in the cloud bundle
+      const localReviews  = loadReviews();
+      const cloudReviews  = bundle.reviews;
+      const merged = { ...localReviews };
+      // Cloud wins for any entry it has data for
+      Object.entries(cloudReviews).forEach(([id, ranks]) => { merged[id] = ranks; });
+      saveReviews(merged);
+    } else {
+      saveReviews(bundle.reviews);
+    }
+  }
+  if (bundle.tierConfig) {
+    if (merge) {
+      // Merge tier config: local adjustments win unless cloud has an entry
+      const local = loadTierConfig();
+      saveTierConfig({ ...local, ...bundle.tierConfig });
+    } else {
+      saveTierConfig(bundle.tierConfig);
+    }
+  }
+  if (bundle.manualStandings) {
+    if (merge) {
+      const local = loadManualStandings();
+      const merged = { ...local };
+      Object.entries(bundle.manualStandings).forEach(([league, teams]) => {
+        merged[league] = { ...(merged[league] || {}), ...teams };
+      });
+      saveManualStandings(merged);
+    } else {
+      saveManualStandings(bundle.manualStandings);
+    }
+  }
 }
 
 async function connectJsonBin() {
@@ -4369,6 +4420,168 @@ function importData(event) {
     event.target.value = ""; // reset so same file can be re-imported
   };
   reader.readAsText(file);
+}
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+const NOTIF_KEY = "draftlogger_notif_v1";
+
+function loadNotifSettings() {
+  try { return JSON.parse(localStorage.getItem(NOTIF_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveNotifSettings() {
+  const settings = {
+    gameStart: !!(document.getElementById("notif-game-start") || {}).checked,
+    draftDone: !!(document.getElementById("notif-draft-done") || {}).checked,
+    leagues:   getNotifLeagueSelections(),
+  };
+  localStorage.setItem(NOTIF_KEY, JSON.stringify(settings));
+}
+
+function getNotifLeagueSelections() {
+  const selected = [];
+  document.querySelectorAll(".notif-league-cb:checked").forEach(cb => selected.push(cb.value));
+  return selected;
+}
+
+async function renderNotifSettings() {
+  const permRow  = document.getElementById("notif-permission-row");
+  const settingsEl = document.getElementById("notif-settings");
+  if (!permRow) return;
+
+  const perm = Notification.permission;
+
+  if (perm === "denied") {
+    permRow.innerHTML = '<div style="color:#ff4d5e;font-size:12px;">Notifications blocked — enable them in your browser settings for this site.</div>';
+    if (settingsEl) settingsEl.style.display = "none";
+    return;
+  }
+
+  if (perm === "default") {
+    permRow.innerHTML = '<button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button>';
+    if (settingsEl) settingsEl.style.display = "none";
+    return;
+  }
+
+  // Granted
+  permRow.innerHTML = '<div style="color:var(--green);font-size:12px;">✓ Notifications enabled</div>';
+  if (settingsEl) settingsEl.style.display = "block";
+
+  const saved = loadNotifSettings();
+  const gsEl  = document.getElementById("notif-game-start");
+  const ddEl  = document.getElementById("notif-draft-done");
+  if (gsEl) gsEl.checked = !!saved.gameStart;
+  if (ddEl) ddEl.checked = !!saved.draftDone;
+
+  // Build league checkboxes from tier list
+  const listEl = document.getElementById("notif-league-list");
+  if (listEl) {
+    const leagues = Object.keys(DEFAULT_TIER_ASSIGNMENTS)
+      .filter(l => !INTL_KEYWORDS.some(k => l.toLowerCase().includes(k)));
+    const savedLeagues = saved.leagues || [];
+    listEl.innerHTML = leagues.map(l =>
+      '<label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;background:var(--surface2);padding:4px 8px;border-radius:5px;">' +
+      '<input type="checkbox" class="notif-league-cb" value="' + l + '" ' + (savedLeagues.includes(l) ? "checked" : "") + ' onchange="saveNotifSettings()" />' +
+      l + '</label>'
+    ).join("");
+  }
+}
+
+async function requestNotifPermission() {
+  const result = await Notification.requestPermission();
+  renderNotifSettings();
+  if (result === "granted") sendNotif("Notifications active", "You'll be notified when games start and drafts complete.", "test");
+}
+
+function sendNotif(title, body, tag) {
+  if (Notification.permission !== "granted") return;
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: "NOTIFY", title, body, tag });
+  } else {
+    new Notification(title, { body, tag });
+  }
+}
+
+// Notification state tracking (in-memory per session)
+const _notifGameStarted = new Set();  // gameIds we've fired "game started" for
+const _notifDraftDone   = new Set();  // gameIds we've fired "draft complete" for
+
+async function checkNotifications() {
+  const settings = loadNotifSettings();
+  if (!settings.gameStart && !settings.draftDone) return;
+  if (Notification.permission !== "granted") return;
+  const watchedLeagues = new Set(settings.leagues || []);
+  if (!watchedLeagues.size) return;
+
+  try {
+    const liveData = await apiGet("/getLive");
+    const events   = (liveData.data?.schedule?.events || [])
+      .filter(e => e.state === "inProgress" && e.type === "match");
+
+    for (const ev of events) {
+      try {
+        const det   = await apiGet("/getEventDetails", { id: ev.id });
+        const event = det.data?.event;
+        if (!event) continue;
+        const leagueName = event.league?.name || "";
+        if (!watchedLeagues.has(leagueName)) continue;
+
+        const matchTeams = event.match?.teams || [];
+        const tById = {};
+        matchTeams.forEach(t => { tById[t.id] = t.code || t.name || ""; });
+
+        const games = (event.match?.games || []).filter(g => g.state === "inProgress" || g.state === "in_game");
+        const totalGames = event.match?.games?.length || 1;
+
+        for (const g of games) {
+          const sides    = g.teams || [];
+          const blueEntry = sides.find(t => t.side === "blue");
+          const redEntry  = sides.find(t => t.side === "red");
+          const blue = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
+          const red  = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
+          const gameNum = g.number || 1;
+          const seriesLabel = totalGames > 1 ? " (Game " + gameNum + " of " + totalGames + ")" : "";
+          const gameKey = g.id + "-start";
+
+          // Game started notification
+          if (settings.gameStart && !_notifGameStarted.has(gameKey)) {
+            _notifGameStarted.add(gameKey);
+            sendNotif(
+              leagueName + ": " + blue + " vs " + red + seriesLabel,
+              "Game is starting now",
+              "start-" + g.id
+            );
+          }
+
+          // Draft complete notification
+          if (settings.draftDone) {
+            const draftKey = g.id + "-draft";
+            if (!_notifDraftDone.has(draftKey)) {
+              try {
+                const feedRes = await fetch("https://feed.lolesports.com/livestats/v1/window/" + g.id);
+                if (feedRes.ok) {
+                  const fd   = await feedRes.json();
+                  const meta = fd?.gameMetadata;
+                  if (meta) {
+                    const bluePicks = (meta.blueTeamMetadata?.participantMetadata || []).map(p => p.championId).filter(Boolean);
+                    const redPicks  = (meta.redTeamMetadata?.participantMetadata  || []).map(p => p.championId).filter(Boolean);
+                    if (bluePicks.length === 5 && redPicks.length === 5) {
+                      _notifDraftDone.add(draftKey);
+                      sendNotif(
+                        "Draft complete" + seriesLabel + " — " + leagueName,
+                        blue + ": " + bluePicks.join(", ") + "\n" + red + ": " + redPicks.join(", "),
+                        "draft-" + g.id
+                      );
+                    }
+                  }
+                }
+              } catch(e) {}
+            }
+          }
+        }
+      } catch(e) {}
+    }
+  } catch(e) {}
 }
 
 // ── Manual schedule ───────────────────────────────────────────────────────────
@@ -4797,7 +5010,8 @@ async function dbRefresh() {
 
 function dbStartPolling() {
   dbRefresh();
-  dbPollTimer = setInterval(dbRefresh, 8000);
+  checkNotifications();
+  dbPollTimer = setInterval(() => { dbRefresh(); checkNotifications(); }, 8000);
 }
 function dbStopPolling() {
   clearInterval(dbPollTimer);
@@ -4868,7 +5082,7 @@ function show(screen) {
     if (screen === "stats")     renderStats();
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
-    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); }
+    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
