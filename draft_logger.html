@@ -379,6 +379,7 @@
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
+  <button onclick="show('champions');closeDrawer()">Champions</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
@@ -397,6 +398,7 @@
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
+  <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
@@ -473,7 +475,7 @@
       </div>
     </div>
     <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">UB</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(3rd)</span> &nbsp;·&nbsp; <span style="color:var(--red);font-weight:600;">GX</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(3rd)</span></div>
+    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
@@ -494,16 +496,16 @@
     <div class="card-title">Draft picks</div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title">UB</div>
+        <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
         <div id="blue-picks">
     <div class="champ-row" id="pick-row-blue-0">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Sion/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
+        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
-          <span class="champ-name">Sion</span>
-          <span style="font-size:10px;color:var(--muted);">UB Pasamelcelo</span>
+          <span class="champ-name">TOP</span>
+          
         </div>
-        <button onclick="clearPick('blue',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
@@ -512,12 +514,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-1">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/MonkeyKing/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
+        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
-          <span class="champ-name">MonkeyKing</span>
-          <span style="font-size:10px;color:var(--muted);">UB Ivama</span>
+          <span class="champ-name">JNG</span>
+          
         </div>
-        <button onclick="clearPick('blue',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
@@ -526,12 +528,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-2">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Syndra/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
+        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
-          <span class="champ-name">Syndra</span>
-          <span style="font-size:10px;color:var(--muted);">UB Midnight</span>
+          <span class="champ-name">MID</span>
+          
         </div>
-        <button onclick="clearPick('blue',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
@@ -540,12 +542,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-3">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Sivir/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
+        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
-          <span class="champ-name">Sivir</span>
-          <span style="font-size:10px;color:var(--muted);">UB adrianlanei</span>
+          <span class="champ-name">BOT</span>
+          
         </div>
-        <button onclick="clearPick('blue',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
@@ -554,12 +556,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-4">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Alistar/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
+        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
-          <span class="champ-name">Alistar</span>
-          <span style="font-size:10px;color:var(--muted);">UB Xixauxas</span>
+          <span class="champ-name">SUP</span>
+          
         </div>
-        <button onclick="clearPick('blue',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
@@ -568,16 +570,16 @@
     </div></div>
       </div>
       <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title">GX</div>
+        <div class="draft-col-title" id="red-col-title">RED SIDE</div>
         <div id="red-picks">
     <div class="champ-row" id="pick-row-red-0">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Jayce/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',0)">
+        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
-          <span class="champ-name">Jayce</span>
-          <span style="font-size:10px;color:var(--muted);">GX Th3Antonio</span>
+          <span class="champ-name">TOP</span>
+          
         </div>
-        <button onclick="clearPick('red',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
@@ -586,12 +588,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-1">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/JarvanIV/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',1)">
+        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
-          <span class="champ-name">JarvanIV</span>
-          <span style="font-size:10px;color:var(--muted);">GX Time</span>
+          <span class="champ-name">JNG</span>
+          
         </div>
-        <button onclick="clearPick('red',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
@@ -600,12 +602,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-2">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Cassiopeia/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',2)">
+        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
-          <span class="champ-name">Cassiopeia</span>
-          <span style="font-size:10px;color:var(--muted);">GX Dyenn</span>
+          <span class="champ-name">MID</span>
+          
         </div>
-        <button onclick="clearPick('red',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
@@ -614,12 +616,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-3">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Lux/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',3)">
+        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
-          <span class="champ-name">Lux</span>
-          <span style="font-size:10px;color:var(--muted);">GX Rayito</span>
+          <span class="champ-name">BOT</span>
+          
         </div>
-        <button onclick="clearPick('red',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
@@ -628,12 +630,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-4">
       <div class="champ-row-top">
-        <img src="https://cdn.communitydragon.org/latest/champion/Karma/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',4)">
+        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
-          <span class="champ-name">Karma</span>
-          <span style="font-size:10px;color:var(--muted);">GX Attila</span>
+          <span class="champ-name">SUP</span>
+          
         </div>
-        <button onclick="clearPick('red',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
+        
       </div>
       <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
@@ -649,17 +651,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">UB +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">UB +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">GX +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">GX +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">UB</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -667,7 +669,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">GX</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -678,36 +680,36 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">UB</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">GX</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
+    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.3s; width: 80%;"></div>
+        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">UB 80%</span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">UB</span></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">20% GX</span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div>→ Champion patterns (7 champs with data)</div><div>↑ Champion flat-100 ROI (6 champs with data)</div></div>
-      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 3 games — treat with caution.</div>
-    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
+      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
+    </div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">UB wins</span>
+        <span id="pred-blue-label">Blue side wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">GX wins</span>
+        <span id="pred-red-label">Red side wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -718,11 +720,11 @@
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">UB side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">GX side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -770,10 +772,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">UB won</span>
+          <span id="vod-result-blue-label">Blue side won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">GX won</span>
+          <span id="vod-result-red-label">Red side won</span>
         </button>
       </div>
     </div>
@@ -832,6 +834,24 @@
     <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
   </div>
   <div id="player-profiles-list"></div>
+</div>
+
+<!-- CHAMPIONS -->
+<div class="screen" id="screen-champions">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:15px;font-weight:600;">Champions</div>
+    <div style="font-size:11px;color:var(--muted);" id="champ-count"></div>
+  </div>
+  <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()" style="margin-bottom:14px;">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="champ-role-tabs">
+    <button class="standings-tab active" onclick="setChampRoleFilter('all',this)">All roles</button>
+    <button class="standings-tab" onclick="setChampRoleFilter('top',this)">Top</button>
+    <button class="standings-tab" onclick="setChampRoleFilter('jungle',this)">Jungle</button>
+    <button class="standings-tab" onclick="setChampRoleFilter('mid',this)">Mid</button>
+    <button class="standings-tab" onclick="setChampRoleFilter('bottom',this)">Bot</button>
+    <button class="standings-tab" onclick="setChampRoleFilter('support',this)">Support</button>
+  </div>
+  <div id="champion-list"></div>
 </div>
 
 <!-- STANDINGS -->
@@ -979,7 +999,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/15/2026, 12:06:15 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/15/2026, 4:00:20 PM</div>
     </div>
   </div>
 
@@ -995,6 +1015,13 @@
     <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
     <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">Choose file</button>
     <div id="import-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">🔍 Live API debug</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Shows exactly what getLive returns — useful for diagnosing missing games.</p>
+    <button class="btn btn-ghost" style="width:100%;" onclick="runLiveDebug()">Check live feed now</button>
+    <div id="live-debug-out" style="margin-top:10px;font-size:11px;font-family:monospace;color:var(--muted);white-space:pre-wrap;max-height:300px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;display:none;"></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1248,11 +1275,43 @@ async function loadLiveGames() {
   try {
     const data   = await apiGet("/getLive");
     const events = (data.data && data.data.schedule && data.data.schedule.events) || [];
-    const live   = events.filter(e => e.state === "inProgress" && e.type === "match");
+    const live   = events.filter(e => e.state === "inProgress" && (e.type === "match" || e.type === "show"));
     const liveIds = new Set(live.map(e => e.id));
 
+    // Separate show-type events (e.g. EWC) from regular match events
+    const showEvents  = live.filter(e => e.type === "show");
+    const matchEvents = live.filter(e => e.type === "match");
+
+    // For show-type events, find the live match IDs from the schedule
+    const showMatchIds = [];
+    if (showEvents.length) {
+      try {
+        const showLeagues = new Set(showEvents.map(e => e.league?.name).filter(Boolean));
+        const sData = await apiGet("/getSchedule");
+        const schedEvs = (sData.data?.schedule?.events || []).filter(e =>
+          e.type === "match" && e.state === "inProgress" && showLeagues.has(e.league?.name)
+        );
+        // If none inProgress, try the most recent unstarted (stream may be ahead of schedule update)
+        if (!schedEvs.length) {
+          const unstartedEvs = (sData.data?.schedule?.events || []).filter(e =>
+            e.type === "match" && e.state === "unstarted" && showLeagues.has(e.league?.name) &&
+            (e.startTime || "").slice(0, 10) === localDateStr()
+          ).sort((a,b) => (a.startTime||"") > (b.startTime||"") ? 1 : -1);
+          if (unstartedEvs.length) schedEvs.push(unstartedEvs[0]);
+        }
+        schedEvs.forEach(e => { const id = e.match?.id || e.id; if (id) showMatchIds.push({ id, leagueName: e.league?.name || "" }); });
+      } catch(e) {}
+    }
+
     liveGameData = [];
-    for (const ev of live) {
+
+    // Process regular match events + show-derived match IDs
+    const eventsToProcess = [
+      ...matchEvents.map(e => ({ id: e.id, leagueName: e.league?.name || "", blockName: e.blockName || "", startTime: e.startTime || "" })),
+      ...showMatchIds.map(s => ({ id: s.id, leagueName: s.leagueName, blockName: "", startTime: "" }))
+    ];
+
+    for (const ev of eventsToProcess) {
       try {
         const det = await apiGet("/getEventDetails", { id: ev.id });
         const event = det.data && det.data.event;
@@ -1284,7 +1343,7 @@ async function loadLiveGames() {
             }
           } catch(e) {}
 
-          liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: event.league ? event.league.name : "", gameId: g.id, gameNumber: g.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks });
+          liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: ev.leagueName || (event.league ? event.league.name : ""), gameId: g.id, gameNumber: g.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks });
         }
       } catch(e) { console.warn("Error loading event", ev.id, e); }
     }
@@ -1305,7 +1364,7 @@ async function loadLiveGames() {
       const sData    = await apiGet("/getSchedule");
       const todayEvs = ((sData.data && sData.data.schedule && sData.data.schedule.events) || [])
         .filter(function(e) {
-          if (e.type !== "match") return false;
+          if (e.type !== "match" && e.type !== "show") return false;
           if (e.state !== "inProgress" && e.state !== "unstarted") return false;
           if ((e.startTime || "").slice(0, 10) !== today) return false;
           if (liveIds.has(e.id)) return false;
@@ -1913,6 +1972,233 @@ function removeLeague(league) {
   delete cfg[league];
   saveTierConfig(cfg);
   renderTiers();
+}
+
+// ── Champions ─────────────────────────────────────────────────────────────────
+const ROLE_DISPLAY = { top:"Top", jungle:"Jungle", mid:"Mid", bottom:"Bot", support:"Support" };
+let _champRoleFilter = "all";
+
+function setChampRoleFilter(role, btn) {
+  _champRoleFilter = role;
+  document.querySelectorAll("#champ-role-tabs .standings-tab").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  renderChampions();
+}
+
+function buildChampionData() {
+  const entries = loadEntries();
+  const champMap = {}; // champId -> { appearances: [{side,role,won,entry,marketWinProb}], vodOutcomes }
+
+  entries.forEach(e => {
+    if (!e.actualWinner) return;
+    ["blue","red"].forEach(side => {
+      (e.champions?.[side] || []).forEach((champId, i) => {
+        if (!champId) return;
+        const role      = ROLES[i] || "unknown";
+        const won       = e.actualWinner === side;
+        const isVod     = !!e.isVod;
+        const draftPref = e.draftPref || 0;
+        const prefForSide = side === "blue" ? -draftPref : draftPref; // positive = you prefer this side
+        // Market win probability for this champion's team (from stored odds if available)
+        let marketWinProb = null;
+        if (e.bet?.oppOdds) {
+          const blueOdds = e.bet.on === "blue" ? e.bet.odds : e.bet.oppOdds;
+          const redOdds  = e.bet.on === "red"  ? e.bet.odds : e.bet.oppOdds;
+          const sideOdds = side === "blue" ? blueOdds : redOdds;
+          const oppOdds  = side === "blue" ? redOdds  : blueOdds;
+          const raw      = 1 / sideOdds;
+          const rawOpp   = 1 / oppOdds;
+          marketWinProb  = raw / (raw + rawOpp);
+        }
+        // Also check the new mkt-blue-odds fields from saved entries
+        // (these don't save yet — future; for now only from bet odds)
+
+        if (!champMap[champId]) champMap[champId] = { roles: {} };
+        if (!champMap[champId].roles[role]) {
+          champMap[champId].roles[role] = {
+            appearances: 0, wins: 0,
+            betOddsGames: 0, betOddsWins: 0, marketWinProbSum: 0,
+            vodDraftWon: 0, vodSkillWon: 0, vodUnexplained: 0, vodTotal: 0,
+            draftPrefSum: 0, draftPrefFavored: 0, draftPrefFavoredWins: 0,
+            draftPrefAgainst: 0, draftPrefAgainstWins: 0,
+            leagues: {},
+            flat100: 0, flat100games: 0,
+          };
+        }
+        const rd = champMap[champId].roles[role];
+        rd.appearances++;
+        if (won) rd.wins++;
+
+        // Market edge
+        if (marketWinProb !== null) {
+          rd.betOddsGames++;
+          if (won) rd.betOddsWins++;
+          rd.marketWinProbSum += marketWinProb;
+        }
+
+        // VOD outcomes
+        if (isVod && draftPref !== 0) {
+          rd.vodTotal++;
+          const otherSide = side === "blue" ? "red" : "blue";
+          if (won) rd.vodDraftWon++;
+          else if (e.skillAdv === otherSide) rd.vodSkillWon++;
+          else rd.vodUnexplained++;
+        }
+
+        // Draft preference when this champion is present
+        rd.draftPrefSum += prefForSide;
+        if (prefForSide > 0) {
+          rd.draftPrefFavored++;
+          if (won) rd.draftPrefFavoredWins++;
+        } else if (prefForSide < 0) {
+          rd.draftPrefAgainst++;
+          if (won) rd.draftPrefAgainstWins++;
+        }
+
+        // League breakdown
+        const lg = e.league || "Unknown";
+        if (!rd.leagues[lg]) rd.leagues[lg] = { apps: 0, wins: 0 };
+        rd.leagues[lg].apps++;
+        if (won) rd.leagues[lg].wins++;
+
+        // Flat-100 ROI (from bet entries only)
+        if (e.bet && e.actualWinner) {
+          const betWon = e.actualWinner === e.bet.on;
+          const champIsOnBetSide = e.bet.on === side;
+          if (champIsOnBetSide) {
+            rd.flat100 += betWon ? (e.bet.odds - 1) * 100 : -100;
+            rd.flat100games++;
+          }
+        }
+      });
+    });
+  });
+
+  return champMap;
+}
+
+function renderChampions() {
+  const el      = document.getElementById("champion-list");
+  const countEl = document.getElementById("champ-count");
+  if (!el) return;
+
+  const q = (document.getElementById("champ-search")?.value || "").toLowerCase().trim();
+  const roleFilter = _champRoleFilter;
+  const champMap = buildChampionData();
+
+  // Filter and sort champions
+  let champs = Object.entries(champMap)
+    .filter(([id]) => !q || id.toLowerCase().includes(q))
+    .filter(([id, data]) => {
+      if (roleFilter === "all") return true;
+      return !!data.roles[roleFilter];
+    })
+    .sort((a, b) => {
+      const aTotal = Object.values(a[1].roles).reduce((s,r) => s + r.appearances, 0);
+      const bTotal = Object.values(b[1].roles).reduce((s,r) => s + r.appearances, 0);
+      return bTotal - aTotal;
+    });
+
+  if (countEl) countEl.textContent = champs.length + " champions";
+
+  if (!champs.length) {
+    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px 0;font-size:13px;">No champion data yet — games with picks logged will appear here.</div>';
+    return;
+  }
+
+  const pColor = v => v > 0 ? "var(--green)" : v < 0 ? "#ff4d5e" : "var(--muted)";
+
+  el.innerHTML = champs.map(([champId, data]) => {
+    const roles = roleFilter === "all"
+      ? Object.entries(data.roles)
+      : [[roleFilter, data.roles[roleFilter]]].filter(([,r]) => r);
+
+    // Overall totals across displayed roles
+    const totalApps = roles.reduce((s,[,r]) => s + r.appearances, 0);
+    const totalWins = roles.reduce((s,[,r]) => s + r.wins, 0);
+    const overallWR = totalApps ? Math.round(totalWins / totalApps * 100) : 0;
+
+    const showRoleSplit = roles.length > 1;
+
+    const roleCards = roles.map(([role, rd]) => {
+      const wr       = rd.appearances ? Math.round(rd.wins / rd.appearances * 100) : 0;
+      const impliedWR = rd.betOddsGames ? Math.round(rd.marketWinProbSum / rd.betOddsGames * 100) : null;
+      const edge     = impliedWR !== null ? (wr - impliedWR) : null;
+      const flat100  = rd.flat100games >= 2 ? rd.flat100 : null;
+
+      // League breakdown — show top 3 by appearances
+      const leagueRows = Object.entries(rd.leagues)
+        .filter(([,l]) => !INTL_KEYWORDS.some(k => l.toString().includes(k)))
+        .sort((a,b) => b[1].apps - a[1].apps)
+        .slice(0, 3)
+        .map(([lg, l]) => {
+          const lgWR = Math.round(l.wins / l.apps * 100);
+          return `<span style="font-size:10px;color:var(--muted);">${lg}: <b style="color:var(--text);">${lgWR}%</b> (${l.apps}g)</span>`;
+        }).join(" &nbsp;·&nbsp; ");
+
+      // Draft pref
+      let draftPrefNote = "";
+      if (rd.draftPrefFavored >= 2) {
+        const favWR = Math.round(rd.draftPrefFavoredWins / rd.draftPrefFavored * 100);
+        draftPrefNote += `When favoured in draft: <b style="color:${favWR>=60?"var(--green)":favWR>=50?"var(--yellow)":"#ff4d5e"};">${favWR}%</b> (${rd.draftPrefFavored}g) &nbsp;`;
+      }
+      if (rd.draftPrefAgainst >= 2) {
+        const agWR = Math.round(rd.draftPrefAgainstWins / rd.draftPrefAgainst * 100);
+        draftPrefNote += `When faded: <b style="color:${agWR>=60?"#ff4d5e":agWR>=50?"var(--yellow)":"var(--green)"};">${agWR}%</b> (${rd.draftPrefAgainst}g)`;
+      }
+
+      // VOD outcomes
+      let vodNote = "";
+      if (rd.vodTotal >= 2) {
+        vodNote = `Draft won: <span style="color:var(--green);">${rd.vodDraftWon}</span> &nbsp;·&nbsp; ` +
+                  `Skill overcame: <span style="color:var(--yellow);">${rd.vodSkillWon}</span> &nbsp;·&nbsp; ` +
+                  `Didn't prevail: <span style="color:#ff4d5e;">${rd.vodUnexplained}</span>`;
+      }
+
+      return `<div style="${showRoleSplit ? "background:var(--surface2);border-radius:7px;padding:10px;margin-top:8px;" : ""}">
+        ${showRoleSplit ? `<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">${ROLE_DISPLAY[role]||role}</div>` : ""}
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:12px;margin-bottom:8px;">
+          <div style="text-align:center;background:var(--bg);border-radius:5px;padding:6px;">
+            <div style="font-size:18px;font-weight:700;color:${wr>=60?"var(--green)":wr>=50?"var(--yellow)":"#ff4d5e"};">${wr}%</div>
+            <div style="font-size:10px;color:var(--muted);">Win rate</div>
+            <div style="font-size:10px;color:var(--muted);">${rd.appearances}g · ${rd.wins}W</div>
+          </div>
+          <div style="text-align:center;background:var(--bg);border-radius:5px;padding:6px;">
+            <div style="font-size:18px;font-weight:700;color:${impliedWR===null?"var(--muted)":edge>=5?"var(--green)":edge<=-5?"#ff4d5e":"var(--text)"};">
+              ${impliedWR !== null ? (edge >= 0 ? "+" : "") + edge + "%" : "—"}
+            </div>
+            <div style="font-size:10px;color:var(--muted);">vs market</div>
+            <div style="font-size:10px;color:var(--muted);">${impliedWR !== null ? "implied " + impliedWR + "%" : "no odds yet"}</div>
+          </div>
+          <div style="text-align:center;background:var(--bg);border-radius:5px;padding:6px;">
+            <div style="font-size:18px;font-weight:700;color:${flat100===null?"var(--muted)":pColor(flat100)};">
+              ${flat100 !== null ? (flat100 >= 0 ? "+" : "") + Math.round(flat100) : "—"}
+            </div>
+            <div style="font-size:10px;color:var(--muted);">Flat-100 ROI</div>
+            <div style="font-size:10px;color:var(--muted);">${rd.flat100games >= 2 ? rd.flat100games + " bets" : "< 2 bets"}</div>
+          </div>
+        </div>
+        ${draftPrefNote ? `<div style="font-size:11px;margin-bottom:5px;">${draftPrefNote}</div>` : ""}
+        ${vodNote ? `<div style="font-size:11px;margin-bottom:5px;">${vodNote}</div>` : ""}
+        ${leagueRows ? `<div style="margin-top:4px;">${leagueRows}</div>` : ""}
+      </div>`;
+    }).join("");
+
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <img src="${championImg(champId)}" style="width:36px;height:36px;border-radius:7px;flex-shrink:0;" onerror="this.style.display='none'" />
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;">${champId}</div>
+          <div style="font-size:11px;color:var(--muted);">
+            ${roles.map(([r]) => ROLE_DISPLAY[r]||r).join(" / ")} &nbsp;·&nbsp;
+            ${totalApps} game${totalApps!==1?"s":""} &nbsp;·&nbsp;
+            <span style="color:${overallWR>=60?"var(--green)":overallWR>=50?"var(--yellow)":"#ff4d5e"};">${overallWR}% overall</span>
+          </div>
+        </div>
+      </div>
+      ${roleCards}
+    </div>`;
+  }).join("");
 }
 
 // ── Standings ─────────────────────────────────────────────────────────────────
@@ -4662,6 +4948,55 @@ function renderManualScheduleList() {
   }).join("");
 }
 
+async function runLiveDebug() {
+  const out = document.getElementById("live-debug-out");
+  if (!out) return;
+  out.style.display = "block";
+  out.textContent = "Fetching…";
+  try {
+    const data   = await apiGet("/getLive");
+    const events = (data.data?.schedule?.events) || [];
+    if (!events.length) { out.textContent = "getLive returned 0 events."; return; }
+
+    let text = "=== getLive events ===\n";
+    text += events.map(e =>
+      `type="${e.type}" state="${e.state}" league="${e.league?.name||"?"}" id="${e.id}"`
+    ).join("\n");
+
+    // Call getEventDetails on each and show structure
+    text += "\n\n=== getEventDetails per event ===\n";
+    for (const ev of events) {
+      try {
+        const det   = await apiGet("/getEventDetails", { id: ev.id });
+        const event = det.data?.event;
+        if (!event) { text += `\n[${ev.id}] → no event data\n`; continue; }
+        const matchKeys = Object.keys(event.match || {}).join(", ");
+        const games     = (event.match?.games || []).map(g => `id=${g.id} state=${g.state} num=${g.number}`).join("; ");
+        const type      = event.type || "?";
+        text += `\n[${ev.league?.name}] id=${ev.id}\n`;
+        text += `  event.type="${type}" match keys: ${matchKeys||"none"}\n`;
+        text += `  games: ${games || "none"}\n`;
+        // Show any top-level keys we might be missing
+        text += `  top-level keys: ${Object.keys(event).join(", ")}\n`;
+      } catch(e) { text += `\n[${ev.id}] → error: ${e.message}\n`; }
+    }
+
+    // Today schedule
+    text += "\n=== getSchedule (today, match+show) ===\n";
+    const sData   = await apiGet("/getSchedule");
+    const today   = localDateStr();
+    const todayEvs = ((sData.data?.schedule?.events) || [])
+      .filter(e => (e.startTime||"").slice(0,10) === today);
+    text += todayEvs.map(e =>
+      `type="${e.type}" state="${e.state}" league="${e.league?.name||"?"}" id="${e.match?.id||e.id}"`
+    ).join("\n");
+
+    out.textContent = text;
+  } catch(e) {
+    out.textContent = "Error: " + e.message;
+  }
+}
+
 // ── GitHub Pages deploy ───────────────────────────────────────────────────────
 const GH_TOKEN_KEY = "draftlogger_gh_token";
 const GH_REPO_KEY  = "draftlogger_gh_repo";
@@ -4975,7 +5310,10 @@ async function dbRefresh() {
   const lastEl = document.getElementById("db-last-updated");
   try {
     const liveData = await apiGet("/getLive");
-    const events   = (liveData.data?.schedule?.events||[]).filter(e => e.state==="inProgress" && e.type==="match");
+    const allLive  = (liveData.data?.schedule?.events||[]).filter(e => e.state==="inProgress" && (e.type==="match"||e.type==="show"));
+    const showEvs  = allLive.filter(e => e.type==="show");
+    const matchEvs = allLive.filter(e => e.type==="match");
+
     // Upcoming
     apiGet("/getSchedule").then(d => {
       const upcoming = ((d.data?.schedule?.events)||[])
@@ -4993,13 +5331,38 @@ async function dbRefresh() {
       }).join("")}</div>`;
     }).catch(()=>{});
 
-    if (!events.length) {
+    // Resolve show-type events to their underlying match IDs via the schedule
+    const eventsToProcess = [...matchEvs];
+    if (showEvs.length) {
+      try {
+        const showLeagues = new Set(showEvs.map(e => e.league?.name).filter(Boolean));
+        const sData = await apiGet("/getSchedule");
+        const schedEvs = (sData.data?.schedule?.events||[]).filter(e =>
+          e.type==="match" && e.state==="inProgress" && showLeagues.has(e.league?.name)
+        );
+        if (!schedEvs.length) {
+          // Fallback: take the earliest unstarted match for that league today
+          const today = localDateStr();
+          (sData.data?.schedule?.events||[])
+            .filter(e => e.type==="match" && e.state==="unstarted" && showLeagues.has(e.league?.name) && (e.startTime||"").slice(0,10)===today)
+            .sort((a,b) => (a.startTime||"")>(b.startTime||"") ? 1 : -1)
+            .slice(0,1)
+            .forEach(e => schedEvs.push(e));
+        }
+        schedEvs.forEach(e => {
+          const id = e.match?.id || e.id;
+          if (id) eventsToProcess.push({ id, league: { name: e.league?.name||"Esports World Cup" }, type: "match" });
+        });
+      } catch(e) {}
+    }
+
+    if (!eventsToProcess.length) {
       dbSyncCards([]);
       if (lastEl) lastEl.textContent = "No live matches — " + new Date().toLocaleTimeString();
       return;
     }
     const cards = [];
-    for (const ev of events) {
+    for (const ev of eventsToProcess) {
       try {
         const det = await apiGet("/getEventDetails", { id: ev.id });
         const event = det.data?.event;
@@ -5014,10 +5377,10 @@ async function dbRefresh() {
           cards.push({
             blueCode: blueEntry ? (tById[blueEntry.id]||"Blue") : "Blue",
             redCode:  redEntry  ? (tById[redEntry.id] ||"Red")  : "Red",
-            league: event.league?.name||"",
+            league: event.league?.name||ev.league?.name||"",
             gameId: g.id,
             gameNumber: g.number||null,
-            picks: { blue: (event.match?.games||[]).length ? [] : [], red: [] }
+            picks: { blue: [], red: [] }
           });
         });
       } catch(e) { console.warn("db event detail error", e); }
@@ -5098,8 +5461,9 @@ function show(screen) {
     if (screen === "results")   { renderPending(); autoCheckResults(); }
     if (screen === "history")   renderHistory();
     if (screen === "review")    { populateReviewSelect(); if (document.getElementById("review-game-select").value) loadReviewGame(); }
-    if (screen === "standings") renderStandings();
-    if (screen === "players")   renderPlayerProfiles();
+    if (screen === "standings")  renderStandings();
+    if (screen === "champions")  renderChampions();
+    if (screen === "players")    renderPlayerProfiles();
     if (screen === "tiers")     renderTiers();
     if (screen === "stats")     renderStats();
     if (screen === "bets")      renderBets();
