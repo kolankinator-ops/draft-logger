@@ -373,12 +373,12 @@
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
-  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
-  <button onclick="show('players');closeDrawer()" class="">Players</button>
+  <button onclick="show('players');closeDrawer()">Players</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
@@ -396,7 +396,7 @@
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
-  <button onclick="show('players')" class="">Players</button>
+  <button onclick="show('players')">Players</button>
   <button onclick="show('standings')">Standings</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
@@ -473,7 +473,7 @@
       </div>
     </div>
     <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
+    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">UB</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(3rd)</span> &nbsp;·&nbsp; <span style="color:var(--red);font-weight:600;">GX</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(3rd)</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
@@ -494,16 +494,16 @@
     <div class="card-title">Draft picks</div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
+        <div class="draft-col-title" id="blue-col-title">UB</div>
         <div id="blue-picks">
     <div class="champ-row" id="pick-row-blue-0">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Sion/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
-          <span class="champ-name">TOP</span>
-          
+          <span class="champ-name">Sion</span>
+          <span style="font-size:10px;color:var(--muted);">UB Pasamelcelo</span>
         </div>
-        
+        <button onclick="clearPick('blue',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
@@ -512,12 +512,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-1">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/MonkeyKing/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
-          <span class="champ-name">JNG</span>
-          
+          <span class="champ-name">MonkeyKing</span>
+          <span style="font-size:10px;color:var(--muted);">UB Ivama</span>
         </div>
-        
+        <button onclick="clearPick('blue',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
@@ -526,12 +526,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-2">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Syndra/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
-          <span class="champ-name">MID</span>
-          
+          <span class="champ-name">Syndra</span>
+          <span style="font-size:10px;color:var(--muted);">UB Midnight</span>
         </div>
-        
+        <button onclick="clearPick('blue',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
@@ -540,12 +540,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-3">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Sivir/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
-          <span class="champ-name">BOT</span>
-          
+          <span class="champ-name">Sivir</span>
+          <span style="font-size:10px;color:var(--muted);">UB adrianlanei</span>
         </div>
-        
+        <button onclick="clearPick('blue',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
@@ -554,12 +554,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-4">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Alistar/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
-          <span class="champ-name">SUP</span>
-          
+          <span class="champ-name">Alistar</span>
+          <span style="font-size:10px;color:var(--muted);">UB Xixauxas</span>
         </div>
-        
+        <button onclick="clearPick('blue',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
@@ -568,16 +568,16 @@
     </div></div>
       </div>
       <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title">RED SIDE</div>
+        <div class="draft-col-title" id="red-col-title">GX</div>
         <div id="red-picks">
     <div class="champ-row" id="pick-row-red-0">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Jayce/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',0)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
-          <span class="champ-name">TOP</span>
-          
+          <span class="champ-name">Jayce</span>
+          <span style="font-size:10px;color:var(--muted);">GX Th3Antonio</span>
         </div>
-        
+        <button onclick="clearPick('red',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
@@ -586,12 +586,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-1">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/JarvanIV/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',1)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
-          <span class="champ-name">JNG</span>
-          
+          <span class="champ-name">JarvanIV</span>
+          <span style="font-size:10px;color:var(--muted);">GX Time</span>
         </div>
-        
+        <button onclick="clearPick('red',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
@@ -600,12 +600,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-2">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Cassiopeia/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',2)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
-          <span class="champ-name">MID</span>
-          
+          <span class="champ-name">Cassiopeia</span>
+          <span style="font-size:10px;color:var(--muted);">GX Dyenn</span>
         </div>
-        
+        <button onclick="clearPick('red',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
@@ -614,12 +614,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-3">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Lux/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',3)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
-          <span class="champ-name">BOT</span>
-          
+          <span class="champ-name">Lux</span>
+          <span style="font-size:10px;color:var(--muted);">GX Rayito</span>
         </div>
-        
+        <button onclick="clearPick('red',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
@@ -628,12 +628,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-4">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Karma/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',4)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
-          <span class="champ-name">SUP</span>
-          
+          <span class="champ-name">Karma</span>
+          <span style="font-size:10px;color:var(--muted);">GX Attila</span>
         </div>
-        
+        <button onclick="clearPick('red',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
@@ -649,17 +649,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">UB +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">UB +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">GX +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">GX +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">UB</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -667,7 +667,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">GX</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -678,36 +678,36 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">UB</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">GX</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
+    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
+        <div id="model-bar-fill" style="height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.3s; width: 80%;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">UB 80%</span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">UB</span></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">20% GX</span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
-      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
-    </div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div>→ Champion patterns (7 champs with data)</div><div>↑ Champion flat-100 ROI (6 champs with data)</div></div>
+      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 3 games — treat with caution.</div>
+    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">Blue side wins</span>
+        <span id="pred-blue-label">UB wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">Red side wins</span>
+        <span id="pred-red-label">GX wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -715,6 +715,16 @@
       <button class="conf-btn" onclick="setConf('medium')">Medium</button>
       <button class="conf-btn" onclick="setConf('high')">High confidence</button>
     </div>
+    </div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div>
+        <label id="mkt-blue-label">UB side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
+      </div>
+      <div>
+        <label id="mkt-red-label">GX side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
+      </div>
     </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
     <textarea id="notes" placeholder="e.g. Blue has strong engage with Amumu + Jarvan, red has no reliable disengage…"></textarea>
@@ -742,14 +752,10 @@
             </select>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label>Your odds</label>
             <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
-          </div>
-          <div>
-            <label>Opponent odds</label>
-            <input type="number" id="bet-opp-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
           </div>
           <div>
             <label>Stake</label>
@@ -764,10 +770,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">Blue side won</span>
+          <span id="vod-result-blue-label">UB won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">Red side won</span>
+          <span id="vod-result-red-label">GX won</span>
         </button>
       </div>
     </div>
@@ -818,7 +824,9 @@
 <div class="screen" id="screen-players">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Player profiles</div>
-    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;"><option value="all">All leagues</option><option value="LES" selected="">LES</option><option value="LRN">LRN</option><option value="MSI">MSI</option><option value="Prime League">Prime League</option></select>
+    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
+      <option value="all">All leagues</option>
+    </select>
   </div>
   <div style="margin-bottom:12px;">
     <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
@@ -971,7 +979,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/14/2026, 2:11:55 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/15/2026, 12:06:15 PM</div>
     </div>
   </div>
 
@@ -1122,14 +1130,16 @@ async function loadRecentGames() {
   if (!el) return;
   try {
     const today = localDateStr();
+    const dismissed = new Set(JSON.parse(sessionStorage.getItem("dismissed_recent") || "[]"));
     const data  = await apiGet("/getSchedule");
     const events = (data.data?.schedule?.events || [])
       .filter(e => {
         if (e.type !== "match" || e.state !== "completed") return false;
         if ((e.startTime || "").slice(0, 10) !== today) return false;
-        // Hide games already logged in any form
         const teams = (e.match?.teams || []).map(t => t.code || t.name || "");
         if (teams.length >= 2 && isGameLogged(teams[0], teams[1], today)) return false;
+        const eid = e.match?.id || e.id || "";
+        if (dismissed.has(eid)) return false;
         return true;
       })
       .sort((a,b) => (b.startTime||"") > (a.startTime||"") ? 1 : -1)
@@ -1142,21 +1152,29 @@ async function loadRecentGames() {
     window._recentEvents = events;
     el.innerHTML = events.map((ev, idx) => {
       const teams     = (ev.match?.teams || []);
-      const winner    = teams.find(t => t.result?.outcome === "win");
       const teamNames = teams.map(t => t.code || t.name || "TBD").join(" vs ");
       const league    = ev.league?.name || "";
-      return `<div class="live-pill" onclick="loadRecentGame(${idx})" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;">⏱</span>
-        <span style="flex:1;min-width:0;">
+      const eid       = ev.match?.id || ev.id || "";
+      return `<div class="live-pill" style="opacity:0.85;">
+        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="loadRecentGame(${idx})">⏱</span>
+        <span style="flex:1;min-width:0;cursor:pointer;" onclick="loadRecentGame(${idx})">
           <b>${teamNames}</b>
           <span style="color:var(--muted);"> · ${league}</span>
           <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
         </span>
+        <button onclick="dismissRecentGame('${eid}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
       </div>`;
     }).join("");
   } catch(e) {
     if (el) el.innerHTML = '<div style="color:var(--muted);font-size:12px;">Couldn\'t load recent games.</div>';
   }
+}
+
+function dismissRecentGame(eid) {
+  const dismissed = new Set(JSON.parse(sessionStorage.getItem("dismissed_recent") || "[]"));
+  dismissed.add(eid);
+  sessionStorage.setItem("dismissed_recent", JSON.stringify([...dismissed]));
+  loadRecentGames();
 }
 
 async function loadRecentGame(idx) {
@@ -2439,6 +2457,11 @@ function updateColTitles() {
   const vrl = document.getElementById("vod-result-red-label");
   if (vbl) vbl.textContent = blue + " won";
   if (vrl) vrl.textContent = red  + " won";
+  // Market odds labels
+  const mbl = document.getElementById("mkt-blue-label");
+  const mrl = document.getElementById("mkt-red-label");
+  if (mbl) mbl.innerHTML = (blue||"Blue") + " side odds <span style='font-weight:400;color:var(--muted);'>(optional)</span>";
+  if (mrl) mrl.innerHTML = (red ||"Red")  + " side odds <span style='font-weight:400;color:var(--muted);'>(optional)</span>";
   refreshBetSelects();
   updateDraftRatingIndicator();
   updateStandingsIndicator();
@@ -2573,7 +2596,7 @@ function saveEntry() {
 }
 
 function clearForm() {
-  ["blue-team","red-team","league","event-context","notes"].forEach(id => {
+  ["blue-team","red-team","league","event-context","notes","mkt-blue-odds","mkt-red-odds"].forEach(id => {
     document.getElementById(id).value = "";
   });
   document.getElementById("game-date").value = localDateStr();
@@ -3810,9 +3833,8 @@ function runPredictionModel() {
   }
 
   // ── Market vs Model comparison ───────────────────────────────────────────────
-  const yourOdds = parseFloat((document.getElementById("bet-odds")     || {}).value) || null;
-  const oppOdds  = parseFloat((document.getElementById("bet-opp-odds") || {}).value) || null;
-  const betOn    = (document.getElementById("bet-team-on") || {}).value || null;
+  const blueOddsInput = parseFloat((document.getElementById("mkt-blue-odds") || {}).value) || null;
+  const redOddsInput  = parseFloat((document.getElementById("mkt-red-odds")  || {}).value) || null;
 
   let mktEl = document.getElementById("model-market-compare");
   if (!mktEl) {
@@ -3822,12 +3844,9 @@ function runPredictionModel() {
     el.appendChild(mktEl);
   }
 
-  if (yourOdds && oppOdds && betOn) {
-    // Determine which odds belong to blue vs red, then normalise to remove vig
-    const blueOdds = betOn === "blue" ? yourOdds : oppOdds;
-    const redOdds  = betOn === "red"  ? yourOdds : oppOdds;
-    const rawBlue  = 1 / blueOdds;
-    const rawRed   = 1 / redOdds;
+  if (blueOddsInput && redOddsInput) {
+    const rawBlue  = 1 / blueOddsInput;
+    const rawRed   = 1 / redOddsInput;
     const total    = rawBlue + rawRed;
     const mktBlue  = Math.round((rawBlue / total) * 100);
     const mktRed   = 100 - mktBlue;
@@ -3904,9 +3923,12 @@ function getBetData() {
   const on      = document.getElementById("bet-team-on").value;
   const against = document.getElementById("bet-team-against").value;
   const odds    = parseFloat(document.getElementById("bet-odds").value);
-  const oppOdds = parseFloat(document.getElementById("bet-opp-odds").value) || null;
   const stake   = parseFloat(document.getElementById("bet-stake").value);
   if (!on || !odds || !stake) return null;
+  // Derive opponent odds from the market odds fields if available
+  const blueOdds = parseFloat((document.getElementById("mkt-blue-odds") || {}).value) || null;
+  const redOdds  = parseFloat((document.getElementById("mkt-red-odds")  || {}).value) || null;
+  const oppOdds  = on === "blue" ? redOdds : blueOdds;
   return { on, against, odds, oppOdds, stake };
 }
 
@@ -3915,7 +3937,7 @@ function resetBetForm() {
   document.getElementById("bet-form").style.display = "none";
   document.getElementById("bet-yes-btn").classList.remove("sel");
   document.getElementById("bet-no-btn").classList.add("sel");
-  ["bet-team-on","bet-team-against","bet-odds","bet-opp-odds","bet-stake"]
+  ["bet-team-on","bet-team-against","bet-odds","bet-stake"]
     .forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
 }
 
