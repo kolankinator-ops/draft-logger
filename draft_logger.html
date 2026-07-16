@@ -273,7 +273,16 @@
   .db-hp-fill.crit { background:#e0473f; }
   .db-items-row { display:flex;gap:2px; }
   .db-items-row img { width:16px;height:16px;border-radius:3px;background:#1c1f29; }
-  .db-log-btn { display:block;text-align:center;font-size:12px;padding:8px 0;border-top:1px solid var(--border);color:var(--blue);cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:inherit;font-weight:600; }
+  .db-event-log { padding:8px 14px 4px;border-top:1px solid var(--border);max-height:180px;overflow-y:auto; }
+  .db-event-log-title { font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px; }
+  .db-event-row { display:flex;gap:8px;align-items:baseline;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;line-height:1.5; }
+  .db-event-row:last-child { border-bottom:none; }
+  .db-event-time { color:var(--muted);flex-shrink:0;font-size:10px;font-family:monospace;width:34px; }
+  .db-event-text { flex:1;min-width:0; }
+  .db-ev-blue { color:var(--blue);font-weight:600; }
+  .db-ev-red  { color:var(--red);font-weight:600; }
+  .db-ev-kill { color:var(--text); }
+  .db-ev-obj  { color:var(--yellow); }text-align:center;font-size:12px;padding:8px 0;border-top:1px solid var(--border);color:var(--blue);cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:inherit;font-weight:600; }
   .db-log-btn:hover { background:rgba(91,140,255,.07); }
   .db-upcoming { background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:4px; }
   .db-upcoming h2 { font-size:14px;margin:0 0 10px;color:var(--muted);font-weight:600; }
@@ -4898,7 +4907,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/15/2026, 5:27:36 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/16/2026, 9:15:54 AM</div>
     </div>
   </div>
 
@@ -9086,6 +9095,150 @@ async function pushToGitHub() {
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 const dbGameCache    = new Map(); // gameId -> { meta, lastFrame, lastDetailsFrame, noFeed }
+const dbEventLogs    = new Map(); // gameId -> array of event strings (newest first)
+const dbPrevFrames   = new Map(); // gameId -> previous frame for diffing
+
+const DRAGON_NAMES = {
+  fire: "Infernal", earth: "Mountain", wind: "Cloud", water: "Ocean",
+  hextech: "Hextech", chemtech: "Chemtech", elder: "Elder"
+};
+
+function dbGameTime(cached) {
+  // Estimate game time from frame timestamp vs match start
+  // Use number of events in log as rough proxy if no better data
+  if (cached.lastFrame && cached.lastFrame.rfc460Timestamp) {
+    // Not reliable without match start time — use meta if available
+  }
+  return null;
+}
+
+function dbFmtTime(ms) {
+  if (!ms && ms !== 0) return "";
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const ss = String(s % 60).padStart(2, "0");
+  return m + ":" + ss;
+}
+
+function dbProcessEvents(gameId, newFrame, prevFrame, meta) {
+  if (!newFrame || !prevFrame || !meta) return [];
+  const events = [];
+
+  // Build participant lookup: id -> { name, champId, side }
+  const partById = {};
+  const blueParts = meta.blueTeamMetadata?.participantMetadata || [];
+  const redParts  = meta.redTeamMetadata?.participantMetadata  || [];
+  blueParts.forEach(p => { partById[p.participantId] = { name: p.summonerName, champ: p.championId, side: "blue" }; });
+  redParts.forEach(p  => { partById[p.participantId] = { name: p.summonerName, champ: p.championId, side: "red"  }; });
+
+  const blueCode = meta.blueTeamMetadata?.esportsTeamId ? "" : "Blue"; // fallback
+  const redCode  = meta.redTeamMetadata?.esportsTeamId  ? "" : "Red";
+
+  // Get team codes from cached card data
+  const cardEl = document.querySelector(`[id="db-events-${gameId}"]`)?.closest(".match-card");
+  const teamNames = { blue: cardEl?.querySelector(".teams")?.textContent?.split(" vs ")[0]?.trim() || "Blue",
+                      red:  cardEl?.querySelector(".teams")?.textContent?.split(" vs ")[1]?.trim() || "Red" };
+
+  const fmt = (pid, showChamp = true) => {
+    const p = partById[pid];
+    if (!p) return "Unknown";
+    const cls = p.side === "blue" ? "db-ev-blue" : "db-ev-red";
+    return `<span class="${cls}">${teamNames[p.side]}</span> ${p.name}${showChamp && p.champ ? " <span style='color:var(--muted);'>[${p.champ}]</span>" : ""}`;
+  };
+
+  // ── Kill diffs ────────────────────────────────────────────────────────────
+  const newAllParts  = [...(newFrame.blueTeam?.participants||[]), ...(newFrame.redTeam?.participants||[])];
+  const prevAllParts = [...(prevFrame.blueTeam?.participants||[]), ...(prevFrame.redTeam?.participants||[])];
+  const prevById = {};
+  prevAllParts.forEach(p => { prevById[p.participantId] = p; });
+
+  // Find who died (death count went up)
+  const deaths = newAllParts.filter(p => {
+    const prev = prevById[p.participantId];
+    return prev && (p.deaths || 0) > (prev.deaths || 0);
+  });
+
+  // Find who got kills (kill count went up)
+  const killers = newAllParts.filter(p => {
+    const prev = prevById[p.participantId];
+    return prev && (p.kills || 0) > (prev.kills || 0);
+  });
+
+  // Find assisters (assist count went up)
+  const assisters = newAllParts.filter(p => {
+    const prev = prevById[p.participantId];
+    return prev && (p.assists || 0) > (prev.assists || 0) && !killers.find(k => k.participantId === p.participantId);
+  });
+
+  deaths.forEach(victim => {
+    const killer = killers[0]; // best guess if multiple kills same frame
+    let text = "";
+    if (killer) {
+      text = fmt(killer.participantId) + ` <span class="db-ev-kill">slew</span> ` + fmt(victim.participantId);
+      if (assisters.length) {
+        text += ` <span style="color:var(--muted);">(${assisters.map(a => fmt(a.participantId, false)).join(", ")} assisted)</span>`;
+      }
+    } else {
+      text = fmt(victim.participantId) + ` <span class="db-ev-kill">was slain</span>`;
+    }
+    events.push({ text, type: "kill" });
+  });
+
+  // ── Objective diffs ───────────────────────────────────────────────────────
+  const prevBlueDragons = prevFrame.blueTeam?.dragons || [];
+  const newBlueDragons  = newFrame.blueTeam?.dragons  || [];
+  const prevRedDragons  = prevFrame.redTeam?.dragons  || [];
+  const newRedDragons   = newFrame.redTeam?.dragons   || [];
+
+  if (newBlueDragons.length > prevBlueDragons.length) {
+    const type = newBlueDragons[newBlueDragons.length - 1] || "";
+    const name = DRAGON_NAMES[type.toLowerCase()] || (type || "");
+    events.push({ text: `<span class="db-ev-blue">${teamNames.blue}</span> <span class="db-ev-obj">slew the ${name} Dragon</span>`, type: "obj" });
+  }
+  if (newRedDragons.length > prevRedDragons.length) {
+    const type = newRedDragons[newRedDragons.length - 1] || "";
+    const name = DRAGON_NAMES[type.toLowerCase()] || (type || "");
+    events.push({ text: `<span class="db-ev-red">${teamNames.red}</span> <span class="db-ev-obj">slew the ${name} Dragon</span>`, type: "obj" });
+  }
+
+  const prevBlueBarons = prevFrame.blueTeam?.barons || 0;
+  const newBlueBarons  = newFrame.blueTeam?.barons  || 0;
+  const prevRedBarons  = prevFrame.redTeam?.barons  || 0;
+  const newRedBarons   = newFrame.redTeam?.barons   || 0;
+  if (newBlueBarons > prevBlueBarons) events.push({ text: `<span class="db-ev-blue">${teamNames.blue}</span> <span class="db-ev-obj">slew Baron Nashor</span>`, type: "obj" });
+  if (newRedBarons  > prevRedBarons)  events.push({ text: `<span class="db-ev-red">${teamNames.red}</span> <span class="db-ev-obj">slew Baron Nashor</span>`,  type: "obj" });
+
+  const prevBlueTowers = prevFrame.blueTeam?.towers || 0;
+  const newBlueTowers  = newFrame.blueTeam?.towers  || 0;
+  const prevRedTowers  = prevFrame.redTeam?.towers  || 0;
+  const newRedTowers   = newFrame.redTeam?.towers   || 0;
+  if (newBlueTowers > prevBlueTowers) events.push({ text: `<span class="db-ev-blue">${teamNames.blue}</span> <span class="db-ev-obj">destroyed a tower</span>`, type: "obj" });
+  if (newRedTowers  > prevRedTowers)  events.push({ text: `<span class="db-ev-red">${teamNames.red}</span> <span class="db-ev-obj">destroyed a tower</span>`,  type: "obj" });
+
+  return events;
+}
+
+function dbUpdateEventLog(gameId, newEvents, frameTimestamp) {
+  const existing = dbEventLogs.get(gameId) || [];
+  const timeLabel = frameTimestamp ? dbFmtTime(frameTimestamp) : "";
+  const tagged = newEvents.map(e => ({ ...e, time: timeLabel }));
+  const updated = [...tagged, ...existing].slice(0, 30); // keep newest 30
+  dbEventLogs.set(gameId, updated);
+
+  const el = document.getElementById("db-events-" + gameId);
+  if (!el) return;
+  if (!updated.length) { el.innerHTML = '<div class="db-event-log-title">Game log</div><div style="color:var(--muted);font-size:11px;">No events yet…</div>'; return; }
+
+  el.innerHTML = '<div class="db-event-log-title">Game log</div>' +
+    updated.map(e =>
+      `<div class="db-event-row">` +
+      `<span class="db-event-time">${e.time || ""}</span>` +
+      `<span class="db-event-text">${e.text}</span>` +
+      `</div>`
+    ).join("");
+}
+
+
 const dbRenderedCards = new Map(); // gameId -> DOM element
 const dbStepCache    = new Map(); // gameId -> last successful backwalk step (saves re-walking)
 let   dbPollTimer    = null;
@@ -9255,6 +9408,23 @@ async function dbRefreshGame(gameId) {
     } else {
       dbRenderStats(gameId, cached);
       dbRenderScoreboard(gameId, cached);
+      // Event log — diff current frame vs previous
+      const newFrame  = cached.lastFrame;
+      const prevFrame = dbPrevFrames.get(gameId);
+      if (newFrame && prevFrame && cached.meta) {
+        // Estimate game time from frame count as rough proxy
+        const newEvents = dbProcessEvents(gameId, newFrame, prevFrame, cached.meta);
+        if (newEvents.length) {
+          // Estimate game time: use total kills as rough proxy for labelling
+          const totalKills = (newFrame.blueTeam?.totalKills||0) + (newFrame.redTeam?.totalKills||0);
+          dbUpdateEventLog(gameId, newEvents, null);
+        }
+      } else if (newFrame && !prevFrame) {
+        // First frame — init the log
+        const el = document.getElementById("db-events-" + gameId);
+        if (el) el.innerHTML = '<div class="db-event-log-title">Game log</div><div style="color:var(--muted);font-size:11px;">Tracking events…</div>';
+      }
+      if (newFrame) dbPrevFrames.set(gameId, JSON.parse(JSON.stringify(newFrame)));
     }
   } catch(e) { console.warn("db feed error", gameId, e); }
 }
@@ -9280,6 +9450,10 @@ function dbBuildCard(c) {
       <div class="db-scoreboard-title">Scoreboard</div>
       <div style="color:var(--muted);font-size:12px;">Loading…</div>
     </div>
+    <div class="db-event-log" id="db-events-${c.gameId}">
+      <div class="db-event-log-title">Game log</div>
+      <div style="color:var(--muted);font-size:11px;">Waiting for events…</div>
+    </div>
     <a href="https://andydanger.github.io/live-lol-esports/#/live/${c.gameId}" target="_blank" rel="noopener"
       style="display:block;text-align:center;font-size:11px;padding:6px 0;border-top:1px solid var(--border);color:var(--blue);text-decoration:none;">
       Open on andydanger ↗
@@ -9295,7 +9469,13 @@ function dbSyncCards(cards) {
   if (!grid) return;
   const currentIds = new Set(cards.map(c => c.gameId));
   for (const [id, el] of dbRenderedCards.entries()) {
-    if (!currentIds.has(id)) { el.remove(); dbRenderedCards.delete(id); dbGameCache.delete(id); }
+    if (!currentIds.has(id)) {
+      el.remove();
+      dbRenderedCards.delete(id);
+      dbGameCache.delete(id);
+      dbEventLogs.delete(id);
+      dbPrevFrames.delete(id);
+    }
   }
   if (!cards.length) {
     if (!grid.querySelector(".empty")) grid.innerHTML = '<div class="empty">No matches are live right now.</div>';
