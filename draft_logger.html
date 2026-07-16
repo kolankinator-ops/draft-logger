@@ -282,7 +282,8 @@
   .db-ev-blue { color:var(--blue);font-weight:600; }
   .db-ev-red  { color:var(--red);font-weight:600; }
   .db-ev-kill { color:var(--text); }
-  .db-ev-obj  { color:var(--yellow); }text-align:center;font-size:12px;padding:8px 0;border-top:1px solid var(--border);color:var(--blue);cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:inherit;font-weight:600; }
+  .db-ev-obj  { color:var(--yellow); }
+  .db-log-btn { display:block;text-align:center;font-size:12px;padding:8px 0;border-top:1px solid var(--border);color:var(--blue);cursor:pointer;background:transparent;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:inherit;font-weight:600; }
   .db-log-btn:hover { background:rgba(91,140,255,.07); }
   .db-upcoming { background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:4px; }
   .db-upcoming h2 { font-size:14px;margin:0 0 10px;color:var(--muted);font-weight:600; }
@@ -383,8 +384,8 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
-  <button onclick="show('history');closeDrawer()" class="">History</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -403,8 +404,8 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
-  <button onclick="show('history')" class="">History</button>
+  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -660,17 +661,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">BLUE SIDE +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">BLUE SIDE +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">RED SIDE +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">RED SIDE +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">BLUE SIDE</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -678,7 +679,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">RED SIDE</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -689,36 +690,36 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">BLUE SIDE</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">RED SIDE</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
+    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height: 100%; background: var(--red); border-radius: 4px; transition: width 0.3s; width: 9%;"></div>
+        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">Blue 9%</span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--red);font-weight:600;">Red</span></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">91% Red</span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div>↑ Champion patterns (10 champs with data)</div><div>↓ Champion flat-100 ROI (7 champs with data)</div></div>
-      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 3 games — treat with caution.</div>
-    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
+      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
+    </div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">BLUE SIDE wins</span>
+        <span id="pred-blue-label">Blue side wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">RED SIDE wins</span>
+        <span id="pred-red-label">Red side wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -729,11 +730,11 @@
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">BLUE SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">RED SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -748,19 +749,19 @@
           <button class="conf-btn sel" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
         </div>
       </div>
-      <div id="bet-form" style="display: none;">
+      <div id="bet-form" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label>Bet on</label>
-            <select id="bet-team-on" onchange="autofillBetAgainst()"><option value="">— select team —</option>
-      <option value="blue">VFB</option>
-      <option value="red">KHK</option></select>
+            <select id="bet-team-on" onchange="autofillBetAgainst()">
+              <option value="">— select team —</option>
+            </select>
           </div>
           <div>
             <label>Bet against</label>
-            <select id="bet-team-against"><option value="">— select team —</option>
-      <option value="blue">VFB</option>
-      <option value="red">KHK</option></select>
+            <select id="bet-team-against">
+              <option value="">— select team —</option>
+            </select>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -781,10 +782,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">BLUE SIDE won</span>
+          <span id="vod-result-blue-label">Blue side won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">RED SIDE won</span>
+          <span id="vod-result-red-label">Red side won</span>
         </button>
       </div>
     </div>
@@ -803,64 +804,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
-    <div id="pending-list">
-      <div class="pending-entry" id="pending-1784222709556">
-        <div class="pending-entry-header">
-          <div>
-            <div style="font-weight:600;font-size:13px;">VFB vs KHK</div>
-            <div class="pending-pred" style="color:var(--muted);">
-              2026-07-16 · Prime League ·
-              Predicted: <span style="color:var(--red)">
-                KHK
-              </span>
-            </div>
-            <span style="color:var(--muted);font-size:11px;margin-top:2px;display:block;">
-           Bet: KHK @ 1.32 · Stake: 100.00
-           <button onclick="openEditBet('1784222709556')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
-         </span>
-          </div>
-          <div class="result-btns">
-            <button class="win-btn" onclick="openPerfForm('1784222709556','blue')">🔵 VFB won</button>
-            <button class="loss-btn" onclick="openPerfForm('1784222709556','red')">🔴 KHK won</button>
-          </div>
-        </div>
-        <div class="perf-form" id="perf-form-1784222709556"></div>
-        <div id="edit-bet-1784222709556" style="display:none;padding:12px;border-top:1px solid var(--border);">
-          <div class="card-title" style="margin-bottom:10px;">Edit bet</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-            <div>
-              <label>Bet on</label>
-              <select id="edit-bet-on-1784222709556">
-                <option value="blue">VFB</option>
-                <option value="red" selected="">KHK</option>
-              </select>
-            </div>
-            <div>
-              <label>Bet against</label>
-              <select id="edit-bet-against-1784222709556">
-                <option value="blue" selected="">VFB</option>
-                <option value="red">KHK</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-            <div>
-              <label>Decimal odds</label>
-              <input type="number" id="edit-bet-odds-1784222709556" step="0.01" min="1.01" value="1.32">
-            </div>
-            <div>
-              <label>Stake</label>
-              <input type="number" id="edit-bet-stake-1784222709556" step="0.01" min="0.01" value="100">
-            </div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="saveEditBet('1784222709556')">Save bet</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-1784222709556').style.display='none'">Cancel</button>
-            <button class="btn btn-danger" onclick="removeBet('1784222709556')">Remove bet</button>
-          </div>
-        </div>
-      </div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 </div>
 
@@ -868,934 +813,11 @@
 <div class="screen" id="screen-history">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">All predictions</div>
-    <select id="history-filter" onchange="renderHistory()" style="width:auto;padding:6px 10px;"><option value="all">All leagues</option><option value="Esports World Cup">Esports World Cup</option><option value="LES">LES</option><option value="LRN">LRN</option><option value="Prime League">Prime League</option><option value="MSI">MSI</option></select>
+    <select id="history-filter" onchange="renderHistory()" style="width:auto;padding:6px 10px;">
+      <option value="all">All leagues</option>
+    </select>
   </div>
-  <div id="history-list">
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">DK vs G2</div>
-            <div class="entry-meta">2026-07-16 · Esports World Cup 2026 · Groups · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1784209862972')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: G2 +1</span>
-          <span style="color:var(--muted);">→ predicted G2 · won DK</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">DK exec: <b>medium</b></span>
-          <span style="color:var(--red);">G2 exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Olaf</span><span class="champ-tag" style="color:var(--blue);">Vi</span><span class="champ-tag" style="color:var(--blue);">Taliyah</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Camille</span><span class="champ-tag" style="color:var(--red);">Gnar</span><span class="champ-tag" style="color:var(--red);">Nasus</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Leona</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">DK vs G2</div>
-            <div class="entry-meta">2026-07-16 · Esports World Cup 2026 · Groups · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784212797988')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--text);">Draft: Even</span>
-          <span style="color:var(--muted);">→ predicted DK · won DK</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">DK</span></span>
-          <span style="color:var(--blue);">DK exec: <b>medium</b></span>
-          <span style="color:var(--red);">G2 exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Jayce</span><span class="champ-tag" style="color:var(--blue);">XinZhao</span><span class="champ-tag" style="color:var(--blue);">Zoe</span><span class="champ-tag" style="color:var(--blue);">Syndra</span><span class="champ-tag" style="color:var(--blue);">Rell</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Sylas</span><span class="champ-tag" style="color:var(--red);">Lucian</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">BAR vs MKF</div>
-            <div class="entry-meta">2026-07-15 · LES 2026 · Week 1 · Game 2 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1784139768611')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: MKF +2</span>
-          <span style="color:var(--muted);">→ predicted MKF · won MKF</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">MKF</span></span>
-          <span style="color:var(--blue);">BAR exec: <b>medium</b></span>
-          <span style="color:var(--red);">MKF exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Jax</span><span class="champ-tag" style="color:var(--blue);">Naafiri</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Caitlyn</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Varus</span><span class="champ-tag" style="color:var(--red);">LeeSin</span><span class="champ-tag" style="color:var(--red);">Aurora</span><span class="champ-tag" style="color:var(--red);">Jhin</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">ML vs Lyon</div>
-            <div class="entry-meta">2026-07-15 · Esports World Cup 2026 · Groups · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784139684374')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: ML +1</span>
-          <span style="color:var(--muted);">→ predicted ML · won ML</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">Lyon</span></span>
-          <span style="color:var(--blue);">ML exec: <b>low</b></span>
-          <span style="color:var(--red);">Lyon exec: <b>low</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">TwistedFate</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Syndra</span><span class="champ-tag" style="color:var(--blue);">Anivia</span><span class="champ-tag" style="color:var(--blue);">Rell</span><span class="champ-tag" style="color:var(--red);">Gnar</span><span class="champ-tag" style="color:var(--red);">Qiyana</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Jhin</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">TS vs KC</div>
-            <div class="entry-meta">2026-07-15 · Esports World Cup 2026 · Groups · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784132179107')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: KC +1</span>
-          <span style="color:var(--muted);">→ predicted KC · won KC</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">TS exec: <b>medium</b></span>
-          <span style="color:var(--red);">KC exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Udyr</span><span class="champ-tag" style="color:var(--blue);">XinZhao</span><span class="champ-tag" style="color:var(--blue);">Sylas</span><span class="champ-tag" style="color:var(--blue);">Caitlyn</span><span class="champ-tag" style="color:var(--blue);">Elise</span><span class="champ-tag" style="color:var(--red);">Vayne</span><span class="champ-tag" style="color:var(--red);">MonkeyKing</span><span class="champ-tag" style="color:var(--red);">Syndra</span><span class="champ-tag" style="color:var(--red);">Mel</span><span class="champ-tag" style="color:var(--red);">Pyke</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">KC vs TS</div>
-            <div class="entry-meta">2026-07-15 · Esports World Cup 2026 · Groups · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784128526663')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: TS +1</span>
-          <span style="color:var(--muted);">→ predicted TS · won TS</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">KC</span></span>
-          
-          
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Renekton</span><span class="champ-tag" style="color:var(--blue);">Trundle</span><span class="champ-tag" style="color:var(--blue);">Orianna</span><span class="champ-tag" style="color:var(--blue);">Jhin</span><span class="champ-tag" style="color:var(--blue);">Rell</span><span class="champ-tag" style="color:var(--red);">Volibear</span><span class="champ-tag" style="color:var(--red);">Naafiri</span><span class="champ-tag" style="color:var(--red);">Viktor</span><span class="champ-tag" style="color:var(--red);">Kaisa</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">KC vs TS</div>
-            <div class="entry-meta">2026-07-15 · Esports World Cup 2026 · Groups · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1784124989448')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: TS +1</span>
-          <span style="color:var(--muted);">→ predicted TS · won KC</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">KC exec: <b>high</b></span>
-          <span style="color:var(--red);">TS exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Gnar</span><span class="champ-tag" style="color:var(--blue);">Vi</span><span class="champ-tag" style="color:var(--blue);">Akali</span><span class="champ-tag" style="color:var(--blue);">Ziggs</span><span class="champ-tag" style="color:var(--blue);">Leona</span><span class="champ-tag" style="color:var(--red);">Urgot</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Cassiopeia</span><span class="champ-tag" style="color:var(--red);">Sivir</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">MKF vs BAR</div>
-            <div class="entry-meta">2026-07-15 · LES 2026 · Week 1 · Game 1 · — confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1784135784071')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: BAR +1</span>
-          <span style="color:var(--muted);">→ predicted BAR · won MKF</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">MKF exec: <b>medium</b></span>
-          <span style="color:var(--red);">BAR exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ambessa</span><span class="champ-tag" style="color:var(--blue);">Nocturne</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Zeri</span><span class="champ-tag" style="color:var(--blue);">Camille</span><span class="champ-tag" style="color:var(--red);">Gnar</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Taliyah</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Leona</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">UCAM vs HRTS</div>
-            <div class="entry-meta">2026-07-14 · LES 2026 · Week 1 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784052043340')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: HRTS +1</span>
-          <span style="color:var(--muted);">→ predicted UCAM · won UCAM</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">UCAM exec: <b>low</b></span>
-          <span style="color:var(--red);">HRTS exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Gnar</span><span class="champ-tag" style="color:var(--blue);">LeeSin</span><span class="champ-tag" style="color:var(--blue);">Galio</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Shen</span><span class="champ-tag" style="color:var(--red);">Olaf</span><span class="champ-tag" style="color:var(--red);">Naafiri</span><span class="champ-tag" style="color:var(--red);">Leblanc</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">FLK vs LUA</div>
-            <div class="entry-meta">2026-07-14 · LES 2026 · Week 1 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784042379223')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: FLK +1</span>
-          <span style="color:var(--muted);">→ predicted LUA · won LUA</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">LUA</span></span>
-          <span style="color:var(--blue);">FLK exec: <b>high</b></span>
-          <span style="color:var(--red);">LUA exec: <b>low</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Gnar</span><span class="champ-tag" style="color:var(--blue);">MonkeyKing</span><span class="champ-tag" style="color:var(--blue);">Hwei</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Neeko</span><span class="champ-tag" style="color:var(--red);">KSante</span><span class="champ-tag" style="color:var(--red);">XinZhao</span><span class="champ-tag" style="color:var(--red);">Cassiopeia</span><span class="champ-tag" style="color:var(--red);">Lucian</span><span class="champ-tag" style="color:var(--red);">Milio</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">LUA vs FLK</div>
-            <div class="entry-meta">2026-07-14 · LES 2026 · Week 1 · Game 2 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1784045247172')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: LUA +1</span>
-          <span style="color:var(--muted);">→ predicted LUA · won FLK</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">LUA</span></span>
-          <span style="color:var(--blue);">LUA exec: <b>medium</b></span>
-          <span style="color:var(--red);">FLK exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Renekton</span><span class="champ-tag" style="color:var(--blue);">LeeSin</span><span class="champ-tag" style="color:var(--blue);">Ahri</span><span class="champ-tag" style="color:var(--blue);">Zeri</span><span class="champ-tag" style="color:var(--blue);">Braum</span><span class="champ-tag" style="color:var(--red);">Zaahen</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Taliyah</span><span class="champ-tag" style="color:var(--red);">Varus</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">LUA vs FLK</div>
-            <div class="entry-meta">2026-07-14 · LES 2026 · Week 1 · Game 3 · — confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1784047974555')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: LUA +1</span>
-          <span style="color:var(--muted);">→ predicted LUA · won LUA</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">LUA</span></span>
-          <span style="color:var(--blue);">LUA exec: <b>low</b></span>
-          <span style="color:var(--red);">FLK exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Sett</span><span class="champ-tag" style="color:var(--blue);">Nocturne</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Ziggs</span><span class="champ-tag" style="color:var(--blue);">Shen</span><span class="champ-tag" style="color:var(--red);">Ambessa</span><span class="champ-tag" style="color:var(--red);">Pantheon</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Kaisa</span><span class="champ-tag" style="color:var(--red);">Rakan</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">HRTS vs UCAM</div>
-            <div class="entry-meta">2026-07-14 · LES 2026 · Week 1 · Game 2 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1784055327379')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: HRTS +1</span>
-          <span style="color:var(--muted);">→ predicted HRTS · won UCAM</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">HRTS</span></span>
-          <span style="color:var(--blue);">HRTS exec: <b>medium</b></span>
-          <span style="color:var(--red);">UCAM exec: <b>low</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Rumble</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Syndra</span><span class="champ-tag" style="color:var(--blue);">Sivir</span><span class="champ-tag" style="color:var(--blue);">Karma</span><span class="champ-tag" style="color:var(--red);">Ambessa</span><span class="champ-tag" style="color:var(--red);">Poppy</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Ezreal</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">3V vs Z5</div>
-            <div class="entry-meta">2026-07-13 · LRN 2026 · Week 4 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783984199304')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: 3V +1</span>
-          <span style="color:var(--muted);">→ predicted 3V · won Z5</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">3V exec: <b>low</b></span>
-          <span style="color:var(--red);">Z5 exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">DrMundo</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Corki</span><span class="champ-tag" style="color:var(--blue);">Alistar</span><span class="champ-tag" style="color:var(--red);">Jax</span><span class="champ-tag" style="color:var(--red);">MonkeyKing</span><span class="champ-tag" style="color:var(--red);">Cassiopeia</span><span class="champ-tag" style="color:var(--red);">Lucian</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">EWI vs SGE</div>
-            <div class="entry-meta">2026-07-13 · Prime League 2026 · Week 3 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783965991091')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: EWI +2</span>
-          <span style="color:var(--muted);">→ predicted EWI · won EWI</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">EWI</span></span>
-          <span style="color:var(--blue);">EWI exec: <b>medium</b></span>
-          <span style="color:var(--red);">SGE exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Sion</span><span class="champ-tag" style="color:var(--blue);">Naafiri</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Leona</span><span class="champ-tag" style="color:var(--red);">Yone</span><span class="champ-tag" style="color:var(--red);">Skarner</span><span class="champ-tag" style="color:var(--red);">TwistedFate</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">EWI vs USE</div>
-            <div class="entry-meta">2026-07-13 · Prime League 2026 · Week 3 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783962631753')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: USE +2</span>
-          <span style="color:var(--muted);">→ predicted USE · won USE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">EWI exec: <b>medium</b></span>
-          <span style="color:var(--red);">USE exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Yorick</span><span class="champ-tag" style="color:var(--blue);">Qiyana</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Hwei</span><span class="champ-tag" style="color:var(--blue);">Nautilus</span><span class="champ-tag" style="color:var(--red);">Renekton</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Anivia</span><span class="champ-tag" style="color:var(--red);">Ezreal</span><span class="champ-tag" style="color:var(--red);">Bard</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">ROSS vs TOG</div>
-            <div class="entry-meta">2026-07-13 · Prime League 2026 · Week 3 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1783962546293')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: TOG +1</span>
-          <span style="color:var(--muted);">→ predicted TOG · won TOG</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">ROSS exec: <b>low</b></span>
-          <span style="color:var(--red);">TOG exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">KSante</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Jhin</span><span class="champ-tag" style="color:var(--blue);">Poppy</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">Nocturne</span><span class="champ-tag" style="color:var(--red);">Jayce</span><span class="champ-tag" style="color:var(--red);">Zeri</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">SGE vs KHK</div>
-            <div class="entry-meta">2026-07-13 · Prime League 2026 · Week 3 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1783958966715')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: KHK +1</span>
-          <span style="color:var(--muted);">→ predicted KHK · won KHK</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">KHK</span></span>
-          <span style="color:var(--blue);">SGE exec: <b>medium</b></span>
-          <span style="color:var(--red);">KHK exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Jayce</span><span class="champ-tag" style="color:var(--blue);">XinZhao</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Anivia</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Hwei</span><span class="champ-tag" style="color:var(--red);">Jhin</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">VFB vs BIG</div>
-            <div class="entry-meta">2026-07-13 · Prime League 2026 · Week 3 · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1783969529081')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: VFB +2</span>
-          <span style="color:var(--muted);">→ predicted VFB · won BIG</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">BIG</span></span>
-          <span style="color:var(--blue);">VFB exec: <b>medium</b></span>
-          <span style="color:var(--red);">BIG exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Swain</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Caitlyn</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Gnar</span><span class="champ-tag" style="color:var(--red);">LeeSin</span><span class="champ-tag" style="color:var(--red);">Sylas</span><span class="champ-tag" style="color:var(--red);">Syndra</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">LYON vs HLE</div>
-            <div class="entry-meta">2026-07-11 · MSI 2026 · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783757672036')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: LYON +1</span>
-          <span style="color:var(--muted);">→ predicted LYON · won HLE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">HLE</span></span>
-          <span style="color:var(--blue);">LYON exec: <b>high</b></span>
-          <span style="color:var(--red);">HLE exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ambessa</span><span class="champ-tag" style="color:var(--blue);">Qiyana</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Jhin</span><span class="champ-tag" style="color:var(--blue);">Poppy</span><span class="champ-tag" style="color:var(--red);">Sion</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Syndra</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">VFB vs SGE</div>
-            <div class="entry-meta">2026-07-09 · Prime League 2026 · Week 2 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783624150967')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: VFB +1</span>
-          <span style="color:var(--muted);">→ predicted VFB · won VFB</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">VFB exec: <b>low</b></span>
-          <span style="color:var(--red);">SGE exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Yorick</span><span class="champ-tag" style="color:var(--blue);">JarvanIV</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">Caitlyn</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Jayce</span><span class="champ-tag" style="color:var(--red);">Aatrox</span><span class="champ-tag" style="color:var(--red);">Aurora</span><span class="champ-tag" style="color:var(--red);">Mel</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">USE vs G2N</div>
-            <div class="entry-meta">2026-07-08 · Prime League 2026 · Week 2 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1783528586643')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted USE · won USE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">G2N</span></span>
-          <span style="color:var(--blue);">USE exec: <b>low</b></span>
-          <span style="color:var(--red);">G2N exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">KSante</span><span class="champ-tag" style="color:var(--blue);">XinZhao</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Tristana</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Vayne</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Akali</span><span class="champ-tag" style="color:var(--red);">Ziggs</span><span class="champ-tag" style="color:var(--red);">Pyke</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">EWI vs TOG</div>
-            <div class="entry-meta">2026-07-07 · Prime League 2026 · Week 2 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783437228914')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted EWI · won TOG</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">EWI exec: <b>medium</b></span>
-          <span style="color:var(--red);">TOG exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Shen</span><span class="champ-tag" style="color:var(--blue);">MonkeyKing</span><span class="champ-tag" style="color:var(--blue);">Orianna</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Leona</span><span class="champ-tag" style="color:var(--red);">Aatrox</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Syndra</span><span class="champ-tag" style="color:var(--red);">Kaisa</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        <div class="entry-note" style="margin-top:5px;">"Blue side seems easier"</div>
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">TSW vs TES</div>
-            <div class="entry-meta">2026-07-05 · MSI 2026 · Game 2 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783224296816')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted TSW · won TSW</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">TES</span></span>
-          <span style="color:var(--blue);">TSW exec: <b>medium</b></span>
-          <span style="color:var(--red);">TES exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ornn</span><span class="champ-tag" style="color:var(--blue);">Naafiri</span><span class="champ-tag" style="color:var(--blue);">Aurora</span><span class="champ-tag" style="color:var(--blue);">MissFortune</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Ahri</span><span class="champ-tag" style="color:var(--red);">Yunara</span><span class="champ-tag" style="color:var(--red);">Lulu</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">LYON vs FUR</div>
-            <div class="entry-meta">2026-07-04 · MSI 2026 · Game 2 · high confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783139167012')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted LYON · won LYON</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">LYON</span></span>
-          <span style="color:var(--blue);">LYON exec: <b>low</b></span>
-          <span style="color:var(--red);">FUR exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Gnar</span><span class="champ-tag" style="color:var(--blue);">MonkeyKing</span><span class="champ-tag" style="color:var(--blue);">Galio</span><span class="champ-tag" style="color:var(--blue);">Ziggs</span><span class="champ-tag" style="color:var(--blue);">Camille</span><span class="champ-tag" style="color:var(--red);">Ambessa</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Aurora</span><span class="champ-tag" style="color:var(--red);">Cassiopeia</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">FUR vs LYON</div>
-            <div class="entry-meta">2026-07-04 · MSI 2026 · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span>
-            <button onclick="deleteEntry('1783135718190')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted FUR · won LYON</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--red)">LYON</span></span>
-          <span style="color:var(--blue);">FUR exec: <b>low</b></span>
-          <span style="color:var(--red);">LYON exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Sion</span><span class="champ-tag" style="color:var(--blue);">Naafiri</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Jhin</span><span class="champ-tag" style="color:var(--blue);">Karma</span><span class="champ-tag" style="color:var(--red);">Jayce</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Syndra</span><span class="champ-tag" style="color:var(--red);">Ezreal</span><span class="champ-tag" style="color:var(--red);">Neeko</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">TES vs G2</div>
-            <div class="entry-meta">2026-07-03 · MSI 2026 · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783057679414')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted G2 · won G2</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          <span style="color:var(--blue);">TES exec: <b>medium</b></span>
-          <span style="color:var(--red);">G2 exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ambessa</span><span class="champ-tag" style="color:var(--blue);">Naafiri</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Varus</span><span class="champ-tag" style="color:var(--blue);">Nautilus</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">Olaf</span><span class="champ-tag" style="color:var(--red);">Leblanc</span><span class="champ-tag" style="color:var(--red);">Ashe</span><span class="champ-tag" style="color:var(--red);">Braum</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">HLE vs TSW</div>
-            <div class="entry-meta">2026-07-03 · MSI 2026 · Game 3 · high confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783054132240')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted HLE · won HLE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">HLE</span></span>
-          <span style="color:var(--blue);">HLE exec: <b>low</b></span>
-          <span style="color:var(--red);">TSW exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">DrMundo</span><span class="champ-tag" style="color:var(--blue);">Nocturne</span><span class="champ-tag" style="color:var(--blue);">Viktor</span><span class="champ-tag" style="color:var(--blue);">MissFortune</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Renekton</span><span class="champ-tag" style="color:var(--red);">Naafiri</span><span class="champ-tag" style="color:var(--red);">Hwei</span><span class="champ-tag" style="color:var(--red);">Caitlyn</span><span class="champ-tag" style="color:var(--red);">Karma</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">HLE vs TSW</div>
-            <div class="entry-meta">2026-07-03 · MSI 2026 · Game 2 · high confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span>
-            <button onclick="deleteEntry('1783051281294')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted HLE · won HLE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">HLE</span></span>
-          <span style="color:var(--blue);">HLE exec: <b>low</b></span>
-          <span style="color:var(--red);">TSW exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ambessa</span><span class="champ-tag" style="color:var(--blue);">Qiyana</span><span class="champ-tag" style="color:var(--blue);">Ahri</span><span class="champ-tag" style="color:var(--blue);">Mel</span><span class="champ-tag" style="color:var(--blue);">Camille</span><span class="champ-tag" style="color:var(--red);">Volibear</span><span class="champ-tag" style="color:var(--red);">JarvanIV</span><span class="champ-tag" style="color:var(--red);">Aurora</span><span class="champ-tag" style="color:var(--red);">Jhin</span><span class="champ-tag" style="color:var(--red);">Elise</span></div>
-        
-        <div class="entry-note" style="margin-top:4px;color:var(--text);font-style:normal;">📝 HLE hands diff but that bear was scary</div>
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">HLE vs TSW</div>
-            <div class="entry-meta">2026-07-03 · MSI 2026 · Game 1 · high confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783048535818')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted HLE · won HLE</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">HLE</span></span>
-          <span style="color:var(--blue);">HLE exec: <b>medium</b></span>
-          <span style="color:var(--red);">TSW exec: <b>high</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Jayce</span><span class="champ-tag" style="color:var(--blue);">Skarner</span><span class="champ-tag" style="color:var(--blue);">Cassiopeia</span><span class="champ-tag" style="color:var(--blue);">Ziggs</span><span class="champ-tag" style="color:var(--blue);">Shen</span><span class="champ-tag" style="color:var(--red);">Sion</span><span class="champ-tag" style="color:var(--red);">LeeSin</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Ezreal</span><span class="champ-tag" style="color:var(--red);">Rell</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">BIG vs USE</div>
-            <div class="entry-meta">2026-07-02 · Prime League · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge wrong">✗ Wrong</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783020873965')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted USE · won BIG</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">BIG</span></span>
-          
-          
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ornn</span><span class="champ-tag" style="color:var(--blue);">LeeSin</span><span class="champ-tag" style="color:var(--blue);">Orianna</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">Pantheon</span><span class="champ-tag" style="color:var(--red);">Galio</span><span class="champ-tag" style="color:var(--red);">Kaisa</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">EINS vs TOG</div>
-            <div class="entry-meta">2026-07-02 · Prime League · Game 1 · medium confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">didn't watch</span>
-            <button onclick="deleteEntry('1783013286288')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted EINS · won EINS</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">EINS</span></span>
-          
-          
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Rumble</span><span class="champ-tag" style="color:var(--blue);">Pantheon</span><span class="champ-tag" style="color:var(--blue);">Annie</span><span class="champ-tag" style="color:var(--blue);">Jhin</span><span class="champ-tag" style="color:var(--blue);">Bard</span><span class="champ-tag" style="color:var(--red);">Ambessa</span><span class="champ-tag" style="color:var(--red);">Vi</span><span class="champ-tag" style="color:var(--red);">Sylas</span><span class="champ-tag" style="color:var(--red);">Mel</span><span class="champ-tag" style="color:var(--red);">Camille</span></div>
-        <div class="entry-note" style="margin-top:5px;">"EINS is much simpler."</div>
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">KHK vs EWI</div>
-            <div class="entry-meta">2026-07-02 · Prime League · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783009174781')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted EWI · won EWI</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">KHK</span></span>
-          
-          
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Jayce</span><span class="champ-tag" style="color:var(--blue);">Pantheon</span><span class="champ-tag" style="color:var(--blue);">Annie</span><span class="champ-tag" style="color:var(--blue);">Kaisa</span><span class="champ-tag" style="color:var(--blue);">Nautilus</span><span class="champ-tag" style="color:var(--red);">Poppy</span><span class="champ-tag" style="color:var(--red);">Viego</span><span class="champ-tag" style="color:var(--red);">Ryze</span><span class="champ-tag" style="color:var(--red);">Seraphine</span><span class="champ-tag" style="color:var(--red);">Braum</span></div>
-        <div class="entry-note" style="margin-top:5px;">"Big Viego Popoff angle but I don't know if he's any good"</div>
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">SGE vs ROSS</div>
-            <div class="entry-meta">2026-07-02 · Prime League · Game 1 · low confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">✓ Correct</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">auto-resolved</span>
-            <button onclick="deleteEntry('1783005189054')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          
-          <span style="color:var(--muted);">→ predicted ROSS · won ROSS</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--muted)">Not sure</span></span>
-          
-          
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Renekton</span><span class="champ-tag" style="color:var(--blue);">Nocturne</span><span class="champ-tag" style="color:var(--blue);">Ahri</span><span class="champ-tag" style="color:var(--blue);">Ezreal</span><span class="champ-tag" style="color:var(--blue);">Karma</span><span class="champ-tag" style="color:var(--red);">Kennen</span><span class="champ-tag" style="color:var(--red);">Aatrox</span><span class="champ-tag" style="color:var(--red);">Viktor</span><span class="champ-tag" style="color:var(--red);">Lucian</span><span class="champ-tag" style="color:var(--red);">Milio</span></div>
-        <div class="entry-note" style="margin-top:5px;">"I don't really like Kennen but I think it will cook in this AOE comp and Ezreal won't be allowed to free fire"</div>
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">T1 vs TLAW</div>
-            <div class="entry-meta">2026-06-28 · MSI 2026 · Game 3 · — confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">Draft won</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">VOD</span>
-            <button onclick="deleteEntry('1783739862195')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: T1 +2</span>
-          <span style="color:var(--muted);">→ predicted TLAW · won T1</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">T1</span></span>
-          <span style="color:var(--blue);">T1 exec: <b>medium</b></span>
-          <span style="color:var(--red);">TLAW exec: <b>low</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Renekton</span><span class="champ-tag" style="color:var(--blue);">LeeSin</span><span class="champ-tag" style="color:var(--blue);">Annie</span><span class="champ-tag" style="color:var(--blue);">Zeri</span><span class="champ-tag" style="color:var(--blue);">Yuumi</span><span class="champ-tag" style="color:var(--red);">Zaahen</span><span class="champ-tag" style="color:var(--red);">Nocturne</span><span class="champ-tag" style="color:var(--red);">Galio</span><span class="champ-tag" style="color:var(--red);">Varus</span><span class="champ-tag" style="color:var(--red);">Neeko</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">T1 vs TLAW</div>
-            <div class="entry-meta">2026-06-28 · MSI 2026 · Game 2 · — confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge correct">Draft won</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">VOD</span>
-            <button onclick="deleteEntry('1783737522675')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--blue);">Draft: T1 +1</span>
-          <span style="color:var(--muted);">→ predicted TLAW · won T1</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">T1</span></span>
-          <span style="color:var(--blue);">T1 exec: <b>medium</b></span>
-          <span style="color:var(--red);">TLAW exec: <b>low</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Ambessa</span><span class="champ-tag" style="color:var(--blue);">Vi</span><span class="champ-tag" style="color:var(--blue);">Ryze</span><span class="champ-tag" style="color:var(--blue);">Kalista</span><span class="champ-tag" style="color:var(--blue);">Renata</span><span class="champ-tag" style="color:var(--red);">Rumble</span><span class="champ-tag" style="color:var(--red);">Poppy</span><span class="champ-tag" style="color:var(--red);">Taliyah</span><span class="champ-tag" style="color:var(--red);">Senna</span><span class="champ-tag" style="color:var(--red);">Nautilus</span></div>
-        
-        
-      </div>
-      <div class="entry">
-        <div class="entry-header">
-          <div>
-            <div class="entry-teams">T1 vs TLAW</div>
-            <div class="entry-meta">2026-06-28 · MSI 2026 · Game 1 · — confidence</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            <span class="outcome-badge" style="background:rgba(224,178,63,.15);color:var(--yellow);">Skill overcame draft</span><span class="outcome-badge pending" style="margin-left:4px;font-size:10px;">VOD</span>
-            <button onclick="deleteEntry('1783736632198')" style="background:none;border:none;color:var(--border);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1;" title="Delete this prediction">✕</button>
-          </div>
-        </div>
-        <div class="entry-scores">
-          <span style="color:var(--red);">Draft: TLAW +2</span>
-          <span style="color:var(--muted);">→ predicted TLAW · won T1</span>
-        </div>
-        
-        <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;">
-          <span>Skill edge: <span style="color:var(--blue)">T1</span></span>
-          <span style="color:var(--blue);">T1 exec: <b>medium</b></span>
-          <span style="color:var(--red);">TLAW exec: <b>medium</b></span>
-        </div>
-        <div class="champ-tags" style="margin-bottom:6px;"><span class="champ-tag" style="color:var(--blue);">Gnar</span><span class="champ-tag" style="color:var(--blue);">XinZhao</span><span class="champ-tag" style="color:var(--blue);">Orianna</span><span class="champ-tag" style="color:var(--blue);">Mel</span><span class="champ-tag" style="color:var(--blue);">Camille</span><span class="champ-tag" style="color:var(--red);">Yasuo</span><span class="champ-tag" style="color:var(--red);">MonkeyKing</span><span class="champ-tag" style="color:var(--red);">Akali</span><span class="champ-tag" style="color:var(--red);">Caitlyn</span><span class="champ-tag" style="color:var(--red);">Bard</span></div>
-        
-        
-      </div></div>
+  <div id="history-list"></div>
 </div>
 
 <!-- GAME REVIEW -->
@@ -1897,163 +919,26 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid">
-    <div class="stat-box"><div class="val">39</div><div class="lbl">Games logged</div></div>
-    <div class="stat-box"><div class="val green">66%</div><div class="lbl">Accuracy</div></div>
-    <div class="stat-box"><div class="val green">23</div><div class="lbl">Correct</div></div>
-    <div class="stat-box"><div class="val red">12</div><div class="lbl">Wrong</div></div>
-    <div class="stat-box"><div class="val yellow">1</div><div class="lbl">Pending</div></div>
-    <div class="stat-box"><div class="val">18</div><div class="lbl">Watched</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">17</div><div class="lbl">Didn't watch</div></div>
-    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
-  </div>
+  <div class="stat-grid" id="stat-grid"></div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy">
-      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 0%" style="flex:1;height:4px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 67%" style="flex:1;height:40px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 89%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 19: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 20: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 21: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 22: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 23: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 24: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 25: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 26: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 27: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 28: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 29: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 30: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 31: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 32: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 33: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 34: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 35: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
-        <span>Game 1</span>
-        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">50% ▼ 20pp</b></span>
-        <span>Game 35</span>
-      </div></div>
+    <div id="rolling-accuracy"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Strong preference (±2)</div>
-          <div style="font-size:11px;color:var(--muted);">4 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--green);">75%</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Slight preference (±1)</div>
-          <div style="font-size:11px;color:var(--muted);">17 games — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:#ff4d5e;">41%</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;">Even (0)</div>
-          <div style="font-size:11px;color:var(--muted);">1 game — preferred side won</div>
-        </div>
-        <span style="font-weight:700;color:var(--green);">100%</span>
-      </div>
-    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
-      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
-      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
-        <span style="color:var(--green);">Draft won: 2</span>
-        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
-        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
-        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
-      </div>
-    </div></div>
+    <div id="draft-pref-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          8 games ·
-          <span style="color:var(--red);">
-            38% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          21 games ·
-          <span style="color:var(--green);">
-            71% accurate
-          </span>
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
-        <span style="font-size:12px;color:var(--muted);">
-          4 games ·
-          <span style="color:var(--green);">
-            100% accurate
-          </span>
-        </span>
-      </div></div>
+    <div id="conf-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 38 total games.</div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft &amp; skill agree → correct</span>
-        <span style="color:var(--green);">
-          75% (8 games)
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Draft beats skill (upset)</span>
-        <span style="color:var(--muted);">
-          29% of 7 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
-    </div>
-    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Skill overcomes draft</span>
-        <span style="color:var(--muted);">
-          71% of 7 conflicts
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
-    </div>
-    <div style="padding:8px 0;">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
-        <span>Predicted correctly when skill was "Not sure"</span>
-        <span style="color:var(--muted);">
-          58% of 12 games
-        </span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
-    </div>
-  </div>
+    <div id="skew-stats"></div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          80% (5 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (2 games)
-        </span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div>
-          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
-          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
-        </div>
-        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
-          100% (1 games)
-        </span>
-      </div></div>
+    <div id="exec-stats"></div>
   </div>
 </div>
 
@@ -2144,7 +1029,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/16/2026, 1:26:55 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/16/2026, 3:04:01 PM</div>
     </div>
   </div>
 
@@ -2215,6 +1100,97 @@
       <div id="notif-league-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
       <div style="font-size:11px;color:var(--muted);">Leagues update from your tier list. Toggle any you want notifications for.</div>
     </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">📥 Bulk import past games</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+      Imports completed games from Riot's API to build up model training data. Fetches team names, champion picks, winners, and league for each game. No predictions, bets, or player ratings — those stay yours to add manually.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div>
+        <label>Leagues to import</label>
+        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;">
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK" checked="" style="width:14px;height:14px;">
+      LCK
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LPL" checked="" style="width:14px;height:14px;">
+      LPL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LEC" checked="" style="width:14px;height:14px;">
+      LEC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCS" checked="" style="width:14px;height:14px;">
+      LCS
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCP" checked="" style="width:14px;height:14px;">
+      LCP
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="CBLOL" checked="" style="width:14px;height:14px;">
+      CBLOL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK CL" checked="" style="width:14px;height:14px;">
+      LCK CL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LDL" checked="" style="width:14px;height:14px;">
+      LDL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NACL" checked="" style="width:14px;height:14px;">
+      NACL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LFL" checked="" style="width:14px;height:14px;">
+      LFL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LES" checked="" style="width:14px;height:14px;">
+      LES
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Prime League" checked="" style="width:14px;height:14px;">
+      Prime League
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="TCL" checked="" style="width:14px;height:14px;">
+      TCL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NLC" checked="" style="width:14px;height:14px;">
+      NLC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Circuito Desafiante" checked="" style="width:14px;height:14px;">
+      Circuito Desafiante
+    </label></div>
+      </div>
+      <div>
+        <label>How far back</label>
+        <select id="bulk-weeks" style="width:100%;margin-top:6px;">
+          <option value="4">4 weeks</option>
+          <option value="8">8 weeks</option>
+          <option value="16" selected="">16 weeks (~4 months)</option>
+          <option value="26">26 weeks (~6 months)</option>
+          <option value="52">52 weeks (full year)</option>
+        </select>
+        <div style="margin-top:10px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+            <input type="checkbox" id="bulk-skip-existing" checked="" style="width:15px;height:15px;">
+            Skip games already logged
+          </label>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="runBulkImport()">Start import</button>
+    <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"><span style="color:var(--muted);">Processing 201/1022… &nbsp;✓ 0 imported &nbsp;— 499 skipped &nbsp;— 0 no picks &nbsp;— 2 errors</span></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -4638,7 +3614,9 @@ function renderHistory() {
     const pending = !e.actualWinner;
 
     let badge;
-    if (e.isVod) {
+    if (e.isBulkImport) {
+      badge = `<span class="outcome-badge pending" style="background:rgba(139,147,167,.12);color:var(--muted);">Import</span>`;
+    } else if (e.isVod) {
       // VOD entries: no prediction was made — show draft preference outcome instead
       if (e.draftPref !== null && e.draftPref !== undefined && e.draftPref !== 0 && e.actualWinner) {
         const prefSide  = e.draftPref < 0 ? "blue" : "red";
@@ -4724,7 +3702,7 @@ function deleteEntry(id) {
 function renderStats() {
   const entries = loadEntries();
   const allCompleted = entries.filter(e => e.actualWinner);
-  const completed  = allCompleted.filter(e => !e.isVod); // exclude VODs from prediction accuracy
+  const completed  = allCompleted.filter(e => !e.isVod && !e.isBulkImport); // exclude VODs and bulk imports from prediction accuracy
   const vodEntries = allCompleted.filter(e => e.isVod);
   const correct = completed.filter(e => e.predWinner === e.actualWinner);
   const pct = completed.length ? Math.round(correct.length / completed.length * 100) : null;
@@ -6259,6 +5237,202 @@ async function checkNotifications() {
   } catch(e) {}
 }
 
+// ── Bulk import ───────────────────────────────────────────────────────────────
+function renderBulkLeagueChecks() {
+  const el = document.getElementById("bulk-league-checks");
+  if (!el) return;
+  const leagues = Object.keys(DEFAULT_TIER_ASSIGNMENTS)
+    .filter(l => !INTL_KEYWORDS.some(k => l.toLowerCase().includes(k)));
+  el.innerHTML = leagues.map(l => `
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="${l}" checked style="width:14px;height:14px;" />
+      ${l}
+    </label>`).join("");
+}
+
+function setBulkStatus(msg, color) {
+  const el = document.getElementById("bulk-status");
+  if (el) el.innerHTML = `<span style="color:${color||"var(--muted)"};">${msg}</span>`;
+}
+
+let _bulkRunning = false;
+
+async function runBulkImport() {
+  if (_bulkRunning) { setBulkStatus("Import already running…", "var(--yellow)"); return; }
+  _bulkRunning = true;
+
+  const selectedLeagues = new Set(
+    [...document.querySelectorAll(".bulk-league-cb:checked")].map(cb => cb.value)
+  );
+  if (!selectedLeagues.size) { setBulkStatus("Select at least one league.", "#ff4d5e"); _bulkRunning = false; return; }
+
+  const weeks      = parseInt(document.getElementById("bulk-weeks")?.value || "16");
+  const skipExisting = !!(document.getElementById("bulk-skip-existing")?.checked);
+  const cutoffDate   = new Date(Date.now() - weeks * 7 * 86400000).toISOString().slice(0,10);
+
+  setBulkStatus(`Starting import — looking back ${weeks} weeks across ${selectedLeagues.size} leagues…`, "var(--muted)");
+
+  let imported = 0, skipped = 0, failed = 0, noFeed = 0;
+  const existingEntries = loadEntries();
+
+  try {
+    // Paginate through schedule until we hit the cutoff date
+    let pageToken = null;
+    let reachedCutoff = false;
+    const matchQueue = []; // { matchId, leagueName, blockName, startTime }
+
+    setBulkStatus("Fetching schedule…", "var(--muted)");
+
+    for (let page = 0; page < 60 && !reachedCutoff; page++) {
+      const params = pageToken ? { pageToken } : {};
+      const data   = await apiGet("/getSchedule", params);
+      const schedule = data?.data?.schedule;
+      if (!schedule) break;
+
+      const events = (schedule.events || []).filter(e =>
+        e.type === "match" &&
+        e.state === "completed" &&
+        selectedLeagues.has(e.league?.name) &&
+        !INTL_KEYWORDS.some(k => (e.league?.name||"").toLowerCase().includes(k))
+      );
+
+      for (const ev of events) {
+        const date = (ev.startTime || "").slice(0,10);
+        if (date < cutoffDate) { reachedCutoff = true; break; }
+        const matchId = ev.match?.id;
+        if (matchId) matchQueue.push({ matchId, leagueName: ev.league?.name || "", blockName: ev.blockName || "", startTime: ev.startTime || "" });
+      }
+
+      pageToken = schedule.pages?.older;
+      if (!pageToken) break;
+    }
+
+    setBulkStatus(`Found ${matchQueue.length} matches to process… (this may take a few minutes)`, "var(--muted)");
+
+    for (let i = 0; i < matchQueue.length; i++) {
+      const { matchId, leagueName, blockName, startTime } = matchQueue[i];
+      const date = startTime.slice(0,10);
+
+      if (i % 5 === 0) {
+        setBulkStatus(
+          `Processing ${i+1}/${matchQueue.length}… &nbsp;✓ ${imported} imported &nbsp;— ${skipped} skipped &nbsp;— ${noFeed} no picks &nbsp;— ${failed} errors`,
+          "var(--muted)"
+        );
+      }
+
+      try {
+        const det      = await apiGet("/getEventDetails", { id: matchId });
+        const event    = det?.data?.event;
+        if (!event?.match) { skipped++; continue; } // no match data (forfeit/walkover)
+
+        const matchTeams = event.match.teams || [];
+        const tById      = {};
+        matchTeams.forEach(t => { tById[t.id] = t.code || t.name || ""; });
+
+        const seriesWinner = matchTeams.find(t => t.result?.outcome === "win");
+        const games = (event.match.games || []).filter(g => g.state === "completed");
+        if (!games.length) { skipped++; continue; }
+
+        for (const g of games) {
+          const sides     = g.teams || [];
+          const blueEntry = sides.find(t => t.side === "blue");
+          const redEntry  = sides.find(t => t.side === "red");
+          if (!blueEntry || !redEntry) { skipped++; continue; }
+          const blueCode  = tById[blueEntry.id] || "Blue";
+          const redCode   = tById[redEntry.id]  || "Red";
+
+          // Determine per-game winner:
+          // For a BO1 or series with only 1 game, use series winner.
+          // For multi-game series, only use series winner for the LAST game
+          // (we can't reliably determine earlier game winners from this API).
+          let actualWinner = null;
+          if (games.length === 1) {
+            const wc = seriesWinner ? (seriesWinner.code || seriesWinner.name || "") : "";
+            actualWinner = wc.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                         : wc.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+          } else if (g.number === games.length) {
+            // Last game of series = series winner's game
+            const wc = seriesWinner ? (seriesWinner.code || seriesWinner.name || "") : "";
+            actualWinner = wc.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                         : wc.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+          } else {
+            // Mid-series games: skip since we can't reliably determine per-game winner
+            skipped++; continue;
+          }
+          if (!actualWinner) { skipped++; continue; }
+
+          // Try to fetch champion picks from feed
+          let champions = { blue: [], red: [] };
+          let players   = { blue: [], red: [] };
+          try {
+            const feedRes = await fetch(`https://feed.lolesports.com/livestats/v1/window/${g.id}`);
+            if (feedRes.ok) {
+              const fd   = await feedRes.json();
+              const meta = fd?.gameMetadata;
+              if (meta) {
+                const blue = meta.blueTeamMetadata?.participantMetadata || [];
+                const red  = meta.redTeamMetadata?.participantMetadata  || [];
+                champions  = {
+                  blue: blue.map(p => p.championId || "").filter(Boolean),
+                  red:  red.map(p  => p.championId || "").filter(Boolean)
+                };
+                players = {
+                  blue: blue.map(p => p.summonerName || "").filter(Boolean),
+                  red:  red.map(p  => p.summonerName || "").filter(Boolean)
+                };
+              } else { noFeed++; }
+            } else { noFeed++; }
+          } catch(e) { noFeed++; }
+
+          // Save as a bulk import entry (no prediction, no bet, no player ratings)
+          const entry = {
+            id:           `bulk_${g.id}_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+            date,
+            league:       leagueName,
+            eventContext: buildContextLabel(leagueName, blockName, startTime),
+            gameNumber:   g.number || null,
+            blueTeam:     blueCode,
+            redTeam:      redCode,
+            champions,
+            players,
+            actualWinner,
+            watched:      false,
+            isBulkImport: true,  // flag so we can distinguish from logged games
+            predWinner:   null,
+            predConf:     null,
+            draftPref:    null,
+            skillAdv:     null,
+            execDemand:   { blue: null, red: null },
+            notes:        "",
+            bet:          null,
+          };
+
+          existingEntries.unshift(entry);
+          imported++;
+        }
+
+        // Small delay to avoid hammering the API
+        await new Promise(r => setTimeout(r, 300));
+
+      } catch(e) { failed++; }
+    }
+
+    // Save all at once
+    saveEntries(existingEntries);
+    autoSync();
+
+    setBulkStatus(
+      `✓ Import complete! &nbsp;<b style="color:var(--green);">${imported} games added</b> &nbsp;· ${skipped} already existed · ${noFeed} no pick data · ${failed} errors`,
+      "var(--green)"
+    );
+
+  } catch(e) {
+    setBulkStatus("Import failed: " + e.message, "#ff4d5e");
+  } finally {
+    _bulkRunning = false;
+  }
+}
+
 // ── Manual schedule ───────────────────────────────────────────────────────────
 const MANUAL_SCHED_KEY = "draftlogger_manual_schedule_v1";
 
@@ -6445,8 +5619,77 @@ async function pushToGitHub() {
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 const dbGameCache    = new Map(); // gameId -> { meta, lastFrame, lastDetailsFrame, noFeed }
-const dbEventLogs    = new Map(); // gameId -> array of event strings (newest first)
-const dbPrevFrames   = new Map(); // gameId -> previous frame for diffing
+const dbEventLogs      = new Map();
+const dbPrevFrames     = new Map();
+const dbHistoryFetched = new Set(); // gameIds we've already loaded history for
+
+async function dbLoadHistory(gameId) {
+  if (dbHistoryFetched.has(gameId)) return;
+  dbHistoryFetched.add(gameId);
+
+  const cached = dbGameCache.get(gameId);
+  const meta   = cached?.meta;
+  if (!meta) return;
+
+  const wBase       = `https://feed.lolesports.com/livestats/v1/window/${gameId}`;
+  const acceptedStep = dbStepCache.get(gameId) || 4;
+
+  // Fetch historical windows from ~20 minutes back up to now
+  // Each window covers ~100s (10 frames × 10s). Step forward 10 steps at a time.
+  const historyDepth = 120; // go back up to 20 minutes past the broadcast delay
+  const startStep    = acceptedStep + historyDepth;
+
+  const allFrames = [];
+  for (let step = startStep; step >= acceptedStep - 5; step -= 10) {
+    const t = dbRoundedTimestamp(new Date(Date.now() - step * 10000));
+    try {
+      const res = await fetch(`${wBase}?startingTime=${encodeURIComponent(t)}`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const frames = data?.frames || [];
+      // De-duplicate by timestamp and add in order
+      frames.forEach(f => {
+        if (!allFrames.find(x => x.rfc460Timestamp === f.rfc460Timestamp)) {
+          allFrames.push(f);
+        }
+      });
+    } catch(e) {}
+  }
+
+  if (allFrames.length < 2) return;
+
+  // Sort chronologically
+  allFrames.sort((a,b) => a.rfc460Timestamp > b.rfc460Timestamp ? 1 : -1);
+
+  // Replay diffs to build event history
+  const historicalEvents = [];
+  for (let i = 1; i < allFrames.length; i++) {
+    const events = dbProcessEvents(gameId, allFrames[i], allFrames[i-1], meta);
+    if (events.length) {
+      const frameTime = new Date(allFrames[i].rfc460Timestamp);
+      const timeLabel = frameTime.getHours().toString().padStart(2,"0") + ":" +
+                        frameTime.getMinutes().toString().padStart(2,"0");
+      events.forEach(e => historicalEvents.push({ ...e, time: timeLabel }));
+    }
+  }
+
+  if (!historicalEvents.length) return;
+
+  // Store as newest-first (reverse chronological) and render
+  dbEventLogs.set(gameId, [...historicalEvents].reverse().slice(0, 50));
+  dbPrevFrames.set(gameId, JSON.parse(JSON.stringify(allFrames[allFrames.length - 1])));
+
+  const el = document.getElementById("db-events-" + gameId);
+  if (!el) return;
+  const log = dbEventLogs.get(gameId) || [];
+  el.innerHTML = '<div class="db-event-log-title">Game log</div>' +
+    log.map(e =>
+      `<div class="db-event-row"><span class="db-event-time">${e.time}</span><span class="db-event-text">${e.text}</span></div>`
+    ).join("") +
+    `<div style="color:var(--muted);font-size:10px;padding:4px 0;text-align:center;">↑ Historical events loaded</div>`;
+}
+
+
 
 const DRAGON_NAMES = {
   fire: "Infernal", earth: "Mountain", wind: "Cloud", water: "Ocean",
@@ -6493,7 +5736,7 @@ function dbProcessEvents(gameId, newFrame, prevFrame, meta) {
     const p = partById[pid];
     if (!p) return "Unknown";
     const cls = p.side === "blue" ? "db-ev-blue" : "db-ev-red";
-    return `<span class="${cls}">${teamNames[p.side]}</span> ${p.name}${showChamp && p.champ ? " <span style='color:var(--muted);'>[${p.champ}]</span>" : ""}`;
+    return `<span class="${cls}">${teamNames[p.side]}</span> <b>${p.name}</b>${showChamp && p.champ ? ` [<span style='color:var(--muted);font-style:italic;'>${p.champ}</span>]` : ``}`;
   };
 
   // ── Kill diffs ────────────────────────────────────────────────────────────
@@ -6533,12 +5776,18 @@ function dbProcessEvents(gameId, newFrame, prevFrame, meta) {
   });
 
   deaths.forEach(victim => {
-    const killer = killers[0]; // best guess if multiple kills same frame
+    const killer = killers.find(k => k.participantId !== victim.participantId);
+    // Assisters: exclude the killer, the victim, and cap at 3 names to avoid teamfight noise
+    const trueAssisters = assisters
+      .filter(a => a.participantId !== victim.participantId && a.participantId !== killer?.participantId)
+      .slice(0, 3);
+
     let text = "";
     if (killer) {
       text = fmt(killer.participantId) + ` <span class="db-ev-kill">slew</span> ` + fmt(victim.participantId);
-      if (assisters.length) {
-        text += ` <span style="color:var(--muted);">(${assisters.map(a => fmt(a.participantId, false)).join(", ")} assisted)</span>`;
+      if (trueAssisters.length) {
+        const assistStr = trueAssisters.map(a => `<span class="${partById[a.participantId]?.side === 'blue' ? 'db-ev-blue' : 'db-ev-red'}">${partById[a.participantId]?.name || '?'}</span>`).join(", ");
+        text += ` <span style="color:var(--muted);font-size:10px;">(${assistStr} assisted)</span>`;
       }
     } else {
       text = fmt(victim.participantId) + ` <span class="db-ev-kill">was slain</span>`;
@@ -6577,20 +5826,31 @@ function dbProcessEvents(gameId, newFrame, prevFrame, meta) {
   if (newBlueTowers > prevBlueTowers) events.push({ text: `<span class="db-ev-blue">${teamNames.blue}</span> <span class="db-ev-obj">destroyed a tower</span>`, type: "obj" });
   if (newRedTowers  > prevRedTowers)  events.push({ text: `<span class="db-ev-red">${teamNames.red}</span> <span class="db-ev-obj">destroyed a tower</span>`,  type: "obj" });
 
+  // Inhibitors
+  const prevBlueInh = prevFrame.blueTeam?.inhibitors || 0;
+  const newBlueInh  = newFrame.blueTeam?.inhibitors  || 0;
+  const prevRedInh  = prevFrame.redTeam?.inhibitors  || 0;
+  const newRedInh   = newFrame.redTeam?.inhibitors   || 0;
+  if (newBlueInh > prevBlueInh) events.push({ text: `<span class="db-ev-blue">${teamNames.blue}</span> <span class="db-ev-obj">destroyed an inhibitor</span>`, type: "obj" });
+  if (newRedInh  > prevRedInh)  events.push({ text: `<span class="db-ev-red">${teamNames.red}</span> <span class="db-ev-obj">destroyed an inhibitor</span>`,  type: "obj" });
+
   return events;
 }
 
-function dbUpdateEventLog(gameId, newEvents, frameTimestamp) {
+function dbUpdateEventLog(gameId, newEvents, timestamp) {
   const existing = dbEventLogs.get(gameId) || [];
-  const timeLabel = frameTimestamp ? dbFmtTime(frameTimestamp) : "";
-  const tagged = newEvents.map(e => ({ ...e, time: timeLabel }));
-  const updated = [...tagged, ...existing].slice(0, 30); // keep newest 30
+  const now = new Date();
+  const timeLabel = now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+  const tagged  = newEvents.map(e => ({ ...e, time: timeLabel }));
+  const updated = [...tagged, ...existing].slice(0, 40);
   dbEventLogs.set(gameId, updated);
 
   const el = document.getElementById("db-events-" + gameId);
   if (!el) return;
-  if (!updated.length) { el.innerHTML = '<div class="db-event-log-title">Game log</div><div style="color:var(--muted);font-size:11px;">No events yet…</div>'; return; }
-
+  if (!updated.length) {
+    el.innerHTML = '<div class="db-event-log-title">Game log</div><div style="color:var(--muted);font-size:11px;">No events yet…</div>';
+    return;
+  }
   el.innerHTML = '<div class="db-event-log-title">Game log</div>' +
     updated.map(e =>
       `<div class="db-event-row">` +
@@ -6645,7 +5905,16 @@ async function dbFetchFeed(gameId) {
   }
   let wRes, startingTime;
   try { ({ res: wRes, startingTime } = await dbFindStartingTime(wBase, gameId)); }
-  catch(e) { cached.noFeed = true; dbGameCache.set(gameId, cached); return cached; }
+  catch(e) {
+    // If we previously had frame data and now get 404, the game ended
+    if (e.message === "404" && cached.lastFrame && !cached.gameEnded) {
+      cached.gameEnded = true;
+    } else if (!cached.lastFrame) {
+      cached.noFeed = true;
+    }
+    dbGameCache.set(gameId, cached);
+    return cached;
+  }
   // Fetch window and details in parallel — saves one full round-trip per poll
   const [wData, dData] = await Promise.all([
     dbSafeJson(wRes),
@@ -6762,8 +6031,25 @@ function dbRenderScoreboard(gameId, cached) {
 async function dbRefreshGame(gameId) {
   try {
     const cached = await dbFetchFeed(gameId);
-    const noFeed = cached.noFeed;
+    const noFeed    = cached.noFeed;
+    const gameEnded = cached.gameEnded;
     dbRenderDraft(gameId, cached);
+    if (gameEnded) {
+      // Game just ended — add a final event to the log and freeze it
+      const existing = dbEventLogs.get(gameId) || [];
+      if (!existing.find(e => e.type === "end")) {
+        const now = new Date();
+        const timeLabel = now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+        dbEventLogs.set(gameId, [{ text: `<span class="db-ev-obj">🏆 Game over</span>`, type: "end", time: timeLabel }, ...existing]);
+        const el = document.getElementById("db-events-" + gameId);
+        if (el) {
+          const log = dbEventLogs.get(gameId);
+          el.innerHTML = '<div class="db-event-log-title">Game log · ended</div>' +
+            log.map(e => `<div class="db-event-row"><span class="db-event-time">${e.time}</span><span class="db-event-text">${e.text}</span></div>`).join("");
+        }
+      }
+      return; // don't update stats/scoreboard with stale data
+    }
     if (noFeed) {
       const se = document.getElementById("db-stats-"+gameId);
       if (se) se.innerHTML = `<div class="db-stats-vs" style="grid-column:1/-1;color:var(--muted);font-size:12px;">Live stats not available for this league.</div>`;
@@ -6781,21 +6067,11 @@ async function dbRefreshGame(gameId) {
 
       if (newFrame && prevFrame && cached.meta) {
         const newEvents = dbProcessEvents(gameId, newFrame, prevFrame, cached.meta);
-        if (newEvents.length) {
-          dbUpdateEventLog(gameId, newEvents, null);
-        } else {
-          // No new events this poll — update the title to show we're live
-          const existing = dbEventLogs.get(gameId) || [];
-          if (logEl && !existing.length) {
-            const totalKills = (newFrame.blueTeam?.totalKills||0) + (newFrame.redTeam?.totalKills||0);
-            logEl.innerHTML = '<div class="db-event-log-title">Game log · tracking' + (totalKills ? ' · ' + totalKills + ' kills so far' : '') + '</div>' +
-              '<div style="color:var(--muted);font-size:11px;">No events detected yet — kills will appear here as they happen.</div>';
-          }
-        }
+        if (newEvents.length) dbUpdateEventLog(gameId, newEvents, null);
       } else if (newFrame && !prevFrame) {
-        if (logEl) logEl.innerHTML = '<div class="db-event-log-title">Game log · live</div><div style="color:var(--muted);font-size:11px;">Tracking events…</div>';
-      } else if (!newFrame && logEl) {
-        logEl.innerHTML = '<div class="db-event-log-title">Game log</div><div style="color:var(--muted);font-size:11px;">Waiting for feed data…</div>';
+        // First frame — load full history in background
+        if (logEl) logEl.innerHTML = '<div class="db-event-log-title">Game log · loading history…</div><div style="color:var(--muted);font-size:11px;">Fetching past events…</div>';
+        dbLoadHistory(gameId);
       }
       if (newFrame) dbPrevFrames.set(gameId, JSON.parse(JSON.stringify(newFrame)));
     }
@@ -6848,6 +6124,7 @@ function dbSyncCards(cards) {
       dbGameCache.delete(id);
       dbEventLogs.delete(id);
       dbPrevFrames.delete(id);
+      dbHistoryFetched.delete(id);
     }
   }
   if (!cards.length) {
@@ -7013,7 +6290,7 @@ function show(screen) {
     if (screen === "stats")     renderStats();
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
-    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); }
+    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
