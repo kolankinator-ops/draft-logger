@@ -384,7 +384,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -394,7 +394,7 @@
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
-  <button onclick="show('bets');closeDrawer()">Bets</button>
+  <button onclick="show('bets');closeDrawer()" class="">Bets</button>
   <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
   <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
@@ -404,14 +404,14 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
   <button onclick="show('stats')">My Stats</button>
-  <button onclick="show('bets')">Bets</button>
+  <button onclick="show('bets')" class="">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('tiers')">⚖ Tiers</button>
   <button onclick="show('settings')" class="active">⚙ Sync</button>
@@ -805,8 +805,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
+    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
   </div>
 </div>
 
@@ -948,7 +948,472 @@
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Bet history</div>
   </div>
-  <div id="bets-list"><div class="empty">No bets logged yet.</div></div>
+  <div id="bets-list">
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">LYON vs FUR</div>
+            <div class="bet-meta">2026-07-04 · MSI 2026</div>
+          </div>
+          <span class="profit-badge win">+35.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>LYON</b> vs FUR</span>
+          <span style="color:var(--muted);">@ 1.35</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+35.00 (+35% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">FUR vs LYON</div>
+            <div class="bet-meta">2026-07-04 · MSI 2026</div>
+          </div>
+          <span class="profit-badge loss">-25.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>FUR</b> vs LYON</span>
+          <span style="color:var(--muted);">@ 2.90</span>
+          <span>Stake: <b>25.00</b></span>
+          <span style="color:#ff4d5e;">-25.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">TSW vs TES</div>
+            <div class="bet-meta">2026-07-05 · MSI 2026</div>
+          </div>
+          <span class="profit-badge win">+135.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>TSW</b> vs TES</span>
+          <span style="color:var(--muted);">@ 2.80</span>
+          <span>Stake: <b>75.00</b></span>
+          <span style="color:var(--green);">+135.00 (+180% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">EWI vs TOG</div>
+            <div class="bet-meta">2026-07-07 · Prime League 2026 · Week 2</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>EWI</b> vs TOG</span>
+          <span style="color:var(--muted);">@ 1.40</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">USE vs G2N</div>
+            <div class="bet-meta">2026-07-08 · Prime League 2026 · Week 2</div>
+          </div>
+          <span class="profit-badge win">+250.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>USE</b> vs G2N</span>
+          <span style="color:var(--muted);">@ 3.50</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+250.00 (+250% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">VFB vs SGE</div>
+            <div class="bet-meta">2026-07-09 · Prime League 2026 · Week 2</div>
+          </div>
+          <span class="profit-badge win">+100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>VFB</b> vs SGE</span>
+          <span style="color:var(--muted);">@ 2.00</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+100.00 (+100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">LYON vs HLE</div>
+            <div class="bet-meta">2026-07-11 · MSI 2026</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>LYON</b> vs HLE</span>
+          <span style="color:var(--muted);">@ 3.50</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">3V vs Z5</div>
+            <div class="bet-meta">2026-07-13 · LRN 2026 · Week 4</div>
+          </div>
+          <span class="profit-badge loss">-62.22</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>3V</b> vs Z5</span>
+          <span style="color:var(--muted);">@ 1.86</span>
+          <span>Stake: <b>62.22</b></span>
+          <span style="color:#ff4d5e;">-62.22 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">EWI vs SGE</div>
+            <div class="bet-meta">2026-07-13 · Prime League 2026 · Week 3</div>
+          </div>
+          <span class="profit-badge win">+32.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>EWI</b> vs SGE</span>
+          <span style="color:var(--muted);">@ 1.32</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+32.00 (+32% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">EWI vs USE</div>
+            <div class="bet-meta">2026-07-13 · Prime League 2026 · Week 3</div>
+          </div>
+          <span class="profit-badge win">+90.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>USE</b> vs EWI</span>
+          <span style="color:var(--muted);">@ 1.90</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+90.00 (+90% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">ROSS vs TOG</div>
+            <div class="bet-meta">2026-07-13 · Prime League 2026 · Week 3</div>
+          </div>
+          <span class="profit-badge win">+68.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>TOG</b> vs ROSS</span>
+          <span style="color:var(--muted);">@ 1.68</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+68.00 (+68% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">SGE vs KHK</div>
+            <div class="bet-meta">2026-07-13 · Prime League 2026 · Week 3</div>
+          </div>
+          <span class="profit-badge win">+25.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>KHK</b> vs SGE</span>
+          <span style="color:var(--muted);">@ 1.25</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+25.00 (+25% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">VFB vs BIG</div>
+            <div class="bet-meta">2026-07-13 · Prime League 2026 · Week 3</div>
+          </div>
+          <span class="profit-badge loss">-47.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>VFB</b> vs BIG</span>
+          <span style="color:var(--muted);">@ 5.30</span>
+          <span>Stake: <b>47.00</b></span>
+          <span style="color:#ff4d5e;">-47.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">UCAM vs HRTS</div>
+            <div class="bet-meta">2026-07-14 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge win">+180.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>UCAM</b> vs HRTS</span>
+          <span style="color:var(--muted);">@ 2.80</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+180.00 (+180% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">FLK vs LUA</div>
+            <div class="bet-meta">2026-07-14 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge win">+28.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>LUA</b> vs FLK</span>
+          <span style="color:var(--muted);">@ 1.28</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+28.00 (+28% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">LUA vs FLK</div>
+            <div class="bet-meta">2026-07-14 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>LUA</b> vs FLK</span>
+          <span style="color:var(--muted);">@ 1.28</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">LUA vs FLK</div>
+            <div class="bet-meta">2026-07-14 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge win">+91.85</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>LUA</b> vs FLK</span>
+          <span style="color:var(--muted);">@ 1.55</span>
+          <span>Stake: <b>167.00</b></span>
+          <span style="color:var(--green);">+91.85 (+55% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">HRTS vs UCAM</div>
+            <div class="bet-meta">2026-07-14 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>HRTS</b> vs UCAM</span>
+          <span style="color:var(--muted);">@ 1.48</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">BAR vs MKF</div>
+            <div class="bet-meta">2026-07-15 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge win">+50.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>MKF</b> vs BAR</span>
+          <span style="color:var(--muted);">@ 1.50</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+50.00 (+50% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">ML vs Lyon</div>
+            <div class="bet-meta">2026-07-15 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge win">+60.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>ML</b> vs Lyon</span>
+          <span style="color:var(--muted);">@ 2.20</span>
+          <span>Stake: <b>50.00</b></span>
+          <span style="color:var(--green);">+60.00 (+120% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">TS vs KC</div>
+            <div class="bet-meta">2026-07-15 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge win">+39.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>KC</b> vs TS</span>
+          <span style="color:var(--muted);">@ 1.39</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+39.00 (+39% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">KC vs TS</div>
+            <div class="bet-meta">2026-07-15 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge win">+187.20</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>TS</b> vs KC</span>
+          <span style="color:var(--muted);">@ 2.56</span>
+          <span>Stake: <b>120.00</b></span>
+          <span style="color:var(--green);">+187.20 (+156% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">KC vs TS</div>
+            <div class="bet-meta">2026-07-15 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>TS</b> vs KC</span>
+          <span style="color:var(--muted);">@ 2.50</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">MKF vs BAR</div>
+            <div class="bet-meta">2026-07-15 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>BAR</b> vs MKF</span>
+          <span style="color:var(--muted);">@ 2.15</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">HRTS vs BAR</div>
+            <div class="bet-meta">2026-07-16 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>BAR</b> vs HRTS</span>
+          <span style="color:var(--muted);">@ 3.10</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">VFB vs KHK</div>
+            <div class="bet-meta">2026-07-16 · Prime League 2026 · Week 4</div>
+          </div>
+          <span class="profit-badge win">+32.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>KHK</b> vs VFB</span>
+          <span style="color:var(--muted);">@ 1.32</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+32.00 (+32% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">SGE vs EINS</div>
+            <div class="bet-meta">2026-07-16 · Prime League 2026 · Week 4</div>
+          </div>
+          <span class="profit-badge loss">-32.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>SGE</b> vs EINS</span>
+          <span style="color:var(--muted);">@ 3.80</span>
+          <span>Stake: <b>32.00</b></span>
+          <span style="color:#ff4d5e;">-32.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">BAR vs HRTS</div>
+            <div class="bet-meta">2026-07-16 · LES 2026 · Week 1</div>
+          </div>
+          <span class="profit-badge win">+131.60</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>HRTS</b> vs BAR</span>
+          <span style="color:var(--muted);">@ 3.80</span>
+          <span>Stake: <b>47.00</b></span>
+          <span style="color:var(--green);">+131.60 (+280% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">DK vs G2</div>
+            <div class="bet-meta">2026-07-16 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge loss">-100.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>G2</b> vs DK</span>
+          <span style="color:var(--muted);">@ 2.00</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:#ff4d5e;">-100.00 (-100% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">DK vs G2</div>
+            <div class="bet-meta">2026-07-16 · Esports World Cup 2026 · Groups</div>
+          </div>
+          <span class="profit-badge win">+90.48</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>DK</b> vs G2</span>
+          <span style="color:var(--muted);">@ 1.58</span>
+          <span>Stake: <b>156.00</b></span>
+          <span style="color:var(--green);">+90.48 (+58% ROI)</span>
+        </div>
+      </div>
+      <div class="bet-entry">
+        <div class="bet-header">
+          <div>
+            <div class="bet-teams">USE vs TOG</div>
+            <div class="bet-meta">2026-07-16 · Prime League 2026 · Week 4</div>
+          </div>
+          <span class="profit-badge win">+58.00</span>
+        </div>
+        <div class="bet-row">
+          <span>Bet: <b>USE</b> vs TOG</span>
+          <span style="color:var(--muted);">@ 1.58</span>
+          <span>Stake: <b>100.00</b></span>
+          <span style="color:var(--green);">+58.00 (+58% ROI)</span>
+        </div>
+      </div></div>
 </div>
 
 <!-- BET STATS -->
@@ -1030,7 +1495,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/17/2026, 11:14:49 AM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/17/2026, 12:59:04 PM</div>
     </div>
   </div>
 
@@ -1103,22 +1568,29 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$503.67</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+335.8%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$275.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+183.3%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$653.67</div>
+        <div style="font-size:20px;font-weight:700;">$425.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$561.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$92.67 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$425.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$28.05 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $561)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$21.25 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $425)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
+      <div>
+        <label>Set current bankroll to ($)</label>
+        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00">
+      </div>
+      <button class="btn btn-primary" style="padding:8px 14px;white-space:nowrap;" onclick="setManualCurrentBankroll()">Update</button>
+    </div>
     <button class="btn btn-ghost" style="width:100%;font-size:12px;" onclick="resetBankrollToCurrent()">↺ Reset current bankroll to starting amount</button>
   </div>
 
@@ -1151,7 +1623,7 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Get notified when a game starts or the draft is complete. Only fires while this tab is open.
     </p>
-    <div id="notif-permission-row" style="margin-bottom:12px;"><button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button></div>
+    <div id="notif-permission-row" style="margin-bottom:12px;"><div style="color:#ff4d5e;font-size:12px;">Notifications blocked — enable them in your browser settings for this site.</div></div>
     <div id="notif-settings" style="display:none;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
@@ -5963,6 +6435,18 @@ function saveBankrollSettings() {
   // Preserve current bankroll unless this is first save
   const current   = s.current != null ? s.current : starting;
   localStorage.setItem(BANKROLL_KEY, JSON.stringify({ starting, unitType, unitValue, floor, current }));
+  updateBankrollDisplay();
+}
+
+function setManualCurrentBankroll() {
+  const val = parseFloat(document.getElementById("bankroll-manual-current")?.value);
+  if (isNaN(val) || val < 0) { alert("Enter a valid amount."); return; }
+  const s = loadBankrollSettings();
+  if (!s.starting) { alert("Set a starting bankroll first."); return; }
+  s.current = val;
+  localStorage.setItem(BANKROLL_KEY, JSON.stringify(s));
+  const el = document.getElementById("bankroll-manual-current");
+  if (el) el.value = "";
   updateBankrollDisplay();
 }
 
