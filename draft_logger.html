@@ -383,8 +383,8 @@
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
-  <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <button onclick="show('history');closeDrawer()">History</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -404,7 +404,7 @@
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('history')">History</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -661,17 +661,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">BLUE SIDE +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">BLUE SIDE +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">RED SIDE +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">RED SIDE +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">BLUE SIDE</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -679,7 +679,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">RED SIDE</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -690,37 +690,37 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">BLUE SIDE</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">RED SIDE</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
+    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
+        <div id="model-bar-fill" style="height: 100%; background: var(--muted); border-radius: 4px; transition: width 0.3s; width: 54%;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">Blue 54%</span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--muted);font-weight:600;">Lean Blue</span></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">46% Red</span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
-      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
-    <div id="model-bet-sizing" style="display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);font-size:12px;line-height:1.8;"></div>
-    </div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div>→ Champion patterns (10 champs with data)</div><div>↑ Champion flat-100 ROI (8 champs with data)</div><div>↓ Cross-position: Sylas vs Lucian — 14% (14g)</div><div>↓ Cross-position: Sylas vs Milio — 0% (10g)</div><div>↑ Cross-position: Senna vs Annie — 92% (24g)</div></div>
+      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 3 games — treat with caution.</div>
+    <div id="model-bet-sizing" style="display: block; margin-top: 8px; padding: 10px 12px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--green); font-size: 12px; line-height: 1.8;"><div style="font-weight:700;color:var(--green);margin-bottom:3px;">💰 Suggested bet: 1 unit = <span style="font-size:14px;">$19.70</span></div><div style="color:var(--muted);">Bankroll: $562.96 · 1 unit = $19.70</div></div>
+    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">Blue side wins</span>
+        <span id="pred-blue-label">BLUE SIDE wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">Red side wins</span>
+        <span id="pred-red-label">RED SIDE wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -731,11 +731,11 @@
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">BLUE SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">RED SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -750,19 +750,19 @@
           <button class="conf-btn sel" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
         </div>
       </div>
-      <div id="bet-form" style="display:none;">
+      <div id="bet-form" style="display: none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label>Bet on</label>
-            <select id="bet-team-on" onchange="autofillBetAgainst()">
-              <option value="">— select team —</option>
-            </select>
+            <select id="bet-team-on" onchange="autofillBetAgainst()"><option value="">— select team —</option>
+      <option value="blue">GEN</option>
+      <option value="red">DK</option></select>
           </div>
           <div>
             <label>Bet against</label>
-            <select id="bet-team-against">
-              <option value="">— select team —</option>
-            </select>
+            <select id="bet-team-against"><option value="">— select team —</option>
+      <option value="blue">GEN</option>
+      <option value="red">DK</option></select>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -783,10 +783,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">Blue side won</span>
+          <span id="vod-result-blue-label">BLUE SIDE won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">Red side won</span>
+          <span id="vod-result-red-label">RED SIDE won</span>
         </button>
       </div>
     </div>
@@ -805,8 +805,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
+    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
   </div>
 </div>
 
@@ -1038,7 +1038,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/17/2026, 11:58:43 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/18/2026, 12:36:27 PM</div>
     </div>
   </div>
 
@@ -1112,20 +1112,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$540.72</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+360.5%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$412.96</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+275.3%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$690.72</div>
+        <div style="font-size:20px;font-weight:700;">$562.96</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$425.84</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$264.88 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$394.07</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$168.89 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$21.29 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $426)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$19.70 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $394)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
@@ -1199,7 +1199,7 @@
       <button class="btn btn-primary" onclick="runLeaguepediaImport()">Import from Leaguepedia</button>
       <button class="btn btn-ghost" onclick="verifyWithLeaguepedia()">✓ Verify inferred data</button>
     </div>
-    <div id="lpedia-status" style="font-size: 12px; margin-top: 10px; min-height: 40px; line-height: 1.8; color: var(--yellow);">Rate limited at 2025-07. 0/12 months cached — click Verify again to resume from where we stopped.</div>
+    <div id="lpedia-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1326,7 +1326,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/17/2026, 11:58:43 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/18/2026, 12:35:18 PM</div>
     </div>
   </div>
 
@@ -6130,7 +6130,7 @@ async function fetchLeaguepediaPage(where, offset, attempt = 0) {
   const params = new URLSearchParams({
     action: "cargoquery",
     format: "json",
-    origin: "*",           // required for CORS from browser
+    origin: "*",
     tables: LPEDIA_TABLE,
     fields: "OverviewPage,Tournament,Team1,Team2,WinTeam,DateTime_UTC,Team1Picks,Team2Picks,Patch,N_GameInMatch,GameId",
     where,
@@ -6140,18 +6140,30 @@ async function fetchLeaguepediaPage(where, offset, attempt = 0) {
   });
   const res = await fetch(`${LPEDIA_API}?${params}`);
 
-  // Rate limited — back off and retry (max 4 attempts)
+  // HTTP-level rate limit
   if (res.status === 429 || res.status === 503) {
-    if (attempt >= 4) throw new Error("Rate limited after 4 retries. Try again in a few minutes.");
-    const wait = (attempt + 1) * 5000; // 5s, 10s, 15s, 20s
-    lpediaSetStatus(`Rate limited — waiting ${wait/1000}s before retry ${attempt+1}/4…`, "var(--yellow)");
+    if (attempt >= 4) throw new Error("Rate limited — please wait a few minutes and try again.");
+    const wait = (attempt + 1) * 8000;
+    lpediaSetStatus(`Rate limited (HTTP ${res.status}) — waiting ${wait/1000}s before retry ${attempt+1}/4…`, "var(--yellow)");
     await new Promise(r => setTimeout(r, wait));
     return fetchLeaguepediaPage(where, offset, attempt + 1);
   }
 
   if (!res.ok) throw new Error("Leaguepedia API returned " + res.status);
   const data = await res.json();
-  if (data.error) throw new Error(data.error.info || JSON.stringify(data.error));
+
+  // JSON-level rate limit (MediaWiki returns 200 + error body for rate limits)
+  if (data.error) {
+    const msg = data.error.info || JSON.stringify(data.error);
+    const isRateLimit = msg.toLowerCase().includes("rate limit") || data.error.code === "ratelimited";
+    if (isRateLimit && attempt < 4) {
+      const wait = (attempt + 1) * 8000;
+      lpediaSetStatus(`Rate limited — waiting ${wait/1000}s before retry ${attempt+1}/4…`, "var(--yellow)");
+      await new Promise(r => setTimeout(r, wait));
+      return fetchLeaguepediaPage(where, offset, attempt + 1);
+    }
+    throw new Error(msg);
+  }
   return data.cargoquery || [];
 }
 
@@ -6280,37 +6292,65 @@ async function verifyWithLeaguepedia() {
     (e.winnerConfidence === "inferred" || !e.winnerConfidence)
   );
   if (!inferred.length) {
-    lpediaSetStatus("No entries to verify.", "var(--green)");
+    lpediaSetStatus("No entries to verify — all data is already confirmed.", "var(--green)");
     _lpediaRunning = false; return;
   }
 
-  // Build list of months to query (one request per month to stay under rate limits)
+  // Group inferred entries by month
   const months = [...new Set(inferred.map(e => e.date.slice(0, 7)))].sort();
+
+  // Resume from sessionStorage cache if available
   const CACHE_KEY = "lpedia_verify_cache_v1";
   let cached = {};
   try { cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || "{}"); } catch(ex) {}
-
-  const lpGames = []; // all fetched games across all months
-
-  // Load any previously cached months first
-  for (const [k, v] of Object.entries(cached)) { lpGames.push(...v); }
   const cachedMonths = new Set(Object.keys(cached));
+  const lpGames = Object.values(cached).flat();
 
-  lpediaSetStatus(`Verifying ${inferred.length} entries across ${months.length} months. ${cachedMonths.size} months already cached.`, "var(--muted)");
+  const remaining = months.filter(m => !cachedMonths.has(m));
+  lpediaSetStatus(
+    `${inferred.length} entries to verify across ${months.length} months.<br>` +
+    `${cachedMonths.size} months already cached (${lpGames.length} games). ` +
+    `${remaining.length} months left to fetch…`,
+    "var(--muted)"
+  );
+  await new Promise(r => setTimeout(r, 500));
 
-  for (const month of months) {
-    if (cachedMonths.has(month)) continue; // already fetched
+  // Build tournament filter from the leagues present in inferred entries
+  // This avoids fetching ALL global games — only the tournaments we care about
+  const inferredLeagues = [...new Set(inferred.map(e => (e.league || e.eventContext || "").toLowerCase()))];
+  const tournamentClauses = [];
+  if (inferredLeagues.some(l => l.includes("world")))      tournamentClauses.push('OverviewPage LIKE "%World Championship%"', 'OverviewPage LIKE "%Worlds%"');
+  if (inferredLeagues.some(l => l.includes("msi") || l.includes("mid-season"))) tournamentClauses.push('OverviewPage LIKE "%Mid-Season Invitational%"', 'OverviewPage LIKE "%MSI%"');
+  if (inferredLeagues.some(l => l.includes("first stand"))) tournamentClauses.push('OverviewPage LIKE "%First Stand%"');
+  if (inferredLeagues.some(l => l.includes("lck")))        tournamentClauses.push('OverviewPage LIKE "%LCK%"');
+  if (inferredLeagues.some(l => l.includes("lpl")))        tournamentClauses.push('OverviewPage LIKE "%LPL%"');
+  if (inferredLeagues.some(l => l.includes("lec")))        tournamentClauses.push('OverviewPage LIKE "%LEC%"');
+  if (inferredLeagues.some(l => l.includes("lcs") || l.includes("lta"))) tournamentClauses.push('OverviewPage LIKE "%LCS%"', 'OverviewPage LIKE "%LTA%"');
+  // Fallback: include all if we can't determine
+  const tournamentFilter = tournamentClauses.length
+    ? " AND (" + tournamentClauses.join(" OR ") + ")"
+    : "";
 
+  for (let mi = 0; mi < remaining.length; mi++) {
+    const month = remaining[mi];
     const [y, m] = month.split("-");
-    const nextMonth = m === "12" ? `${parseInt(y)+1}-01` : `${y}-${String(parseInt(m)+1).padStart(2,"0")}`;
-    const where = `DateTime_UTC >= "${month}-01" AND DateTime_UTC < "${nextMonth}-01"`;
+    const nextM  = m === "12" ? `${parseInt(y)+1}-01` : `${y}-${String(parseInt(m)+1).padStart(2,"0")}`;
+    const where  = `DateTime_UTC >= "${month}-01" AND DateTime_UTC < "${nextM}-01"${tournamentFilter}`;
 
-    lpediaSetStatus(`Fetching ${month}… (${months.indexOf(month)+1}/${months.length} months · ${lpGames.length} games so far)`, "var(--muted)");
+    lpediaSetStatus(
+      `Fetching ${month} (${mi+1}/${remaining.length} remaining · ${cachedMonths.size} cached · ${lpGames.length} games so far)…`,
+      "var(--muted)"
+    );
 
     try {
       const monthGames = [];
-      let offset = 0, hasMore = true;
+      let offset = 0, hasMore = true, page = 0;
       while (hasMore) {
+        page++;
+        lpediaSetStatus(
+          `Fetching ${month} page ${page} (${mi+1}/${remaining.length} months remaining)…`,
+          "var(--muted)"
+        );
         const rows = await fetchLeaguepediaPage(where, offset);
         rows.forEach(row => {
           const r = row.title || row;
@@ -6327,32 +6367,30 @@ async function verifyWithLeaguepedia() {
         if (hasMore) await new Promise(r => setTimeout(r, 2000));
       }
 
-      // Cache this month
+      // Cache this month immediately so a future rate limit doesn't lose it
       cached[month] = monthGames;
+      cachedMonths.add(month);
       sessionStorage.setItem(CACHE_KEY, JSON.stringify(cached));
       lpGames.push(...monthGames);
 
-      // Longer pause between months
       await new Promise(r => setTimeout(r, 3000));
 
     } catch(e) {
-      if (e.message.includes("rate limit") || e.message.includes("Rate limit")) {
-        lpediaSetStatus(
-          `Rate limited at ${month}. ${Object.keys(cached).length}/${months.length} months cached — click Verify again to resume from where we stopped.`,
-          "var(--yellow)"
-        );
-        _lpediaRunning = false; return;
-      }
-      lpediaSetStatus("Failed fetching " + month + ": " + e.message, "#ff4d5e");
+      const isRateLimit = e.message.toLowerCase().includes("rate limit");
+      lpediaSetStatus(
+        `${isRateLimit ? "Rate limited" : "Error"} at ${month}.<br>` +
+        `<b>${cachedMonths.size}/${months.length} months cached</b> — click <b>✓ Verify inferred data</b> again to resume from here.<br>` +
+        `<span style="color:var(--muted);font-size:11px;">${e.message}</span>`,
+        "var(--yellow)"
+      );
       _lpediaRunning = false; return;
     }
   }
 
-  // Clear cache now that we have everything
   sessionStorage.removeItem(CACHE_KEY);
 
+  // Match and verify
   lpediaSetStatus(`Matching ${lpGames.length} Leaguepedia games against ${inferred.length} entries…`, "var(--muted)");
-
   let verified = 0, corrected = 0, unmatched = 0;
   const entryMap = new Map(entries.map(e => [e.id, e]));
 
@@ -6365,22 +6403,16 @@ async function verifyWithLeaguepedia() {
       ((g.blue.toUpperCase() === bc && g.red.toUpperCase() === rc) ||
        (g.blue.toUpperCase() === rc  && g.red.toUpperCase() === bc))
     );
-
     if (!match) { unmatched++; continue; }
     const entry = entryMap.get(ie.id);
     if (!entry) continue;
-
     const lpWinner = match.winner.toUpperCase() === bc ? "blue"
                    : match.winner.toUpperCase() === rc ? "red" : null;
     if (!lpWinner) { unmatched++; continue; }
-
     if (lpWinner === entry.actualWinner) {
-      entry.winnerConfidence = "verified";
-      verified++;
+      entry.winnerConfidence = "verified"; verified++;
     } else {
-      entry.actualWinner     = lpWinner;
-      entry.winnerConfidence = "verified";
-      corrected++;
+      entry.actualWinner = lpWinner; entry.winnerConfidence = "verified"; corrected++;
     }
   }
 
@@ -6388,9 +6420,9 @@ async function verifyWithLeaguepedia() {
   autoSync();
   lpediaSetStatus(
     `✓ Verification complete!<br>` +
-    `<b style="color:var(--green);">${verified} confirmed correct</b> · ` +
-    `<b style="color:var(--yellow);">${corrected} corrected</b> · ` +
-    `${unmatched} unmatched (different team names or not in Leaguepedia)`,
+    `<b style="color:var(--green);">${verified} confirmed correct</b> &nbsp;·&nbsp; ` +
+    `<b style="color:var(--yellow);">${corrected} corrected</b> &nbsp;·&nbsp; ` +
+    `${unmatched} unmatched`,
     corrected > 0 ? "var(--yellow)" : "var(--green)"
   );
   renderHistory();
