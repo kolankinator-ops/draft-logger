@@ -1035,7 +1035,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/17/2026, 6:17:18 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/17/2026, 6:31:07 PM</div>
     </div>
   </div>
 
@@ -1043,7 +1043,7 @@
     <div class="card-title">↓ Export data</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Downloads everything — all logged games, bulk imports, bets, player ratings, tier weights, and bankroll settings — as a JSON file. Use this to move all data to another device.</p>
     <button class="btn btn-ghost" onclick="exportData()">Download backup</button>
-    <div id="export-info" style="font-size:11px;color:var(--muted);margin-top:6px;"></div>
+    <div id="export-info" style="font-size:11px;color:var(--muted);margin-top:6px;">✓ Exported 2867 entries (3167KB). Transfer this file to your other device and use Import data there.</div>
   </div>
 
   <div class="card">
@@ -1118,11 +1118,11 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$658.51</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$626.55</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$31.96 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$32.93 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $659)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$31.33 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $627)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
@@ -1156,7 +1156,7 @@
       <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
-    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Encoding and pushing…</span></div>
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Pushing app…</span></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1271,13 +1271,13 @@
       </div>
     </div>
     <button class="btn btn-primary" style="width:100%;" onclick="runBulkImport()">Start import</button>
-    <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
+    <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"><span style="color:var(--green);">✓ Import complete! &nbsp;<b style="color:var(--green);">2809 games added</b> &nbsp;· 781 skipped · 19 no pick data · 0 errors<br><b style="color:var(--yellow);">⬇ Download your backup now before closing this tab!</b> Go to Export data above.<br><br><b>Skip reasons:</b><br>39× Already logged<br>742× Winner undetermined (mid-series, no feed data)<br><br><b>Sample undetermined games:</b><br><span style="font-size:10px;">2026-06-12 T1 vs HLE G2<br>2026-06-12 T1 vs HLE G3<br>2026-06-13 BLG vs WE G3<br>2026-06-13 WE vs BLG G4<br>2026-06-14 T1 vs GEN G2<br>2026-06-14 T1 vs GEN G3<br>2026-06-14 T1 vs GEN G4<br>2026-06-04 UCAM vs MKF G2<br>2026-06-04 MKF vs UCAM G3<br>2026-06-04 MKF vs UCAM G4</span></span></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
       <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;margin-bottom:8px;">
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Not run yet.</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/17/2026, 6:31:07 PM · Nothing new</div>
     </div>
   </div>
 
@@ -5731,6 +5731,11 @@ async function runBulkImport() {
 
           existingEntries.unshift(entry);
           imported++;
+
+          // Save incrementally every 25 games so progress isn't lost if anything goes wrong
+          if (imported % 25 === 0) {
+            saveEntries(existingEntries);
+          }
         }
 
         // Small delay to avoid hammering the API
@@ -5749,7 +5754,8 @@ async function runBulkImport() {
     const skipDetails = skipLog.filter(s => s.reason.includes('undetermined')).slice(0,10)
       .map(s => `${s.date} ${s.teams||''} G${s.game||'?'}`).join('<br>');
     setBulkStatus(
-      `✓ Import complete! &nbsp;<b style="color:var(--green);">${imported} games added</b> &nbsp;· ${skipped} skipped · ${noFeed} no pick data · ${failed} errors<br><br>` +
+      `✓ Import complete! &nbsp;<b style="color:var(--green);">${imported} games added</b> &nbsp;· ${skipped} skipped · ${noFeed} no pick data · ${failed} errors<br>` +
+      `<b style="color:var(--yellow);">⬇ Download your backup now before closing this tab!</b> Go to Export data above.<br><br>` +
       `<b>Skip reasons:</b><br>${skipBreakdown || 'none'}` +
       (skipDetails ? `<br><br><b>Sample undetermined games:</b><br><span style="font-size:10px;">${skipDetails}</span>` : ''),
       "var(--green)"
@@ -6309,53 +6315,93 @@ function setGhStatus(msg, color) {
   if (el) el.innerHTML = `<span style="color:${color||"var(--muted)"};">${msg}</span>`;
 }
 
+async function pushFileToGitHub(token, repo, filePath, content, message, headers) {
+  const apiBase = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+  let sha = null;
+  const getRes = await fetch(apiBase, { headers });
+  if (getRes.ok) { sha = (await getRes.json()).sha; }
+  else if (getRes.status !== 404) throw new Error("GitHub API error " + getRes.status);
+  const putRes = await fetch(apiBase, {
+    method: "PUT",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({ message, content, ...(sha ? { sha } : {}) })
+  });
+  if (!putRes.ok) {
+    const err = await putRes.json().catch(() => ({}));
+    throw new Error(err.message || "Push failed: " + putRes.status);
+  }
+}
+
 async function pushToGitHub() {
   const token = (document.getElementById("gh-token")||{}).value.trim() || localStorage.getItem(GH_TOKEN_KEY) || "";
   const repo  = (document.getElementById("gh-repo") ||{}).value.trim() || localStorage.getItem(GH_REPO_KEY)  || "";
   const path  = (document.getElementById("gh-path") ||{}).value.trim() || localStorage.getItem(GH_PATH_KEY)  || "draft_logger.html";
   if (!token) { setGhStatus("Paste your GitHub token first.", "#ff4d5e"); return; }
   if (!repo)  { setGhStatus("Enter your repo (e.g. username/draft-logger).", "#ff4d5e"); return; }
-  setGhStatus("Fetching current file SHA…", "var(--muted)");
+
+  const headers = { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" };
+  const msg     = `Update draft logger — ${new Date().toLocaleString()}`;
+  const owner   = repo.split("/")[0];
+  const repoName = repo.split("/")[1];
+
   try {
-    const apiBase = `https://api.github.com/repos/${repo}/contents/${path}`;
-    const headers = { "Authorization": `token ${token}`, "Accept": "application/vnd.github.v3+json" };
-
-    // Get current SHA (required for updates)
-    let sha = null;
-    const getRes = await fetch(apiBase, { headers });
-    if (getRes.ok) { sha = (await getRes.json()).sha; }
-    else if (getRes.status !== 404) throw new Error("GitHub API error " + getRes.status);
-
-    setGhStatus("Encoding and pushing…", "var(--muted)");
-
-    // Use outerHTML but strip any dynamically injected runtime elements
-    // to keep the pushed file as close to source as possible
+    // 1. Push the app HTML
+    setGhStatus("Pushing app…", "var(--muted)");
     const clone = document.documentElement.cloneNode(true);
-    // Clear any dynamically populated content that shouldn't be in source
     ["db-live-grid","db-upcoming-wrap","live-pills","recent-pills","vod-pills",
      "player-profiles-list","standings-content","standings-league-tabs",
      "tier-legend","tier-league-list","ms-sched-list","model-market-compare"]
       .forEach(id => { const el = clone.querySelector("#" + id); if (el) el.innerHTML = ""; });
     const html    = "<!DOCTYPE html>\n" + clone.outerHTML;
     const encoded = btoa(unescape(encodeURIComponent(html)));
+    await pushFileToGitHub(token, repo, path, encoded, msg, headers);
 
-    const putRes = await fetch(apiBase, {
-      method: "PUT",
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ message: `Update draft logger — ${new Date().toLocaleString()}`, content: encoded, ...(sha ? { sha } : {}) })
-    });
-    if (!putRes.ok) {
-      const err = await putRes.json().catch(() => ({}));
-      throw new Error(err.message || "Push failed: " + putRes.status);
-    }
+    // 2. Push full data as data.json — no size limit, accessible from all devices
+    setGhStatus("Pushing data…", "var(--muted)");
+    const bundle      = fullDataBundle();
+    const dataJson    = JSON.stringify(bundle);
+    const dataEncoded = btoa(unescape(encodeURIComponent(dataJson)));
+    const dataPath    = path.replace(/[^/]+$/, "") + "data.json";
+    await pushFileToGitHub(token, repo, dataPath, dataEncoded, msg + " [data]", headers);
+
     localStorage.setItem(GH_TOKEN_KEY, token);
     localStorage.setItem(GH_REPO_KEY,  repo);
     localStorage.setItem(GH_PATH_KEY,  path);
-    const owner    = repo.split("/")[0];
-    const repoName = repo.split("/")[1];
-    setGhStatus(`✓ Pushed! Live at <a href="https://${owner}.github.io/${repoName}/${path}" target="_blank" style="color:var(--blue);">your GitHub Pages URL</a> in ~30 seconds.`, "var(--green)");
+
+    const entryCount = bundle.entries.length;
+    const sizeKB     = Math.round(dataJson.length / 1024);
+    setGhStatus(
+      `✓ Pushed! App + ${entryCount} entries (${sizeKB}KB data) live at ` +
+      `<a href="https://${owner}.github.io/${repoName}/${path}" target="_blank" style="color:var(--blue);">GitHub Pages</a> in ~30 seconds.`,
+      "var(--green)"
+    );
   } catch(e) {
     setGhStatus("Failed: " + e.message, "#ff4d5e");
+  }
+}
+
+async function syncFromGitHub() {
+  // On startup, fetch data.json from GitHub Pages and merge with local data
+  const repo = localStorage.getItem(GH_REPO_KEY) || "";
+  const path = localStorage.getItem(GH_PATH_KEY) || "draft_logger.html";
+  if (!repo) return;
+  const owner    = repo.split("/")[0];
+  const repoName = repo.split("/")[1];
+  const dataPath = path.replace(/[^/]+$/, "") + "data.json";
+  const url      = `https://${owner}.github.io/${repoName}/${dataPath}`;
+  try {
+    const res = await fetch(url + "?t=" + Date.now()); // cache-bust
+    if (!res.ok) return; // data.json doesn't exist yet — first push hasn't happened
+    const bundle = await res.json();
+    if (!bundle || !bundle.entries) return;
+    const localCount = loadEntries().length;
+    applyDataBundle(bundle, true); // merge — never overwrites local
+    const newCount = loadEntries().length;
+    if (newCount > localCount) {
+      console.log(`[GitHub sync] Merged ${newCount - localCount} new entries from data.json`);
+    }
+  } catch(e) {
+    // Silent fail — GitHub Pages might not have data.json yet or network is offline
   }
 }
 
@@ -7055,6 +7101,8 @@ if (_savedKey) {
   if (_kField) _kField.value = _savedKey;
   // Pull from cloud on startup using merge mode — never overwrites local data
   syncFromCloudOnStartup();
+  // Also sync from GitHub Pages data.json — no size limits, works for bulk imports
+  syncFromGitHub();
 }
 // Register service worker for PWA / offline support
 if ("serviceWorker" in navigator) {
