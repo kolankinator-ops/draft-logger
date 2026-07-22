@@ -382,10 +382,10 @@
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Upcoming</button>
-  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -402,10 +402,10 @@
 
 
 <nav>
-  <button onclick="show('dashboard')" class="">📡 Live</button>
+  <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Upcoming</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -425,7 +425,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">4 live — 1:00:54 PM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -528,17 +528,32 @@
 
   <div class="card">
     <div class="card-title">Match info</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
       <div>
         <label>Blue side team</label>
         <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()">
       </div>
+      <button onclick="swapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
       <div>
         <label>Red side team</label>
         <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()">
       </div>
     </div>
-    <div id="side-confirm-banner" style="display: none; margin-top: 10px; padding: 12px 14px; background: rgba(224, 178, 63, 0.1); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; border-color: var(--muted);"><div style="font-size:12px;color:var(--muted);text-align:center;padding:4px 0;">🔄 Verifying team sides from API…</div></div>
+    <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
+      <div style="font-size:12px;color:var(--yellow);font-weight:700;margin-bottom:8px;">⚠ Confirm team sides before logging a bet</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px;">
+        <div style="background:rgba(59,130,246,.15);border:1px solid var(--blue);border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:2px;">🟦 BLUE SIDE</div>
+          <div id="side-confirm-blue" style="font-size:17px;font-weight:700;"></div>
+        </div>
+        <button onclick="swapSides()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:16px;cursor:pointer;" title="Swap sides">⇄</button>
+        <div style="background:rgba(239,68,68,.15);border:1px solid var(--red);border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:2px;">🟥 RED SIDE</div>
+          <div id="side-confirm-red" style="font-size:17px;font-weight:700;"></div>
+        </div>
+      </div>
+      <button onclick="confirmSides()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">✓ Sides are correct</button>
+    </div>
     <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
     <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -716,17 +731,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">BLUE SIDE +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">BLUE SIDE +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">RED SIDE +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">RED SIDE +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">BLUE SIDE</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -734,7 +749,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">RED SIDE</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -745,37 +760,37 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">BLUE SIDE</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">RED SIDE</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
+    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height: 100%; background: var(--muted); border-radius: 4px; transition: width 0.3s; width: 45%;"></div>
+        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">Blue 45%</span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--red);font-weight:600;">Lean Red</span></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">55% Red</span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div>↓ Champion patterns (10 champs with data)</div><div>↓ Champion flat-100 ROI (8 champs with data)</div></div>
-      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 6 games — treat with caution.</div>
-    <div id="model-bet-sizing" style="display: block; margin-top: 8px; padding: 10px 12px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--green); font-size: 12px; line-height: 1.8;"><div style="font-weight:700;color:var(--green);margin-bottom:3px;">💰 Suggested bet: 1 unit = <span style="font-size:14px;">$5.85</span></div><div style="color:var(--muted);">Bankroll: $216.93 · 1 unit = $5.85</div></div>
-    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
+      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
+    <div id="model-bet-sizing" style="display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);font-size:12px;line-height:1.8;"></div>
+    </div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">BLUE SIDE wins</span>
+        <span id="pred-blue-label">Blue side wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">RED SIDE wins</span>
+        <span id="pred-red-label">Red side wins</span>
       </button>
     </div>
     <div class="conf-row">
@@ -786,11 +801,11 @@
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">BLUE SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">RED SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -805,19 +820,19 @@
           <button class="conf-btn sel" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
         </div>
       </div>
-      <div id="bet-form" style="display: none;">
+      <div id="bet-form" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label>Bet on</label>
-            <select id="bet-team-on" onchange="autofillBetAgainst()"><option value="">— select team —</option>
-      <option value="blue">ZYB</option>
-      <option value="red">SC</option></select>
+            <select id="bet-team-on" onchange="autofillBetAgainst()">
+              <option value="">— select team —</option>
+            </select>
           </div>
           <div>
             <label>Bet against</label>
-            <select id="bet-team-against"><option value="">— select team —</option>
-      <option value="blue">ZYB</option>
-      <option value="red">SC</option></select>
+            <select id="bet-team-against">
+              <option value="">— select team —</option>
+            </select>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -838,10 +853,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">BLUE SIDE won</span>
+          <span id="vod-result-blue-label">Blue side won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">RED SIDE won</span>
+          <span id="vod-result-red-label">Red side won</span>
         </button>
       </div>
     </div>
@@ -860,8 +875,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
+    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
   </div>
 </div>
 
@@ -962,31 +977,198 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid"></div>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-box"><div class="val">5911</div><div class="lbl">Games logged</div></div>
+    <div class="stat-box"><div class="val green">61%</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="val green">50</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="val red">32</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="val yellow">0</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val">36</div><div class="lbl">Watched</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">46</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy"></div>
+    <div id="rolling-accuracy">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 0%" style="flex:1;height:4px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 67%" style="flex:1;height:40px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 89%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 19: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 20: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 21: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 22: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 23: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 24: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 25: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 26: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 27: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 28: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 29: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 30: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 31: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 32: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 33: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 34: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 35: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 36: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 37: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 38: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 39: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 40: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 41: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 42: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 43: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 44: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 45: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 46: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 47: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 48: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 49: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 50: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 51: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 52: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 53: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 54: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 55: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 56: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 57: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 58: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 59: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 60: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 61: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 62: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 63: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 64: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 65: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 66: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 67: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 68: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 69: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 70: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 71: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 72: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 73: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 74: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 75: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 76: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 77: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 78: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 79: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 80: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 81: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 82: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span>Game 1</span>
+        <span>Last 10-game rolling avg: <b style="color:var(--green);">60% ▲ 10pp</b></span>
+        <span>Game 82</span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats"></div>
+    <div id="draft-pref-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Strong preference (±2)</div>
+          <div style="font-size:11px;color:var(--muted);">35 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">51%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Slight preference (±1)</div>
+          <div style="font-size:11px;color:var(--muted);">28 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">50%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Even (0)</div>
+          <div style="font-size:11px;color:var(--muted);">4 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">50%</span>
+      </div>
+    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <span style="color:var(--green);">Draft won: 2</span>
+        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
+        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
+        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats"></div>
+    <div id="conf-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          19 games ·
+          <span style="color:var(--red);">
+            32% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          36 games ·
+          <span style="color:var(--green);">
+            72% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          11 games ·
+          <span style="color:var(--green);">
+            91% accurate
+          </span>
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats"></div>
+    <div id="skew-stats">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 5911 total games.</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft &amp; skill agree → correct</span>
+        <span style="color:var(--green);">
+          74% (27 games)
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft beats skill (upset)</span>
+        <span style="color:var(--muted);">
+          20% of 15 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Skill overcomes draft</span>
+        <span style="color:var(--muted);">
+          80% of 15 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
+    </div>
+    <div style="padding:8px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Predicted correctly when skill was "Not sure"</span>
+        <span style="color:var(--muted);">
+          52% of 25 games
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats"></div>
+    <div id="exec-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          80% (5 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (2 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (1 games)
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Model calibration</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">When the model says 65%, does the predicted side actually win 65% of the time? Bars above the line = underconfident, below = overconfident.</p>
-    <div id="calibration-chart"></div>
+    <div id="calibration-chart"><div style="font-size:12px;color:var(--muted);margin-bottom:14px;">
+          Overall: <b style="color:var(--text);">64%</b> actual vs <b style="color:var(--text);">61%</b> expected average confidence · 66 predictions
+          <span style="margin-left:8px;font-size:10px;">— vertical line = expected, bar = actual</span>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">50–54% <span style="color:var(--muted);">(19g)</span></span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual: 32% <span style="color:var(--muted);font-weight:400;">(-20% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:18px;position:relative;overflow:visible;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:32%;background:#ff4d5e;border-radius:4px;opacity:0.7;transition:width .3s;"></div>
+            <div style="position:absolute;left:52%;top:-3px;height:24px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">60–64% <span style="color:var(--muted);">(36g)</span></span>
+            <span style="font-weight:700;color:var(--green);">Actual: 72% <span style="color:var(--muted);font-weight:400;">(+10% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:18px;position:relative;overflow:visible;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:72%;background:var(--green);border-radius:4px;opacity:0.7;transition:width .3s;"></div>
+            <div style="position:absolute;left:62%;top:-3px;height:24px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">70–74% <span style="color:var(--muted);">(11g)</span></span>
+            <span style="font-weight:700;color:var(--green);">Actual: 91% <span style="color:var(--muted);font-weight:400;">(+19% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:18px;position:relative;overflow:visible;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:91%;background:var(--green);border-radius:4px;opacity:0.7;transition:width .3s;"></div>
+            <div style="position:absolute;left:72%;top:-3px;height:24px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div></div>
   </div>
 </div>
 
@@ -1081,7 +1263,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/22/2026, 1:04:36 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/22/2026, 2:05:29 PM</div>
     </div>
   </div>
 
@@ -1155,20 +1337,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$66.93</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+44.6%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$149.40</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+99.6%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$216.93</div>
+        <div style="font-size:20px;font-weight:700;">$299.40</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$116.93</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$100.00 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$299.40</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$5.85 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $117)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$14.97 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $299)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
@@ -1331,7 +1513,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/22/2026, 1:03:42 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/22/2026, 2:04:24 PM</div>
     </div>
   </div>
 
@@ -3580,13 +3762,18 @@ function renderPending() {
         </div>`;
     }
     // Not yet resolved: show winner buttons
-    const betSummary = e.bet
-      ? `<span style="color:var(--muted);font-size:11px;margin-top:2px;display:block;">
-           Bet: ${e.bet.on==='blue'?e.blueTeam:e.redTeam} @ ${e.bet.odds.toFixed(2)} · Stake: $${e.bet.stake.toFixed(2)}
-           <button onclick="openEditBet('${e.id}')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
-         </span>`
+    const allBets = [e.bet, ...(e.additionalBets||[])].filter(Boolean);
+    const betSummary = allBets.length
+      ? `<div style="margin-top:4px;">
+           ${allBets.map((b,i) => `<span style="color:var(--muted);font-size:11px;display:block;">
+             Bet ${allBets.length>1?i+1+': ':''}${b.on==='blue'?e.blueTeam:e.redTeam} @ ${b.odds.toFixed(2)} · $${b.stake.toFixed(2)}
+             <button onclick="openEditBetIdx('${e.id}',${i})" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
+             <button onclick="removeBetIdx('${e.id}',${i})" style="background:none;border:none;color:#ff4d5e;font-size:11px;cursor:pointer;padding:0 2px;">✕</button>
+           </span>`).join('')}
+           <button onclick="openAddAnotherBet('${e.id}')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0;">+ Add another bet</button>
+         </div>`
       : `<span style="margin-top:4px;display:block;">
-           <button onclick="openEditBet('${e.id}')" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer;padding:0;font-weight:600;">+ Add bet</button>
+           <button onclick="openEditBetIdx('${e.id}',-1)" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer;padding:0;font-weight:600;">+ Add bet</button>
          </span>`;
     return `
       <div class="pending-entry" id="pending-${e.id}">
@@ -3608,37 +3795,37 @@ function renderPending() {
         </div>
         <div class="perf-form" id="perf-form-${e.id}"></div>
         <div id="edit-bet-${e.id}" style="display:none;padding:12px;border-top:1px solid var(--border);">
-          <div class="card-title" style="margin-bottom:10px;">${e.bet ? "Edit bet" : "Add bet"}</div>
+          <div class="card-title" style="margin-bottom:10px;" id="edit-bet-title-${e.id}">Add bet</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
             <div>
               <label>Bet on</label>
               <select id="edit-bet-on-${e.id}">
-                <option value="blue" ${(e.bet?.on||e.predWinner)==='blue'?'selected':''}>${e.blueTeam}</option>
-                <option value="red"  ${(e.bet?.on||e.predWinner)==='red' ?'selected':''}>${e.redTeam}</option>
+                <option value="blue" ${e.predWinner==='blue'?'selected':''}>${e.blueTeam}</option>
+                <option value="red"  ${e.predWinner==='red' ?'selected':''}>${e.redTeam}</option>
               </select>
             </div>
             <div>
               <label>Bet against</label>
               <select id="edit-bet-against-${e.id}">
-                <option value="red"  ${(e.bet?.against||(e.predWinner==='blue'?'red':'blue'))==='red' ?'selected':''}>${e.redTeam}</option>
-                <option value="blue" ${(e.bet?.against||(e.predWinner==='blue'?'red':'blue'))==='blue'?'selected':''}>${e.blueTeam}</option>
+                <option value="red"  ${e.predWinner==='blue'?'selected':''}>${e.redTeam}</option>
+                <option value="blue" ${e.predWinner==='red' ?'selected':''}>${e.blueTeam}</option>
               </select>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
             <div>
               <label>Decimal odds</label>
-              <input type="number" id="edit-bet-odds-${e.id}" step="0.01" min="1.01" value="${e.bet?e.bet.odds:''}" />
+              <input type="number" id="edit-bet-odds-${e.id}" step="0.01" min="1.01" />
             </div>
             <div>
               <label>Stake</label>
-              <input type="number" id="edit-bet-stake-${e.id}" step="0.01" min="0.01" value="${e.bet?e.bet.stake:''}" />
+              <input type="number" id="edit-bet-stake-${e.id}" step="0.01" min="0.01" />
             </div>
           </div>
+          <input type="hidden" id="edit-bet-idx-${e.id}" value="-1" />
           <div class="btn-row">
-            <button class="btn btn-primary" onclick="saveEditBet('${e.id}')">Save bet</button>
+            <button class="btn btn-primary" onclick="saveEditBetIdx('${e.id}')">Save bet</button>
             <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-${e.id}').style.display='none'">Cancel</button>
-            ${e.bet ? `<button class="btn btn-danger" onclick="removeBet('${e.id}')">Remove bet</button>` : ""}
           </div>
         </div>
       </div>`;
@@ -3646,36 +3833,97 @@ function renderPending() {
 }
 
 function openEditBet(id) {
+  openEditBetIdx(id, -1);
+}
+
+function openEditBetIdx(id, idx) {
   const el = document.getElementById("edit-bet-" + id);
   if (!el) return;
-  el.style.display = el.style.display === "none" ? "block" : "none";
+  const entries = loadEntries();
+  const entry   = entries.find(e => e.id === id);
+  if (!entry) return;
+  const allBets = [entry.bet, ...(entry.additionalBets||[])].filter(Boolean);
+  const bet     = idx >= 0 ? allBets[idx] : null;
+  // Populate form
+  const onEl    = document.getElementById("edit-bet-on-"    + id);
+  const agEl    = document.getElementById("edit-bet-against-"+ id);
+  const oddsEl  = document.getElementById("edit-bet-odds-"  + id);
+  const stakeEl = document.getElementById("edit-bet-stake-" + id);
+  const idxEl   = document.getElementById("edit-bet-idx-"   + id);
+  const titleEl = document.getElementById("edit-bet-title-" + id);
+  if (bet) {
+    if (onEl)    onEl.value    = bet.on;
+    if (agEl)    agEl.value    = bet.against;
+    if (oddsEl)  oddsEl.value  = bet.odds;
+    if (stakeEl) stakeEl.value = bet.stake;
+    if (titleEl) titleEl.textContent = idx === 0 ? "Edit bet" : `Edit bet ${idx + 1}`;
+  } else {
+    if (onEl)    onEl.value    = entry.predWinner || "blue";
+    if (agEl)    agEl.value    = entry.predWinner === "blue" ? "red" : "blue";
+    if (oddsEl)  oddsEl.value  = "";
+    if (stakeEl) stakeEl.value = "";
+    if (titleEl) titleEl.textContent = allBets.length > 0 ? "Add another bet" : "Add bet";
+  }
+  if (idxEl) idxEl.value = idx;
+  el.style.display = "block";
 }
 
-function saveEditBet(id) {
+function openAddAnotherBet(id) {
+  openEditBetIdx(id, -1);
+}
+
+function saveEditBetIdx(id) {
   const entries = loadEntries();
-  const entry = entries.find(e => e.id === id);
+  const entry   = entries.find(e => e.id === id);
   if (!entry) return;
-  const on      = document.getElementById("edit-bet-on-" + id).value;
-  const against = document.getElementById("edit-bet-against-" + id).value;
-  const odds    = parseFloat(document.getElementById("edit-bet-odds-" + id).value);
-  const stake   = parseFloat(document.getElementById("edit-bet-stake-" + id).value);
+  const on      = document.getElementById("edit-bet-on-"    + id)?.value;
+  const against = document.getElementById("edit-bet-against-"+ id)?.value;
+  const odds    = parseFloat(document.getElementById("edit-bet-odds-"  + id)?.value);
+  const stake   = parseFloat(document.getElementById("edit-bet-stake-" + id)?.value);
+  const idx     = parseInt(document.getElementById("edit-bet-idx-"   + id)?.value ?? "-1");
   if (!odds || !stake) { alert("Enter valid odds and stake."); return; }
-  entry.bet = { on, against, odds, stake };
+  const newBet  = { on, against, odds, stake };
+  if (!entry.additionalBets) entry.additionalBets = [];
+  if (idx === -1 || idx === 0) {
+    // First/new bet → goes in entry.bet
+    if (idx === -1 && entry.bet) {
+      // Already has a primary bet, this is a new additional bet
+      entry.additionalBets.push(newBet);
+    } else {
+      entry.bet = newBet;
+    }
+  } else {
+    // Editing an additional bet (idx 1+ maps to additionalBets[idx-1])
+    entry.additionalBets[idx - 1] = newBet;
+  }
+  saveEntries(entries);
+  autoSync();
+  document.getElementById("edit-bet-" + id).style.display = "none";
+  renderPending();
+}
+
+function removeBetIdx(id, idx) {
+  if (!confirm("Remove this bet?")) return;
+  const entries = loadEntries();
+  const entry   = entries.find(e => e.id === id);
+  if (!entry) return;
+  if (idx === 0) {
+    // Remove primary bet — promote first additional if any
+    if (entry.additionalBets?.length) {
+      entry.bet = entry.additionalBets.shift();
+    } else {
+      delete entry.bet;
+    }
+  } else {
+    entry.additionalBets?.splice(idx - 1, 1);
+  }
   saveEntries(entries);
   autoSync();
   renderPending();
 }
 
-function removeBet(id) {
-  if (!confirm("Remove bet from this entry?")) return;
-  const entries = loadEntries();
-  const entry = entries.find(e => e.id === id);
-  if (!entry) return;
-  delete entry.bet;
-  saveEntries(entries);
-  autoSync();
-  renderPending();
-}
+function saveEditBet(id) { saveEditBetIdx(id); }
+function removeBet(id)   { removeBetIdx(id, 0); }
 
 function markDidntWatch(id) {
   const entries = loadEntries();
@@ -6689,8 +6937,11 @@ function resetBankrollToCurrent() {
 
 function getPendingStakes() {
   return loadEntries()
-    .filter(e => e.bet && e.bet.stake && !e.actualWinner)
-    .reduce((sum, e) => sum + (e.bet.stake || 0), 0);
+    .filter(e => !e.actualWinner)
+    .reduce((sum, e) => {
+      const allBets = [e.bet, ...(e.additionalBets||[])].filter(Boolean);
+      return sum + allBets.reduce((s, b) => s + (b.stake || 0), 0);
+    }, 0);
 }
 
 function getAvailableBankroll() {
@@ -6792,14 +7043,18 @@ function updateBetSizing(modelPct, edgePct) {
 }
 
 function applyBetResultToBankroll(entry) {
-  if (!entry.bet || !entry.actualWinner) return;
+  if (!entry.actualWinner) return;
   const s = loadBankrollSettings();
   if (!s.starting) return;
-  const current = s.current ?? s.starting;
-  const won     = entry.actualWinner === entry.bet.on;
-  const stake   = entry.bet.stake || 0;
-  const profit  = won ? stake * (entry.bet.odds - 1) : -stake;
-  s.current     = Math.max(0, current + profit);
+  const allBets = [entry.bet, ...(entry.additionalBets||[])].filter(Boolean);
+  if (!allBets.length) return;
+  let current = s.current ?? s.starting;
+  for (const bet of allBets) {
+    const won   = entry.actualWinner === bet.on;
+    const stake = bet.stake || 0;
+    current     = Math.max(0, current + (won ? stake * (bet.odds - 1) : -stake));
+  }
+  s.current = current;
   localStorage.setItem(BANKROLL_KEY, JSON.stringify(s));
 }
 
