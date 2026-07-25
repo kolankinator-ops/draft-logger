@@ -384,14 +384,14 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()" class="">📅 Schedule</button>
-  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
+  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
-  <button onclick="show('review');closeDrawer()" class="">Game Review</button>
+  <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
   <button onclick="show('champions');closeDrawer()">Champions</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
-  <button onclick="show('tiers');closeDrawer()" class="">⚖ Tiers</button>
+  <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
   <button onclick="show('model');closeDrawer()">📊 Model</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
@@ -406,8 +406,8 @@
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')" class="">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
-  <button onclick="show('review')" class="">Game Review</button>
+  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
@@ -415,7 +415,7 @@
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
-  <button onclick="show('tiers')" class="">⚖ Tiers</button>
+  <button onclick="show('tiers')">⚖ Tiers</button>
   <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
@@ -475,622 +475,13 @@
   </div>
   <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Pre-enter odds for upcoming matches. When a game goes live, tapping "+ Log this game" on the dashboard will auto-fill the odds. Games expire 2 hours after their start time.</p>
   <div id="today-games-list"><div style="margin-bottom:18px;">
-      <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Saturday, Jul 25</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Today</div>
       <div style="margin-bottom:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">LPL</div>
-        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">WE <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> LGD</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784816986447_zwql')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 3:00 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 WE</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LGD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_zwql',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_zwql',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 WE</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LGD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_zwql',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_zwql',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 WE</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LGD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_zwql',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_zwql',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_zwql',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">IG <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> WBG</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784816986447_8vba')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 5:00 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 IG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 WBG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_8vba',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_8vba',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 IG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 WBG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_8vba',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_8vba',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 IG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 WBG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_8vba',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_8vba',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_8vba',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">TES <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> TT</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784816986447_wjuv')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 7:00 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 TES</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_wjuv',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_wjuv',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 TES</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_wjuv',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_wjuv',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 TES</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_wjuv',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_wjuv',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_wjuv',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div>
-      </div><div style="margin-bottom:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">LCP</div>
-        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">GZ <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> MVK</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784816986447_kc3q')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 5:00 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 GZ</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 MVK</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_kc3q',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_kc3q',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 GZ</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 MVK</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_kc3q',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_kc3q',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 GZ</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 MVK</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_kc3q',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_kc3q',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_kc3q',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">SHG <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> TSW</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784816986447_1man')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 7:30 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 SHG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TSW</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_1man',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_1man',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 SHG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TSW</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_1man',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784816986447_1man',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 SHG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 TSW</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784816986447_1man',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784816986447_1man',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784816986447_1man',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div>
-      </div><div style="margin-bottom:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">LEC</div>
-        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">VIT <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> G2</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784817013625_m542')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 10:30 AM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VIT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 G2</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784817013625_m542',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784817013625_m542',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VIT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 G2</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784817013625_m542',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784817013625_m542',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VIT</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 G2</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784817013625_m542',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784817013625_m542',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784817013625_m542',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">MKOI <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> KC</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784862602483_7xko')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 1:30 PM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 MKOI</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KC</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_7xko',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784862602483_7xko',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 MKOI</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KC</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_7xko',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784862602483_7xko',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 MKOI</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KC</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_7xko',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_7xko',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_7xko',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div>
-      </div><div style="margin-bottom:14px;">
         <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">CBLOL</div>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-        <div style="font-weight:700;font-size:14px;">FUR <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> LOS</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button onclick="removeTodayGame('tg_1784862602483_e8b1')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 12:00 PM</div>
-      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FUR</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LOS</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_e8b1',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784862602483_e8b1',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FUR</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LOS</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_e8b1',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
-        <div style="display:flex;gap:6px;align-items:center;">
-          
-          <button onclick="toggleTodaySlot('tg_1784862602483_e8b1',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FUR</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LOS</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_e8b1',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_e8b1',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-        </div>
-      </div>
-      
-      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_e8b1',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-    </div>
-    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
         <div style="font-weight:700;font-size:14px;">LOUD <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> PAIN</div>
-        <div style="display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-size:10px;color:var(--green);">✓ ready</span>
           <button onclick="removeTodayGame('tg_1784862602483_r2ka')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
         </div>
       </div>
@@ -1101,21 +492,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           
-          
+          <button onclick="todayLogGame('tg_1784862602483_r2ka',1)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 LOUD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.62" onblur="updateTodayOdds('tg_1784862602483_r2ka',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 PAIN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2.15" onblur="updateTodayOdds('tg_1784862602483_r2ka',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: LOUD 57% · PAIN 43% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_r2ka',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1123,21 +514,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_r2ka',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_r2ka',2)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 LOUD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.62" onblur="updateTodayOdds('tg_1784862602483_r2ka',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 PAIN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2.15" onblur="updateTodayOdds('tg_1784862602483_r2ka',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: LOUD 57% · PAIN 43% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_r2ka',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1145,21 +536,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_r2ka',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_r2ka',3)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 LOUD</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.65" onblur="updateTodayOdds('tg_1784862602483_r2ka',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 PAIN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_r2ka',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2.1" onblur="updateTodayOdds('tg_1784862602483_r2ka',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_r2ka',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: LOUD 56% · PAIN 44% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_r2ka',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div>
     </div>
@@ -1168,7 +559,7 @@
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
         <div style="font-weight:700;font-size:14px;">FLY <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> LYON</div>
-        <div style="display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-size:10px;color:var(--green);">✓ ready</span>
           <button onclick="removeTodayGame('tg_1784862602483_3l64')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
         </div>
       </div>
@@ -1179,21 +570,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           
-          
+          <button onclick="todayLogGame('tg_1784862602483_3l64',1)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FLY</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.65" onblur="updateTodayOdds('tg_1784862602483_3l64',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LYON</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2.1" onblur="updateTodayOdds('tg_1784862602483_3l64',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: FLY 56% · LYON 44% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_3l64',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1201,21 +592,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_3l64',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_3l64',2)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FLY</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.65" onblur="updateTodayOdds('tg_1784862602483_3l64',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LYON</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2.1" onblur="updateTodayOdds('tg_1784862602483_3l64',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: FLY 56% · LYON 44% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_3l64',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1223,27 +614,27 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_3l64',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_3l64',3)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 FLY</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.72" onblur="updateTodayOdds('tg_1784862602483_3l64',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LYON</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_3l64',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="2" onblur="updateTodayOdds('tg_1784862602483_3l64',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_3l64',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: FLY 54% · LYON 46% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_3l64',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div>
     </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
         <div style="font-weight:700;font-size:14px;">DIG <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> SEN</div>
-        <div style="display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-size:10px;color:var(--green);">✓ ready</span>
           <button onclick="removeTodayGame('tg_1784862602483_0rq2')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
         </div>
       </div>
@@ -1254,21 +645,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           
-          
+          <button onclick="todayLogGame('tg_1784862602483_0rq2',1)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DIG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="3.8" onblur="updateTodayOdds('tg_1784862602483_0rq2',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 SEN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.22" onblur="updateTodayOdds('tg_1784862602483_0rq2',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: DIG 24% · SEN 76% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_0rq2',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1276,21 +667,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_0rq2',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_0rq2',2)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DIG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="3.8" onblur="updateTodayOdds('tg_1784862602483_0rq2',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 SEN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.22" onblur="updateTodayOdds('tg_1784862602483_0rq2',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: DIG 24% · SEN 76% <span style="opacity:.6;">(8% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_0rq2',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -1298,21 +689,21 @@
         <div style="display:flex;gap:6px;align-items:center;">
           
           <button onclick="toggleTodaySlot('tg_1784862602483_0rq2',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
-          
+          <button onclick="todayLogGame('tg_1784862602483_0rq2',3)" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
         <div>
           <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DIG</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="3.4" onblur="updateTodayOdds('tg_1784862602483_0rq2',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
         <div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 SEN</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784862602483_0rq2',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <input type="text" inputmode="decimal" placeholder="odds" value="1.26" onblur="updateTodayOdds('tg_1784862602483_0rq2',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784862602483_0rq2',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
         </div>
       </div>
-      
+      <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: DIG 27% · SEN 73% <span style="opacity:.6;">(9% margin)</span></div>
       <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784862602483_0rq2',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div>
     </div>
@@ -2160,6 +1551,915 @@
     </div>
     </div>
       </div>
+    </div><div style="margin-bottom:18px;">
+      <div style="font-size:15px;font-weight:700;margin-bottom:10px;">Monday, Jul 27</div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">KeSPA Cup</div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">BFX <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> GEN</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_e1ob')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 2:00 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BFX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_e1ob',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_e1ob',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BFX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_e1ob',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_e1ob',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BFX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_e1ob',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_e1ob',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_e1ob',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">HLE <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> DK</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_waue')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 2:45 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_waue',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_waue',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_waue',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_waue',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_waue',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_waue',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_waue',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">KT <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> GEN</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_6owq')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 3:30 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 KT</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_6owq',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_6owq',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 KT</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_6owq',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_6owq',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 KT</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 GEN</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_6owq',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_6owq',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_6owq',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">T1 <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> DK</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_8aav')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 4:15 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_8aav',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_8aav',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_8aav',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_8aav',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_8aav',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_8aav',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_8aav',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">HLE <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> KRX</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_nacl')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 5:00 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KRX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_nacl',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_nacl',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KRX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_nacl',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_nacl',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 HLE</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 KRX</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_nacl',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_nacl',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_nacl',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">T1 <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> NS</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_l9cq')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 5:45 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 NS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_l9cq',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_l9cq',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 NS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_l9cq',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_l9cq',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 NS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_l9cq',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_l9cq',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_l9cq',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">BRO <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> DK</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784977755292_5od8')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 6:30 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BRO</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_5od8',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_5od8',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BRO</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_5od8',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784977755292_5od8',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 BRO</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DK</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784977755292_5od8',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784977755292_5od8',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784977755292_5od8',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">T1 <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> DNS</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784991303602_lwwn')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 7:15 AM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DNS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784991303602_lwwn',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784991303602_lwwn',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DNS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784991303602_lwwn',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784991303602_lwwn',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 T1</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 DNS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784991303602_lwwn',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784991303602_lwwn',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784991303602_lwwn',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div>
+      </div><div style="margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);">NLC</div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">RUD <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> VES</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784995542417_vndp')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 12:00 PM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 RUD</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 VES</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_vndp',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784995542417_vndp',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 RUD</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 VES</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_vndp',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784995542417_vndp',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 RUD</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 VES</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_vndp',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_vndp',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_vndp',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">DEER <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> EA</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1784995542417_ildh')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 12:00 PM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DEER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 EA</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_ildh',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784995542417_ildh',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DEER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 EA</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_ildh',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1784995542417_ildh',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 DEER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 EA</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1784995542417_ildh',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1784995542417_ildh',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1784995542417_ildh',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">VER <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> LLS</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1785002402507_0527')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 2:00 PM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LLS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_0527',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1785002402507_0527',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LLS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_0527',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1785002402507_0527',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 VER</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 LLS</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_0527',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_0527',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_0527',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div><div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div style="font-weight:700;font-size:14px;">AP <span style="color:var(--muted);font-weight:400;font-size:12px;">vs</span> BDG</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="removeTodayGame('tg_1785002402507_rhx3')" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">BO3 · 2:00 PM</div>
+      <div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 1</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 AP</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',1,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',1,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 BDG</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',1,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',1,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_rhx3',1,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 2</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1785002402507_rhx3',2)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 AP</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',2,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',2,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 BDG</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',2,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',2,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_rhx3',2,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div><div style="padding:10px 0 6px;border-top:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">Game 3</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          
+          <button onclick="toggleTodaySlot('tg_1785002402507_rhx3',3)" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">✕ Not needed</button>
+          
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
+        <div>
+          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 AP</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',3,'blue',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',3,'blue',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
+        <div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 BDG</div>
+          <input type="text" inputmode="decimal" placeholder="odds" value="" onblur="updateTodayOdds('tg_1785002402507_rhx3',3,'red',this.value)" oninput="saveTodayOddsLive('tg_1785002402507_rhx3',3,'red',this.value)" style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+        </div>
+      </div>
+      
+      <input type="text" placeholder="Notes…" value="" onblur="updateTodayNotes('tg_1785002402507_rhx3',3,this.value)" style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+    </div>
+    </div>
+      </div>
     </div></div>
 
   <div id="today-add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:none;align-items:center;justify-content:center;padding:16px;">
@@ -2604,8 +2904,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
-    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 
   <div class="card">
@@ -2618,7 +2918,7 @@
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="First Stand"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCP"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option><option value="TCL"></option><option value="Worlds"></option></datalist>
+      <datalist id="sb-league-list"></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -2654,7 +2954,9 @@
   <div style="font-size:15px;font-weight:600;margin-bottom:14px;">Game Review</div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Select a game</div>
-    <select id="review-game-select" onchange="loadReviewGame()" style="width:100%;"><option value="">— choose a game you watched —</option><option value="1784899735185">2026-07-24 · EDG vs BLG · LPL Week 1. Game 2</option><option value="1784896698406">2026-07-24 · BLG vs EDG · LPL 2026 · Week 1</option><option value="1784920050579">2026-07-24 · KC vs VIT · LEC 2026 · Week 1</option><option value="1784912004296">2026-07-24 · G2 vs MKOI · LEC 2026 · Week 1</option><option value="1784841271829">2026-07-23 · CPD vs BLUE · NACL 2026 · Week 2</option><option value="1784835565129">2026-07-23 · EWI vs ROSS · Prime League 2026 · Week 5</option><option value="1784820778378">2026-07-23 · LUA vs MKF · LES 2026 · Week 2</option><option value="1784826208550">2026-07-23 · IJC vs JL · La Ligue Française 2026 · Week 1</option><option value="1784854276350">2026-07-23 · WU vs CNV · NACL 2026 · Week 2</option><option value="1784754824495">2026-07-22 · CCG vs NRG · NACL 2026 · Week 2</option><option value="1784744716416">2026-07-22 · USE vs KHK · Prime League 2026 · Week 5</option><option value="1784726624283">2026-07-22 · TES vs WE · LPL 2026 · Week 1</option><option value="1784726136558">2026-07-22 · TES vs WE · LPL 2026 · Week 1</option><option value="1784740760326">2026-07-22 · KHK vs USE · Prime League 2026 · Week 5</option><option value="1784769280576">2026-07-22 · CONT vs OME · NACL 2026 · Week 2</option><option value="1784674615695">2026-07-21 · VKS vs 7REX · Circuito Desafiante 2026 · Week 1</option><option value="1784650246083">2026-07-21 · TLNP vs IJC · La Ligue Française 2026 · Week 1</option><option value="1784647080874">2026-07-21 · LUA vs UB · LES 2026 · Week 2</option><option value="1784664269207">2026-07-21 · SC vs SLY · La Ligue Française 2026 · Week 1</option><option value="1784660436047">2026-07-21 · GL vs JL · La Ligue Française 2026 · Week 1</option><option value="1784554482800">2026-07-20 · KRX vs KT · KeSPA Cup 2026 · Groups</option><option value="1784388888054">2026-07-18 · DK vs GEN · Esports World Cup 2026 · Semifinals</option><option value="1784294907000">2026-07-17 · DK vs BLG · Esports World Cup 2026 · Quarterfinals</option><option value="1784297894773">2026-07-17 · DK vs BLG · Esports World Cup 2026 · Quarterfinals</option><option value="1784298166294">2026-07-17 · KC vs AGAL · Esports World Cup 2026 · Quarterfinals</option><option value="1784322787218">2026-07-17 · CCG vs BLUE · NACL 2026 · Week 1</option><option value="1784316355372">2026-07-17 · USE vs ROSS · Prime League 2026 · Week 4</option><option value="1784309641804">2026-07-17 · G2N vs EINS · Prime League 2026 · Week 4</option><option value="1784227735732">2026-07-16 · HRTS vs BAR · LES 2026 · Week 1</option><option value="1784209862972">2026-07-16 · DK vs G2 · Esports World Cup 2026 · Groups</option><option value="1784212797988">2026-07-16 · DK vs G2 · Esports World Cup 2026 · Groups</option><option value="1784228522221">2026-07-16 · USE vs TOG · Prime League 2026 · Week 4</option><option value="1784139684374">2026-07-15 · ML vs Lyon · Esports World Cup 2026 · Groups</option><option value="1784132179107">2026-07-15 · TS vs KC · Esports World Cup 2026 · Groups</option><option value="1784128526663">2026-07-15 · KC vs TS · Esports World Cup 2026 · Groups</option><option value="1784124989448">2026-07-15 · KC vs TS · Esports World Cup 2026 · Groups</option><option value="1784135784071">2026-07-15 · MKF vs BAR · LES 2026 · Week 1</option><option value="1784052043340">2026-07-14 · UCAM vs HRTS · LES 2026 · Week 1</option><option value="1784042379223">2026-07-14 · FLK vs LUA · LES 2026 · Week 1</option><option value="1784045247172">2026-07-14 · LUA vs FLK · LES 2026 · Week 1</option><option value="1784047974555">2026-07-14 · LUA vs FLK · LES 2026 · Week 1</option><option value="1784055327379">2026-07-14 · HRTS vs UCAM · LES 2026 · Week 1</option><option value="1783962546293">2026-07-13 · ROSS vs TOG · Prime League 2026 · Week 3</option><option value="1783958966715">2026-07-13 · SGE vs KHK · Prime League 2026 · Week 3</option><option value="1783969529081">2026-07-13 · VFB vs BIG · Prime League 2026 · Week 3</option><option value="1783528586643">2026-07-08 · USE vs G2N · Prime League 2026 · Week 2</option><option value="1783135718190">2026-07-04 · FUR vs LYON · MSI 2026</option><option value="1783051281294">2026-07-03 · HLE vs TSW · MSI 2026</option><option value="1783739862195">2026-06-28 · T1 vs TLAW · MSI 2026</option><option value="1783737522675">2026-06-28 · T1 vs TLAW · MSI 2026</option><option value="1783736632198">2026-06-28 · T1 vs TLAW · MSI 2026</option></select>
+    <select id="review-game-select" onchange="loadReviewGame()" style="width:100%;">
+      <option value="">— choose a game you watched —</option>
+    </select>
   </div>
   <div id="review-content"></div>
 </div>
@@ -2876,7 +3178,7 @@
       <input type="text" id="jsonbin-bin-input" placeholder="e.g. 64a3f2..." style="flex:1;">
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectJsonBin()">Connect</button>
     </div>
-    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
+    <div id="jsonbin-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:#ff4d5e;">Push failed: Status 403</span></div>
 
     <div id="jsonbin-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;">
@@ -2895,7 +3197,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/24/2026, 10:46:00 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/25/2026, 2:02:12 PM</div>
     </div>
   </div>
 
@@ -2965,26 +3267,26 @@
     </div>
     <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--muted);">$1000.00</div>
+        <div style="font-size:17px;font-weight:700;color:var(--muted);">$150.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$104.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+10.4%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$42.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+28.0%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$1104.00</div>
+        <div style="font-size:20px;font-weight:700;">$192.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$1104.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$69.40</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$122.60 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$55.20 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $1104)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$2.14 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit · scaled down  (5% of $69)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
-    </div></div>
+    </div><div style="font-size:11px;color:var(--yellow);">⚠ Available below floor ($113) — unit size scaled down to protect bankroll.</div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
       <div>
         <label>Set current bankroll to ($)</label>
@@ -3145,7 +3447,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/24/2026, 10:45:59 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/25/2026, 2:02:12 PM</div>
     </div>
   </div>
 
@@ -3419,39 +3721,52 @@ async function loadLiveGames() {
 
         const games = (event.match && event.match.games) || [];
 
-        // Skip if all games done — getLive can lag
+        // Skip if all games done
         if (games.length && games.every(g => g.state === "completed" || g.state === "unneeded")) continue;
-
-        const liveGames = games.filter(g => g.state === "inProgress" || g.state === "in_game");
-        // Between games in a series, don't show the next unstarted game
-        if (!liveGames.length) continue;
 
         const matchTeams = (event.match && event.match.teams) || [];
         const teamById = {};
         matchTeams.forEach(t => { teamById[t.id] = t.code || t.name || ""; });
 
-        for (const g of liveGames) {
-          const sides = g.teams || [];
-          const blueEntry = sides.find(t => t.side === "blue");
-          const redEntry  = sides.find(t => t.side === "red");
-          const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
-          const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+        // Find the actually-live game by probing the feed highest-number first
+        // (getEventDetails game states lag; the feed is authoritative)
+        const sortedGames = [...games]
+          .filter(g => g.state !== "unneeded")
+          .sort((a,b) => (b.number||0) - (a.number||0));
 
-          let picks = { blue: [], red: [] };
+        let foundGame = null;
+        let picks = { blue: [], red: [] };
+
+        for (const g of sortedGames) {
           try {
             const res = await fetch(`${FEED_BASE}/window/${g.id}`);
             if (res.ok) {
               const fd = await res.json();
-              const meta = fd.gameMetadata;
-              if (meta) {
+              if (fd && fd.gameMetadata) {
+                const meta = fd.gameMetadata;
                 picks.blue = (meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata) || [];
                 picks.red  = (meta.redTeamMetadata  && meta.redTeamMetadata.participantMetadata)  || [];
+                foundGame = g;
+                break; // this is the live game
               }
             }
           } catch(e) {}
-
-          liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: ev.leagueName || (event.league ? event.league.name : ""), gameId: g.id, gameNumber: g.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks });
         }
+
+        // If no feed data yet (between games), use first non-completed game
+        if (!foundGame) {
+          foundGame = sortedGames[sortedGames.length - 1] || null;
+        }
+        if (!foundGame) continue;
+
+        const g = foundGame;
+        const sides = g.teams || [];
+        const blueEntry = sides.find(t => t.side === "blue");
+        const redEntry  = sides.find(t => t.side === "red");
+        const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
+        const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
+
+        liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: ev.leagueName || (event.league ? event.league.name : ""), gameId: g.id, gameNumber: g.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks });
       } catch(e) { console.warn("Error loading event", ev.id, e); }
     }
 
@@ -7820,60 +8135,7 @@ function runPredictionModel() {
     factors.push(`${compContrib>0?"↑":"↓"} Comp matchup: ${compCount} cross-team pairs avg ${(0.5 + compTotal/compCount*100).toFixed(0)}% blue`);
   }
 
-  // ── Factor 12: Player on champion vs specific opponent comp ───────────────────
-  // "Knight on Akali in games where any of these 5 opponents appeared" — no minimum
-  const oppsForBlue = (pickedChamps.red  || []).filter(Boolean);
-  const oppsForRed  = (pickedChamps.blue || []).filter(Boolean);
-
-  const getPlayerChampVsComp = (player, champ, opponentChamps) => {
-    if (!player || !champ || !opponentChamps.length) return null;
-    const matchedIds = new Set(), winIds = new Set(), matchedOpps = new Set();
-    for (const e of allEntries) {
-      if (!e.actualWinner) continue;
-      const bPl = e.players?.blue || [], rPl = e.players?.red  || [];
-      const bCh = e.champions?.blue|| [], rCh = e.champions?.red || [];
-      const bIdx = bPl.indexOf(player), rIdx = rPl.indexOf(player);
-      let pSide = null, pChamp = null;
-      if (bIdx !== -1) { pSide = "blue"; pChamp = bCh[bIdx]; }
-      else if (rIdx !== -1) { pSide = "red"; pChamp = rCh[rIdx]; }
-      if (!pSide || pChamp !== champ) continue;
-      const enemyCh = pSide === "blue" ? rCh : bCh;
-      const hits = opponentChamps.filter(oc => enemyCh.includes(oc));
-      if (!hits.length) continue;
-      hits.forEach(h => matchedOpps.add(h));
-      matchedIds.add(e.id);
-      if (e.actualWinner === pSide) winIds.add(e.id);
-    }
-    const total = matchedIds.size;
-    return total > 0 ? { wins: winIds.size, total, opponents: [...matchedOpps] } : null;
-  };
-
-  const bluePlayers = pickedPlayers.blue || [];
-  const redPlayers  = pickedPlayers.red  || [];
-  for (let i = 0; i < 5; i++) {
-    const bp = bluePlayers[i], bc = (pickedChamps.blue||[])[i];
-    const rp = redPlayers[i],  rc = (pickedChamps.red ||[])[i];
-    if (bp && bc) {
-      const d = getPlayerChampVsComp(bp, bc, oppsForBlue);
-      if (d) {
-        const wr = d.wins / d.total;
-        const contrib = (wr - 0.5) * 1.2;
-        logOdds += contrib;
-        const vsStr = d.opponents.length ? ` vs ${d.opponents.join("/")}` : "";
-        factors.push(`${contrib>0?"↑":"↓"} ${bp} on ${bc}${vsStr}: ${d.wins}/${d.total} (${Math.round(wr*100)}%)`);
-      }
-    }
-    if (rp && rc) {
-      const d = getPlayerChampVsComp(rp, rc, oppsForRed);
-      if (d) {
-        const wr = d.wins / d.total;
-        const contrib = -(wr - 0.5) * 1.2;
-        logOdds += contrib;
-        const vsStr = d.opponents.length ? ` vs ${d.opponents.join("/")}` : "";
-        factors.push(`${contrib>0?"↑":"↓"} ${rp} on ${rc}${vsStr}: ${d.wins}/${d.total} (${Math.round(wr*100)}%)`);
-      }
-    }
-  }
+    // ── Convert to probability and display ─────────────────────────────────────
   if (factors.length === 0) {
     el.style.display = "none";
     return;
@@ -7908,28 +8170,30 @@ function runPredictionModel() {
     const forBlue = factors.filter(f => f.startsWith("↑"));
     const forRed  = factors.filter(f => f.startsWith("↓"));
 
+    // Strip the arrow, keep "Label — stat (Ng)" → format as "Label: stat (Ng)"
     const fmt = f => {
       const body = f.replace(/^[↑↓] /,"");
+      // body is like "T1 win rate on blue side — 68% (47g)" or "MID matchup: Ryze vs Akali — 65% (23g)"
       const dashIdx = body.lastIndexOf(" — ");
-      if (dashIdx === -1) {
-        const colonIdx = body.lastIndexOf(": ");
-        if (colonIdx === -1) return `<span>${body}</span>`;
-        return `<span style="color:var(--text);">${body.slice(0,colonIdx)}</span><span style="color:var(--muted);float:right;padding-left:6px;">${body.slice(colonIdx+2)}</span>`;
-      }
-      return `<span style="color:var(--text);">${body.slice(0,dashIdx).trim()}</span><span style="color:var(--muted);float:right;padding-left:6px;">${body.slice(dashIdx+3).trim()}</span>`;
+      if (dashIdx === -1) return `<span>${body}</span>`;
+      const label = body.slice(0, dashIdx).trim();
+      const stat  = body.slice(dashIdx + 3).trim();
+      return `<span style="color:var(--text);">${label}</span> <span style="color:var(--muted);float:right;padding-left:6px;">${stat}</span>`;
     };
 
     const col = (items, color, header) => {
       if (!items.length) return `<div><div style="font-size:10px;font-weight:700;color:${color};letter-spacing:.05em;margin-bottom:4px;">${header}</div><div style="font-size:11px;color:var(--muted);">—</div></div>`;
-      return `<div><div style="font-size:10px;font-weight:700;color:${color};letter-spacing:.05em;margin-bottom:4px;">${header}</div>${items.map(f=>`<div style="font-size:11px;line-height:1.7;overflow:hidden;">${fmt(f)}</div>`).join("")}</div>`;
+      return `<div>
+        <div style="font-size:10px;font-weight:700;color:${color};letter-spacing:.05em;margin-bottom:4px;">${header}</div>
+        ${items.map(f => `<div style="font-size:11px;line-height:1.7;overflow:hidden;">${fmt(f)}</div>`).join("")}
+      </div>`;
     };
 
     return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0;">
-      ${col(forBlue,"var(--blue)","🟦 " + blueLabel)}
-      ${col(forRed, "var(--red)", "🟥 " + redLabel)}
+      ${col(forBlue,"var(--blue)", "🟦 " + blueLabel)}
+      ${col(forRed, "var(--red)",  "🟥 " + redLabel)}
     </div>`;
   })();
-
 
   // Show disagree section now that model has a pick
   const disagreeWrap = document.getElementById("model-disagree-wrap");
@@ -7989,20 +8253,7 @@ function runPredictionModel() {
         (absDiff >= 5
           ? '→ Model is +' + absDiff + '% on ' + edgeSide + ' vs market · ' + edgeNote
           : '→ ' + edgeNote) +
-      '</div>' +
-      (absDiff >= 5 ? (() => {
-        const betSide    = divergence > 0 ? "blue" : "red";
-        const betTeam    = betSide === "blue" ? blueLabel : redLabel;
-        const betOdds    = betSide === "blue" ? blueOddsInput : redOddsInput;
-        const edgePctVal = betSide === "blue" ? (bluePct - mktBlue) : (redPct - mktRed);
-        const bankroll   = loadBankrollSettings();
-        const unitDollar = (bankroll.current || bankroll.starting || 100) * ((bankroll.unitPct || 5) / 100);
-        const baseUnits  = edgePctVal >= 15 ? 3 : edgePctVal >= 10 ? 2 : 1;
-        return '<div style="margin-top:8px;padding:8px 10px;background:rgba(62,207,142,.1);border:1px solid var(--green);border-radius:7px;font-size:12px;">' +
-          '<b style="color:var(--green);">→ Bet ' + betTeam + '</b>' +
-          '<span style="color:var(--muted);"> · ' + baseUnits + 'u = $' + (baseUnits * unitDollar).toFixed(2) + ' · Edge: +' + edgePctVal + '% · Odds: ' + betOdds + '</span>' +
-          '</div>';
-      })() : '<div style="font-size:11px;color:var(--muted);margin-top:4px;">→ No clear bet advantage</div>');
+      '</div>';
     mktEl.style.display = "block";
 
     // Bet sizing — pass model % and edge %
@@ -11557,33 +11808,45 @@ async function dbRefresh() {
         );
         if (allDone) continue;
 
-        const games = allGames.filter(g => g.state === "inProgress" || g.state === "in_game");
-        // Only show cards for games that are actually in progress
-        // Between games in a series, show nothing rather than the next unstarted game
-        if (!games.length) continue;
-
         const matchTeams = event.match?.teams||[];
         const tById = {}; matchTeams.forEach(t => tById[t.id]=t.code||t.name||"");
-        // Extract series score for display (3)
         const seriesScores = {};
         matchTeams.forEach(t => { seriesScores[t.code||t.name||""] = t.result?.gameWins || 0; });
-        games.forEach(g => {
-          const blueEntry = (g.teams||[]).find(t=>t.side==="blue");
-          const redEntry  = (g.teams||[]).find(t=>t.side==="red");
-          const blueCode  = blueEntry ? (tById[blueEntry.id]||"Blue") : "Blue";
-          const redCode   = redEntry  ? (tById[redEntry.id] ||"Red")  : "Red";
-          const blueWins  = seriesScores[blueCode] || 0;
-          const redWins   = seriesScores[redCode]  || 0;
-          cards.push({
-            blueCode, redCode,
-            league: event.league?.name||"",
-            gameId: g.id,
-            gameNumber: g.number||null,
-            seriesScore: (blueWins || redWins) ? `${blueWins}–${redWins}` : null,
-            blockName: ev.blockName || "",
-            startTime: ev.startTime || "",
-            picks: { blue: [], red: [] }
-          });
+
+        // Find the actually-live game by probing the feed highest-number first
+        const sortedGames = [...allGames]
+          .filter(g => g.state !== "unneeded")
+          .sort((a,b) => (b.number||0) - (a.number||0));
+
+        let foundGame = null;
+        for (const g of sortedGames) {
+          try {
+            const res = await fetch(`${FEED_BASE}/window/${g.id}`);
+            if (res.ok) {
+              const fd = await res.json();
+              if (fd && fd.gameMetadata) { foundGame = g; break; }
+            }
+          } catch(e) {}
+        }
+        if (!foundGame) foundGame = sortedGames[sortedGames.length - 1] || null;
+        if (!foundGame) continue;
+
+        const g = foundGame;
+        const blueEntry = (g.teams||[]).find(t=>t.side==="blue");
+        const redEntry  = (g.teams||[]).find(t=>t.side==="red");
+        const blueCode  = blueEntry ? (tById[blueEntry.id]||"Blue") : "Blue";
+        const redCode   = redEntry  ? (tById[redEntry.id] ||"Red")  : "Red";
+        const blueWins  = seriesScores[blueCode] || 0;
+        const redWins   = seriesScores[redCode]  || 0;
+        cards.push({
+          blueCode, redCode,
+          league: event.league?.name||"",
+          gameId: g.id,
+          gameNumber: g.number||null,
+          seriesScore: (blueWins || redWins) ? `${blueWins}–${redWins}` : null,
+          blockName: ev.blockName || "",
+          startTime: ev.startTime || "",
+          picks: { blue: [], red: [] }
         });
       } catch(e) { console.warn("db event detail error", e); }
     }
