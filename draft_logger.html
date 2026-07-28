@@ -385,14 +385,14 @@
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
   <button onclick="show('champions');closeDrawer()">Champions</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
-  <button onclick="show('model');closeDrawer()" class="">📊 Model</button>
+  <button onclick="show('model');closeDrawer()">📊 Model</button>
   <button onclick="show('stats');closeDrawer()">My Stats</button>
   <div class="nav-drawer-title">Betting</div>
   <button onclick="show('bets');closeDrawer()">Bets</button>
@@ -406,12 +406,12 @@
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
-  <button onclick="show('model')" class="">📊 Model</button>
+  <button onclick="show('model')">📊 Model</button>
   <button onclick="show('stats')">My Stats</button>
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
@@ -918,8 +918,8 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;"><span style="color:var(--green);">✓ Auto-resolved 2 results.</span> You can still add performance ratings from History.</div>
+    <div id="pending-list"><div class="empty">No pending games — all caught up.</div></div>
   </div>
 
   <div class="card">
@@ -932,7 +932,7 @@
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"></datalist>
+      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="First Stand"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCP"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option><option value="TCL"></option><option value="Worlds"></option></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -1073,546 +1073,203 @@
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Full model breakdown</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Pick any logged game to see every factor the model considered — including ones that didn't fire — and the exact log-odds contribution of each.</p>
-    <select id="breakdown-game-select" onchange="renderFullBreakdown()" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;margin-bottom:12px;"><option value="">— Select a game —</option><option value="1785085338493">2026-07-26 MKOI vs VIT · VIT won</option><option value="1785004322648">2026-07-25 LOS vs FUR · LOS won</option><option value="1785008047537">2026-07-25 LOUD vs PAIN · LOUD won</option><option value="1785008470378">2026-07-25 PAIN vs LOUD · PAIN won</option><option value="1785010596997">2026-07-25 FLY vs LYON · LYON won</option><option value="1785010890796">2026-07-25 PAIN vs LOUD · LOUD won</option><option value="1785013539367">2026-07-25 LYON vs FLY · LYON won</option><option value="1785015306961">2026-07-25 LYON vs FLY · LYON won</option><option value="1785019256439">2026-07-25 SEN vs DIG · DIG won</option><option value="1785019350606">2026-07-25 SEN vs DIG · DIG won</option><option value="1784994577801">2026-07-25 G2 vs VIT · G2 won</option><option value="1784976312104">2026-07-25 WBG vs IG · IG won</option><option value="1784993597581">2026-07-25 G2 vs VIT · G2 won</option><option value="1784997737525">2026-07-25 MKOI vs KC · KC won</option><option value="1785001265638">2026-07-25 FUR vs LOS · LOS won</option><option value="1785001843392">2026-07-25 KC vs MKOI · KC won</option><option value="1784903394987">2026-07-24 BLG vs EDG · BLG won</option><option value="1784899735185">2026-07-24 EDG vs BLG · BLG won</option><option value="1784896698406">2026-07-24 BLG vs EDG · EDG won</option><option value="1784904564330">2026-07-24 MKOI vs G2 · G2 won</option><option value="1784920050579">2026-07-24 KC vs VIT · KC won</option><option value="1784912004296">2026-07-24 G2 vs MKOI · G2 won</option><option value="1784841271829">2026-07-23 CPD vs BLUE · CPD won</option><option value="1784836450446">2026-07-23 KCB vs TLNP · TLNP won</option><option value="1784835565129">2026-07-23 EWI vs ROSS · ROSS won</option><option value="sb_1784825188637">2026-07-23 BIG vs SGE · BIG won</option><option value="1784823044873">2026-07-23 ES vs SC · SC won</option><option value="1784822560446">2026-07-23 BIG vs SGE · BIG won</option><option value="1784820778378">2026-07-23 LUA vs MKF · MKF won</option><option value="1784819618339">2026-07-23 SGE vs BIG · BIG won</option><option value="1784825637748">2026-07-23 BIG vs SGE · BIG won</option><option value="1784826042474">2026-07-23 GX vs HRTS · HRTS won</option><option value="1784826208550">2026-07-23 IJC vs JL · JL won</option><option value="1784829609190">2026-07-23 GL vs VITB · VITB won</option><option value="1784854276350">2026-07-23 WU vs CNV · WU won</option><option value="1784753771510">2026-07-22 TSS vs EST · EST won</option><option value="1784754824495">2026-07-22 CCG vs NRG · NRG won</option><option value="1784751574488">2026-07-22 KBM vs INTZ · INTZ won</option><option value="1784746688801">2026-07-22 SLY vs JL · JL won</option><option value="1784744716416">2026-07-22 USE vs KHK · USE won</option><option value="1784743929248">2026-07-22 GL vs IJC · GL won</option><option value="1784736425292">2026-07-22 TOG vs G2N · G2N won</option><option value="1784736898358">2026-07-22 VITB vs TLNP · TLNP won</option><option value="1784737050256">2026-07-22 FLK vs UB · UB won</option><option value="1784726624283">2026-07-22 TES vs WE · TES won</option><option value="1784726136558">2026-07-22 TES vs WE · TES won</option><option value="1784733589612">2026-07-22 UB vs FLK · UB won</option><option value="1784735007538">2026-07-22 TOG vs G2N · G2N won</option><option value="1784739875513">2026-07-22 ZYB vs SC · SC won</option><option value="1784740760326">2026-07-22 KHK vs USE · USE won</option><option value="1784740269489">2026-07-22 BAR vs UCAM · UCAM won</option><option value="1784750676686">2026-07-22 KCB vs ES · KCB won</option><option value="1784758380514">2026-07-22 NRG vs CCG · NRG won</option><option value="1784769280576">2026-07-22 CONT vs OME · CONT won</option><option value="autolog_116809240490217980_1784646885199">2026-07-21 EST vs PAIN · EST won</option><option value="1784674615695">2026-07-21 VKS vs 7REX · VKS won</option><option value="1784671797656">2026-07-21 NERD vs TSS · NERD won</option><option value="1784657994406">2026-07-21 MKF vs GX · MKF won</option><option value="1784657080064">2026-07-21 MCON vs OUAT · MCON won</option><option value="1784656853604">2026-07-21 KCB vs ZYB · KCB won</option><option value="1784650246083">2026-07-21 TLNP vs IJC · IJC won</option><option value="1784649872730">2026-07-21 LUA vs UB · LUA won</option><option value="1784649807081">2026-07-21 EINS vs SGE · EINS won</option><option value="1784647080874">2026-07-21 LUA vs UB · LUA won</option><option value="1784646952814">2026-07-21 SGE vs EINS · EINS won</option><option value="1784634366770">2026-07-21 KRX vs T1 · T1 won</option><option value="1784653538966">2026-07-21 BIG vs EWI · BIG won</option><option value="1784666807478">2026-07-21 RMD vs PAIN · PAIN won</option><option value="1784664269207">2026-07-21 SC vs SLY · SLY won</option><option value="1784660436047">2026-07-21 GL vs JL · GL won</option><option value="autolog_116809240490217970_1784646884084">2026-07-20 TSS vs RMD · TSS won</option><option value="autolog_116809240490152416_1784646882798">2026-07-20 NERD vs RED · NERD won</option><option value="autolog_116809240490152390_1784646881522">2026-07-20 INTZ vs 7REX · INTZ won</option><option value="autolog_116809240490152356_1784646880442">2026-07-20 VKS vs KBM · VKS won</option><option value="autolog_116878159559794405_1784646879613">2026-07-20 LLS vs B2U · LLS won</option><option value="autolog_116878159559794404_1784646879436">2026-07-20 B2U vs LLS · LLS won</option><option value="autolog_116878159559794401_1784646878423">2026-07-20 SE vs AP · AP won</option><option value="autolog_116878159559794400_1784646878195">2026-07-20 AP vs SE · AP won</option><option value="autolog_116878159559794398_1784646877044">2026-07-20 BDG vs BROD · BDG won</option><option value="1784554482800">2026-07-20 KRX vs KT · KRX won</option><option value="1784567257686">2026-07-20 VER vs ABV · VER won</option><option value="1784468107536">2026-07-19 KC vs DK · DK won</option><option value="1784470969242">2026-07-19 DK vs KC · DK won</option><option value="1784474263242">2026-07-19 DK vs KC · DK won</option><option value="autolog_116884625332707652_1784341932747">2026-07-18 OME vs WU · OME won</option><option value="autolog_116884625332707653_1784341932867">2026-07-18 OME vs WU · OME won</option><option value="1784392585014">2026-07-18 GEN vs DK · DK won</option><option value="1784388888054">2026-07-18 DK vs GEN · GEN won</option><option value="bulk_116884625201897758_1784255131885_ktjm">2026-07-17 MU vs DOG · DOG won</option><option value="bulk_116884625201897757_1784255129496_qwpb">2026-07-17 DOG vs MU · MU won</option><option value="bulk_116884625201897756_1784255127309_tkzi">2026-07-17 DOG vs MU · DOG won</option><option value="autolog_116713163972559009_1784307481794">2026-07-17 BIG vs G2N · G2N won</option><option value="autolog_116884625201897758_1784307480839">2026-07-17 MU vs DOG · DOG won</option><option value="bulk_116884625201897756_1784327544562_hxbc">2026-07-17 DOG vs MU · DOG won</option><option value="bulk_116884625201897757_1784327546220_pexj">2026-07-17 DOG vs MU · MU won</option><option value="1784301419673">2026-07-17 BIG vs G2N · G2N won</option><option value="1784294907000">2026-07-17 DK vs BLG · DK won</option><option value="1784297894773">2026-07-17 DK vs BLG · BLG won</option><option value="1784298166294">2026-07-17 KC vs AGAL · KC won</option><option value="1784301014073">2026-07-17 BLG vs DK · DK won</option><option value="1784326148825">2026-07-17 BLUE vs CCG · CCG won</option><option value="1784322787218">2026-07-17 CCG vs BLUE · CCG won</option><option value="1784316355372">2026-07-17 USE vs ROSS · USE won</option><option value="1784305752819">2026-07-17 BIG vs EINS · EINS won</option><option value="1784312916416">2026-07-17 EWI vs VFB · EWI won</option><option value="1784309641804">2026-07-17 G2N vs EINS · G2N won</option><option value="bulk_116884625029210332_1784255123510_rkie">2026-07-16 CNV vs CPD · CPD won</option><option value="bulk_116884625029210331_1784255121061_6lx5">2026-07-16 CPD vs CNV · CPD won</option><option value="bulk_116833506932128093_1784255106707_kecr">2026-07-16 BAR vs HRTS · BAR won</option><option value="bulk_116713163972559025_1784255096346_r7zl">2026-07-16 G2N vs TOG · G2N won</option><option value="bulk_116713163972559059_1784255092123_0yy1">2026-07-16 ROSS vs KHK · ROSS won</option><option value="bulk_116833506932259269_1784255088975_sti0">2026-07-16 FLK vs UCAM · UCAM won</option><option value="bulk_116833506932259268_1784255087053_e4z0">2026-07-16 FLK vs UCAM · UCAM won</option><option value="autolog_116884625029210332_1784307479739">2026-07-16 CNV vs CPD · CPD won</option><option value="autolog_116884625029210331_1784307479531">2026-07-16 CPD vs CNV · CPD won</option><option value="autolog_116713163972559025_1784307476247">2026-07-16 G2N vs TOG · G2N won</option><option value="autolog_116713163972559059_1784307475462">2026-07-16 ROSS vs KHK · ROSS won</option><option value="autolog_116833506932259269_1784307474715">2026-07-16 FLK vs UCAM · UCAM won</option><option value="autolog_116833506932259268_1784307474541">2026-07-16 FLK vs UCAM · UCAM won</option><option value="bulk_116833506932128093_1784327529153_6xy0">2026-07-16 BAR vs HRTS · BAR won</option><option value="1784227735732">2026-07-16 HRTS vs BAR · HRTS won</option><option value="1784222709556">2026-07-16 VFB vs KHK · KHK won</option><option value="1784225044311">2026-07-16 SGE vs EINS · EINS won</option><option value="1784221015115">2026-07-16 BAR vs HRTS · HRTS won</option><option value="1784209862972">2026-07-16 DK vs G2 · DK won</option><option value="1784212797988">2026-07-16 DK vs G2 · DK won</option><option value="1784228522221">2026-07-16 USE vs TOG · USE won</option><option value="bulk_116833506932193685_1784255077951_k1cd">2026-07-15 UB vs GX · GX won</option><option value="bulk_116833506932193684_1784255075714_4y82">2026-07-15 UB vs GX · GX won</option><option value="autolog_116833506932193685_1784307472928">2026-07-15 UB vs GX · GX won</option><option value="autolog_116833506932193684_1784307472719">2026-07-15 UB vs GX · GX won</option><option value="1784139768611">2026-07-15 BAR vs MKF · MKF won</option><option value="1784139684374">2026-07-15 ML vs Lyon · ML won</option><option value="1784132179107">2026-07-15 TS vs KC · KC won</option><option value="1784128526663">2026-07-15 KC vs TS · TS won</option><option value="1784124989448">2026-07-15 KC vs TS · KC won</option><option value="1784135784071">2026-07-15 MKF vs BAR · MKF won</option><option value="1784052043340">2026-07-14 UCAM vs HRTS · UCAM won</option><option value="1784042379223">2026-07-14 FLK vs LUA · LUA won</option><option value="1784045247172">2026-07-14 LUA vs FLK · FLK won</option><option value="1784047974555">2026-07-14 LUA vs FLK · LUA won</option><option value="1784055327379">2026-07-14 HRTS vs UCAM · UCAM won</option><option value="1783984199304">2026-07-13 3V vs Z5 · Z5 won</option><option value="1783965991091">2026-07-13 EWI vs SGE · EWI won</option><option value="1783962631753">2026-07-13 EWI vs USE · USE won</option><option value="1783962546293">2026-07-13 ROSS vs TOG · TOG won</option><option value="1783958966715">2026-07-13 SGE vs KHK · KHK won</option><option value="1783969529081">2026-07-13 VFB vs BIG · BIG won</option><option value="bulk_115570934355614609_1784345331865_4jz5">2026-07-12 BLG vs HLE · HLE won</option><option value="bulk_115570934355614608_1784345329281_9fwz">2026-07-12 BLG vs HLE · BLG won</option><option value="bulk_115570934355614607_1784345326772_y7r3">2026-07-12 HLE vs BLG · BLG won</option><option value="bulk_115570934355614606_1784345324571_uibk">2026-07-12 BLG vs HLE · HLE won</option><option value="bulk_115570934355614610_1784342875147_1k3r">2026-07-12 BLG vs HLE · HLE won</option><option value="bulk_115570934355614603_1784345317296_4rw2">2026-07-11 LYON vs HLE · HLE won</option><option value="bulk_115570934355614602_1784345314820_yml4">2026-07-11 LYON vs HLE · LYON won</option><option value="bulk_115570934355614601_1784345312361_jifh">2026-07-11 HLE vs LYON · LYON won</option><option value="bulk_115570934355614604_1784342865450_8a8a">2026-07-11 HLE vs LYON · HLE won</option><option value="1783757672036">2026-07-11 LYON vs HLE · HLE won</option><option value="bulk_115570934355614596_1784342856047_i6xx">2026-07-10 G2 vs LYON · LYON won</option><option value="bulk_115570934355614595_1784342854482_uzaz">2026-07-10 LYON vs G2 · LYON won</option><option value="bulk_115570934355614594_1784342852498_n4pl">2026-07-10 G2 vs LYON · LYON won</option><option value="bulk_115570934355614578_1784345270199_ry8j">2026-07-09 HLE vs BLG · HLE won</option><option value="bulk_115570934355614577_1784345267434_6vr9">2026-07-09 HLE vs BLG · BLG won</option><option value="bulk_115570934355614579_1784342849059_3wpz">2026-07-09 HLE vs BLG · BLG won</option><option value="bulk_115570934355614576_1784342843172_6l9n">2026-07-09 BLG vs HLE · BLG won</option><option value="bulk_116713163972558995_1784255182585_d0tj">2026-07-09 BIG vs TOG · BIG won</option><option value="bulk_116713163972559063_1784255178926_ayrr">2026-07-09 ROSS vs VFB · ROSS won</option><option value="bulk_116713163972559045_1784255176058_t96c">2026-07-09 EWI vs EINS · EWI won</option><option value="bulk_116713163972559037_1784255172964_1v1i">2026-07-09 USE vs KHK · KHK won</option><option value="bulk_116713163972559037_1784327601317_07b4">2026-07-09 USE vs KHK · KHK won</option><option value="bulk_116713163972559045_1784327604681_djcs">2026-07-09 EWI vs EINS · EWI won</option><option value="bulk_116713163972559063_1784327608710_ps0a">2026-07-09 ROSS vs VFB · ROSS won</option><option value="bulk_116713163972558995_1784327612709_mn0d">2026-07-09 BIG vs TOG · BIG won</option><option value="1783624150967">2026-07-09 VFB vs SGE · VFB won</option><option value="bulk_115570934355614585_1784342840297_lllm">2026-07-08 G2 vs T1 · G2 won</option><option value="bulk_115570934355614584_1784342838162_kyc3">2026-07-08 G2 vs T1 · T1 won</option><option value="bulk_115570934355614583_1784342836408_6ugr">2026-07-08 G2 vs T1 · G2 won</option><option value="bulk_115570934355614582_1784342834031_zwln">2026-07-08 G2 vs T1 · G2 won</option><option value="bulk_115570934355614590_1784342831154_dyrf">2026-07-08 LYON vs TSW · LYON won</option><option value="bulk_115570934355614589_1784342829422_09te">2026-07-08 LYON vs TSW · LYON won</option><option value="bulk_115570934355614588_1784342827375_rkl7">2026-07-08 LYON vs TSW · LYON won</option><option value="bulk_116713163972559005_1784255169754_3adn">2026-07-08 BIG vs SGE · BIG won</option><option value="bulk_116713163972559071_1784255166767_ad98">2026-07-08 VFB vs EINS · EINS won</option><option value="bulk_116713163972559023_1784255162493_zn5n">2026-07-08 TOG vs KHK · KHK won</option><option value="bulk_116713163972559043_1784255155523_g0ve">2026-07-08 EWI vs ROSS · EWI won</option><option value="bulk_116713163972559043_1784327585084_e10t">2026-07-08 EWI vs ROSS · EWI won</option><option value="bulk_116713163972559023_1784327591481_7nw1">2026-07-08 TOG vs KHK · KHK won</option><option value="bulk_116713163972559071_1784327595353_edwo">2026-07-08 VFB vs EINS · EINS won</option><option value="bulk_116713163972559005_1784327598401_dsaq">2026-07-08 BIG vs SGE · BIG won</option><option value="1783528586643">2026-07-08 USE vs G2N · USE won</option><option value="bulk_116713163972559079_1784255151569_x4u4">2026-07-07 KHK vs G2N · G2N won</option><option value="bulk_116713163972559001_1784255146938_qner">2026-07-07 ROSS vs BIG · BIG won</option><option value="bulk_116713163972559075_1784255143871_bmyo">2026-07-07 G2N vs SGE · G2N won</option><option value="bulk_116713163972559033_1784255139411_is3z">2026-07-07 USE vs EINS · USE won</option><option value="bulk_116713163972559033_1784327571515_93kl">2026-07-07 USE vs EINS · USE won</option><option value="bulk_116713163972559075_1784327575368_978h">2026-07-07 G2N vs SGE · G2N won</option><option value="bulk_116713163972559001_1784327578521_jb9s">2026-07-07 ROSS vs BIG · BIG won</option><option value="bulk_116713163972559079_1784327582167_3nxm">2026-07-07 KHK vs G2N · G2N won</option><option value="1783437228914">2026-07-07 EWI vs TOG · TOG won</option><option value="bulk_115570934355614566_1784342824664_0fj8">2026-07-06 T1 vs FUR · T1 won</option></select>
+    <select id="breakdown-game-select" onchange="renderFullBreakdown()" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;margin-bottom:12px;">
+      <option value="">— Select a game —</option>
+    </select>
     <div id="full-breakdown-output"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Calibration — how accurate is the model?</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">When the model says 65%, does the predicted side actually win 65% of the time? Vertical line = expected, bar = actual.</p>
-    <div id="model-calibration"><div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Overall: <b style="color:var(--text);">64%</b> actual vs <b style="color:var(--text);">64%</b> avg expected · 106 predictions</div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">Low (50–54%) · 35g</span>
-            <span style="font-weight:700;color:var(--blue);">Actual 49% <span style="color:var(--muted);font-weight:400;">(-3% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:49%;background:var(--blue);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:52%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;opacity:0.65;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">55–59% · 2g · small sample</span>
-            <span style="font-weight:700;color:var(--green);">Actual 100% <span style="color:var(--muted);font-weight:400;">(+43% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:57%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">Medium (60–64%) · 40g</span>
-            <span style="font-weight:700;color:var(--green);">Actual 70% <span style="color:var(--muted);font-weight:400;">(+8% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:70%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:62%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">High (70–74%) · 15g</span>
-            <span style="font-weight:700;color:var(--green);">Actual 87% <span style="color:var(--muted);font-weight:400;">(+15% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:87%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:72%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;opacity:0.65;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">75–79% · 1g · small sample</span>
-            <span style="font-weight:700;color:var(--green);">Actual 100% <span style="color:var(--muted);font-weight:400;">(+23% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:77%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">80–84% · 3g</span>
-            <span style="font-weight:700;color:#ff4d5e;">Actual 33% <span style="color:var(--muted);font-weight:400;">(-49% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:33%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:82%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;opacity:0.65;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">85–89% · 2g · small sample</span>
-            <span style="font-weight:700;color:#ff4d5e;">Actual 50% <span style="color:var(--muted);font-weight:400;">(-37% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:50%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:87%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">90–94% · 3g</span>
-            <span style="font-weight:700;color:var(--green);">Actual 100% <span style="color:var(--muted);font-weight:400;">(+8% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:92%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div><div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--muted);">95–99% · 5g</span>
-            <span style="font-weight:700;color:#ff4d5e;">Actual 40% <span style="color:var(--muted);font-weight:400;">(-57% vs expected)</span></span>
-          </div>
-          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
-            <div style="position:absolute;left:0;top:0;height:100%;width:40%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
-            <div style="position:absolute;left:97%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
-          </div>
-        </div></div>
+    <div id="model-calibration"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🔬 Backtest</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Runs the model against every completed game using only data from <i>other</i> games (leave-one-out). Shows what confidence the model would have assigned and whether it was right. Separate from your moment-captured ratings.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runBacktest()">Run backtest</button>
+    <div id="backtest-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="backtest-results"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Factor accuracy</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">How often each factor you provide actually correlates with the winner across all logged games.</p>
-    <div id="model-factor-accuracy"><div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-          <span style="font-weight:600;">Draft preference</span>
-          <span style="color:var(--muted);font-weight:700;">58% correct (102g)</span>
-        </div>
-        <div style="background:var(--bg);border-radius:4px;height:10px;">
-          <div style="width:58%;height:100%;background:var(--muted);border-radius:4px;opacity:0.8;"></div>
-        </div>
-      </div><div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-          <span style="font-weight:600;">Skill advantage</span>
-          <span style="color:var(--muted);font-weight:700;">48% correct (116g)</span>
-        </div>
-        <div style="background:var(--bg);border-radius:4px;height:10px;">
-          <div style="width:48%;height:100%;background:var(--muted);border-radius:4px;opacity:0.8;"></div>
-        </div>
-      </div><div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-          <span style="font-weight:600;">Execution demand — blue</span>
-          <span style="color:#ff4d5e;font-weight:700;">29% correct (108g)</span>
-        </div>
-        <div style="background:var(--bg);border-radius:4px;height:10px;">
-          <div style="width:29%;height:100%;background:#ff4d5e;border-radius:4px;opacity:0.8;"></div>
-        </div>
-      </div><div style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-        <span style="font-weight:600;">Market odds favourite</span>
-        <span style="color:var(--green);font-weight:700;">65% correct (97g)</span>
-      </div>
-      <div style="background:var(--bg);border-radius:4px;height:10px;">
-        <div style="width:65%;height:100%;background:var(--blue);border-radius:4px;opacity:0.8;"></div>
-      </div>
-    </div></div>
+    <div id="model-factor-accuracy"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">High-confidence failures</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">Games where you marked High confidence but the other team won — useful for spotting blind spots.</p>
-    <div id="model-failures"><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">CONT vs OME</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">98% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-22 · NACL</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">OME</span> · <span style="color:var(--green);">Actually won: CONT</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: red · Blue exec: high · Red exec: medium</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Closeness: ⚔️ Competitive</div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">MKOI vs VIT</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">97% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-26 · LEC</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">MKOI</span> · <span style="color:var(--green);">Actually won: VIT</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: low</div>
-          
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">WBG vs IG</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">97% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LPL</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">WBG</span> · <span style="color:var(--green);">Actually won: IG</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -1 (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: medium</div>
-          
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">PAIN vs LOUD</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">88% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">LOUD</span> · <span style="color:var(--green);">Actually won: PAIN</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
-          
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">LOUD vs PAIN</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">83% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">PAIN</span> · <span style="color:var(--green);">Actually won: LOUD</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
-          
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">PAIN vs LOUD</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">80% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">PAIN</span> · <span style="color:var(--green);">Actually won: LOUD</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
-          
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">GL vs VITB</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">71% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-23 · La Ligue Française</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">GL</span> · <span style="color:var(--green);">Actually won: VITB</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Skill adv: unsure · Blue exec: medium · Red exec: low</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Closeness: 👍 Comfortable</div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:13px;font-weight:700;">VITB vs TLNP</span>
-            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">70% confident → WRONG</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-22 · La Ligue Française</div>
-          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">VITB</span> · <span style="color:var(--green);">Actually won: TLNP</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: blue</div>
-          
-        </div></div>
+    <div id="model-failures"></div>
   </div>
   <div class="card">
     <div class="card-title">Recent predictions</div>
-    <div id="model-recent"><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">MKOI vs VIT</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-26 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">97%</span></div>
-            <div style="color:var(--muted);font-size:11px;">MKOI</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">LOS vs FUR</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · CBLOL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">83%</span></div>
-            <div style="color:var(--muted);font-size:11px;">LOS</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">LOUD vs PAIN</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · CBLOL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">83%</span></div>
-            <div style="color:var(--muted);font-size:11px;">PAIN</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">PAIN vs LOUD</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · CBLOL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">88%</span></div>
-            <div style="color:var(--muted);font-size:11px;">LOUD</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">FLY vs LYON</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LCS</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">FLY</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">PAIN vs LOUD</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · CBLOL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">80%</span></div>
-            <div style="color:var(--muted);font-size:11px;">PAIN</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">LYON vs FLY</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LCS</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">LYON</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">LYON vs FLY</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LCS</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">LYON</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">SEN vs DIG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LCS</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">DIG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">SEN vs DIG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LCS</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">DIG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">G2 vs VIT</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">G2</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">WBG vs IG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LPL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">97%</span></div>
-            <div style="color:var(--muted);font-size:11px;">WBG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">G2 vs VIT</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">56%</span></div>
-            <div style="color:var(--muted);font-size:11px;">G2</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">MKOI vs KC</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">KC</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">FUR vs LOS</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · CBLOL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">77%</span></div>
-            <div style="color:var(--muted);font-size:11px;">LOS</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">KC vs MKOI</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-25 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">90%</span></div>
-            <div style="color:var(--muted);font-size:11px;">KC</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">BLG vs EDG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-24 · LPL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">52%</span></div>
-            <div style="color:var(--muted);font-size:11px;">EDG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">EDG vs BLG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-24 · LPL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">62%</span></div>
-            <div style="color:var(--muted);font-size:11px;">EDG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">BLG vs EDG</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-24 · LPL</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">50%</span></div>
-            <div style="color:var(--muted);font-size:11px;">BLG</div>
-          </div>
-        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
-          <div style="min-width:0;">
-            <div style="font-weight:600;">MKOI vs G2</div>
-            <div style="color:var(--muted);font-size:11px;">2026-07-24 · LEC</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
-            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">50%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
-            <div style="color:var(--muted);font-size:11px;">G2</div>
-          </div>
-        </div></div>
+    <div id="model-recent"></div>
   </div>
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Model disagreements</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">Games where you went against the model's pick. Track record shows whether your instincts or the model are right.</p>
-    <div id="model-disagreements"><div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg);border-radius:8px;margin-bottom:12px;font-size:13px;">
-        <span>You: <b style="color:var(--green);">9W 3L</b> (75%)</span>
-        <span style="color:var(--muted);font-size:11px;">12 settled</span>
-        <span>Model: <b style="color:#ff4d5e;">3W 9L</b></span>
-      </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">FLY vs LYON</span>
-            <span style="color:#ff4d5e;">✗ Model was right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">FLY</span>
-            · Model said <b>84%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">LYON vs FLY</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">LYON</span>
-            · Model said <b>63%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">LYON vs FLY</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">LYON</span>
-            · Model said <b>57%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">SEN vs DIG</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--red);">DIG</span>
-            · Model said <b>74%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">SEN vs DIG</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--red);">DIG</span>
-            · Model said <b>54%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">G2 vs VIT</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LEC</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">G2</span>
-            · Model said <b>54%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">MKOI vs KC</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LEC</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--red);">KC</span>
-            · Model said <b>66%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">MKOI vs G2</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-24 · LEC</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--red);">G2</span>
-            · Model said <b>93%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">KCB vs TLNP</span>
-            <span style="color:#ff4d5e;">✗ Model was right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-23 · La Ligue Française</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">KCB</span>
-            · Model said <b>62%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">LUA vs MKF</span>
-            <span style="color:#ff4d5e;">✗ Model was right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-23 · LES</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">LUA</span>
-            · Model said <b>78%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">IJC vs JL</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-23 · La Ligue Française</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--red);">JL</span>
-            · Model said <b>52%</b> the other way
-          </div>
-        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-            <span style="font-size:13px;font-weight:700;">WU vs CNV</span>
-            <span style="color:var(--green);">✓ You were right</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);">2026-07-23 · NACL</div>
-          <div style="font-size:12px;margin-top:4px;">
-            You picked <span style="color:var(--blue);">WU</span>
-            · Model said <b>56%</b> the other way
-          </div>
-        </div></div>
+    <div id="model-disagreements"></div>
   </div>
 </div>
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid"></div>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-box"><div class="val">5955</div><div class="lbl">Games logged</div></div>
+    <div class="stat-box"><div class="val green">63%</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="val green">80</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="val red">46</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="val yellow">0</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val">55</div><div class="lbl">Watched</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">71</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy"></div>
+    <div id="rolling-accuracy">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 78%" style="flex:1;height:47px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 19: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 20: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 21: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 22: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 23: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 24: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 25: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 26: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 27: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 28: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 29: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 30: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 31: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 32: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 33: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 34: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 35: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 36: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 37: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 38: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 39: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 40: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 41: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 42: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 43: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 44: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 45: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 46: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 47: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 48: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 49: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 50: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 51: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 52: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 53: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 54: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 55: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 56: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 57: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 58: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 59: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 60: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 61: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 62: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 63: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 64: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 65: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 66: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 67: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 68: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 69: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 70: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 71: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 72: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 73: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 74: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 75: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 76: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 77: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 78: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 79: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 80: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 81: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 82: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 83: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 84: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 85: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 86: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 87: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 88: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 89: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 90: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 91: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 92: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 93: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 94: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 95: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 96: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 97: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 98: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 99: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 100: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 101: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 102: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 103: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 104: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 105: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 106: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 107: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 108: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 109: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 110: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 111: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 112: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 113: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 114: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 115: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 116: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 117: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 118: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 119: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 120: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 121: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 122: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 123: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 124: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 125: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 126: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span>Game 1</span>
+        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">50% ▼ 20pp</b></span>
+        <span>Game 126</span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats"></div>
+    <div id="draft-pref-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Strong preference (±2)</div>
+          <div style="font-size:11px;color:var(--muted);">69 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--green);">61%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Slight preference (±1)</div>
+          <div style="font-size:11px;color:var(--muted);">33 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">52%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Even (0)</div>
+          <div style="font-size:11px;color:var(--muted);">5 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:#ff4d5e;">40%</span>
+      </div>
+    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <span style="color:var(--green);">Draft won: 2</span>
+        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
+        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
+        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats"></div>
+    <div id="conf-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          20 games ·
+          <span style="color:var(--red);">
+            35% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          39 games ·
+          <span style="color:var(--green);">
+            72% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          13 games ·
+          <span style="color:var(--green);">
+            92% accurate
+          </span>
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats"></div>
+    <div id="skew-stats">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 5955 total games.</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft &amp; skill agree → correct</span>
+        <span style="color:var(--green);">
+          79% (43 games)
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft beats skill (upset)</span>
+        <span style="color:var(--muted);">
+          29% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Skill overcomes draft</span>
+        <span style="color:var(--muted);">
+          71% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
+    </div>
+    <div style="padding:8px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Predicted correctly when skill was "Not sure"</span>
+        <span style="color:var(--muted);">
+          55% of 42 games
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats"></div>
+    <div id="exec-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          80% (5 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (2 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (1 games)
+        </span>
+      </div></div>
   </div>
 </div>
 
@@ -1707,7 +1364,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/27/2026, 5:48:39 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/28/2026, 1:15:58 AM</div>
     </div>
   </div>
 
@@ -1781,22 +1438,22 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$19.16</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+12.8%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$0.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+0.0%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$169.16</div>
+        <div style="font-size:20px;font-weight:700;">$150.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$46.56</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$122.60 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$150.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$0.96 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit · scaled down  (5% of $47)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$7.50 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $150)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
-    </div><div style="font-size:11px;color:var(--yellow);margin-bottom:6px;">⚠ Available below floor ($113) — unit size scaled down to protect bankroll.</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
+    </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
           <div style="font-size:14px;font-weight:700;color:var(--green);">$0.00</div>
           <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
@@ -1843,8 +1500,34 @@
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px;">
-    <div class="card-title">🚀 GitHub Pages deploy</div>
+  <div class="card" style="margin-top: 14px; display: block;" id="pnl-summary-card">
+    <div class="card-title">💵 P&amp;L Summary</div>
+    <div id="pnl-display" style="margin-top:4px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--green);">$0.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--muted);">$150.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total deposited</div>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-150.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Total net profit</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-150.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($150.00) − starting ($150.00)</div>
+    </div></div>
+  </div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Push this file directly to your GitHub repo so changes go live automatically — no manual uploading needed.
     </p>
@@ -1993,7 +1676,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/27/2026, 5:48:39 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/28/2026, 1:15:58 AM</div>
     </div>
   </div>
 
@@ -2049,7 +1732,7 @@
     <div id="ms-sched-list" style="margin-top:10px;"></div>
   </div>
 
-</div>
+
 
 <script>
 function localDateStr(d) {
@@ -5584,6 +5267,138 @@ function renderFullBreakdown() {
     </div>`;
 }
 
+// ── Backtest ──────────────────────────────────────────────────────────────────
+const BACKTEST_KEY = "draftlogger_backtest_v1";
+
+function modelPredictPure(game, training, fw) {
+  const blue = resolveTeam(game.blueTeam), red = resolveTeam(game.redTeam);
+  const bChamps = game.champions?.blue || [], rChamps = game.champions?.red || [];
+  const bPlayers = game.players?.blue  || [], rPlayers = game.players?.red  || [];
+  const fw1=fw.f1??1, fw5=fw.f5??1, fw7=fw.f7??1, fw9=fw.f9??1, fw12=fw.f12??1;
+  let logOdds = 0;
+
+  // F1: Team win rates
+  [{ team:blue, side:"blue" }, { team:red, side:"red" }].forEach(({ team, side }) => {
+    const games = training.filter(e => resolveTeam(e.blueTeam)===team || resolveTeam(e.redTeam)===team);
+    if (games.length < 3) return;
+    const wins = games.filter(e => (resolveTeam(e.blueTeam)===team&&e.actualWinner==="blue")||(resolveTeam(e.redTeam)===team&&e.actualWinner==="red")).length;
+    logOdds += (side==="blue"?1:-1) * (wins/games.length - 0.5) * 1.5 * fw1;
+  });
+
+  // F5: Champion presence
+  let champC = 0;
+  [...bChamps.map(c=>({c,s:"blue"})), ...rChamps.map(c=>({c,s:"red"}))].forEach(({c,s}) => {
+    if (!c) return;
+    const cg = training.filter(e=>(e.champions?.blue||[]).includes(c)||(e.champions?.red||[]).includes(c));
+    if (cg.length < 3) return;
+    const cw = cg.filter(e=>{const onBlue=(e.champions?.blue||[]).includes(c);return(onBlue&&e.actualWinner==="blue")||(!onBlue&&e.actualWinner==="red");}).length;
+    champC += (s==="blue"?1:-1) * (cw/cg.length - 0.5) * 0.3;
+  });
+  logOdds += champC * fw5;
+
+  // F7: Lane matchups
+  let mC = 0;
+  for (let i=0;i<5;i++) {
+    const bc=bChamps[i], rc=rChamps[i];
+    if (!bc||!rc) continue;
+    const mg = training.filter(e=>(e.champions?.blue||[])[i]===bc&&(e.champions?.red||[])[i]===rc);
+    if (!mg.length) continue;
+    mC += (mg.filter(e=>e.actualWinner==="blue").length/mg.length - 0.5) * 1.5;
+  }
+  logOdds += mC * fw7;
+
+  // F9: Side preference
+  [{ team:blue, side:"blue" }, { team:red, side:"red" }].forEach(({ team, side }) => {
+    const sg = training.filter(e=>resolveTeam(side==="blue"?e.blueTeam:e.redTeam)===team);
+    if (sg.length < 5) return;
+    const sw = sg.filter(e=>e.actualWinner===side).length;
+    const ag = training.filter(e=>resolveTeam(e.blueTeam)===team||resolveTeam(e.redTeam)===team);
+    const aw = ag.filter(e=>(resolveTeam(e.blueTeam)===team&&e.actualWinner==="blue")||(resolveTeam(e.redTeam)===team&&e.actualWinner==="red")).length;
+    logOdds += (side==="blue"?1:-1) * (sw/sg.length - (ag.length?aw/ag.length:0.5)) * 1.0 * fw9;
+  });
+
+  // F12: Player-champ vs opponent comp
+  [[bPlayers,bChamps,rChamps,1],[rPlayers,rChamps,bChamps,-1]].forEach(([players,champs,opps,dir]) => {
+    for (let i=0;i<5;i++) {
+      const player=players[i], champ=champs[i];
+      if (!player||!champ||!opps.filter(Boolean).length) continue;
+      const matched = training.filter(e => {
+        const bPl=e.players?.blue||[], rPl=e.players?.red||[];
+        const bCh=e.champions?.blue||[], rCh=e.champions?.red||[];
+        const bIdx=bPl.indexOf(player), rIdx=rPl.indexOf(player);
+        let pSide=null, pChamp=null;
+        if (bIdx!==-1){pSide="blue";pChamp=bCh[bIdx];}else if(rIdx!==-1){pSide="red";pChamp=rCh[rIdx];}
+        if (!pSide||pChamp!==champ) return false;
+        return opps.filter(Boolean).some(oc=>(pSide==="blue"?rCh:bCh).includes(oc));
+      });
+      if (!matched.length) continue;
+      const wins = matched.filter(e=>{
+        const pSide=(e.players?.blue||[]).indexOf(player)!==-1?"blue":"red";
+        return e.actualWinner===pSide;
+      }).length;
+      logOdds += dir*(wins/matched.length-0.5)*1.2*fw12;
+    }
+  });
+
+  const bluePct = Math.round(1/(1+Math.exp(-logOdds))*100);
+  return { winner:logOdds>=0?"blue":"red", confidence:Math.max(bluePct,100-bluePct), bluePct };
+}
+
+async function runBacktest() {
+  const statusEl=document.getElementById("backtest-status"), resultsEl=document.getElementById("backtest-results");
+  if (!statusEl||!resultsEl) return;
+
+  const completed = loadEntries().filter(e =>
+    e.actualWinner && !e.isStandaloneBet &&
+    ((e.champions?.blue||[]).filter(Boolean).length >= 3 || (e.champions?.red||[]).filter(Boolean).length >= 3)
+  );
+
+  if (completed.length < 10) { statusEl.textContent="Need at least 10 completed games with champion data."; return; }
+  statusEl.textContent=`Running leave-one-out backtest on ${completed.length} games…`;
+  resultsEl.innerHTML="";
+  const fw=loadFactorWeights(), results=[];
+
+  for (let i=0;i<completed.length;i++) {
+    const pred = modelPredictPure(completed[i], completed.filter((_,j)=>j!==i), fw);
+    results.push({ date:completed[i].date, league:completed[i].league||"",
+      blueTeam:resolveTeam(completed[i].blueTeam), redTeam:resolveTeam(completed[i].redTeam),
+      modelWinner:pred.winner, confidence:pred.confidence, bluePct:pred.bluePct,
+      actualWinner:completed[i].actualWinner, correct:pred.winner===completed[i].actualWinner });
+    if (i%20===0) { statusEl.textContent=`Processing… ${i+1}/${completed.length}`; await new Promise(r=>setTimeout(r,0)); }
+  }
+
+  localStorage.setItem(BACKTEST_KEY, JSON.stringify({ results, ranAt: new Date().toISOString() }));
+  renderBacktestResults(results);
+  statusEl.textContent=`Done — ${completed.length} games backtested.`;
+}
+
+function renderBacktestResults(results) {
+  const el=document.getElementById("backtest-results");
+  if (!el||!results.length) return;
+  const overall=results.filter(r=>r.correct).length/results.length;
+  const buckets={};
+  results.forEach(r=>{ const b=Math.floor(r.confidence/5)*5; if(!buckets[b])buckets[b]={correct:0,total:0}; buckets[b].total++; if(r.correct)buckets[b].correct++; });
+  const rows=Object.entries(buckets).sort((a,b)=>+a[0]-+b[0]).map(([b,d])=>{
+    const pct=Math.round(d.correct/d.total*100), exp=+b+2, diff=pct-exp;
+    const color=Math.abs(diff)<=5?"var(--green)":diff>0?"var(--blue)":"#ff4d5e";
+    const small=d.total<5;
+    return `<div style="padding:6px 0;border-bottom:1px solid var(--border);opacity:${small?.6:1};">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">
+        <span>${b}–${+b+4}%${small?" · small":""}  · ${d.total}g</span>
+        <span style="font-weight:700;color:${color};">Actual ${pct}% (${diff>=0?"+":""}${diff}%)</span>
+      </div>
+      <div style="background:var(--bg);border-radius:3px;height:7px;position:relative;">
+        <div style="height:100%;width:${Math.min(100,pct)}%;background:${color};border-radius:3px;"></div>
+        <div style="position:absolute;left:${Math.min(100,exp)}%;top:-2px;height:11px;width:1px;background:var(--muted);"></div>
+      </div></div>`;
+  }).join("");
+  el.innerHTML=`<div style="font-size:13px;margin-bottom:12px;">Overall <b>${Math.round(overall*100)}%</b> across ${results.length} games</div>
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">CALIBRATION BY CONFIDENCE BUCKET</div>
+    ${rows}
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">Built with leave-one-out: each game predicted using only data from other games. If high-confidence buckets are short, use factor weights to bring those factors down.</p>`;
+}
+// ── End Backtest ──────────────────────────────────────────────────────────────
+
 function renderModelPage() {
   const allEntries = loadEntries();
   const completed  = allEntries.filter(e => e.actualWinner && e.predWinner && !e.isBulkImport);
@@ -8700,6 +8515,7 @@ function doCashOut(half) {
   const el = document.getElementById("cashout-amount");
   if (el) el.value = "";
   updateBankrollDisplay();
+  renderPnLSummary();
   autoSync();
 }
 
@@ -8844,6 +8660,55 @@ function updateBankrollDisplay() {
         </div>
       </div>`;
     })();
+}
+
+function renderPnLSummary() {
+  const el = document.getElementById("pnl-display");
+  const card = document.getElementById("pnl-summary-card");
+  if (!el) return;
+  const s = loadBankrollSettings();
+  const cashed   = s.totalCashedOut || 0;
+  const deposited = s.totalDeposited || 0;
+  const takeHome  = cashed - deposited;
+  const current   = s.current ?? s.starting ?? 0;
+  const totalValue = takeHome + current; // what you'd have if you cashed out everything now
+  const starting  = s.starting || 0;
+  const netProfit = totalValue - starting;
+
+  if (!cashed && !deposited) {
+    if (card) card.style.display = "none";
+    return;
+  }
+  if (card) card.style.display = "block";
+
+  const thColor = takeHome >= 0 ? "var(--green)" : "#ff4d5e";
+  const npColor = netProfit >= 0 ? "var(--green)" : "#ff4d5e";
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--green);">$${cashed.toFixed(2)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--muted);">$${deposited.toFixed(2)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total deposited</div>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
+        <span style="font-size:24px;font-weight:800;color:${thColor};">${takeHome>=0?"+":""}$${takeHome.toFixed(2)}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid ${npColor};">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Total net profit</span>
+        <span style="font-size:24px;font-weight:800;color:${npColor};">${netProfit>=0?"+":""}$${netProfit.toFixed(2)}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($${current.toFixed(2)}) − starting ($${starting.toFixed(2)})</div>
+    </div>`;
 }
 
 function updateBetSizing(modelPct, edgePct) {
@@ -10692,13 +10557,19 @@ function show(screen) {
     if (screen === "betstats")  renderBetStats();
     if (screen === "today")     { loadTodayGames(); }
     if (screen === "watch")     { renderWatchPage(); }
-    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); loadAutoLogSettingsUI(); }
+    if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); loadAutoLogSettingsUI(); renderPnLSummary(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+window.onerror = function(msg, src, line, col, err) {
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;top:0;left:0;right:0;background:#ff4d5e;color:#fff;padding:8px 12px;font-size:11px;z-index:9999;word-break:break-all;";
+  d.textContent = "JS Error: " + msg + " (line " + line + ")";
+  document.body?.appendChild(d);
+};
 document.getElementById("game-date").value = localDateStr();
 initPickInputs();
 loadLiveGames();
