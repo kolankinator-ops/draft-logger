@@ -384,8 +384,8 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
-  <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -406,7 +406,7 @@
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -579,8 +579,8 @@
       </div>
       <button onclick="confirmSides()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">✓ Sides are correct</button>
     </div>
-    <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
+    <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"><span style="color:var(--blue);">KT draft: <b>4.20</b> <span style="color:var(--muted);">(4g)</span></span><span style="color:var(--border);margin:0 6px;">·</span><span style="color:var(--red);">T1 draft: <b>2.48</b> <span style="color:var(--muted);">(6g)</span></span><span style="color:var(--border);margin:0 6px;">·</span><span style="color:var(--blue);">→ KT has the draft edge (1.72 pts)</span></div>
+    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">KT</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(1st)</span> &nbsp;·&nbsp; <span style="color:var(--red);font-weight:600;">T1</span> <span style="color:var(--green);">0W</span>/<span style="color:#ff4d5e;">0L</span> <span style="color:var(--muted);">(1st)</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
@@ -604,16 +604,16 @@
     </div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
+        <div class="draft-col-title" id="blue-col-title">KT</div>
         <div id="blue-picks">
     <div class="champ-row" id="pick-row-blue-0">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Rumble/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
-          <span class="champ-name">TOP</span>
-          
+          <span class="champ-name">Rumble</span>
+          <span style="font-size:10px;color:var(--muted);">KT PerfecT</span>
         </div>
-        
+        <button onclick="clearPick('blue',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
@@ -622,12 +622,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-1">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/JarvanIV/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
-          <span class="champ-name">JNG</span>
-          
+          <span class="champ-name">JarvanIV</span>
+          <span style="font-size:10px;color:var(--muted);">KT Cuzz</span>
         </div>
-        
+        <button onclick="clearPick('blue',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
@@ -636,12 +636,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-2">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Yone/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
-          <span class="champ-name">MID</span>
-          
+          <span class="champ-name">Yone</span>
+          <span style="font-size:10px;color:var(--muted);">KT Bdd</span>
         </div>
-        
+        <button onclick="clearPick('blue',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
@@ -650,12 +650,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-3">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/MissFortune/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
-          <span class="champ-name">BOT</span>
-          
+          <span class="champ-name">MissFortune</span>
+          <span style="font-size:10px;color:var(--muted);">KT FenRir</span>
         </div>
-        
+        <button onclick="clearPick('blue',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
@@ -664,12 +664,12 @@
     </div>
     <div class="champ-row" id="pick-row-blue-4">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Rell/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
-          <span class="champ-name">SUP</span>
-          
+          <span class="champ-name">Rell</span>
+          <span style="font-size:10px;color:var(--muted);">KT Effort</span>
         </div>
-        
+        <button onclick="clearPick('blue',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
@@ -678,16 +678,16 @@
     </div></div>
       </div>
       <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title">RED SIDE</div>
+        <div class="draft-col-title" id="red-col-title">T1</div>
         <div id="red-picks">
     <div class="champ-row" id="pick-row-red-0">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Jayce/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',0)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
-          <span class="champ-name">TOP</span>
-          
+          <span class="champ-name">Jayce</span>
+          <span style="font-size:10px;color:var(--muted);">T1 Doran</span>
         </div>
-        
+        <button onclick="clearPick('red',0)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
@@ -696,12 +696,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-1">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/LeeSin/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',1)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
-          <span class="champ-name">JNG</span>
-          
+          <span class="champ-name">LeeSin</span>
+          <span style="font-size:10px;color:var(--muted);">T1 Oner</span>
         </div>
-        
+        <button onclick="clearPick('red',1)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
@@ -710,12 +710,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-2">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Ryze/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',2)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
-          <span class="champ-name">MID</span>
-          
+          <span class="champ-name">Ryze</span>
+          <span style="font-size:10px;color:var(--muted);">T1 Faker</span>
         </div>
-        
+        <button onclick="clearPick('red',2)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
@@ -724,12 +724,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-3">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Jhin/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',3)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
-          <span class="champ-name">BOT</span>
-          
+          <span class="champ-name">Jhin</span>
+          <span style="font-size:10px;color:var(--muted);">T1 Peyz</span>
         </div>
-        
+        <button onclick="clearPick('red',3)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
@@ -738,12 +738,12 @@
     </div>
     <div class="champ-row" id="pick-row-red-4">
       <div class="champ-row-top">
-        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <img src="https://cdn.communitydragon.org/latest/champion/Shen/square" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:5px;flex-shrink:0;cursor:pointer;" onclick="openPickEditor('red',4)">
         <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
-          <span class="champ-name">SUP</span>
-          
+          <span class="champ-name">Shen</span>
+          <span style="font-size:10px;color:var(--muted);">T1 Keria</span>
         </div>
-        
+        <button onclick="clearPick('red',4)" style="background:none;border:none;color:var(--border);font-size:14px;cursor:pointer;padding:0 2px;margin-left:auto;line-height:1;" title="Clear">✕</button>
       </div>
       <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
         <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
@@ -759,17 +759,17 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">KT +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">KT +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">T1 +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">T1 +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">KT</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -777,7 +777,7 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">T1</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -788,30 +788,39 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">KT</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">T1</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
+    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
+        <div id="model-bar-fill" style="height: 100%; background: var(--muted); border-radius: 4px; transition: width 0.3s; width: 47%;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">KT 47%</span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--muted);font-weight:600;">Lean T1</span></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">53% T1</span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
-      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
-      <div id="model-bet-sizing" style="display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);font-size:12px;line-height:1.8;"></div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0;">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.05em;margin-bottom:4px;">🟦 KT</div>
+        <div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>for red T1 win rate: 68% (220g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Mid matchup: Yone vs Ryze</span> <span style="color:var(--muted);float:right;padding-left:6px;">67% (33g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Bot matchup: MissFortune vs Jhin</span> <span style="color:var(--muted);float:right;padding-left:6px;">57% (56g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rumble vs LeeSin</span> <span style="color:var(--muted);float:right;padding-left:6px;">52% (46g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rumble vs Jhin</span> <span style="color:var(--muted);float:right;padding-left:6px;">56% (141g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rumble vs Shen</span> <span style="color:var(--muted);float:right;padding-left:6px;">69% (13g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: JarvanIV vs Jayce</span> <span style="color:var(--muted);float:right;padding-left:6px;">60% (104g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: JarvanIV vs Jhin</span> <span style="color:var(--muted);float:right;padding-left:6px;">56% (104g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Yone vs LeeSin</span> <span style="color:var(--muted);float:right;padding-left:6px;">69% (13g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Yone vs Jhin</span> <span style="color:var(--muted);float:right;padding-left:6px;">58% (43g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: MissFortune vs Jayce</span> <span style="color:var(--muted);float:right;padding-left:6px;">71% (24g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: MissFortune vs Ryze</span> <span style="color:var(--muted);float:right;padding-left:6px;">53% (32g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rell vs Jhin</span> <span style="color:var(--muted);float:right;padding-left:6px;">75% (72g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>KT blue side: 53% (94g, overall 48%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>T1 red side: 62% (100g, overall 68%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Synergy: blue +0.015 / red +0.013</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Comp matchup: 25 cross-team pairs avg 5% blue</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>KT PerfecT on Rumble vs LeeSin/Jhin/Ryze: 10/14 (71%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>KT Cuzz on JarvanIV vs Jhin/LeeSin/Jayce: 6/10 (60%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>T1 Faker on Ryze vs Rumble/MissFortune/Rell/JarvanIV: 7/15 (47%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>JarvanIV last 7d: 22/35 (63%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Yone last 7d: 2/2 (100%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>MissFortune last 7d: 2/2 (100%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Rell last 7d: 17/29 (59%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Jayce last 7d: 14/32 (44%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Jhin last 7d: 6/16 (38%)</span></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:.05em;margin-bottom:4px;">🟥 T1</div>
+        <div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Top matchup: Rumble vs Jayce</span> <span style="color:var(--muted);float:right;padding-left:6px;">41% (32g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Jungle matchup: JarvanIV vs LeeSin</span> <span style="color:var(--muted);float:right;padding-left:6px;">42% (89g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Support matchup: Rell vs Shen</span> <span style="color:var(--muted);float:right;padding-left:6px;">23% (13g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rumble vs Ryze</span> <span style="color:var(--muted);float:right;padding-left:6px;">48% (239g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: JarvanIV vs Ryze</span> <span style="color:var(--muted);float:right;padding-left:6px;">41% (205g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: JarvanIV vs Shen</span> <span style="color:var(--muted);float:right;padding-left:6px;">48% (25g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Yone vs Jayce</span> <span style="color:var(--muted);float:right;padding-left:6px;">35% (23g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Yone vs Shen</span> <span style="color:var(--muted);float:right;padding-left:6px;">0% (8g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: MissFortune vs LeeSin</span> <span style="color:var(--muted);float:right;padding-left:6px;">31% (13g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rell vs Jayce</span> <span style="color:var(--muted);float:right;padding-left:6px;">43% (47g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rell vs LeeSin</span> <span style="color:var(--muted);float:right;padding-left:6px;">46% (26g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Rell vs Ryze</span> <span style="color:var(--muted);float:right;padding-left:6px;">42% (97g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>T1 Doran on Jayce vs Rell/Rumble/Yone: 6/6 (100%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>T1 Oner on LeeSin vs Rumble/JarvanIV: 3/3 (100%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>T1 Peyz on Jhin vs JarvanIV/MissFortune/Rumble: 4/8 (50%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Rumble last 7d: 8/19 (42%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>LeeSin last 7d: 21/36 (58%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Ryze last 7d: 13/26 (50%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Shen last 7d: 15/30 (50%)</span></div>
+      </div>
+    </div></div>
+      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 8 games — treat with caution.</div>
+      <div id="model-bet-sizing" style="display: block; margin-top: 8px; padding: 10px 12px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--green); font-size: 12px; line-height: 1.8;"><div style="font-weight:700;color:var(--green);margin-bottom:3px;">💰 Suggested bet: 1 unit = <span style="font-size:14px;">$26.93</span></div><div style="color:var(--muted);">Bankroll: $658.51 · 1 unit = $26.93</div></div>
 
       <!-- I disagree -->
-      <div id="model-disagree-wrap" style="display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;">
+      <div id="model-disagree-wrap" style="display: block; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
         <div id="model-disagree-state-agree" style="display:flex;align-items:center;justify-content:space-between;">
           <span style="font-size:12px;color:var(--muted);">Think the model is wrong?</span>
           <button onclick="setModelDisagreement(true)" style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--text);cursor:pointer;">↩ I disagree</button>
@@ -824,26 +833,26 @@
           <div id="model-disagree-sizing" style="padding:8px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--yellow);font-size:12px;line-height:1.8;"></div>
         </div>
       </div>
-    </div>
+    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: none;"></div></div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">Blue side wins</span>
+        <span id="pred-blue-label">KT wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">Red side wins</span>
+        <span id="pred-red-label">T1 wins</span>
       </button>
     </div>
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">KT side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">T1 side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -896,10 +905,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">Blue side won</span>
+          <span id="vod-result-blue-label">KT won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">Red side won</span>
+          <span id="vod-result-red-label">T1 won</span>
         </button>
       </div>
     </div>
@@ -918,8 +927,72 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">Couldn't find matching games in the schedule. Check team names match exactly.</div>
+    <div id="pending-list">
+      <div class="pending-entry" id="pending-1785323665071">
+        <div class="pending-entry-header">
+          <div>
+            <div style="font-weight:600;font-size:13px;">KT vs T1</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · LCK ·
+              Predicted: <span style="color:var(--blue)">
+                KT
+              </span>
+            </div>
+            <div style="margin-top:4px;">
+           <span style="color:var(--muted);font-size:11px;display:block;">
+             Bet 1: KT @ 2.35 · $100.00
+             <button onclick="openEditBetIdx('1785323665071',0)" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
+             <button onclick="removeBetIdx('1785323665071',0)" style="background:none;border:none;color:#ff4d5e;font-size:11px;cursor:pointer;padding:0 2px;">✕</button>
+           </span><span style="color:var(--muted);font-size:11px;display:block;">
+             Bet 2: KT @ 2.50 · $20.00
+             <button onclick="openEditBetIdx('1785323665071',1)" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Edit</button>
+             <button onclick="removeBetIdx('1785323665071',1)" style="background:none;border:none;color:#ff4d5e;font-size:11px;cursor:pointer;padding:0 2px;">✕</button>
+           </span>
+           <button onclick="openAddAnotherBet('1785323665071')" style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0;">+ Add another bet</button>
+         </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785323665071','blue')">🔵 KT won</button>
+            <button class="loss-btn" onclick="openPerfForm('1785323665071','red')">🔴 T1 won</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785323665071"></div>
+        <div id="edit-bet-1785323665071" style="display:none;padding:12px;border-top:1px solid var(--border);">
+          <div class="card-title" style="margin-bottom:10px;" id="edit-bet-title-1785323665071">Add bet</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div>
+              <label>Bet on</label>
+              <select id="edit-bet-on-1785323665071">
+                <option value="blue" selected="">KT</option>
+                <option value="red">T1</option>
+              </select>
+            </div>
+            <div>
+              <label>Bet against</label>
+              <select id="edit-bet-against-1785323665071">
+                <option value="red" selected="">T1</option>
+                <option value="blue">KT</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div>
+              <label>Decimal odds</label>
+              <input type="number" id="edit-bet-odds-1785323665071" step="0.01" min="1.01">
+            </div>
+            <div>
+              <label>Stake</label>
+              <input type="number" id="edit-bet-stake-1785323665071" step="0.01" min="0.01">
+            </div>
+          </div>
+          <input type="hidden" id="edit-bet-idx-1785323665071" value="-1">
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveEditBetIdx('1785323665071')">Save bet</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('edit-bet-1785323665071').style.display='none'">Cancel</button>
+          </div>
+        </div>
+      </div></div>
   </div>
 
   <div class="card">
@@ -932,7 +1005,7 @@
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"></datalist>
+      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="First Stand"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCK Challengers"></option><option value="LCP"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option><option value="TCL"></option><option value="Worlds"></option></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -1113,26 +1186,163 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid"></div>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-box"><div class="val">6030</div><div class="lbl">Games logged</div></div>
+    <div class="stat-box"><div class="val green">63%</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="val green">85</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="val red">51</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="val yellow">1</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val">64</div><div class="lbl">Watched</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">72</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy"></div>
+    <div id="rolling-accuracy">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 0%" style="flex:1;height:4px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 67%" style="flex:1;height:40px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 89%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 19: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 20: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 21: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 22: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 23: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 24: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 25: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 26: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 27: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 28: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 29: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 30: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 31: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 32: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 33: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 34: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 35: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 36: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 37: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 38: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 39: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 40: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 41: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 42: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 43: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 44: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 45: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 46: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 47: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 48: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 49: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 50: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 51: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 52: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 53: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 54: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 55: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 56: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 57: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 58: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 59: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 60: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 61: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 62: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 63: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 64: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 65: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 66: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 67: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 68: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 69: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 70: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 71: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 72: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 73: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 74: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 75: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 76: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 77: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 78: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 79: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 80: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 81: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 82: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 83: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 84: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 85: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 86: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 87: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 88: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 89: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 90: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 91: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 92: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 93: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 94: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 95: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 96: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 97: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 98: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 99: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 100: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 101: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 102: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 103: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 104: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 105: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 106: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 107: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 108: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 109: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 110: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 111: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 112: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 113: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 114: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 115: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 116: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 117: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 118: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 119: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 120: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 121: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 122: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 123: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 124: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 125: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 126: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 127: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 128: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 129: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 130: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 131: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 132: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 133: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 134: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 135: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 136: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span>Game 1</span>
+        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">50% ▼ 10pp</b></span>
+        <span>Game 136</span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats"></div>
+    <div id="draft-pref-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Strong preference (±2)</div>
+          <div style="font-size:11px;color:var(--muted);">75 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--green);">60%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Slight preference (±1)</div>
+          <div style="font-size:11px;color:var(--muted);">35 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">51%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Even (0)</div>
+          <div style="font-size:11px;color:var(--muted);">7 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:#ff4d5e;">43%</span>
+      </div>
+    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <span style="color:var(--green);">Draft won: 2</span>
+        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
+        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
+        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats"></div>
+    <div id="conf-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          20 games ·
+          <span style="color:var(--red);">
+            35% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          39 games ·
+          <span style="color:var(--green);">
+            72% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          13 games ·
+          <span style="color:var(--green);">
+            92% accurate
+          </span>
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats"></div>
+    <div id="skew-stats">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 6029 total games.</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft &amp; skill agree → correct</span>
+        <span style="color:var(--green);">
+          79% (43 games)
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft beats skill (upset)</span>
+        <span style="color:var(--muted);">
+          29% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Skill overcomes draft</span>
+        <span style="color:var(--muted);">
+          71% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
+    </div>
+    <div style="padding:8px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Predicted correctly when skill was "Not sure"</span>
+        <span style="color:var(--muted);">
+          55% of 49 games
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats"></div>
+    <div id="exec-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          80% (5 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (2 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (1 games)
+        </span>
+      </div></div>
   </div>
 </div>
 
@@ -1227,7 +1437,7 @@
         Push overwrites cloud with your local data. Pull overwrites local with cloud data.
         Auto-sync pushes after every save when connected.
       </div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/28/2026, 10:03:44 PM</div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:6px;">Last synced: 7/29/2026, 7:30:10 AM</div>
     </div>
   </div>
 
@@ -1301,22 +1511,22 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$0.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+0.0%)</div>
+        <div style="font-size:17px;font-weight:700;color:#ff4d5e;">$-130.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (-52.0%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$250.00</div>
+        <div style="font-size:20px;font-weight:700;">$120.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$250.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$0.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$120.00 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$12.50 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $250)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$0.01 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit · scaled down  (5% of $0)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
-    </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
+    </div><div style="font-size:11px;color:var(--yellow);margin-bottom:6px;">⚠ Available below floor ($100) — unit size scaled down to protect bankroll.</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
           <div style="font-size:14px;font-weight:700;color:var(--green);">$0.00</div>
           <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
@@ -1390,7 +1600,7 @@
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($658.51) − starting ($150.00)</div>
     </div></div>
-    <div id="pnl-edit" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+    <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
         <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01"></div>
@@ -1554,7 +1764,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/28/2026, 10:03:44 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/29/2026, 7:30:10 AM</div>
     </div>
   </div>
 
@@ -1736,80 +1946,94 @@ function dismissRecentGame(eid) {
   loadRecentGames();
 }
 
+let _recentMatchGames = [];
+let _recentMatchMeta  = {};
+
 async function loadRecentGame(idx) {
   const events = window._recentEvents || [];
   const ev     = events[idx];
   if (!ev) { console.warn("loadRecentGame: no event at idx", idx); return; }
 
-  // Show a banner so the user knows not to peek at the result
   const banner = document.getElementById("retroactive-banner");
-  if (banner) {
-    banner.style.display = "block";
-    banner.innerHTML = `<span style="color:var(--yellow);">⏱ Loading game details…</span>`;
-  }
+  if (banner) { banner.style.display = "block"; banner.innerHTML = `<span style="color:var(--yellow);">⏱ Loading game details…</span>`; }
 
   try {
     const matchId = ev.match?.id || ev.id;
-    if (!matchId) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Couldn't find match ID for this game.</span>`; return; }
+    if (!matchId) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Couldn't find match ID.</span>`; return; }
 
-    const det    = await apiGet("/getEventDetails", { id: matchId });
-    const event  = det.data?.event;
+    const det   = await apiGet("/getEventDetails", { id: matchId });
+    const event = det.data?.event;
     if (!event) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">API returned no event data.</span>`; return; }
 
-    // Match is confirmed completed from schedule — accept any game state
-    // (API sometimes returns "finished", "", or even "inProgress" for just-ended games)
-    const games      = (event.match?.games || []).filter(g => g.state !== "unstarted")
-                       .sort((a,b) => (a.number||0) - (b.number||0));
-    // If no non-unstarted games found, just take any game
-    const allGames   = games.length ? games : (event.match?.games || []);
+    const games = (event.match?.games || [])
+      .filter(g => g.state !== "unstarted")
+      .sort((a,b) => (a.number||0) - (b.number||0));
+    const allGames = games.length ? games : (event.match?.games || []);
+
     const matchTeams = event.match?.teams || [];
-    const tById      = {};
+    const tById = {};
     matchTeams.forEach(t => { tById[t.id] = t.code || t.name || ""; });
-    const winner     = matchTeams.find(t => t.result?.outcome === "win");
+    const winner = matchTeams.find(t => t.result?.outcome === "win");
 
-    const targetGame = allGames[0];
-    if (!targetGame) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">No games found in this match.</span>`; return; }
+    _recentMatchGames = allGames;
+    _recentMatchMeta  = { event, tById, winner, ev };
 
-    const sides     = targetGame.teams || [];
-    const blueEntry = sides.find(t => t.side === "blue");
-    const redEntry  = sides.find(t => t.side === "red");
-    const blueCode  = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
-    const redCode   = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
-
-    // Store winner silently — don't show in UI
-    const winnerCode  = winner ? (winner.code || winner.name || "") : "";
-    retroactiveWinner = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
-                      : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
-
-    document.getElementById("blue-team").value     = blueCode;
-    document.getElementById("red-team").value      = redCode;
-    document.getElementById("league").value        = event.league?.name || "";
-    document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10) || localDateStr();
-    document.getElementById("event-context").value = buildContextLabel(event.league?.name || "", ev.blockName || "", ev.startTime || "");
-    currentGameNumber = targetGame.number || null;
-    updateColTitles();
-
-    if (banner) banner.innerHTML = `<span style="color:var(--yellow);">⏱ Retroactive log — fill in your prediction as you remembered it. The result is hidden until you save.</span>`;
-
-    try {
-      const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
-      if (res.ok) {
-        const text = await res.text();
-        const fd   = text ? JSON.parse(text) : null;
-        const meta = fd?.gameMetadata;
-        if (meta) {
-          renderPickInputs(meta.blueTeamMetadata?.participantMetadata || [], meta.redTeamMetadata?.participantMetadata || []);
-        }
-      }
-    } catch(e) {}
-
-    runPredictionModel();
-    fillOddsFromPlan(blueCode, redCode, currentGameNumber);
-    document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
+    await _loadRecentGameN(0, banner);
   } catch(e) {
     console.error("loadRecentGame error:", e);
-    if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Error loading game: ${e.message}</span>`;
+    if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Error: ${e.message}</span>`;
   }
+}
+
+async function _loadRecentGameN(gameIdx, banner) {
+  const { event, tById, winner, ev } = _recentMatchMeta;
+  const allGames = _recentMatchGames;
+  const targetGame = allGames[gameIdx];
+  if (!targetGame) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">No games found in this match.</span>`; return; }
+
+  const sides     = targetGame.teams || [];
+  const blueEntry = sides.find(t => t.side === "blue");
+  const redEntry  = sides.find(t => t.side === "red");
+  const blueCode  = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
+  const redCode   = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
+
+  const winnerCode  = winner ? (winner.code || winner.name || "") : "";
+  retroactiveWinner = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
+                    : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+
+  document.getElementById("blue-team").value     = blueCode;
+  document.getElementById("red-team").value      = redCode;
+  document.getElementById("league").value        = event.league?.name || "";
+  document.getElementById("game-date").value     = (ev.startTime || "").slice(0, 10) || localDateStr();
+  document.getElementById("event-context").value = buildContextLabel(event.league?.name || "", ev.blockName || "", ev.startTime || "");
+  currentGameNumber = targetGame.number || (gameIdx + 1);
+  updateColTitles();
+
+  // Game switcher shown when series has multiple games
+  if (banner) {
+    const switcherHtml = allGames.length > 1
+      ? `<div style="display:flex;gap:6px;margin-top:8px;align-items:center;">
+          <span style="font-size:11px;color:var(--muted);">Game:</span>
+          ${allGames.map((g, i) =>
+            `<button onclick="_loadRecentGameN(${i})" style="padding:3px 10px;border-radius:5px;border:1px solid ${i===gameIdx?"var(--blue)":"var(--border)"};background:${i===gameIdx?"rgba(59,130,246,.15)":"none"};color:${i===gameIdx?"var(--blue)":"var(--muted)"};font-size:12px;cursor:pointer;">${g.number||i+1}</button>`
+          ).join("")}
+        </div>` : "";
+    banner.style.display = "block";
+    banner.innerHTML = `<span style="color:var(--yellow);">⏱ Retroactive log — fill in your prediction as you remembered it. The result is hidden until you save.</span>${switcherHtml}`;
+  }
+
+  try {
+    const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
+    if (res.ok) {
+      const fd = await res.json();
+      const meta = fd?.gameMetadata;
+      if (meta) renderPickInputs(meta.blueTeamMetadata?.participantMetadata || [], meta.redTeamMetadata?.participantMetadata || []);
+    }
+  } catch(e) {}
+
+  runPredictionModel();
+  fillOddsFromPlan(blueCode, redCode, currentGameNumber);
+  document.getElementById("blue-team").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 
@@ -6101,7 +6325,7 @@ function runPredictionModel() {
   let   logOdds  = 0;
   let   minGames = Infinity;
   const fw = loadFactorWeights(); // factor weights — applied to each contribution
-  const fw1=fw.f1??1,fw2=fw.f2??1,fw3=fw.f3??1,fw4=fw.f4??1,fw5=fw.f5??1,fw6=fw.f6??1,fw7=fw.f7??1,fw8=fw.f8??1,fw9=fw.f9??1,fw10=fw.f10??1,fw11=fw.f11??1,fw12=fw.f12??1;
+  const fw1=fw.f1??1,fw2=fw.f2??1,fw3=fw.f3??1,fw4=fw.f4??1,fw5=fw.f5??1,fw6=fw.f6??1,fw7=fw.f7??1,fw8=fw.f8??1,fw9=fw.f9??1,fw10=fw.f10??1,fw11=fw.f11??1,fw12=fw.f12??1,fw13=fw.f13??1;
 
   // Read market odds early — used to compute skill gap for Factor 2 discount
   const _blueOdds = parseFloat((document.getElementById("mkt-blue-odds") || {}).value) || null;
@@ -6428,6 +6652,28 @@ function runPredictionModel() {
   }
 
     // ── Convert to probability and display ─────────────────────────────────────
+
+  // ── Factor 13: Champion win rate — last 7 days (current meta/form) ───────────
+  const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0,10);
+  const recentGames  = allEntries.filter(e => e.actualWinner && e.date >= sevenDaysAgo);
+
+  let champRecentContrib = 0;
+  [...(pickedChamps.blue||[]).map(c=>({c,side:"blue"})), ...(pickedChamps.red||[]).map(c=>({c,side:"red"}))].forEach(({c,side}) => {
+    if (!c) return;
+    const cGames = recentGames.filter(e =>
+      (e.champions?.blue||[]).includes(c) || (e.champions?.red||[]).includes(c)
+    );
+    if (!cGames.length) return;
+    const wins = cGames.filter(e => {
+      const onBlue = (e.champions?.blue||[]).includes(c);
+      return (onBlue && e.actualWinner === "blue") || (!onBlue && e.actualWinner === "red");
+    }).length;
+    const wr     = wins / cGames.length;
+    const contrib = (side === "blue" ? 1 : -1) * (wr - 0.5) * 0.8;
+    champRecentContrib += contrib;
+    factors.push(`${contrib>0?"↑":"↓"} ${c} last 7d: ${wins}/${cGames.length} (${Math.round(wr*100)}%)`);
+  });
+  logOdds += champRecentContrib * fw13;
   if (factors.length === 0) {
     el.style.display = "none";
     return;
@@ -7028,7 +7274,8 @@ const FACTOR_LABELS = {
   f1:"Team win rates", f2:"Draft preference", f3:"Skill advantage",
   f4:"Execution demand", f5:"Champion presence", f6:"Champion ROI",
   f7:"Lane matchups", f8:"Cross-position", f9:"Side preference",
-  f10:"Team synergy", f11:"Comp matchup", f12:"Player-champ vs comp"
+  f10:"Team synergy", f11:"Comp matchup", f12:"Player-champ vs comp",
+  f13:"Champion form (last 7d)"
 };
 function loadFactorWeights() {
   try { return JSON.parse(localStorage.getItem(FACTOR_WEIGHTS_KEY) || "{}"); }
