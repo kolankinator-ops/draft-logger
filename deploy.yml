@@ -1,0 +1,83 @@
+import { supabase } from './supabase.js'
+import { openLocalDB, pullFromSupabase, flushSyncQueue, loadEntries, saveEntries, loadSettings, saveSettings, patchSettings } from './sync.js'
+import { renderAuthScreen, initAuth } from './auth.js'
+
+// ── Boot sequence ─────────────────────────────────────────────
+
+async function boot() {
+  await openLocalDB()
+
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (!session) {
+    showAuth()
+    return
+  }
+
+  await startApp(session.user)
+}
+
+function showAuth() {
+  document.getElementById('app').innerHTML = renderAuthScreen()
+  initAuth(async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) await startApp(session.user)
+  })
+}
+
+async function startApp(user) {
+  // Show loading while we sync
+  document.getElementById('app').innerHTML = `
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);">
+      <div style="text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px;">📋</div>
+        <div style="font-size:14px;color:var(--muted);">Syncing your data…</div>
+      </div>
+    </div>`
+
+  // Pull latest data from Supabase, merge with local
+  if (navigator.onLine) {
+    await pullFromSupabase().catch(e => console.warn('Initial pull failed:', e))
+  }
+
+  // Expose sync functions globally for the existing app code to call
+  window._db_loadEntries    = loadEntries
+  window._db_saveEntries    = saveEntries
+  window._db_loadSettings   = loadSettings
+  window._db_saveSettings   = saveSettings
+  window._db_patchSettings  = patchSettings
+  window._db_currentUser    = user
+  window._db_signOut        = async () => {
+    await supabase.auth.signOut()
+    window.location.reload()
+  }
+
+  // Flush any queued changes on next tick
+  setTimeout(() => flushSyncQueue(), 2000)
+
+  // Mount the main app HTML
+  document.getElementById('app').innerHTML = window._getAppHTML()
+  window._initApp()
+}
+
+// ── Auth state listener ───────────────────────────────────────
+
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    window.location.reload()
+  }
+  if (event === 'SIGNED_IN' && session) {
+    // Handle magic link redirect
+    startApp(session.user)
+  }
+})
+
+// ── Start ─────────────────────────────────────────────────────
+
+boot().catch(e => {
+  console.error('Boot error:', e)
+  document.getElementById('app').innerHTML = `
+    <div style="padding:40px;text-align:center;color:#ff4d5e;">
+      Failed to start: ${e.message}
+    </div>`
+})
