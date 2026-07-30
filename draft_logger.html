@@ -10843,7 +10843,7 @@ const _lastScreen = localStorage.getItem("draftlogger_last_screen") || "dashboar
 show(_lastScreen);
 
 // Boot Supabase — shows auth screen if not signed in, pulls data if signed in
-_sbBoot();
+window.addEventListener('load', function() { setTimeout(_sbBoot, 500); });
 
 </script>
 
