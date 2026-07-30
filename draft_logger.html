@@ -10663,7 +10663,6 @@ function show(screen) {
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
     if (screen === "today")     { loadTodayGames(); }
-    if (screen === "watch")     { renderWatchPage(); }
     if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
