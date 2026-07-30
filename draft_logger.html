@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <title>Draft Logger</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -378,15 +379,24 @@
 
 <!-- Nav drawer overlay -->
 <div class="nav-overlay" id="nav-overlay" onclick="closeDrawer()"></div>
-<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: flex; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"><span style="font-size:11px;">✓</span><span>Synced</span></div>
+<div id="update-pill" onclick="location.reload()" title="Reload to get the new version"
+     style="display:none;position:fixed;bottom:12px;right:12px;z-index:998;align-items:center;gap:6px;
+            background:var(--blue);color:#fff;border:none;border-radius:999px;
+            padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;
+            box-shadow:0 2px 10px rgba(0,0,0,.45);">\u21bb New version \u2014 tap to reload</div>
+<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now"
+     style="display:none;position:fixed;bottom:12px;left:12px;z-index:998;align-items:center;gap:6px;
+            background:var(--surface);border:1px solid var(--border);border-radius:999px;
+            padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;
+            box-shadow:0 2px 8px rgba(0,0,0,.35);opacity:.92;"></div>
 
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
-  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
+  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -399,15 +409,15 @@
   <button onclick="show('bets');closeDrawer()">Bets</button>
   <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
-  <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
+  <button onclick="show('settings');closeDrawer()">⚙ Sync</button>
 </div>
 
 
 <nav>
-  <button onclick="show('dashboard')" class="">📡 Live</button>
+  <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
-  <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')" class="">Log Results</button>
+  <button class="active" onclick="show('log')">Log Game</button>
+  <button onclick="show('results')">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -417,7 +427,7 @@
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('tiers')">⚖ Tiers</button>
-  <button onclick="show('settings')" class="active">⚙ Sync</button>
+  <button onclick="show('settings')">⚙ Sync</button>
 </nav>
 
 <!-- DASHBOARD -->
@@ -427,13 +437,15 @@
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
+      <button onclick="openWatchPicker()" id="db-watch-btn" style="display:none;font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--blue);border-radius:6px;cursor:pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">7 live — 1:33:51 PM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
     </div>
   </div>
-  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
+  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
+    <div class="empty">Loading live matches…</div>
+  </div>
 
   <!-- Watch picker modal -->
   <div id="watch-picker-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;padding:16px;">
@@ -463,7 +475,7 @@
     <span style="font-size:12px;color:var(--muted);">Look ahead:</span>
     <select id="today-lookahead" onchange="loadTodayGames()" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
       <option value="24">Next 24 hours</option>
-      <option value="48" selected="">Next 48 hours</option>
+      <option value="48" selected>Next 48 hours</option>
       <option value="72">Next 72 hours</option>
       <option value="168">Next 7 days</option>
     </select>
@@ -481,22 +493,22 @@
     <div style="background:var(--surface);border-radius:14px;padding:20px;width:100%;max-width:380px;">
       <div style="font-size:14px;font-weight:700;margin-bottom:14px;">Add manual game</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1"></div>
-        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN"></div>
+        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1" /></div>
+        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN" /></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK"></div>
+        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK" /></div>
         <div><label>Format</label>
           <select id="tadd-format">
             <option value="BO1">BO1</option>
-            <option value="BO3" selected="">BO3</option>
+            <option value="BO3" selected>BO3</option>
             <option value="BO5">BO5</option>
           </select>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Time (optional)</label><input type="time" id="tadd-time"></div>
-        <div><label>Date</label><input type="date" id="tadd-date"></div>
+        <div><label>Time (optional)</label><input type="time" id="tadd-time" /></div>
+        <div><label>Date</label><input type="date" id="tadd-date" /></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn btn-primary" style="flex:1;" onclick="saveTodayGame()">Add</button>
@@ -507,7 +519,7 @@
 </div>
 
 <!-- LOG GAME -->
-<div class="screen" id="screen-log">
+<div class="screen active" id="screen-log">
 
   <!-- Mode toggle -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -524,10 +536,14 @@
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
       </div>
     </div>
-    <div id="live-pills"></div>
+    <div id="live-pills">
+      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
+    </div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills"></div>
+      <div id="recent-pills">
+        <div style="color:var(--muted);font-size:12px;">Loading today's games…</div>
+      </div>
     </div>
   </div>
 
@@ -543,7 +559,9 @@
           <option value="all">All leagues</option>
         </select>
       </div>
-      <div id="vod-pills"></div>
+      <div id="vod-pills">
+        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
+      </div>
     </div>
     <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
@@ -557,12 +575,12 @@
     <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
       <div>
         <label>Blue side team</label>
-        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()">
+        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()" />
       </div>
       <button onclick="swapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
       <div>
         <label>Red side team</label>
-        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()">
+        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()" />
       </div>
     </div>
     <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
@@ -585,172 +603,32 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
-        <input type="text" id="league" placeholder="e.g. LCK">
+        <input type="text" id="league" placeholder="e.g. LCK" />
       </div>
       <div>
         <label>Date</label>
-        <input type="date" id="game-date">
+        <input type="date" id="game-date" />
       </div>
     </div>
     <div>
       <label>Event context <span style="color:var(--muted);font-weight:400;">(auto-filled from live picker)</span></label>
-      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3">
+      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3" />
     </div>
   </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Draft picks</div>
-      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks &amp; players</button>
+      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks & players</button>
     </div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
         <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
-        <div id="blue-picks">
-    <div class="champ-row" id="pick-row-blue-0">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
-          <span class="champ-name">TOP</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
-        <div id="pick-list-blue-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-blue-1">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
-          <span class="champ-name">JNG</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
-        <div id="pick-list-blue-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-blue-2">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
-          <span class="champ-name">MID</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
-        <div id="pick-list-blue-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-blue-3">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
-          <span class="champ-name">BOT</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
-        <div id="pick-list-blue-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-blue-4">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
-          <span class="champ-name">SUP</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
-        <div id="pick-list-blue-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div></div>
+        <div id="blue-picks"></div>
       </div>
       <div class="draft-col red-col">
         <div class="draft-col-title" id="red-col-title">RED SIDE</div>
-        <div id="red-picks">
-    <div class="champ-row" id="pick-row-red-0">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
-          <span class="champ-name">TOP</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
-        <div id="pick-list-red-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-red-1">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
-          <span class="champ-name">JNG</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
-        <div id="pick-list-red-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-red-2">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
-          <span class="champ-name">MID</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
-        <div id="pick-list-red-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-red-3">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
-          <span class="champ-name">BOT</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
-        <div id="pick-list-red-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div>
-    <div class="champ-row" id="pick-row-red-4">
-      <div class="champ-row-top">
-        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
-        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
-          <span class="champ-name">SUP</span>
-          
-        </div>
-        
-      </div>
-      <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
-        <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
-        <div id="pick-list-red-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
-      </div>
-    </div></div>
+        <div id="red-picks"></div>
       </div>
     </div>
   </div>
@@ -762,9 +640,9 @@
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
       <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
       <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
-      <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn even" onclick="setDraftPref(0)"  id="dpref-0">Even</button>
+      <button class="three-btn red"  onclick="setDraftPref(1)"  id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red"  onclick="setDraftPref(2)"  id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
@@ -791,7 +669,7 @@
     <div class="three-way" id="skill-adv-row">
       <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red"  onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -841,11 +719,11 @@
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
+        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()" />
       </div>
       <div>
         <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
+        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()" />
       </div>
     </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
@@ -877,15 +755,15 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label>Your odds</label>
-            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();">
+            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();" />
           </div>
           <div>
             <label>Stake</label>
-            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00">
+            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00" />
           </div>
         </div>
         <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()">
+          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()" />
           <span>Value bet <span style="color:var(--muted);font-size:11px;">— I'm taking the edge, not disagreeing with the model's pick</span></span>
         </label>
         <div id="value-bet-sizing" style="display:none;margin-top:8px;padding:8px 10px;background:rgba(59,130,246,.08);border:1px solid var(--blue);border-radius:8px;font-size:12px;line-height:1.6;"></div>
@@ -919,30 +797,30 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
-    <div id="pending-list"><div class="empty">✓ All caught up — no pending games.</div></div>
+    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
   </div>
 
   <div class="card">
     <div class="card-title">Log a standalone bet</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&amp;L only, no effect on the model.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&L only, no effect on the model.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1"></div>
-      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN"></div>
+      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1" /></div>
+      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN" /></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
-      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCK Challengers"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option></datalist>
+      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off" />
+      <datalist id="sb-league-list"></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
-      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50"></div>
+      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" /></div>
+      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50" /></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Date</label>
-        <input type="date" id="sb-date">
+        <input type="date" id="sb-date" />
       </div>
       <div>
         <label>Result</label>
@@ -956,7 +834,7 @@
     </div>
     <div style="margin-bottom:10px;">
       <label>Note <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1">
+      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1" />
     </div>
     <button class="btn btn-primary" style="width:100%;" onclick="saveStandaloneBet()">Save bet</button>
     <div id="sb-status" style="font-size:12px;margin-top:8px;min-height:16px;"></div>
@@ -985,7 +863,7 @@
     </select>
   </div>
   <div style="margin-bottom:12px;">
-    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
+    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()" />
   </div>
   <div id="player-profiles-list"></div>
 </div>
@@ -997,7 +875,7 @@
     <div style="font-size:11px;color:var(--muted);" id="champ-count"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;">
-    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()">
+    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()" />
     <select id="champ-sort" onchange="renderChampions()" style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;">
       <option value="appearances">Most seen</option>
       <option value="winrate">Win rate</option>
@@ -1052,7 +930,7 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Add a league</div>
     <div style="display:flex;gap:8px;">
-      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;">
+      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;" />
       <button class="btn btn-ghost" onclick="addTierLeague()">Add</button>
     </div>
   </div>
@@ -1168,7 +1046,7 @@
 <div class="screen" id="screen-betstats">
   <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;"></div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">Daily P&amp;L calendar</div>
+    <div class="card-title">Daily P&L calendar</div>
     <div id="bet-calendar"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1198,14 +1076,14 @@
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Team betting performance</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&amp;L from bets placed on each team, sorted by total profit.</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&L from bets placed on each team, sorted by total profit.</div>
     <div id="bet-by-team"></div>
   </div>
 
 </div>
 
 <!-- SETTINGS / SYNC -->
-<div class="screen active" id="screen-settings">
+<div class="screen" id="screen-settings">
 
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">☁ Device sync</div>
@@ -1225,21 +1103,21 @@
     </div>
 
     <label>Worker URL</label>
-    <input type="text" id="sync-url" placeholder="https://draft-logger-sync.you.workers.dev" style="margin-top:4px;">
+    <input type="text" id="sync-url" placeholder="https://draft-logger-sync.you.workers.dev" style="margin-top:4px;" />
     <label style="margin-top:10px;">Sync code <span style="color:var(--muted);font-weight:400;">(the SYNC_CODE secret — identical on every device)</span></label>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <input type="password" id="sync-code" placeholder="your long random string" style="flex:1;">
+      <input type="password" id="sync-code" placeholder="your long random string" style="flex:1;" />
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
-    <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--green);">Synced</span></div>
+    <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
 
-    <div id="sync-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
+    <div id="sync-connected" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="syncNow({full:true,bulk:true,manual:true})">↻ Sync now</button>
         <button class="btn btn-danger" onclick="disconnectSync()">Disconnect</button>
       </div>
-      <div id="sync-counts" style="font-size:11px;color:var(--muted);margin-top:8px;">147 logged games · 5902 bulk imports on this device</div>
-      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:4px;">Last synced: 7/30/2026, 1:34:51 PM</div>
+      <div id="sync-counts" style="font-size:11px;color:var(--muted);margin-top:8px;"></div>
+      <div id="sync-last" style="font-size:11px;color:var(--muted);margin-top:4px;"></div>
       <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;">
         Syncs automatically a couple of seconds after any change, when you switch
         back to the tab, and every 45 seconds while it is open.
@@ -1254,8 +1132,8 @@
       on this device, then pushes the result to the new sync. Existing local
       games are never overwritten.
     </p>
-    <input type="password" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="margin-bottom:8px;">
-    <input type="text" id="legacy-jsonbin-bin" placeholder="Bin ID" style="margin-bottom:8px;">
+    <input type="password" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="margin-bottom:8px;" />
+    <input type="text" id="legacy-jsonbin-bin" placeholder="Bin ID" style="margin-bottom:8px;" />
     <button class="btn btn-ghost" onclick="importFromJsonBin()">Import once</button>
     <div id="legacy-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
   </div>
@@ -1270,7 +1148,7 @@
   <div class="card">
     <div class="card-title">↑ Import data</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Load a previously exported JSON backup. Merges with existing data — nothing is overwritten or deleted.</p>
-    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)" />
     <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">Choose file</button>
     <div id="import-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
   </div>
@@ -1288,12 +1166,12 @@
       Map old team names to current ones so historical data (rebrands, acquisitions) is counted in the right team's stats and model.
     </p>
     <div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center;margin-bottom:8px;">
-      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;">
+      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;" />
       <span style="color:var(--muted);padding:0 4px;">→</span>
-      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;">
+      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;" />
       <button class="btn btn-primary" style="padding:8px 12px;white-space:nowrap;" onclick="addTeamAlias()">Add</button>
     </div>
-    <div id="alias-list" style="font-size:12px;"><div style="color:var(--muted);">No aliases set yet.</div></div>
+    <div id="alias-list" style="font-size:12px;"></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1304,7 +1182,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Starting bankroll ($)</label>
-        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()">
+        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()" />
       </div>
       <div>
         <label>Unit size</label>
@@ -1317,52 +1195,18 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
         <label id="bankroll-unit-label">Unit % of starting</label>
-        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()">
+        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()" />
       </div>
       <div>
         <label>Floor (% of starting — scale down below)</label>
-        <input type="number" id="bankroll-floor" min="10" max="90" step="5" value="40" oninput="saveBankrollSettings()">
+        <input type="number" id="bankroll-floor" min="10" max="90" step="5" value="40" oninput="saveBankrollSettings()" />
       </div>
     </div>
-    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--muted);">$250.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
-      </div>
-      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$95.98</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+38.4%)</div>
-      </div>
-    </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$345.98</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
-      </div>
-      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$345.98</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
-      </div>
-    </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.30 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $346)</span></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
-    </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
-        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:700;color:var(--green);">$0.00</div>
-          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
-        </div>
-        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:700;color:var(--muted);">$400.00</div>
-          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Deposited</div>
-        </div>
-        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:700;color:#ff4d5e;">$-400.00</div>
-          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Take home</div>
-        </div>
-      </div></div>
+    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
       <div>
         <label>Set current bankroll to ($)</label>
-        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00">
+        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00" />
       </div>
       <button class="btn btn-primary" style="padding:8px 14px;white-space:nowrap;" onclick="setManualCurrentBankroll()">Update</button>
     </div>
@@ -1373,7 +1217,7 @@
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half">
+          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half" />
         </div>
         <button class="btn btn-ghost" onclick="doCashOut(false)">Cash out amount</button>
         <button class="btn btn-primary" onclick="doCashOut(true)">Cash out half</button>
@@ -1385,45 +1229,21 @@
       <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00">
+          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00" />
         </div>
         <button class="btn btn-primary" onclick="doDeposit()">Add to bankroll</button>
       </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top: 14px; display: block;" id="pnl-summary-card">
-    <div class="card-title">💵 P&amp;L Summary</div>
-    <div id="pnl-display" style="margin-top:4px;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:22px;font-weight:800;color:var(--green);">$0.00</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
-      </div>
-      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:22px;font-weight:800;color:var(--muted);">$400.00</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total deposited</div>
-      </div>
-    </div>
-    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;">
-        <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-400.00</span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
-    </div>
-    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;">
-        <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-304.02</span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($345.98) − starting ($250.00)</div>
-    </div></div>
+  <div class="card" style="margin-top:14px;" id="pnl-summary-card">
+    <div class="card-title">💵 P&L Summary</div>
+    <div id="pnl-display" style="margin-top:4px;"></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01"></div>
-        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01"></div>
+        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01" /></div>
+        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01" /></div>
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-primary" onclick="savePnLEdit()">Save</button>
@@ -1445,17 +1265,17 @@
       3. Copy the token (starts with <code>ghp_</code>) and paste below
     </div>
     <label>GitHub personal access token</label>
-    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;">
+    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;" />
     <label>Repository (owner/repo)</label>
-    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;">
+    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;" />
     <label>File path in repo</label>
-    <input type="text" id="gh-path" value="draft_logger.html" style="margin-bottom:10px;">
+    <input type="text" id="gh-path" value="draft_logger.html" style="margin-bottom:10px;" />
     <div class="btn-row">
       <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
       <button class="btn btn-ghost" onclick="pullFromGitHub()">↓ Pull from GitHub</button>
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
-    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Pushing app…</span></div>
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1463,16 +1283,16 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Get notified when a game starts or the draft is complete. Only fires while this tab is open.
     </p>
-    <div id="notif-permission-row" style="margin-bottom:12px;"><button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button></div>
+    <div id="notif-permission-row" style="margin-bottom:12px;"></div>
     <div id="notif-settings" style="display:none;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;">
+          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
           Game started
         </label>
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;">
+          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
           Draft complete (shows picks)
         </label>
       </div>
@@ -1490,86 +1310,26 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
       <div>
         <label>Leagues to import</label>
-        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;">
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LCK" checked="" style="width:14px;height:14px;">
-      LCK
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LPL" checked="" style="width:14px;height:14px;">
-      LPL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LEC" checked="" style="width:14px;height:14px;">
-      LEC
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LCS" checked="" style="width:14px;height:14px;">
-      LCS
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LCP" checked="" style="width:14px;height:14px;">
-      LCP
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="CBLOL" checked="" style="width:14px;height:14px;">
-      CBLOL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LCK CL" checked="" style="width:14px;height:14px;">
-      LCK CL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LDL" checked="" style="width:14px;height:14px;">
-      LDL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="NACL" checked="" style="width:14px;height:14px;">
-      NACL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LFL" checked="" style="width:14px;height:14px;">
-      LFL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="LES" checked="" style="width:14px;height:14px;">
-      LES
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="Prime League" checked="" style="width:14px;height:14px;">
-      Prime League
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="TCL" checked="" style="width:14px;height:14px;">
-      TCL
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="NLC" checked="" style="width:14px;height:14px;">
-      NLC
-    </label>
-    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
-      <input type="checkbox" class="bulk-league-cb" value="Circuito Desafiante" checked="" style="width:14px;height:14px;">
-      Circuito Desafiante
-    </label></div>
+        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;"></div>
       </div>
       <div>
         <label>How far back</label>
         <select id="bulk-weeks" style="width:100%;margin-top:6px;">
           <option value="4">4 weeks</option>
           <option value="8">8 weeks</option>
-          <option value="16" selected="">16 weeks (~4 months)</option>
+          <option value="16" selected>16 weeks (~4 months)</option>
           <option value="26">26 weeks (~6 months)</option>
           <option value="52">52 weeks (full year)</option>
         </select>
         <div style="margin-top:10px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-skip-existing" checked="" style="width:15px;height:15px;">
+            <input type="checkbox" id="bulk-skip-existing" checked style="width:15px;height:15px;" />
             Skip games already logged
           </label>
         </div>
         <div style="margin-top:8px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;">
+            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;" />
             Include Worlds / MSI / First Stand
           </label>
         </div>
@@ -1580,10 +1340,10 @@
     <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
       <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;margin-bottom:8px;">
-        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
+        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;" />
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/29/2026, 1:55:14 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;"></div>
     </div>
   </div>
 
@@ -1596,7 +1356,7 @@
       <div>
         <label>Year</label>
         <select id="lpl-year" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-          <option value="2026" selected="">2026</option>
+          <option value="2026" selected>2026</option>
           <option value="2025">2025</option>
           <option value="2024">2024</option>
         </select>
@@ -1605,12 +1365,12 @@
         <label>Split</label>
         <select id="lpl-split" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
           <option value="Spring">Spring</option>
-          <option value="Summer" selected="">Summer</option>
+          <option value="Summer" selected>Summer</option>
         </select>
       </div>
     </div>
     <label style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;cursor:pointer;">
-      <input type="checkbox" id="lpl-skip-existing" checked="" style="width:14px;height:14px;">
+      <input type="checkbox" id="lpl-skip-existing" checked style="width:14px;height:14px;" />
       Skip games already in your data
     </label>
     <button class="btn btn-primary" style="width:100%;" onclick="runLPLImport()">Import LPL data</button>
@@ -1620,122 +1380,12 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">📺 League streams</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">All leagues and their streams. Edit any Twitch channel name directly. Add new leagues at the bottom. Edits override the built-in defaults.</p>
-    <div id="streams-list" style="margin-bottom:12px;"><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Arabian League">Arabian League</span>
-      <input type="text" id="stream-input-Arabian_League" value="arabianleague" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Arabian League', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="CBLOL">CBLOL</span>
-      <input type="text" id="stream-input-CBLOL" value="cblol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('CBLOL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK">LCK</span>
-      <input type="text" id="stream-input-LCK" value="lckkr" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK CL">LCK CL</span>
-      <input type="text" id="stream-input-LCK_CL" value="lckcl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK CL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCO">LCO</span>
-      <input type="text" id="stream-input-LCO" value="lcool" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCO', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCS">LCS</span>
-      <input type="text" id="stream-input-LCS" value="lolesports" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCS', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LDL">LDL</span>
-      <input type="text" id="stream-input-LDL" value="https://lolesports.com/live/ldl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LDL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LEC">LEC</span>
-      <input type="text" id="stream-input-LEC" value="lolesports" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LEC', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LES">LES</span>
-      <input type="text" id="stream-input-LES" value="les" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LES', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LFL">LFL</span>
-      <input type="text" id="stream-input-LFL" value="otplol_" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LFL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LLA">LLA</span>
-      <input type="text" id="stream-input-LLA" value="lla" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LLA', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LPL">LPL</span>
-      <input type="text" id="stream-input-LPL" value="https://lolesports.com/live/lpl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LPL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LVP SL">LVP SL</span>
-      <input type="text" id="stream-input-LVP_SL" value="superligaol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LVP SL', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="La Ligue Française">La Ligue Française</span>
-      <input type="text" id="stream-input-La_Ligue_Fran_aise" value="otplol_" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('La Ligue Française', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="NLC">NLC</span>
-      <input type="text" id="stream-input-NLC" value="nlcleague" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('NLC', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PCS">PCS</span>
-      <input type="text" id="stream-input-PCS" value="lolpcs" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PCS', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PG Nationals">PG Nationals</span>
-      <input type="text" id="stream-input-PG_Nationals" value="pgnationalsit" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PG Nationals', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Prime League">Prime League</span>
-      <input type="text" id="stream-input-Prime_League" value="primeleague" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Prime League', this.value)">
-      <button onclick="resetStreamToDefault('Prime League',document.getElementById('stream-input-Prime_League'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Superliga">Superliga</span>
-      <input type="text" id="stream-input-Superliga" value="superligaol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Superliga', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="TCL">TCL</span>
-      <input type="text" id="stream-input-TCL" value="Riotgamesturkish" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('TCL', this.value)">
-      <button onclick="resetStreamToDefault('TCL',document.getElementById('stream-input-TCL'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Ultraliga">Ultraliga</span>
-      <input type="text" id="stream-input-Ultraliga" value="ultraliga" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Ultraliga', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="VCS">VCS</span>
-      <input type="text" id="stream-input-VCS" value="vcslivestreamofficial" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('VCS', this.value)">
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div></div>
+    <div id="streams-list" style="margin-bottom:12px;"></div>
     <div style="border-top:1px solid var(--border);padding-top:10px;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">ADD NEW LEAGUE</div>
       <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:flex-end;">
-        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League"></div>
-        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan"></div>
+        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League" /></div>
+        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan" /></div>
         <button class="btn btn-primary" onclick="addCustomStream()" style="white-space:nowrap;">Add</button>
       </div>
     </div>
@@ -1747,16 +1397,16 @@
       Add games not on Riot's API — EWC, offline events, or any match you want to appear in the live pill section on the day it's played.
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1"></div>
-      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN"></div>
+      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1" /></div>
+      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN" /></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC"></div>
-      <div><label>Date</label><input type="date" id="ms-date"></div>
+      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC" /></div>
+      <div><label>Date</label><input type="date" id="ms-date" /></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>Block / Round <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals">
+      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals" />
     </div>
     <button class="btn btn-primary" onclick="addManualScheduleGame()" style="width:100%;">Add to schedule</button>
     <div id="ms-sched-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
@@ -9374,6 +9024,23 @@ async function pushToGitHub() {
     const dataPath    = path.replace(/[^/]+$/, "") + "data.json";
     await pushFileToGitHub(token, repo, dataPath, dataEncoded, msg + " [data]", headers);
 
+    // 3. Push sw.js and manifest.json. These were never deployed before, so
+    //    the service worker on your phone stayed byte-identical forever and the
+    //    browser never ran an update cycle. Stamping a fresh version into the
+    //    worker on every push is what makes updates actually land.
+    const _dir = path.replace(/[^/]+$/, "");
+    const _b64 = (t) => btoa(unescape(encodeURIComponent(t)));
+    const _swEl  = document.getElementById("sw-src");
+    const _manEl = document.getElementById("manifest-src");
+    if (_swEl) {
+      setGhStatus("Pushing service worker\u2026", "var(--muted)");
+      const swSrc = _swEl.textContent.replace("__SW_VERSION__", String(Date.now()));
+      await pushFileToGitHub(token, repo, _dir + "sw.js", _b64(swSrc), msg + " [sw]", headers);
+    }
+    if (_manEl) {
+      await pushFileToGitHub(token, repo, _dir + "manifest.json", _b64(_manEl.textContent.trim()), msg + " [manifest]", headers);
+    }
+
     localStorage.setItem(GH_TOKEN_KEY, token);
     localStorage.setItem(GH_REPO_KEY,  repo);
     localStorage.setItem(GH_PATH_KEY,  path);
@@ -11194,7 +10861,21 @@ if (syncConfigured()) {
 }
 // Register service worker for PWA / offline support
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    const poke = () => reg.update().catch(() => {});
+    poke();
+    setInterval(poke, 15 * 60 * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") poke();
+    });
+  }).catch(e => console.warn("Service worker registration failed:", e));
+
+  // A new worker taking control means new code is on the server. Say so
+  // instead of leaving the phone silently a version behind.
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    const el = document.getElementById("update-pill");
+    if (el) el.style.display = "flex";
+  });
 }
 </script>
 <!-- League filter modal — kept at body level so it works from any tab -->
@@ -11206,7 +10887,7 @@ if ("serviceWorker" in navigator) {
     </div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Unchecked leagues are hidden on the dashboard, log game, and schedule pages. Data is still tracked for all leagues.</p>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <button onclick="setAllLeagues(true)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
+      <button onclick="setAllLeagues(true)"  style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
       <button onclick="setAllLeagues(false)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Uncheck all</button>
     </div>
     <div id="league-filter-list"></div>
@@ -11214,6 +10895,136 @@ if ("serviceWorker" in navigator) {
   </div>
 </div>
 
+<!-- Deploy sources. pushToGitHub() writes these out as real files so that
+     sw.js and manifest.json travel with every deploy instead of going stale. -->
+<script type="text/plain" id="sw-src">
+// Draft Logger service worker.
+// VERSION is rewritten with a timestamp every time the app pushes to GitHub,
+// which is what makes the browser treat this file as new and run the update
+// cycle. A fixed version string means the browser byte-compares, sees no
+// change, and never updates anything.
+const VERSION = "__SW_VERSION__";
+const CACHE   = "draft-logger-" + VERSION;
 
+const ASSETS = [
+  "./draft_logger.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./icon-maskable-512.png"
+];
 
-</body></html>
+self.addEventListener("install", e => {
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    // Cached one at a time on purpose. cache.addAll() is atomic, so a single
+    // missing file aborts the whole install and the worker never activates.
+    await Promise.all(ASSETS.map(a =>
+      c.add(a).catch(err => console.warn("[sw] could not cache", a, err))
+    ));
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener("activate", e => {
+  e.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener("fetch", e => {
+  const req = e.request;
+
+  // Never touch anything but same-origin GETs. This keeps the Cloudflare sync
+  // POSTs and every external API (Riot, OpenDota, etc.) completely untouched.
+  if (req.method !== "GET") return;
+  let url;
+  try { url = new URL(req.url); } catch (err) { return; }
+  if (url.origin !== self.location.origin) return;
+
+  // Network first, cache as fallback: online always gets the newest deploy,
+  // offline still opens. The old worker was cache-first and only for
+  // localhost, so on GitHub Pages it served nothing at all.
+  e.respondWith((async () => {
+    try {
+      const fresh = await fetch(req, { cache: "no-cache" });
+      if (fresh && fresh.ok) {
+        const c = await caches.open(CACHE);
+        c.put(req, fresh.clone()).catch(() => {});
+      }
+      return fresh;
+    } catch (err) {
+      const hit = await caches.match(req);
+      if (hit) return hit;
+      if (req.mode === "navigate") {
+        const shell = await caches.match("./draft_logger.html");
+        if (shell) return shell;
+      }
+      throw err;
+    }
+  })());
+});
+
+// The app posts NOTIFY whenever a service worker controls the page. The old
+// worker had no message listener at all, so those notifications went nowhere.
+self.addEventListener("message", e => {
+  const d = e.data || {};
+  if (d.type === "NOTIFY") {
+    self.registration.showNotification(d.title || "Draft Logger", {
+      body: d.body || "",
+      tag: d.tag,
+      icon: "./icon-192.png",
+      badge: "./icon-192.png"
+    });
+  } else if (d.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  e.waitUntil((async () => {
+    const all = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const c of all) if ("focus" in c) return c.focus();
+    if (self.clients.openWindow) return self.clients.openWindow("./draft_logger.html");
+  })());
+});
+</script>
+<script type="text/plain" id="manifest-src">
+{
+  "name": "Draft Logger",
+  "short_name": "Draft Logger",
+  "description": "LoL draft logging, prediction tracking and bankroll management",
+  "start_url": "./draft_logger.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0e14",
+  "theme_color": "#0c0e14",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
+</script>
+
+</body>
+</html>
