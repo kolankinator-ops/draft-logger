@@ -477,14 +477,6 @@ async function gdriveSync() {
 
 // Auto-push after every save
 const _origAutoSync = typeof autoSync === "function" ? autoSync : () => {};
-function autoSync() {
-  _origAutoSync();
-  if (_gdriveToken) {
-    clearTimeout(_gdrivePushTimer);
-    _gdrivePushTimer = setTimeout(() => gdrivePush().catch(()=>{}), 3000);
-  }
-}
-
 function _gdriveStatus(msg, color) {
   const el = document.getElementById("gdrive-status");
   if (el) { el.textContent = msg; el.style.color = color || "var(--muted)"; }
@@ -522,6 +514,7 @@ window.addEventListener("load", function() {
 <!-- Mobile hamburger header -->
 <div class="hamburger" id="hamburger-bar">
   <span class="hamburger-title">Draft Logger</span>
+  <span id="sync-indicator" style="font-size:10px;color:var(--muted);margin-right:auto;margin-left:8px;"></span>
   <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
 </div>
 
@@ -535,7 +528,7 @@ window.addEventListener("load", function() {
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
-  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
@@ -1469,11 +1462,11 @@ window.addEventListener("load", function() {
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$359.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$251.30</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$107.70 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.95 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $359)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$12.56 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $251)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -9299,20 +9292,33 @@ async function pushFileToGitHub(token, repo, filePath, content, message, headers
 
 async function pushToGitHubSilent() {
   const token = localStorage.getItem(GH_TOKEN_KEY);
-  const repo  = localStorage.getItem(GH_REPO_KEY);
-  if (!token || !repo) return;
+  const repo  = localStorage.getItem(GH_REPO_KEY) || "kolankinator-ops/draft-logger";
+  if (!token) return;
+  const ind = document.getElementById("sync-indicator");
+  if (ind) ind.textContent = "↑ syncing…";
   try {
     const bundle = JSON.stringify(fullDataBundle());
     const b64    = btoa(unescape(encodeURIComponent(bundle)));
     const apiUrl = `https://api.github.com/repos/${repo}/contents/data.json`;
     const getRes = await fetch(apiUrl, { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" } });
     const getSha = getRes.ok ? (await getRes.json()).sha : undefined;
-    await fetch(apiUrl, {
+    const putRes = await fetch(apiUrl, {
       method: "PUT",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" },
       body: JSON.stringify({ message: "Auto-sync data", content: b64, ...(getSha ? { sha: getSha } : {}) })
     });
-  } catch(e) { console.warn("Silent GitHub push failed:", e); }
+    if (putRes.ok) {
+      if (ind) { ind.textContent = "✓ synced"; setTimeout(() => { if(ind) ind.textContent=""; }, 3000); }
+      setGhStatus("✓ Auto-synced " + new Date().toLocaleTimeString(), "var(--green)");
+    } else {
+      const err = await putRes.json();
+      if (ind) ind.textContent = "⚠ sync failed";
+      setGhStatus("⚠ Sync failed: " + err.message, "#ff4d5e");
+    }
+  } catch(e) {
+    if (ind) ind.textContent = "⚠ sync failed";
+    console.warn("GitHub push failed:", e);
+  }
 }
 
 async function pushToGitHub() {
@@ -9398,7 +9404,7 @@ async function pullFromGitHub() {
 }
 
 async function syncFromGitHub() {
-  // Always pull from the hardcoded public data.json URL — no config needed
+  // Always pull from hardcoded public URL — works on every device, no config needed
   const url = "https://kolankinator-ops.github.io/draft-logger/data.json";
   try {
     const res = await fetch(url + "?t=" + Date.now());
@@ -9406,7 +9412,8 @@ async function syncFromGitHub() {
     const bundle = await res.json();
     if (!bundle || !bundle.entries) return;
     applyDataBundle(bundle, true);
-  } catch(e) {}
+    console.log("[Sync] Pulled", bundle.entries.length, "entries from GitHub");
+  } catch(e) { console.warn("[Sync] Pull failed:", e.message); }
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
