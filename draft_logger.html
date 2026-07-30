@@ -368,7 +368,6 @@
   .bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
   .bar-val { font-size: 12px; font-weight: 600; color: var(--text); min-width: 28px; text-align: right; }
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -10658,6 +10657,12 @@ function show(screen) {
   }
 }
 
+
+</script>
+
+<!-- Supabase sync — runs independently of main script -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
 // ── Supabase integration ──────────────────────────────────────────────────────
 const SB_URL  = "https://bsajdyunxzkkrgtvsuwf.supabase.co";
 const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzYWpkeXVueHpra3JndHZzdXdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNzc3ODUsImV4cCI6MjEwMDk1Mzc4NX0.gj2GNvvHfLcvidTMSmsMFVoJR3MlYnIhJbJF1VgP9r4";
@@ -10839,7 +10844,9 @@ show(_lastScreen);
 
 // Boot Supabase — shows auth screen if not signed in, pulls data if signed in
 _sbBoot();
+
 </script>
+
 <!-- League filter modal — kept at body level so it works from any tab -->
 <div id="league-filter-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:flex-start;justify-content:center;padding:24px 16px;">
   <div style="background:var(--surface);border-radius:14px;padding:20px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;margin-top:20px;">
