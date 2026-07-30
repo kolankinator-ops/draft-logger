@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <title>Draft Logger</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -368,7 +367,156 @@
   .bar-fill { height: 100%; background: var(--blue); border-radius: 3px; }
   .bar-val { font-size: 12px; font-weight: 600; color: var(--text); min-width: 28px; text-align: right; }
 </style>
-</head>
+  <script src="https://accounts.google.com/gsi/client" async="" defer=""></script>
+  <script src="https://apis.google.com/js/api.js" async="" defer="">
+// ── Google Drive sync ─────────────────────────────────────────────────────────
+const GDRIVE_CLIENT_ID  = "785384277758-5oga8dhb8k0a5jcartrafcu4a6pqvstl.apps.googleusercontent.com"; // replace with your client ID
+const GDRIVE_SCOPE      = "https://www.googleapis.com/auth/drive.appdata";
+const GDRIVE_TOKEN_KEY  = "draftlogger_gdrive_token";
+const GDRIVE_FILE_NAME  = "draftlogger-data.json";
+let   _gdriveToken      = null;
+let   _gdrivePushTimer  = null;
+
+function _gdriveLoadToken() {
+  try { const t = JSON.parse(localStorage.getItem(GDRIVE_TOKEN_KEY)||"null"); _gdriveToken = t; return !!t; }
+  catch(e) { return false; }
+}
+
+function gdriveConnect() {
+  if (GDRIVE_CLIENT_ID === "YOUR_GOOGLE_CLIENT_ID") {
+    alert("Add your Google Client ID first — see ⚙ Sync for instructions.");
+    return;
+  }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GDRIVE_CLIENT_ID,
+    scope: GDRIVE_SCOPE,
+    callback: async (response) => {
+      if (response.error) { _gdriveStatus("Auth failed: " + response.error, "#ff4d5e"); return; }
+      _gdriveToken = { access_token: response.access_token, expires_at: Date.now() + (response.expires_in * 1000) };
+      localStorage.setItem(GDRIVE_TOKEN_KEY, JSON.stringify(_gdriveToken));
+      _gdriveUpdateUI();
+      await gdriveSync();
+    }
+  });
+  client.requestAccessToken();
+}
+
+function gdriveDisconnect() {
+  localStorage.removeItem(GDRIVE_TOKEN_KEY);
+  _gdriveToken = null;
+  _gdriveUpdateUI();
+  _gdriveStatus("Disconnected.", "var(--muted)");
+}
+
+async function _gdriveEnsureToken() {
+  if (!_gdriveToken) return false;
+  if (Date.now() > (_gdriveToken.expires_at - 60000)) {
+    // Token expired — need to re-auth silently
+    gdriveConnect();
+    return false;
+  }
+  return true;
+}
+
+async function _gdriveFindFile() {
+  const res = await fetch(
+    "https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name%3D%27" + GDRIVE_FILE_NAME + "%27&fields=files(id)",
+    { headers: { Authorization: "Bearer " + _gdriveToken.access_token } }
+  );
+  const data = await res.json();
+  return data.files?.[0]?.id || null;
+}
+
+async function gdrivePush() {
+  if (!await _gdriveEnsureToken()) return;
+  _gdriveStatus("Pushing…", "var(--muted)");
+  try {
+    const bundle  = JSON.stringify(fullDataBundle());
+    const fileId  = await _gdriveFindFile();
+    const url     = fileId
+      ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`
+      : "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+    const method  = fileId ? "PATCH" : "POST";
+    let body, headers;
+    if (fileId) {
+      body    = bundle;
+      headers = { Authorization: "Bearer " + _gdriveToken.access_token, "Content-Type": "application/json" };
+    } else {
+      const meta = JSON.stringify({ name: GDRIVE_FILE_NAME, parents: ["appDataFolder"] });
+      const boundary = "draftlogger_boundary";
+      body = "--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + meta +
+             "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + bundle +
+             "\r\n--" + boundary + "--";
+      headers = { Authorization: "Bearer " + _gdriveToken.access_token, "Content-Type": "multipart/related; boundary=" + boundary };
+    }
+    await fetch(url, { method, headers, body });
+    _gdriveStatus("✓ Synced " + new Date().toLocaleTimeString(), "var(--green)");
+  } catch(e) {
+    _gdriveStatus("Push failed: " + e.message, "#ff4d5e");
+  }
+}
+
+async function gdriveSync() {
+  if (!await _gdriveEnsureToken()) return;
+  _gdriveStatus("Pulling…", "var(--muted)");
+  try {
+    const fileId = await _gdriveFindFile();
+    if (!fileId) { _gdriveStatus("No data found — push from your main device first.", "var(--yellow)"); return; }
+    const res    = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+      { headers: { Authorization: "Bearer " + _gdriveToken.access_token } });
+    const bundle = await res.json();
+    if (bundle?.entries) {
+      applyDataBundle(bundle, true);
+      _gdriveStatus("✓ Pulled " + bundle.entries.length + " entries · " + new Date().toLocaleTimeString(), "var(--green)");
+      show(localStorage.getItem("draftlogger_last_screen") || "dashboard");
+    }
+  } catch(e) {
+    _gdriveStatus("Pull failed: " + e.message, "#ff4d5e");
+  }
+}
+
+// Auto-push after every save
+const _origAutoSync = typeof autoSync === "function" ? autoSync : () => {};
+function autoSync() {
+  _origAutoSync();
+  if (_gdriveToken) {
+    clearTimeout(_gdrivePushTimer);
+    _gdrivePushTimer = setTimeout(() => gdrivePush().catch(()=>{}), 3000);
+  }
+}
+
+function _gdriveStatus(msg, color) {
+  const el = document.getElementById("gdrive-status");
+  if (el) { el.textContent = msg; el.style.color = color || "var(--muted)"; }
+}
+
+function _gdriveUpdateUI() {
+  const btn  = document.getElementById("gdrive-connect-btn");
+  const conn = document.getElementById("gdrive-connected");
+  if (_gdriveToken) {
+    if (btn)  btn.innerHTML  = "";
+    if (conn) conn.style.display = "block";
+    _gdriveStatus("Connected · auto-syncing", "var(--green)");
+  } else {
+    if (btn)  btn.innerHTML  = '<button class="btn btn-primary" onclick="gdriveConnect()" style="width:100%;">Connect Google Drive</button>';
+    if (conn) conn.style.display = "none";
+  }
+}
+
+// Init on load
+window.addEventListener("load", function() {
+  if (_gdriveLoadToken()) {
+    _gdriveUpdateUI();
+    // Auto-pull on startup if connected
+    setTimeout(() => gdriveSync().catch(()=>{}), 1500);
+  } else {
+    _gdriveUpdateUI();
+  }
+});
+// ── End Google Drive sync ─────────────────────────────────────────────────────
+
+</script>
+<style id="googleidentityservice_button_styles">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:.875rem;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:.875rem;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:.6875rem;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc{border:1px solid #8e918f;background-color:#131314;color:#e3e3e3}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.08)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.12)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.i5vt6e-to915-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#c4c7c5;fill:#c4c7c5}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style></head>
 <body>
 
 <!-- Mobile hamburger header -->
@@ -377,18 +525,7 @@
   <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
 </div>
 
-<!-- First-time setup overlay — only shown once ever -->
-<div id="auth-screen" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:var(--bg);padding:20px;flex-direction:column;z-index:99999;">
-  <div style="width:100%;max-width:340px;text-align:center;">
-    <div style="font-size:40px;margin-bottom:12px;">📋</div>
-    <div style="font-size:20px;font-weight:700;margin-bottom:6px;">Draft Logger</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">One-time setup — pick a password to protect your data. You won't see this again.</div>
-    <div id="auth-err" style="display:none;background:rgba(255,77,94,.1);border:1px solid #ff4d5e;border-radius:8px;padding:10px;font-size:13px;color:#ff4d5e;margin-bottom:12px;"></div>
-    <input id="auth-email" type="email" placeholder="Email address" style="width:100%;margin-bottom:8px;" />
-    <input id="auth-pass"  type="password" placeholder="Choose a password" style="width:100%;margin-bottom:14px;" onkeydown="if(event.key==='Enter')authSubmit()" />
-    <button onclick="authSubmit()" class="btn btn-primary" style="width:100%;">Set up & sync</button>
-  </div>
-</div>
+
 
 <!-- Nav drawer overlay -->
 <div class="nav-overlay" id="nav-overlay" onclick="closeDrawer()"></div>
@@ -412,14 +549,14 @@
   <button onclick="show('bets');closeDrawer()">Bets</button>
   <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
-  <button onclick="show('settings');closeDrawer()">⚙ Sync</button>
+  <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
 </div>
 
 
 <nav>
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
-  <button class="active" onclick="show('log')">Log Game</button>
+  <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -430,7 +567,7 @@
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('tiers')">⚖ Tiers</button>
-  <button onclick="show('settings')">⚙ Sync</button>
+  <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
 <!-- DASHBOARD -->
@@ -446,9 +583,7 @@
       <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
     </div>
   </div>
-  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
-    <div class="empty">Loading live matches…</div>
-  </div>
+  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
 
   <!-- Watch picker modal -->
   <div id="watch-picker-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;padding:16px;">
@@ -478,7 +613,7 @@
     <span style="font-size:12px;color:var(--muted);">Look ahead:</span>
     <select id="today-lookahead" onchange="loadTodayGames()" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
       <option value="24">Next 24 hours</option>
-      <option value="48" selected>Next 48 hours</option>
+      <option value="48" selected="">Next 48 hours</option>
       <option value="72">Next 72 hours</option>
       <option value="168">Next 7 days</option>
     </select>
@@ -496,22 +631,22 @@
     <div style="background:var(--surface);border-radius:14px;padding:20px;width:100%;max-width:380px;">
       <div style="font-size:14px;font-weight:700;margin-bottom:14px;">Add manual game</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1" /></div>
-        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN" /></div>
+        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1"></div>
+        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK" /></div>
+        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK"></div>
         <div><label>Format</label>
           <select id="tadd-format">
             <option value="BO1">BO1</option>
-            <option value="BO3" selected>BO3</option>
+            <option value="BO3" selected="">BO3</option>
             <option value="BO5">BO5</option>
           </select>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Time (optional)</label><input type="time" id="tadd-time" /></div>
-        <div><label>Date</label><input type="date" id="tadd-date" /></div>
+        <div><label>Time (optional)</label><input type="time" id="tadd-time"></div>
+        <div><label>Date</label><input type="date" id="tadd-date"></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn btn-primary" style="flex:1;" onclick="saveTodayGame()">Add</button>
@@ -522,7 +657,7 @@
 </div>
 
 <!-- LOG GAME -->
-<div class="screen active" id="screen-log">
+<div class="screen" id="screen-log">
 
   <!-- Mode toggle -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -539,14 +674,10 @@
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
       </div>
     </div>
-    <div id="live-pills">
-      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
-    </div>
+    <div id="live-pills"></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills">
-        <div style="color:var(--muted);font-size:12px;">Loading today's games…</div>
-      </div>
+      <div id="recent-pills"></div>
     </div>
   </div>
 
@@ -562,31 +693,29 @@
           <option value="all">All leagues</option>
         </select>
       </div>
-      <div id="vod-pills">
-        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
-      </div>
+      <div id="vod-pills"></div>
     </div>
     <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
     </div>
   </div>
 
-  <div id="retroactive-banner" style="display:none;background:rgba(224,178,63,.1);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;line-height:1.5;"></div>
+  <div id="retroactive-banner" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;line-height:1.5;"></div>
 
   <div class="card">
     <div class="card-title">Match info</div>
     <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
       <div>
         <label>Blue side team</label>
-        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()" />
+        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()">
       </div>
       <button onclick="swapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
       <div>
         <label>Red side team</label>
-        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()" />
+        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()">
       </div>
     </div>
-    <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
+    <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;">
       <div style="font-size:12px;color:var(--yellow);font-weight:700;margin-bottom:8px;">⚠ Confirm team sides before logging a bet</div>
       <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px;">
         <div style="background:rgba(59,130,246,.15);border:1px solid var(--blue);border-radius:8px;padding:8px;text-align:center;">
@@ -601,37 +730,177 @@
       </div>
       <button onclick="confirmSides()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">✓ Sides are correct</button>
     </div>
-    <div id="draft-rating-indicator" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-    <div id="standings-indicator" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
+    <div id="draft-rating-indicator" style="font-size:12px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
+    <div id="standings-indicator" style="font-size:12px;margin-top:4px;color:var(--muted);"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
-        <input type="text" id="league" placeholder="e.g. LCK" />
+        <input type="text" id="league" placeholder="e.g. LCK">
       </div>
       <div>
         <label>Date</label>
-        <input type="date" id="game-date" />
+        <input type="date" id="game-date">
       </div>
     </div>
     <div>
       <label>Event context <span style="color:var(--muted);font-weight:400;">(auto-filled from live picker)</span></label>
-      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3" />
+      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3">
     </div>
   </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Draft picks</div>
-      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks & players</button>
+      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks &amp; players</button>
     </div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
         <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
-        <div id="blue-picks"></div>
+        <div id="blue-picks">
+    <div class="champ-row" id="pick-row-blue-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
+          <span class="champ-name">TOP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
+        <div id="pick-list-blue-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
+          <span class="champ-name">JNG</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
+        <div id="pick-list-blue-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
+          <span class="champ-name">MID</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
+        <div id="pick-list-blue-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
+          <span class="champ-name">BOT</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
+        <div id="pick-list-blue-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
+        <div id="pick-list-blue-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
       <div class="draft-col red-col">
         <div class="draft-col-title" id="red-col-title">RED SIDE</div>
-        <div id="red-picks"></div>
+        <div id="red-picks">
+    <div class="champ-row" id="pick-row-red-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
+          <span class="champ-name">TOP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
+        <div id="pick-list-red-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
+          <span class="champ-name">JNG</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
+        <div id="pick-list-red-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
+          <span class="champ-name">MID</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
+        <div id="pick-list-red-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
+          <span class="champ-name">BOT</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
+        <div id="pick-list-red-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
+        <div id="pick-list-red-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
     </div>
   </div>
@@ -643,9 +912,9 @@
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
       <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
       <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
-      <button class="three-btn even" onclick="setDraftPref(0)"  id="dpref-0">Even</button>
-      <button class="three-btn red"  onclick="setDraftPref(1)"  id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red"  onclick="setDraftPref(2)"  id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
@@ -672,7 +941,7 @@
     <div class="three-way" id="skill-adv-row">
       <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red"  onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -722,11 +991,11 @@
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()" />
+        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
         <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()" />
+        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
@@ -758,15 +1027,15 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label>Your odds</label>
-            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();" />
+            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();">
           </div>
           <div>
             <label>Stake</label>
-            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00" />
+            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00">
           </div>
         </div>
         <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()" />
+          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()">
           <span>Value bet <span style="color:var(--muted);font-size:11px;">— I'm taking the edge, not disagreeing with the model's pick</span></span>
         </label>
         <div id="value-bet-sizing" style="display:none;margin-top:8px;padding:8px 10px;background:rgba(59,130,246,.08);border:1px solid var(--blue);border-radius:8px;font-size:12px;line-height:1.6;"></div>
@@ -806,24 +1075,24 @@
 
   <div class="card">
     <div class="card-title">Log a standalone bet</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&L only, no effect on the model.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&amp;L only, no effect on the model.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1" /></div>
-      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN" /></div>
+      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1"></div>
+      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN"></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
-      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off" />
+      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
       <datalist id="sb-league-list"></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" /></div>
-      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50" /></div>
+      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
+      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Date</label>
-        <input type="date" id="sb-date" />
+        <input type="date" id="sb-date">
       </div>
       <div>
         <label>Result</label>
@@ -837,7 +1106,7 @@
     </div>
     <div style="margin-bottom:10px;">
       <label>Note <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1" />
+      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1">
     </div>
     <button class="btn btn-primary" style="width:100%;" onclick="saveStandaloneBet()">Save bet</button>
     <div id="sb-status" style="font-size:12px;margin-top:8px;min-height:16px;"></div>
@@ -866,7 +1135,7 @@
     </select>
   </div>
   <div style="margin-bottom:12px;">
-    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()" />
+    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
   </div>
   <div id="player-profiles-list"></div>
 </div>
@@ -878,7 +1147,7 @@
     <div style="font-size:11px;color:var(--muted);" id="champ-count"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;">
-    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()" />
+    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()">
     <select id="champ-sort" onchange="renderChampions()" style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;">
       <option value="appearances">Most seen</option>
       <option value="winrate">Win rate</option>
@@ -933,7 +1202,7 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Add a league</div>
     <div style="display:flex;gap:8px;">
-      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;" />
+      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;">
       <button class="btn btn-ghost" onclick="addTierLeague()">Add</button>
     </div>
   </div>
@@ -1049,7 +1318,7 @@
 <div class="screen" id="screen-betstats">
   <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;"></div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">Daily P&L calendar</div>
+    <div class="card-title">Daily P&amp;L calendar</div>
     <div id="bet-calendar"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1079,24 +1348,46 @@
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Team betting performance</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&L from bets placed on each team, sorted by total profit.</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&amp;L from bets placed on each team, sorted by total profit.</div>
     <div id="bet-by-team"></div>
   </div>
 
 </div>
 
 <!-- SETTINGS / SYNC -->
-<div class="screen" id="screen-settings">
+<div class="screen active" id="screen-settings">
+
+
 
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">☁ Supabase sync</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Your data syncs automatically after every save. Use Pull to force a refresh from another device.</p>
-    <div id="sb-sync-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <button class="btn btn-primary" onclick="_sbPull().then(()=>{const e=document.getElementById('sb-sync-status');if(e)e.innerHTML='<span style=&quot;color:var(--green)&quot;>✓ Pulled from Supabase</span>'}).catch(e=>{const el=document.getElementById('sb-sync-status');if(el)el.textContent='Pull failed: '+e.message})">↓ Pull</button>
-      <button class="btn btn-ghost"   onclick="_sbPush().then(()=>{const e=document.getElementById('sb-sync-status');if(e)e.innerHTML='<span style=&quot;color:var(--green)&quot;>✓ Pushed to Supabase</span>'}).catch(e=>{const el=document.getElementById('sb-sync-status');if(el)el.textContent='Push failed: '+e.message})">↑ Push</button>
+    <div class="card-title">🔄 Google Drive sync</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Syncs automatically across all your devices. Connect once per device — after that every save pushes to Drive silently.</p>
+    <div id="gdrive-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;"></div>
+    <div id="gdrive-connect-btn"></div>
+    <div id="gdrive-connected" style="display:none;margin-top:8px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn btn-primary" onclick="gdriveSync()">↓ Pull now</button>
+        <button class="btn btn-ghost" onclick="gdrivePush()">↑ Push now</button>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:11px;" onclick="gdriveDisconnect()">Disconnect</button>
     </div>
-    <button class="btn btn-ghost" style="width:100%;color:#ff4d5e;border-color:#ff4d5e;" onclick="if(confirm('Sign out?'))sbSignOut()">Sign out</button>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">🚀 Push to GitHub</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Push your data to GitHub so other devices can pull it.</p>
+    <label>GitHub personal access token</label>
+    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;">
+    <label>Repository (owner/repo)</label>
+    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;">
+    <label>File path in repo</label>
+    <input type="text" id="gh-path" value="draft_logger.html" style="margin-bottom:10px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
+      <button class="btn btn-ghost" onclick="pullFromGitHub()">↓ Pull from GitHub</button>
+      <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
+    </div>
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Pushing app…</span></div>
   </div>
 
   <div class="card" style="margin-bottom:14px;">
@@ -1109,7 +1400,7 @@
   <div class="card">
     <div class="card-title">↑ Import data</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Load a previously exported JSON backup. Merges with existing data — nothing is overwritten or deleted.</p>
-    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)" />
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
     <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">Choose file</button>
     <div id="import-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
   </div>
@@ -1127,12 +1418,12 @@
       Map old team names to current ones so historical data (rebrands, acquisitions) is counted in the right team's stats and model.
     </p>
     <div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center;margin-bottom:8px;">
-      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;" />
+      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;">
       <span style="color:var(--muted);padding:0 4px;">→</span>
-      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;" />
+      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;">
       <button class="btn btn-primary" style="padding:8px 12px;white-space:nowrap;" onclick="addTeamAlias()">Add</button>
     </div>
-    <div id="alias-list" style="font-size:12px;"></div>
+    <div id="alias-list" style="font-size:12px;"><div style="color:var(--muted);">No aliases set yet.</div></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1143,7 +1434,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Starting bankroll ($)</label>
-        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()" />
+        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()">
       </div>
       <div>
         <label>Unit size</label>
@@ -1156,18 +1447,52 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
         <label id="bankroll-unit-label">Unit % of starting</label>
-        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()" />
+        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()">
       </div>
       <div>
         <label>Floor (% of starting — scale down below)</label>
-        <input type="number" id="bankroll-floor" min="10" max="90" step="5" value="40" oninput="saveBankrollSettings()" />
+        <input type="number" id="bankroll-floor" min="10" max="90" step="5" value="40" oninput="saveBankrollSettings()">
       </div>
     </div>
-    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"></div>
+    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
+        <div style="font-size:17px;font-weight:700;color:var(--muted);">$250.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
+      </div>
+      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$109.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+43.6%)</div>
+      </div>
+    </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
+        <div style="font-size:20px;font-weight:700;">$359.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
+      </div>
+      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
+        <div style="font-size:20px;font-weight:700;color:inherit;">$359.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+      </div>
+    </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.95 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $359)</span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
+    </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:var(--green);">$150.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
+        </div>
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:var(--muted);">$400.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Deposited</div>
+        </div>
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:#ff4d5e;">$-250.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Take home</div>
+        </div>
+      </div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
       <div>
         <label>Set current bankroll to ($)</label>
-        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00" />
+        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00">
       </div>
       <button class="btn btn-primary" style="padding:8px 14px;white-space:nowrap;" onclick="setManualCurrentBankroll()">Update</button>
     </div>
@@ -1178,7 +1503,7 @@
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half" />
+          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half">
         </div>
         <button class="btn btn-ghost" onclick="doCashOut(false)">Cash out amount</button>
         <button class="btn btn-primary" onclick="doCashOut(true)">Cash out half</button>
@@ -1190,21 +1515,45 @@
       <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00" />
+          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00">
         </div>
         <button class="btn btn-primary" onclick="doDeposit()">Add to bankroll</button>
       </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px;" id="pnl-summary-card">
-    <div class="card-title">💵 P&L Summary</div>
-    <div id="pnl-display" style="margin-top:4px;"></div>
+  <div class="card" style="margin-top: 14px; display: block;" id="pnl-summary-card">
+    <div class="card-title">💵 P&amp;L Summary</div>
+    <div id="pnl-display" style="margin-top:4px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--green);">$150.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--muted);">$400.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total deposited</div>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-250.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Total net profit</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-141.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($359.00) − starting ($250.00)</div>
+    </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01" /></div>
-        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01" /></div>
+        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01"></div>
+        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01"></div>
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-primary" onclick="savePnLEdit()">Save</button>
@@ -1219,7 +1568,7 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
       Import your data from the old single-file version. Go to your old app → ⚙ Sync → Download backup, then import it here.
     </p>
-    <input type="file" id="migrate-file" accept=".json" style="display:none;" onchange="importData(event)" />
+    <input type="file" id="migrate-file" accept=".json" style="display:none;" onchange="importData(event)">
     <button class="btn btn-primary" onclick="document.getElementById('migrate-file').click()">Import old backup</button>
     <div id="migrate-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
   </div>
@@ -1230,16 +1579,16 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Get notified when a game starts or the draft is complete. Only fires while this tab is open.
     </p>
-    <div id="notif-permission-row" style="margin-bottom:12px;"></div>
+    <div id="notif-permission-row" style="margin-bottom:12px;"><button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button></div>
     <div id="notif-settings" style="display:none;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
+          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;">
           Game started
         </label>
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
+          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;">
           Draft complete (shows picks)
         </label>
       </div>
@@ -1257,26 +1606,86 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
       <div>
         <label>Leagues to import</label>
-        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;"></div>
+        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;">
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK" checked="" style="width:14px;height:14px;">
+      LCK
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LPL" checked="" style="width:14px;height:14px;">
+      LPL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LEC" checked="" style="width:14px;height:14px;">
+      LEC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCS" checked="" style="width:14px;height:14px;">
+      LCS
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCP" checked="" style="width:14px;height:14px;">
+      LCP
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="CBLOL" checked="" style="width:14px;height:14px;">
+      CBLOL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK CL" checked="" style="width:14px;height:14px;">
+      LCK CL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LDL" checked="" style="width:14px;height:14px;">
+      LDL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NACL" checked="" style="width:14px;height:14px;">
+      NACL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LFL" checked="" style="width:14px;height:14px;">
+      LFL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LES" checked="" style="width:14px;height:14px;">
+      LES
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Prime League" checked="" style="width:14px;height:14px;">
+      Prime League
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="TCL" checked="" style="width:14px;height:14px;">
+      TCL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NLC" checked="" style="width:14px;height:14px;">
+      NLC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Circuito Desafiante" checked="" style="width:14px;height:14px;">
+      Circuito Desafiante
+    </label></div>
       </div>
       <div>
         <label>How far back</label>
         <select id="bulk-weeks" style="width:100%;margin-top:6px;">
           <option value="4">4 weeks</option>
           <option value="8">8 weeks</option>
-          <option value="16" selected>16 weeks (~4 months)</option>
+          <option value="16" selected="">16 weeks (~4 months)</option>
           <option value="26">26 weeks (~6 months)</option>
           <option value="52">52 weeks (full year)</option>
         </select>
         <div style="margin-top:10px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-skip-existing" checked style="width:15px;height:15px;" />
+            <input type="checkbox" id="bulk-skip-existing" checked="" style="width:15px;height:15px;">
             Skip games already logged
           </label>
         </div>
         <div style="margin-top:8px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;" />
+            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;">
             Include Worlds / MSI / First Stand
           </label>
         </div>
@@ -1287,10 +1696,10 @@
     <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
       <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;margin-bottom:8px;">
-        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;" />
+        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;"></div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/30/2026, 1:39:27 AM · 27 games added</div>
     </div>
   </div>
 
@@ -1303,7 +1712,7 @@
       <div>
         <label>Year</label>
         <select id="lpl-year" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-          <option value="2026" selected>2026</option>
+          <option value="2026" selected="">2026</option>
           <option value="2025">2025</option>
           <option value="2024">2024</option>
         </select>
@@ -1312,12 +1721,12 @@
         <label>Split</label>
         <select id="lpl-split" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
           <option value="Spring">Spring</option>
-          <option value="Summer" selected>Summer</option>
+          <option value="Summer" selected="">Summer</option>
         </select>
       </div>
     </div>
     <label style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;cursor:pointer;">
-      <input type="checkbox" id="lpl-skip-existing" checked style="width:14px;height:14px;" />
+      <input type="checkbox" id="lpl-skip-existing" checked="" style="width:14px;height:14px;">
       Skip games already in your data
     </label>
     <button class="btn btn-primary" style="width:100%;" onclick="runLPLImport()">Import LPL data</button>
@@ -1327,12 +1736,122 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">📺 League streams</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">All leagues and their streams. Edit any Twitch channel name directly. Add new leagues at the bottom. Edits override the built-in defaults.</p>
-    <div id="streams-list" style="margin-bottom:12px;"></div>
+    <div id="streams-list" style="margin-bottom:12px;"><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Arabian League">Arabian League</span>
+      <input type="text" id="stream-input-Arabian_League" value="arabianleague" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Arabian League', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="CBLOL">CBLOL</span>
+      <input type="text" id="stream-input-CBLOL" value="cblol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('CBLOL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK">LCK</span>
+      <input type="text" id="stream-input-LCK" value="lckkr" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK CL">LCK CL</span>
+      <input type="text" id="stream-input-LCK_CL" value="lckcl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK CL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCO">LCO</span>
+      <input type="text" id="stream-input-LCO" value="lcool" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCO', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCS">LCS</span>
+      <input type="text" id="stream-input-LCS" value="lolesports" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LDL">LDL</span>
+      <input type="text" id="stream-input-LDL" value="https://lolesports.com/live/ldl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LDL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LEC">LEC</span>
+      <input type="text" id="stream-input-LEC" value="lolesports" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LEC', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LES">LES</span>
+      <input type="text" id="stream-input-LES" value="les" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LES', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LFL">LFL</span>
+      <input type="text" id="stream-input-LFL" value="otplol_" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LFL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LLA">LLA</span>
+      <input type="text" id="stream-input-LLA" value="lla" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LLA', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LPL">LPL</span>
+      <input type="text" id="stream-input-LPL" value="https://lolesports.com/live/lpl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LPL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LVP SL">LVP SL</span>
+      <input type="text" id="stream-input-LVP_SL" value="superligaol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LVP SL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="La Ligue Française">La Ligue Française</span>
+      <input type="text" id="stream-input-La_Ligue_Fran_aise" value="otplol_" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('La Ligue Française', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="NLC">NLC</span>
+      <input type="text" id="stream-input-NLC" value="nlcleague" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('NLC', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PCS">PCS</span>
+      <input type="text" id="stream-input-PCS" value="lolpcs" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PG Nationals">PG Nationals</span>
+      <input type="text" id="stream-input-PG_Nationals" value="pgnationalsit" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PG Nationals', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Prime League">Prime League</span>
+      <input type="text" id="stream-input-Prime_League" value="primeleague_de" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Prime League', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Superliga">Superliga</span>
+      <input type="text" id="stream-input-Superliga" value="superligaol" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Superliga', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="TCL">TCL</span>
+      <input type="text" id="stream-input-TCL" value="tcl" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('TCL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Ultraliga">Ultraliga</span>
+      <input type="text" id="stream-input-Ultraliga" value="ultraliga" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Ultraliga', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="VCS">VCS</span>
+      <input type="text" id="stream-input-VCS" value="vcslivestreamofficial" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('VCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div></div>
     <div style="border-top:1px solid var(--border);padding-top:10px;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">ADD NEW LEAGUE</div>
       <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:flex-end;">
-        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League" /></div>
-        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan" /></div>
+        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League"></div>
+        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan"></div>
         <button class="btn btn-primary" onclick="addCustomStream()" style="white-space:nowrap;">Add</button>
       </div>
     </div>
@@ -1344,16 +1863,16 @@
       Add games not on Riot's API — EWC, offline events, or any match you want to appear in the live pill section on the day it's played.
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1" /></div>
-      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN" /></div>
+      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1"></div>
+      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC" /></div>
-      <div><label>Date</label><input type="date" id="ms-date" /></div>
+      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC"></div>
+      <div><label>Date</label><input type="date" id="ms-date"></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>Block / Round <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals" />
+      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals">
     </div>
     <button class="btn btn-primary" onclick="addManualScheduleGame()" style="width:100%;">Add to schedule</button>
     <div id="ms-sched-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
@@ -7309,8 +7828,9 @@ function disconnectJsonBin() {
 
 // Auto-push after every save if connected. Shows a visible warning on failure.
 function autoSync() {
-  // Now handled by Supabase — push after every save
-  _sbAutoSync();
+  // Auto-push to GitHub after every save (debounced 3 seconds)
+  clearTimeout(window._ghSyncTimer);
+  window._ghSyncTimer = setTimeout(() => pushToGitHubSilent().catch(()=>{}), 3000);
 }
 
 // ── Export / Import ───────────────────────────────────────────────────────────
@@ -8778,21 +9298,19 @@ async function pushFileToGitHub(token, repo, filePath, content, message, headers
 }
 
 async function pushToGitHubSilent() {
-  // Silently push to GitHub after bankroll changes — no UI feedback
   const token = localStorage.getItem(GH_TOKEN_KEY);
   const repo  = localStorage.getItem(GH_REPO_KEY);
-  const path  = localStorage.getItem(GH_PATH_KEY);
-  if (!token || !repo || !path) return; // GitHub not configured
+  if (!token || !repo) return;
   try {
-    const bundle  = JSON.stringify(fullDataBundle());
-    const b64     = btoa(unescape(encodeURIComponent(bundle)));
-    const apiUrl  = `https://api.github.com/repos/${repo}/contents/${path}`;
-    const getRes  = await fetch(apiUrl, { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" } });
-    const getSha  = getRes.ok ? (await getRes.json()).sha : undefined;
+    const bundle = JSON.stringify(fullDataBundle());
+    const b64    = btoa(unescape(encodeURIComponent(bundle)));
+    const apiUrl = `https://api.github.com/repos/${repo}/contents/data.json`;
+    const getRes = await fetch(apiUrl, { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" } });
+    const getSha = getRes.ok ? (await getRes.json()).sha : undefined;
     await fetch(apiUrl, {
       method: "PUT",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" },
-      body: JSON.stringify({ message: "Auto-sync bankroll", content: b64, ...(getSha ? { sha: getSha } : {}) })
+      body: JSON.stringify({ message: "Auto-sync data", content: b64, ...(getSha ? { sha: getSha } : {}) })
     });
   } catch(e) { console.warn("Silent GitHub push failed:", e); }
 }
@@ -8880,28 +9398,15 @@ async function pullFromGitHub() {
 }
 
 async function syncFromGitHub() {
-  // On startup, fetch data.json from GitHub Pages and merge with local data
-  const repo = localStorage.getItem(GH_REPO_KEY) || "";
-  const path = localStorage.getItem(GH_PATH_KEY) || "draft_logger.html";
-  if (!repo) return;
-  const owner    = repo.split("/")[0];
-  const repoName = repo.split("/")[1];
-  const dataPath = path.replace(/[^/]+$/, "") + "data.json";
-  const url      = `https://${owner}.github.io/${repoName}/${dataPath}`;
+  // Always pull from the hardcoded public data.json URL — no config needed
+  const url = "https://kolankinator-ops.github.io/draft-logger/data.json";
   try {
-    const res = await fetch(url + "?t=" + Date.now()); // cache-bust
-    if (!res.ok) return; // data.json doesn't exist yet — first push hasn't happened
+    const res = await fetch(url + "?t=" + Date.now());
+    if (!res.ok) return;
     const bundle = await res.json();
     if (!bundle || !bundle.entries) return;
-    const localCount = loadEntries().length;
-    applyDataBundle(bundle, true); // merge — never overwrites local
-    const newCount = loadEntries().length;
-    if (newCount > localCount) {
-      console.log("[GitHub sync] Merged " + (newCount - localCount) + " new entries from data.json");
-    }
-  } catch(e) {
-    // Silent fail — GitHub Pages might not have data.json yet or network is offline
-  }
+    applyDataBundle(bundle, true);
+  } catch(e) {}
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
@@ -9808,43 +10313,18 @@ function renderTodayGames() {
 
   // ── Slot renderer ─────────────────────────────────────────────────────────
   const slotHtml = (g, s) => {
-    const isLive = g.scheduledTime && new Date(g.scheduledTime) <= now;
-    const imp    = (s.blueOdds && s.redOdds) ? (() => {
-      const rawB = 1/s.blueOdds, rawR = 1/s.redOdds, tot = rawB + rawR;
-      const impB = Math.round(rawB/tot*100);
-      return `<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Implied: ${g.blueTeam} ${impB}% · ${g.redTeam} ${100-impB}% <span style="opacity:.6;">(${Math.round((tot-1)*100)}% margin)</span></div>`;
-    })() : "";
     const dimmed = !s.active ? "opacity:0.35;pointer-events:none;" : "";
-    return `<div style="padding:10px 0 6px;border-top:1px solid var(--border);${dimmed}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    const now2 = new Date();
+    const isLive = g.scheduledTime && new Date(g.scheduledTime) <= now2;
+    return `<div style="padding:8px 0 4px;border-top:1px solid var(--border);${dimmed}">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:11px;font-weight:700;color:var(--muted);">${g.format === "BO1" ? "" : "Game " + s.gameNum}</span>
         <div style="display:flex;gap:6px;align-items:center;">
-          ${isLive && s.active && s.blueOdds && s.redOdds ? '<span style="font-size:9px;color:var(--red);font-weight:700;background:rgba(239,68,68,.15);padding:1px 5px;border-radius:3px;">LIVE</span>' : ""}
+          ${isLive && s.active ? '<span style="font-size:9px;color:var(--red);font-weight:700;background:rgba(239,68,68,.15);padding:1px 5px;border-radius:3px;">LIVE</span>' : ""}
           ${g.format !== "BO1" && s.gameNum > 1 ? `<button onclick="toggleTodaySlot('${g.id}',${s.gameNum})" style="background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--muted);cursor:pointer;">${s.active ? "✕ Not needed" : "↺ Restore"}</button>` : ""}
-          ${s.active && s.blueOdds && s.redOdds ? `<button onclick="todayLogGame('${g.id}',${s.gameNum})" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>` : ""}
+          ${s.active ? `<button onclick="todayLogGame('${g.id}',${s.gameNum})" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:2px 10px;font-size:10px;font-weight:600;cursor:pointer;">Log →</button>` : ""}
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 36px 1fr;gap:6px;align-items:end;margin-bottom:6px;">
-        <div>
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:3px;">🟦 ${g.blueTeam}</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="${s.blueOdds || ""}"
-            onblur="updateTodayOdds('${g.id}',${s.gameNum},'blue',this.value)"
-            oninput="saveTodayOddsLive('${g.id}',${s.gameNum},'blue',this.value)"
-            style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--muted);padding-bottom:10px;">vs</div>
-        <div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:3px;">🟥 ${g.redTeam}</div>
-          <input type="text" inputmode="decimal" placeholder="odds" value="${s.redOdds || ""}"
-            onblur="updateTodayOdds('${g.id}',${s.gameNum},'red',this.value)"
-            oninput="saveTodayOddsLive('${g.id}',${s.gameNum},'red',this.value)"
-            style="width:100%;font-size:14px;padding:7px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
-        </div>
-      </div>
-      ${imp}
-      <input type="text" placeholder="Notes…" value="${s.notes || ""}"
-        onblur="updateTodayNotes('${g.id}',${s.gameNum},this.value)"
-        style="width:100%;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
     </div>`;
   };
 
@@ -10675,7 +11155,7 @@ const SB_CRED_KEY = "draftlogger_sbcred_v1";
 
 function _authErr(msg) { const e=document.getElementById("auth-err"); if(e){e.textContent=msg;e.style.display="block";} }
 
-function _showAuth()  {
+function _showAuth()  { return; //
   const el = document.getElementById("auth-screen");
   if (el) el.style.display = "flex";
 }
@@ -10843,7 +11323,7 @@ const _lastScreen = localStorage.getItem("draftlogger_last_screen") || "dashboar
 show(_lastScreen);
 
 // Boot Supabase — shows auth screen if not signed in, pulls data if signed in
-window.addEventListener('load', function() { setTimeout(_sbBoot, 500); });
+
 
 </script>
 
@@ -10856,7 +11336,7 @@ window.addEventListener('load', function() { setTimeout(_sbBoot, 500); });
     </div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Unchecked leagues are hidden on the dashboard, log game, and schedule pages. Data is still tracked for all leagues.</p>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <button onclick="setAllLeagues(true)"  style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
+      <button onclick="setAllLeagues(true)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
       <button onclick="setAllLeagues(false)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Uncheck all</button>
     </div>
     <div id="league-filter-list"></div>
@@ -10864,5 +11344,6 @@ window.addEventListener('load', function() { setTimeout(_sbBoot, 500); });
   </div>
 </div>
 
-</body>
-</html>
+
+
+</body></html>
