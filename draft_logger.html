@@ -3597,8 +3597,8 @@ function updateColTitles() {
   updateStandingsIndicator();
   runPredictionModel();
 }
-document.getElementById("blue-team").addEventListener("input", updateColTitles);
-document.getElementById("red-team").addEventListener("input", updateColTitles);
+document.getElementById("blue-team")?.addEventListener("input", updateColTitles);
+document.getElementById("red-team")?.addEventListener("input", updateColTitles);
 
 // ── Prediction controls ───────────────────────────────────────────────────────
 let predWinner = null, predConf = null, draftPref = null, skillAdv = null;
