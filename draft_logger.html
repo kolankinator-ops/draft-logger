@@ -378,27 +378,16 @@
   <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
 </div>
 
-<!-- Auth screen — shown when not signed in -->
-<div id="auth-screen" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:var(--bg);padding:20px;flex-direction:column;z-index:99999;overflow-y:auto;">
-  <div style="width:100%;max-width:360px;">
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-size:36px;">📋</div>
-      <div style="font-size:22px;font-weight:700;margin-top:8px;">Draft Logger</div>
-    </div>
-    <div id="auth-err" style="display:none;background:rgba(255,77,94,.1);border:1px solid #ff4d5e;border-radius:8px;padding:10px 14px;font-size:13px;color:#ff4d5e;margin-bottom:14px;"></div>
-    <div id="auth-ok"  style="display:none;background:rgba(62,207,142,.1);border:1px solid var(--green);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green);margin-bottom:14px;"></div>
-    <div class="card">
-      <div style="display:grid;grid-template-columns:1fr 1fr;margin:-14px -14px 14px;border-bottom:1px solid var(--border);">
-        <button id="tab-in" onclick="authSwitchTab('in')" style="padding:12px;font-size:13px;font-weight:600;background:var(--blue-dim);color:var(--blue);border:none;cursor:pointer;border-bottom:2px solid var(--blue);">Sign in</button>
-        <button id="tab-up" onclick="authSwitchTab('up')" style="padding:12px;font-size:13px;font-weight:600;background:none;color:var(--muted);border:none;cursor:pointer;border-bottom:2px solid transparent;">Create account</button>
-      </div>
-      <label>Email</label>
-      <input id="auth-email" type="email" placeholder="you@example.com" style="margin-bottom:10px;" />
-      <label>Password</label>
-      <input id="auth-pass" type="password" placeholder="••••••••" style="margin-bottom:14px;" onkeydown="if(event.key==='Enter')authSubmit()" />
-      <button id="auth-btn" onclick="authSubmit()" class="btn btn-primary" style="width:100%;margin-bottom:10px;">Sign in</button>
-      <button onclick="authMagicLink()" class="btn btn-ghost" style="width:100%;font-size:12px;">✉ Send magic link instead</button>
-    </div>
+<!-- First-time setup overlay — only shown once ever -->
+<div id="auth-screen" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:var(--bg);padding:20px;flex-direction:column;z-index:99999;">
+  <div style="width:100%;max-width:340px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:12px;">📋</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:6px;">Draft Logger</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">One-time setup — pick a password to protect your data. You won't see this again.</div>
+    <div id="auth-err" style="display:none;background:rgba(255,77,94,.1);border:1px solid #ff4d5e;border-radius:8px;padding:10px;font-size:13px;color:#ff4d5e;margin-bottom:12px;"></div>
+    <input id="auth-email" type="email" placeholder="Email address" style="width:100%;margin-bottom:8px;" />
+    <input id="auth-pass"  type="password" placeholder="Choose a password" style="width:100%;margin-bottom:14px;" onkeydown="if(event.key==='Enter')authSubmit()" />
+    <button onclick="authSubmit()" class="btn btn-primary" style="width:100%;">Set up & sync</button>
   </div>
 </div>
 
@@ -10677,60 +10666,68 @@ let   _sbUser = null;
 let   _sbSyncTimer = null;
 
 // ── Auth helpers ──────────────────────────────────────────────────────────────
-function authSwitchTab(tab) {
-  const isIn = tab === "in";
-  document.getElementById("tab-in").style.cssText = `padding:12px;font-size:13px;font-weight:600;border:none;cursor:pointer;border-bottom:2px solid ${isIn?"var(--blue)":"transparent"};background:${isIn?"var(--blue-dim)":"none"};color:${isIn?"var(--blue)":"var(--muted)"};`;
-  document.getElementById("tab-up").style.cssText = `padding:12px;font-size:13px;font-weight:600;border:none;cursor:pointer;border-bottom:2px solid ${!isIn?"var(--blue)":"transparent"};background:${!isIn?"var(--blue-dim)":"none"};color:${!isIn?"var(--blue)":"var(--muted)"};`;
-  document.getElementById("auth-btn").textContent = isIn ? "Sign in" : "Create account";
-  window._authTab = tab;
-}
-window._authTab = "in";
-
-async function authSubmit() {
-  const email = document.getElementById("auth-email")?.value?.trim();
-  const pass  = document.getElementById("auth-pass")?.value;
-  const btn   = document.getElementById("auth-btn");
-  if (!email || !pass) { _authErr("Enter email and password."); return; }
-  btn.disabled = true; btn.textContent = "Loading…";
-  const fn = window._authTab === "in" ? _sb.auth.signInWithPassword.bind(_sb.auth) : _sb.auth.signUp.bind(_sb.auth);
-  const { error } = await fn({ email, password: pass });
-  btn.disabled = false; btn.textContent = window._authTab === "in" ? "Sign in" : "Create account";
-  if (error) { _authErr(error.message); return; }
-  if (window._authTab === "up") { _authOk("Account created! Check your email to confirm, then sign in."); return; }
-  _sbBootApp();
-}
-
-async function authMagicLink() {
-  const email = document.getElementById("auth-email")?.value?.trim();
-  if (!email) { _authErr("Enter your email first."); return; }
-  const { error } = await _sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } });
-  if (error) { _authErr(error.message); return; }
-  _authOk("Magic link sent — check your email.");
-}
+const SB_CRED_KEY = "draftlogger_sbcred_v1";
 
 function _authErr(msg) { const e=document.getElementById("auth-err"); if(e){e.textContent=msg;e.style.display="block";} }
-function _authOk(msg)  { const e=document.getElementById("auth-ok");  if(e){e.textContent=msg;e.style.display="block";} }
 
 function _showAuth()  {
   const el = document.getElementById("auth-screen");
   if (el) el.style.display = "flex";
-  const nav = document.querySelector("nav");
-  if (nav) nav.style.display = "none";
 }
 function _hideAuth()  {
   const el = document.getElementById("auth-screen");
   if (el) el.style.display = "none";
-  const nav = document.querySelector("nav");
-  if (nav) nav.style.display = "";
 }
 
-// ── Boot: check session → show auth or app ────────────────────────────────────
+async function authSubmit() {
+  const email = document.getElementById("auth-email")?.value?.trim();
+  const pass  = document.getElementById("auth-pass")?.value;
+  if (!email || !pass) { _authErr("Enter email and password."); return; }
+
+  // Try sign in first, then sign up if no account yet
+  let result = await _sb.auth.signInWithPassword({ email, password: pass });
+  if (result.error?.message?.includes("Invalid login")) {
+    result = await _sb.auth.signUp({ email, password: pass });
+  }
+  if (result.error) { _authErr(result.error.message); return; }
+
+  // Save credentials so we auto-sign in next time
+  localStorage.setItem(SB_CRED_KEY, JSON.stringify({ email, password: pass }));
+  _sbUser = result.data?.user || result.data?.session?.user;
+  _hideAuth();
+  await _sbBootApp();
+}
+
+// ── Boot: auto-sign in if credentials saved, else show one-time setup ─────────
 async function _sbBoot() {
   if (!_sb) { console.warn("Supabase not loaded"); return; }
+
+  // Try existing session first
   const { data: { session } } = await _sb.auth.getSession();
-  if (!session) { _showAuth(); return; }
-  _sbUser = session.user;
-  await _sbBootApp();
+  if (session) {
+    _sbUser = session.user;
+    _hideAuth();
+    await _sbBootApp();
+    return;
+  }
+
+  // Try stored credentials (auto-login, no prompt)
+  const stored = localStorage.getItem(SB_CRED_KEY);
+  if (stored) {
+    try {
+      const { email, password } = JSON.parse(stored);
+      const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+      if (!error && data?.user) {
+        _sbUser = data.user;
+        _hideAuth();
+        await _sbBootApp();
+        return;
+      }
+    } catch(e) {}
+  }
+
+  // First time ever — show the one-time setup screen
+  _showAuth();
 }
 
 async function _sbBootApp() {
