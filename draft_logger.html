@@ -395,6 +395,7 @@
   <div class="nav-drawer-title">Main</div>
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
+  <button onclick="show('watch');closeDrawer()">📺 Watch</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
@@ -454,13 +455,54 @@
       <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">Select which streams to open.</div>
       <div id="watch-picker-streams" style="margin-bottom:14px;"></div>
       <div style="display:flex;gap:8px;">
-        <button onclick="launchMultiTwitch()" class="btn btn-primary" style="flex:1;">Open MultiTwitch ↗</button>
+        <button onclick="watchHere()" class="btn btn-primary" style="flex:1;">Watch here</button>
+        <button onclick="launchMultiTwitch()" class="btn btn-ghost" style="white-space:nowrap;">MultiTwitch ↗</button>
         <button onclick="closeWatchPicker()" class="btn btn-ghost">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
+
+<!-- WATCH -->
+<div class="screen" id="screen-watch">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:15px;font-weight:600;">📺 Watch</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="watch-cols" onchange="setWatchCols(this.value)"
+        style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+        <option value="auto">Auto layout</option>
+        <option value="1">1 column</option>
+        <option value="2">2 columns</option>
+        <option value="3">3 columns</option>
+      </select>
+      <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
+      <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openWatchPicker()">+ Add live</button>
+      <button class="btn btn-danger" style="font-size:12px;padding:5px 10px;" onclick="clearWatch()">Clear</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <input type="text" id="watch-manual-ch" placeholder="twitch channel or URL"
+      onkeydown="if(event.key==='Enter')addWatchManual()" style="flex:1;" />
+    <button class="btn btn-primary" style="white-space:nowrap;" onclick="addWatchManual()">Add</button>
+  </div>
+
+  <div id="watch-warning" style="display:none;font-size:12px;color:var(--yellow);background:var(--surface2);
+       border-radius:8px;padding:10px 12px;margin-bottom:12px;line-height:1.6;"></div>
+
+  <div id="watch-layout" style="display:flex;gap:12px;align-items:flex-start;">
+    <div id="watch-grid" style="flex:1;display:grid;gap:12px;"></div>
+    <div id="watch-chat-panel" style="display:none;width:340px;flex-shrink:0;"></div>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">
+    Streams play muted — tap 🔇 on a tile to move audio to it. Keeping the
+    logger tab in front means the live feed keeps polling at full speed.
+  </div>
+</div>
 
 <!-- TODAY'S GAMES -->
 <div class="screen" id="screen-today">
@@ -9760,6 +9802,325 @@ function getLeagueStream(leagueName) {
   return key ? LEAGUE_STREAMS[key] : null;
 }
 
+// ── In-app multi-stream viewer ────────────────────────────────────────────────
+// Twitch requires a `parent` matching the hosting domain, over HTTPS. Derived
+// at runtime so this keeps working wherever the app is served from.
+const WATCH_KEY      = "draftlogger_watch_channels_v1";
+const WATCH_COLS_KEY = "draftlogger_watch_cols_v1";
+let _watchAudio = null;      // channel currently allowed sound
+let _watchChat  = false;
+
+function twitchParent() { return location.hostname; }
+// If GitHub deploy is configured we can tell the user exactly where to go
+// instead of describing it in the abstract.
+function hostedAppUrl() {
+  try {
+    const repo = localStorage.getItem(GH_REPO_KEY) || "";
+    const path = localStorage.getItem(GH_PATH_KEY) || "draft_logger.html";
+    if (!repo.includes("/")) return null;
+    const [owner, name] = repo.split("/");
+    if (!owner || !name) return null;
+    return `https://${owner}.github.io/${name}/${path}`;
+  } catch(e) { return null; }
+}
+
+function watchSupported() {
+  const h = location.hostname;
+  return location.protocol === "https:" || h === "localhost" || h === "127.0.0.1";
+}
+function normaliseChannel(v) {
+  return (v || "").trim()
+    .replace(/^(https?:\/\/)?(www\.)?twitch\.tv\//i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/\/+$/, "")
+    .toLowerCase();
+}
+function loadWatchChannels() {
+  try { return JSON.parse(localStorage.getItem(WATCH_KEY) || "[]"); }
+  catch(e) { return []; }
+}
+function saveWatchChannels(list) {
+  localStorage.setItem(WATCH_KEY, JSON.stringify([...new Set(list)].slice(0, 8)));
+}
+function watchEmbedUrl(ch) {
+  const muted = (_watchAudio === ch) ? "false" : "true";
+  return `https://player.twitch.tv/?channel=${encodeURIComponent(ch)}` +
+         `&parent=${encodeURIComponent(twitchParent())}&muted=${muted}&autoplay=true`;
+}
+function watchChatUrl(ch) {
+  return `https://www.twitch.tv/embed/${encodeURIComponent(ch)}/chat` +
+         `?parent=${encodeURIComponent(twitchParent())}&darkpopout`;
+}
+
+function addWatchChannel(ch) {
+  ch = normaliseChannel(ch);
+  if (!ch) return;
+  const list = loadWatchChannels();
+  if (!list.includes(ch)) { list.push(ch); saveWatchChannels(list); }
+  if (!_watchAudio) _watchAudio = ch;
+  renderWatchPage();
+}
+function addWatchManual() {
+  const el = document.getElementById("watch-manual-ch");
+  if (!el || !el.value.trim()) return;
+  addWatchChannel(el.value);
+  el.value = "";
+}
+function removeWatchChannel(ch) {
+  saveWatchChannels(loadWatchChannels().filter(c => c !== ch));
+  if (_watchAudio === ch) _watchAudio = loadWatchChannels()[0] || null;
+  renderWatchPage();
+}
+function clearWatch() {
+  if (!confirm("Remove all streams?")) return;
+  saveWatchChannels([]); _watchAudio = null;
+  renderWatchPage();
+}
+function soloAudio(ch) {
+  _watchAudio = (_watchAudio === ch) ? null : ch;
+  renderWatchPage();
+}
+function setWatchCols(v) {
+  localStorage.setItem(WATCH_COLS_KEY, v);
+  renderWatchPage();
+}
+function toggleWatchChat() {
+  _watchChat = !_watchChat;
+  renderWatchPage();
+}
+
+// Send the picker's selection here instead of out to multitwitch.tv
+function watchHere() {
+  const checked = [...document.querySelectorAll(".watch-stream-check:checked")].map(el => el.value);
+  if (!checked.length) { alert("Select at least one stream."); return; }
+  const list = loadWatchChannels();
+  checked.forEach(c => { const n = normaliseChannel(c); if (n && !list.includes(n)) list.push(n); });
+  saveWatchChannels(list);
+  if (!_watchAudio) _watchAudio = normaliseChannel(checked[0]);
+  closeWatchPicker();
+  show("watch");
+}
+
+// ── Auto-follow live games ───────────────────────────────────────────────────
+// Driven by the dashboard poll, so it reuses the same league-filtered live list
+// the dashboard already computes. Channels resolve through getLeagueStream(),
+// which checks your Settings overrides before the built-in map.
+const WATCH_AUTO_KEY  = "draftlogger_watch_auto_v1";
+const WATCH_OWNED_KEY = "draftlogger_watch_auto_added_v1";
+let _watchLiveMeta = {};   // channel -> [{league, blue, red}]
+
+function watchAutoOn() { return localStorage.getItem(WATCH_AUTO_KEY) === "1"; }
+function loadWatchOwned() {
+  try { return JSON.parse(localStorage.getItem(WATCH_OWNED_KEY) || "[]"); }
+  catch(e) { return []; }
+}
+function saveWatchOwned(list) {
+  localStorage.setItem(WATCH_OWNED_KEY, JSON.stringify([...new Set(list)]));
+}
+
+function toggleWatchAuto() {
+  const on = !watchAutoOn();
+  localStorage.setItem(WATCH_AUTO_KEY, on ? "1" : "0");
+  if (!on) {
+    // Turning it off releases the auto-added streams but keeps anything
+    // you added by hand.
+    const owned = new Set(loadWatchOwned());
+    saveWatchChannels(loadWatchChannels().filter(c => !owned.has(c)));
+    saveWatchOwned([]);
+    if (_watchAudio && !loadWatchChannels().includes(_watchAudio)) _watchAudio = loadWatchChannels()[0] || null;
+  } else {
+    syncWatchFromLive(_lastVisibleCards);
+  }
+  renderWatchPage();
+}
+
+let _lastVisibleCards = [];
+
+function syncWatchFromLive(cards) {
+  _lastVisibleCards = cards || [];
+
+  // Rebuild the channel -> matchup map regardless, so tiles can label themselves.
+  const meta = {};
+  const liveChannels = new Set();
+  for (const c of _lastVisibleCards) {
+    const info = getLeagueStream(c.league);
+    if (!info || !info.twitch) continue;
+    const ch = normaliseChannel(info.twitch);
+    if (!ch) continue;
+    liveChannels.add(ch);
+    (meta[ch] = meta[ch] || []).push({
+      league: c.league || "",
+      blue: c.blueCode || c.blueTeam || "",
+      red:  c.redCode  || c.redTeam  || ""
+    });
+  }
+  _watchLiveMeta = meta;
+
+  if (!watchAutoOn()) return;
+
+  const owned = new Set(loadWatchOwned());
+  const list  = loadWatchChannels();
+  let changed = false;
+
+  for (const ch of liveChannels) {
+    if (!list.includes(ch)) { list.push(ch); owned.add(ch); changed = true; }
+  }
+  // Drop only what auto-follow added, once its league is no longer live.
+  for (const ch of [...owned]) {
+    if (liveChannels.has(ch)) continue;
+    const i = list.indexOf(ch);
+    if (i >= 0) list.splice(i, 1);
+    owned.delete(ch);
+    changed = true;
+  }
+
+  if (!changed) { updateWatchAutoBtn(); return; }
+
+  saveWatchChannels(list);
+  saveWatchOwned([...owned]);
+  const current = loadWatchChannels();
+  if (_watchAudio && !current.includes(_watchAudio)) _watchAudio = null;
+  if (!_watchAudio && current.length) _watchAudio = current[0];
+
+  if (document.getElementById("screen-watch")?.classList.contains("active")) renderWatchPage();
+  else updateWatchAutoBtn();
+}
+
+function updateWatchAutoBtn() {
+  const btn = document.getElementById("watch-auto-btn");
+  if (btn) {
+    const on = watchAutoOn();
+    btn.textContent = (on ? "\u25CF" : "\u25CB") + " Auto-follow";
+    btn.style.color = on ? "var(--green)" : "";
+    btn.style.borderColor = on ? "var(--green)" : "";
+  }
+  const lb = document.getElementById("watch-league-btn");
+  if (lb) {
+    const saved = loadScheduleLeagues();
+    lb.textContent = saved ? `\uD83C\uDFF7 Leagues (${saved.length})` : "\uD83C\uDFF7 Leagues";
+  }
+}
+
+function renderWatchPage() {
+  const grid = document.getElementById("watch-grid");
+  const warn = document.getElementById("watch-warning");
+  if (!grid) return;
+
+  const sel = document.getElementById("watch-cols");
+  const cols = localStorage.getItem(WATCH_COLS_KEY) || "auto";
+  if (sel) sel.value = cols;
+
+  updateWatchAutoBtn();
+
+  // On a file:// or content:// origin Twitch cannot validate `parent`, so the
+  // players can never load. Say so plainly rather than rendering broken tiles.
+  if (!watchSupported()) {
+    if (warn) warn.style.display = "none";
+    const url  = hostedAppUrl();
+    const here = location.href.slice(0, 40);
+    grid.style.gridTemplateColumns = "1fr";
+    grid.innerHTML =
+      `<div style="background:var(--surface);border:1px solid var(--yellow);border-radius:10px;padding:16px;line-height:1.7;">
+         <div style="font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:8px;">Streams can't load from this address</div>
+         <div style="font-size:13px;color:var(--muted);">
+           You've opened a downloaded copy (<code>${here}\u2026</code>). Twitch only allows
+           embeds on a real <b>https</b> domain, so the players stay blank here.
+           Everything else \u2014 logging, sync, auto-follow \u2014 works fine either way.
+         </div>
+         ${url ? `<a href="${url}" style="display:inline-block;margin-top:12px;background:var(--blue);color:#fff;
+              text-decoration:none;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:700;">
+              Open the hosted version \u2192</a>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px;word-break:break-all;">${url}</div>`
+           : `<div style="font-size:12px;color:var(--muted);margin-top:10px;">
+                Open the app from your GitHub Pages URL instead, and bookmark that.
+              </div>`}
+       </div>`;
+    const panel = document.getElementById("watch-chat-panel");
+    if (panel) { panel.style.display = "none"; panel.innerHTML = ""; }
+    return;
+  }
+  if (warn) warn.style.display = "none";
+
+  const list = loadWatchChannels();
+  if (!list.length) {
+    grid.style.gridTemplateColumns = "1fr";
+    grid.innerHTML = watchAutoOn()
+      ? '<div class="empty">Auto-follow is on — streams will appear here as games go live in the leagues you have enabled.</div>'
+      : '<div class="empty">No streams yet. Turn on <b>Auto-follow</b>, use <b>+ Add live</b>, or type a channel above.</div>';
+  } else {
+    grid.style.gridTemplateColumns =
+      cols === "auto" ? (list.length === 1 ? "1fr" : "repeat(auto-fit,minmax(360px,1fr))")
+                      : `repeat(${cols},1fr)`;
+
+    // Only touch tiles whose src actually changed, so switching audio or
+    // adding a stream doesn't reload every player on the page.
+    const seen = new Set();
+    list.forEach(ch => {
+      seen.add(ch);
+      const wanted = watchEmbedUrl(ch);
+      let tile = grid.querySelector(`[data-ch="${ch}"]`);
+      if (!tile) {
+        tile = document.createElement("div");
+        tile.dataset.ch = ch;
+        tile.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;";
+        tile.innerHTML =
+          `<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
+             <iframe title="${ch}" allowfullscreen
+               style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+           </div>
+           <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;">
+             <div style="flex:1;overflow:hidden;">
+               <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;">${ch}</div>
+               <div class="watch-meta" style="font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+             </div>
+             <button class="watch-audio" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;"></button>
+             <a href="https://twitch.tv/${ch}" target="_blank" rel="noopener"
+                style="color:var(--muted);text-decoration:none;font-size:12px;padding:2px 4px;" title="Open on Twitch">\u2197</a>
+             <button class="watch-remove" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px;" title="Remove">\u2715</button>
+           </div>`;
+        tile.querySelector(".watch-audio").onclick = () => soloAudio(ch);
+        tile.querySelector(".watch-remove").onclick = () => removeWatchChannel(ch);
+        grid.appendChild(tile);
+      }
+      const f = tile.querySelector("iframe");
+      if (f.getAttribute("src") !== wanted) f.setAttribute("src", wanted);
+      const metaEl = tile.querySelector(".watch-meta");
+      if (metaEl) {
+        const games = _watchLiveMeta[ch] || [];
+        const owned = loadWatchOwned().includes(ch);
+        metaEl.textContent = games.length
+          ? games.map(g => `${g.league}: ${g.blue} vs ${g.red}`).join("  ·  ")
+          : (owned ? "waiting…" : "pinned");
+      }
+      const btn = tile.querySelector(".watch-audio");
+      const on = _watchAudio === ch;
+      btn.textContent = on ? "\uD83D\uDD0A" : "\uD83D\uDD07";
+      btn.style.opacity = on ? "1" : ".5";
+      btn.title = on ? "Audio on" : "Move audio here";
+    });
+    [...grid.children].forEach(el => { if (el.dataset.ch && !seen.has(el.dataset.ch)) el.remove(); });
+  }
+
+  // Chat follows whichever stream currently has audio.
+  const panel = document.getElementById("watch-chat-panel");
+  if (panel) {
+    const ch = _watchAudio || list[0];
+    if (_watchChat && ch) {
+      const wanted = watchChatUrl(ch);
+      panel.style.display = "block";
+      let f = panel.querySelector("iframe");
+      if (!f) {
+        panel.innerHTML = `<iframe style="width:100%;height:70vh;border:1px solid var(--border);border-radius:10px;"></iframe>`;
+        f = panel.querySelector("iframe");
+      }
+      if (f.getAttribute("src") !== wanted) f.setAttribute("src", wanted);
+    } else {
+      panel.style.display = "none";
+      panel.innerHTML = "";
+    }
+  }
+}
+
 // ── Watch on MultiTwitch ──────────────────────────────────────────────────────
 function openWatchPicker() {
   const modal = document.getElementById("watch-picker-modal");
@@ -9872,6 +10233,7 @@ function closeLeagueFilter() {
   const activeScreen = document.querySelector(".screen.active")?.id;
   if (activeScreen === "screen-dashboard") dbRefresh();
   if (activeScreen === "screen-log") { loadLiveGames(); loadRecentGames(); }
+  if (activeScreen === "screen-watch") { dbRefresh(); renderWatchPage(); }
 }
 
 function updateLeagueFilter() {
@@ -10689,6 +11051,7 @@ async function dbRefresh() {
     // Apply league display filter (data collection unaffected)
     const visibleCards = cards.filter(c => isLeagueVisible(c.league || ""));
     dbSyncCards(visibleCards);
+    syncWatchFromLive(visibleCards);   // watch page follows the same filtered list
     updateWatchBtn();
     // Update series scores on newly built cards
     cards.forEach(c => {
@@ -10703,6 +11066,7 @@ async function dbRefresh() {
 }
 
 function dbStartPolling() {
+  if (dbPollTimer) clearInterval(dbPollTimer);   // never stack intervals
   dbRefresh();
   checkNotifications();
   dbStartCountdown(8);
@@ -10773,7 +11137,9 @@ function show(screen) {
   screenEl.classList.add("active");
   document.querySelectorAll(`nav button[onclick*="'${screen}'"], .nav-drawer button[onclick*="'${screen}'"]`)
     .forEach(b => b.classList.add("active"));
-  if (screen === "dashboard") { dbStartPolling(); }
+  // The watch screen keeps polling too — that is the whole point of watching
+  // in here rather than in a background tab.
+  if (screen === "dashboard" || screen === "watch") { dbStartPolling(); }
   else { dbStopPolling(); }
   try {
     if (screen === "results")   {
