@@ -379,7 +379,7 @@
 </div>
 
 <!-- Auth screen — shown when not signed in -->
-<div id="auth-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:var(--bg);padding:20px;flex-direction:column;">
+<div id="auth-screen" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:var(--bg);padding:20px;flex-direction:column;z-index:99999;overflow-y:auto;">
   <div style="width:100%;max-width:360px;">
     <div style="text-align:center;margin-bottom:28px;">
       <div style="font-size:36px;">📋</div>
@@ -10712,8 +10712,18 @@ async function authMagicLink() {
 function _authErr(msg) { const e=document.getElementById("auth-err"); if(e){e.textContent=msg;e.style.display="block";} }
 function _authOk(msg)  { const e=document.getElementById("auth-ok");  if(e){e.textContent=msg;e.style.display="block";} }
 
-function _showAuth()  { document.getElementById("auth-screen").style.display="flex"; document.querySelector("nav")&&(document.querySelector("nav").style.display="none"); }
-function _hideAuth()  { document.getElementById("auth-screen").style.display="none"; document.querySelector("nav")&&(document.querySelector("nav").style.display=""); }
+function _showAuth()  {
+  const el = document.getElementById("auth-screen");
+  if (el) el.style.display = "flex";
+  const nav = document.querySelector("nav");
+  if (nav) nav.style.display = "none";
+}
+function _hideAuth()  {
+  const el = document.getElementById("auth-screen");
+  if (el) el.style.display = "none";
+  const nav = document.querySelector("nav");
+  if (nav) nav.style.display = "";
+}
 
 // ── Boot: check session → show auth or app ────────────────────────────────────
 async function _sbBoot() {
