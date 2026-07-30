@@ -477,6 +477,14 @@ async function gdriveSync() {
 
 // Auto-push after every save
 const _origAutoSync = typeof autoSync === "function" ? autoSync : () => {};
+function autoSync() {
+  _origAutoSync();
+  if (_gdriveToken) {
+    clearTimeout(_gdrivePushTimer);
+    _gdrivePushTimer = setTimeout(() => gdrivePush().catch(()=>{}), 3000);
+  }
+}
+
 function _gdriveStatus(msg, color) {
   const el = document.getElementById("gdrive-status");
   if (el) { el.textContent = msg; el.style.color = color || "var(--muted)"; }
@@ -514,7 +522,6 @@ window.addEventListener("load", function() {
 <!-- Mobile hamburger header -->
 <div class="hamburger" id="hamburger-bar">
   <span class="hamburger-title">Draft Logger</span>
-  <span id="sync-indicator" style="font-size:10px;color:var(--muted);margin-right:auto;margin-left:8px;"></span>
   <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
 </div>
 
@@ -529,7 +536,7 @@ window.addEventListener("load", function() {
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
   <button onclick="show('log');closeDrawer()" class="">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Game Review</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -550,7 +557,7 @@ window.addEventListener("load", function() {
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -903,17 +910,17 @@ window.addEventListener("load", function() {
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
-      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
-      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">BLUE SIDE +2</span></button>
+      <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">BLUE SIDE +1</span></button>
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
-      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">RED SIDE +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">RED SIDE +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">BLUE SIDE</div>
         <div style="display:flex;gap:4px;" id="exec-blue-row">
           <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
           <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
@@ -921,7 +928,7 @@ window.addEventListener("load", function() {
         </div>
       </div>
       <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">RED SIDE</div>
         <div style="display:flex;gap:4px;" id="exec-red-row">
           <button class="conf-btn" onclick="setExec('red','low')">Low</button>
           <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
@@ -932,30 +939,39 @@ window.addEventListener("load", function() {
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
-      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
+      <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">BLUE SIDE</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">RED SIDE</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
-    <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
+    <div id="model-prediction" style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: block;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
-        <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
+        <div id="model-bar-fill" style="height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.3s; width: 88%;"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);"></span>
-        <span id="model-call" style="font-size:12px;color:var(--muted);"></span>
-        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
+        <span id="model-blue-pct" style="font-size:13px;font-weight:700;color:var(--blue);">Blue 88%</span>
+        <span id="model-call" style="font-size:12px;color:var(--muted);"><span style="color:var(--blue);font-weight:600;">Blue</span></span>
+        <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);">12% Red</span>
       </div>
-      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
-      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
-      <div id="model-bet-sizing" style="display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);font-size:12px;line-height:1.8;"></div>
+      <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0;">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.05em;margin-bottom:4px;">🟦 Blue</div>
+        <div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Champion flat-100 ROI (8 champs with data)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Gnar vs Syndra</span> <span style="color:var(--muted);float:right;padding-left:6px;">60% (10g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Synergy: blue +-0.051 / red +-0.240</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>HLE Kanavi on Qiyana vs JarvanIV: 1/1 (100%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Gnar last 7d: 11/15 (73%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Qiyana last 7d: 3/4 (75%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Galio last 7d: 6/8 (75%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Lucian last 7d: 7/13 (54%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Yunara last 7d: 0/2 (0%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Lulu last 7d: 0/2 (0%)</span></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:.05em;margin-bottom:4px;">🟥 Red</div>
+        <div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Champion patterns (8 champs with data)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Jungle matchup: Qiyana vs JarvanIV</span> <span style="color:var(--muted);float:right;padding-left:6px;">40% (5g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span style="color:var(--text);">Cross-position: Gnar vs JarvanIV</span> <span style="color:var(--muted);float:right;padding-left:6px;">33% (9g)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Comp matchup: 9 cross-team pairs avg -23% blue</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Milio last 7d: 3/7 (43%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>JarvanIV last 7d: 16/23 (70%)</span></div><div style="font-size:11px;line-height:1.7;overflow:hidden;"><span>Syndra last 7d: 15/25 (60%)</span></div>
+      </div>
+    </div></div>
+      <div id="model-warning" style="font-size: 11px; color: var(--yellow); margin-top: 6px; display: block;">⚠ Some factors based on only 3 games — treat with caution.</div>
+      <div id="model-bet-sizing" style="display: block; margin-top: 8px; padding: 10px 12px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--green); font-size: 12px; line-height: 1.8;"><div style="font-weight:700;color:var(--green);margin-bottom:3px;">💰 Suggested bet: 1 unit = <span style="font-size:14px;">$12.56</span></div><div style="color:var(--muted);">Bankroll: $359.00 · 1 unit = $12.56</div></div>
 
       <!-- I disagree -->
-      <div id="model-disagree-wrap" style="display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;">
+      <div id="model-disagree-wrap" style="display: block; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
         <div id="model-disagree-state-agree" style="display:flex;align-items:center;justify-content:space-between;">
           <span style="font-size:12px;color:var(--muted);">Think the model is wrong?</span>
           <button onclick="setModelDisagreement(true)" style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--text);cursor:pointer;">↩ I disagree</button>
@@ -968,26 +984,26 @@ window.addEventListener("load", function() {
           <div id="model-disagree-sizing" style="padding:8px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--yellow);font-size:12px;line-height:1.8;"></div>
         </div>
       </div>
-    </div>
+    <div id="model-market-compare" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: block;"></div></div>
 
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue" onclick="setPred('blue')">
-        <span id="pred-blue-label">Blue side wins</span>
+        <span id="pred-blue-label">BLUE SIDE wins</span>
       </button>
       <button class="pred-btn red" id="pred-red" onclick="setPred('red')">
-        <span id="pred-red-label">Red side wins</span>
+        <span id="pred-red-label">RED SIDE wins</span>
       </button>
     </div>
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label">BLUE SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
-        <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label">RED SIDE side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
@@ -1002,19 +1018,19 @@ window.addEventListener("load", function() {
           <button class="conf-btn sel" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
         </div>
       </div>
-      <div id="bet-form" style="display:none;">
+      <div id="bet-form" style="display: none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
           <div>
             <label>Bet on</label>
-            <select id="bet-team-on" onchange="autofillBetAgainst();renderValueBetSizing();">
-              <option value="">— select team —</option>
-            </select>
+            <select id="bet-team-on" onchange="autofillBetAgainst();renderValueBetSizing();"><option value="">— select team —</option>
+      <option value="blue">HLE</option>
+      <option value="red">DK</option></select>
           </div>
           <div>
             <label>Bet against</label>
-            <select id="bet-team-against">
-              <option value="">— select team —</option>
-            </select>
+            <select id="bet-team-against"><option value="">— select team —</option>
+      <option value="blue">HLE</option>
+      <option value="red">DK</option></select>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -1040,10 +1056,10 @@ window.addEventListener("load", function() {
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue" onclick="setVodResult('blue')">
-          <span id="vod-result-blue-label">Blue side won</span>
+          <span id="vod-result-blue-label">BLUE SIDE won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red" onclick="setVodResult('red')">
-          <span id="vod-result-red-label">Red side won</span>
+          <span id="vod-result-red-label">RED SIDE won</span>
         </button>
       </div>
     </div>
@@ -1062,8 +1078,8 @@ window.addEventListener("load", function() {
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
+    <div id="pending-list"><div class="empty">✓ All caught up — no pending games.</div></div>
   </div>
 
   <div class="card">
@@ -1076,7 +1092,7 @@ window.addEventListener("load", function() {
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"></datalist>
+      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCK Challengers"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -1462,11 +1478,11 @@ window.addEventListener("load", function() {
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$251.30</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$107.70 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$359.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$12.56 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $251)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.95 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $359)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -9292,33 +9308,20 @@ async function pushFileToGitHub(token, repo, filePath, content, message, headers
 
 async function pushToGitHubSilent() {
   const token = localStorage.getItem(GH_TOKEN_KEY);
-  const repo  = localStorage.getItem(GH_REPO_KEY) || "kolankinator-ops/draft-logger";
-  if (!token) return;
-  const ind = document.getElementById("sync-indicator");
-  if (ind) ind.textContent = "↑ syncing…";
+  const repo  = localStorage.getItem(GH_REPO_KEY);
+  if (!token || !repo) return;
   try {
     const bundle = JSON.stringify(fullDataBundle());
     const b64    = btoa(unescape(encodeURIComponent(bundle)));
     const apiUrl = `https://api.github.com/repos/${repo}/contents/data.json`;
     const getRes = await fetch(apiUrl, { headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" } });
     const getSha = getRes.ok ? (await getRes.json()).sha : undefined;
-    const putRes = await fetch(apiUrl, {
+    await fetch(apiUrl, {
       method: "PUT",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" },
       body: JSON.stringify({ message: "Auto-sync data", content: b64, ...(getSha ? { sha: getSha } : {}) })
     });
-    if (putRes.ok) {
-      if (ind) { ind.textContent = "✓ synced"; setTimeout(() => { if(ind) ind.textContent=""; }, 3000); }
-      setGhStatus("✓ Auto-synced " + new Date().toLocaleTimeString(), "var(--green)");
-    } else {
-      const err = await putRes.json();
-      if (ind) ind.textContent = "⚠ sync failed";
-      setGhStatus("⚠ Sync failed: " + err.message, "#ff4d5e");
-    }
-  } catch(e) {
-    if (ind) ind.textContent = "⚠ sync failed";
-    console.warn("GitHub push failed:", e);
-  }
+  } catch(e) { console.warn("Silent GitHub push failed:", e); }
 }
 
 async function pushToGitHub() {
@@ -9404,7 +9407,7 @@ async function pullFromGitHub() {
 }
 
 async function syncFromGitHub() {
-  // Always pull from hardcoded public URL — works on every device, no config needed
+  // Always pull from the hardcoded public data.json URL — no config needed
   const url = "https://kolankinator-ops.github.io/draft-logger/data.json";
   try {
     const res = await fetch(url + "?t=" + Date.now());
@@ -9412,8 +9415,7 @@ async function syncFromGitHub() {
     const bundle = await res.json();
     if (!bundle || !bundle.entries) return;
     applyDataBundle(bundle, true);
-    console.log("[Sync] Pulled", bundle.entries.length, "entries from GitHub");
-  } catch(e) { console.warn("[Sync] Pull failed:", e.message); }
+  } catch(e) {}
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
