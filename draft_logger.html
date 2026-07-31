@@ -387,7 +387,7 @@
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
   <button onclick="show('watch');closeDrawer()">📺 Watch</button>
   <button onclick="show('review');closeDrawer()">🕶 Review drafts</button>
@@ -410,7 +410,7 @@
 
 
 <nav>
-  <button onclick="show('dashboard')" class="">📡 Live</button>
+  <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
@@ -433,10 +433,10 @@
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
+      <button onclick="openWatchPicker()" id="db-watch-btn" style="display:none;font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--blue);border-radius:6px;cursor:pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 4:55:07 PM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -1197,6 +1197,17 @@
     <div id="streak-results"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">⚖ Swing champions</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Tests whether a champion <i>amplifies</i> the gap between teams — winning more than
+      expected when their side is already favoured, and less when it isn't. That is the
+      measurable version of "only good in the better player's hands". Uses actual results
+      rather than model predictions, so it runs on your whole bulk pool.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runSwingAnalysis()">Measure amplification</button>
+    <div id="swing-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="swing-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
     <div class="card-title">⚔ Champion reliability</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
       For every champion in your logged games, how well the model did when it was on
@@ -1633,7 +1644,7 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Get notified when a game starts or the draft is complete. Only fires while this tab is open.
     </p>
-    <div id="notif-permission-row" style="margin-bottom:12px;"><button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button></div>
+    <div id="notif-permission-row" style="margin-bottom:12px;"><div style="color:#ff4d5e;font-size:12px;">Notifications blocked — enable them in your browser settings for this site.</div></div>
     <div id="notif-settings" style="display:none;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
@@ -1753,7 +1764,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/31/2026, 4:55:10 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/31/2026, 7:45:14 PM · Nothing new</div>
     </div>
   </div>
 
@@ -1877,8 +1888,8 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Prime League">Prime League</span>
-      <input type="text" id="stream-input-Prime_League" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Prime League', this.value)">
-      <button onclick="resetStreamToDefault('Prime League',document.getElementById('stream-input-Prime_League'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <input type="text" id="stream-input-Prime_League" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Prime League', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
       <span></span>
     </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Superliga">Superliga</span>
@@ -1887,8 +1898,8 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="TCL">TCL</span>
-      <input type="text" id="stream-input-TCL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('TCL', this.value)">
-      <button onclick="resetStreamToDefault('TCL',document.getElementById('stream-input-TCL'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <input type="text" id="stream-input-TCL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('TCL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
       <span></span>
     </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Ultraliga">Ultraliga</span>
@@ -5975,6 +5986,152 @@ function fitPlattScaling() {
   return { ok: true, ...params };
 }
 // ── End Platt scaling ─────────────────────────────────────────────────────────
+
+// ── Swing / amplification analysis ───────────────────────────────────────────
+// A champion that only works in the better player's hands should push results
+// away from the middle: more wins than expected when its team is already
+// stronger, more losses when weaker. Team strength differential stands in for
+// player skill differential — imperfect, but available on every bulk game,
+// which is what makes this testable at scale.
+async function runSwingAnalysis() {
+  const statusEl = document.getElementById("swing-status");
+  const el = document.getElementById("swing-results");
+  if (!statusEl || !el) return;
+
+  const hasChamps = e => (e.champions?.blue || []).filter(Boolean).length >= 3
+                      && (e.champions?.red  || []).filter(Boolean).length >= 3;
+  const ordered = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date && hasChamps(e))
+    .sort((a, b) => (a.date || "") < (b.date || "") ? -1 : 1);
+
+  if (ordered.length < 200) {
+    statusEl.textContent = "";
+    el.innerHTML = `<div class="empty">Only ${ordered.length} games. This needs several hundred to separate amplification from noise.</div>`;
+    return;
+  }
+
+  // Rolling team records, built forward so a game is only judged on prior form.
+  const rec = {};
+  const wr = t => {
+    const r = rec[t];
+    return (r && r.n >= 10) ? r.w / r.n : null;
+  };
+  const bump = (t, won) => {
+    const r = (rec[t] = rec[t] || { w: 0, n: 0 });
+    r.n++; if (won) r.w++;
+  };
+
+  const obs = [];   // { champ, edge, won }
+  const EDGE = 0.08;
+
+  for (let i = 0; i < ordered.length; i++) {
+    const g = ordered[i];
+    const bt = resolveTeam(g.blueTeam), rt = resolveTeam(g.redTeam);
+    const bw = wr(bt), rw = wr(rt);
+    const blueWon = g.actualWinner === "blue";
+    if (bw != null && rw != null) {
+      const diff = bw - rw;
+      const add = (side, edge, won) =>
+        [...new Set((g.champions?.[side] || []).filter(Boolean).map(c => String(c).trim()))]
+          .forEach(c => obs.push({ champ: c, edge, won }));
+      add("blue", diff, blueWon);
+      add("red", -diff, !blueWon);
+    }
+    bump(bt, blueWon); bump(rt, !blueWon);
+    if (i % 300 === 0) { statusEl.textContent = `Scanning… ${i}/${ordered.length}`; await new Promise(r => setTimeout(r, 0)); }
+  }
+
+  if (obs.length < 500) {
+    statusEl.textContent = "";
+    el.innerHTML = '<div class="empty">Not enough games with established team records yet.</div>';
+    return;
+  }
+
+  const fav = obs.filter(o => o.edge > EDGE);
+  const und = obs.filter(o => o.edge < -EDGE);
+  const baseFav = fav.filter(o => o.won).length / (fav.length || 1);
+  const baseUnd = und.filter(o => o.won).length / (und.length || 1);
+
+  const byChamp = {};
+  obs.forEach(o => (byChamp[o.champ] = byChamp[o.champ] || []).push(o));
+
+  // Recent pick rate, so verdicts about dead champions can be hidden.
+  const recentCut = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const picks = {}; let recentGames = 0;
+  ordered.forEach(e => {
+    if (e.date < recentCut) return;
+    recentGames++;
+    [...new Set([...(e.champions?.blue || []), ...(e.champions?.red || [])].filter(Boolean)
+      .map(c => String(c).trim()))].forEach(c => picks[c] = (picks[c] || 0) + 1);
+  });
+
+  const rows = Object.entries(byChamp).map(([champ, v]) => {
+    const f = v.filter(o => o.edge > EDGE), u = v.filter(o => o.edge < -EDGE);
+    if (f.length < 15 || u.length < 15) return null;
+    const fw2 = f.filter(o => o.won).length / f.length;
+    const uw = u.filter(o => o.won).length / u.length;
+    // Amplification: does it beat expectation when ahead AND undershoot when behind?
+    const amp = ((fw2 - baseFav) - (uw - baseUnd)) * 100;
+    const se = Math.sqrt(0.25 / f.length + 0.25 / u.length) * 100;
+    return { champ, amp, se, favN: f.length, undN: u.length,
+             favWR: fw2 * 100, undWR: uw * 100,
+             pickRate: recentGames ? (picks[champ] || 0) / recentGames * 100 : 0 };
+  }).filter(Boolean);
+
+  if (rows.length < 5) {
+    statusEl.textContent = "";
+    el.innerHTML = '<div class="empty">Not enough champions have appeared on both sides of a mismatch often enough.</div>';
+    return;
+  }
+
+  // Same shrinkage discipline as everywhere else.
+  const mean = rows.reduce((a, r) => a + r.amp, 0) / rows.length;
+  const varA = rows.reduce((a, r) => a + (r.amp - mean) ** 2, 0) / rows.length;
+  const meanSE2 = rows.reduce((a, r) => a + r.se ** 2, 0) / rows.length;
+  const tau2 = Math.max(0, varA - meanSE2);
+  rows.forEach(r => { const w = tau2 / (tau2 + r.se ** 2); r.shrunk = r.amp * w; r.weight = w; });
+
+  const currentOnly = true;
+  const visible = rows.filter(r => r.pickRate >= 3).sort((a, b) => b.shrunk - a.shrunk);
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1);
+
+  el.innerHTML =
+    `<div style="font-size:12px;margin-bottom:2px;">Baseline: favoured sides win
+       <b>${(baseFav*100).toFixed(0)}%</b>, underdogs <b>${(baseUnd*100).toFixed(0)}%</b></div>
+     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+       ${obs.length.toLocaleString()} champion-appearances across ${ordered.length.toLocaleString()} games \u00B7
+       ${visible.length} champions shown of ${rows.length} with enough data</div>
+     ${tau2 <= 0.5
+       ? `<div style="background:rgba(255,77,94,.1);border:1px solid #ff4d5e;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px;line-height:1.7;">
+            <b style="color:#ff4d5e;">No real spread between champions.</b> Once sampling noise is
+            removed, champions do not differ in how much they amplify a mismatch \u2014 the numbers
+            below are noise and nothing here supports treating any champion as a swing pick.</div>`
+       : `<div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px;line-height:1.7;">
+            Champions genuinely differ by about <b style="color:var(--text);">${Math.sqrt(tau2).toFixed(1)} points</b>
+            of amplification. Positive means the champion widens whatever gap already exists \u2014
+            better than expected when favoured, worse when underdog.</div>`}
+     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">MOST AMPLIFYING FIRST</div>` +
+    visible.slice(0, 15).map(r => {
+      const strong = Math.abs(r.shrunk) > 4;
+      return `<div style="padding:8px 0;border-bottom:1px solid var(--border);opacity:${strong?1:.65};">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <span style="font-size:12px;font-weight:600;">${r.champ}</span>
+          <span style="font-size:12px;font-weight:700;color:${strong?(r.shrunk>0?"var(--yellow)":"var(--blue)"):"var(--muted)"};">${signed(r.shrunk)} amp</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+          favoured <b style="color:var(--text);">${r.favWR.toFixed(0)}%</b> (${r.favN}) \u00B7
+          underdog <b style="color:var(--text);">${r.undWR.toFixed(0)}%</b> (${r.undN}) \u00B7
+          raw ${signed(r.amp)} \u00B7 ${(r.weight*100).toFixed(0)}% survives \u00B7 ${r.pickRate.toFixed(0)}% pick rate
+        </div></div>`;
+    }).join("") +
+    `<p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       Team strength differential stands in for player skill differential here. It is a proxy:
+       the stronger team usually has the better player in a given lane, but not always, so a
+       real effect will show up muted rather than absent. A champion topping this list <i>and</i>
+       on your prior list is worth acting on; one that only appears here is a hypothesis.</p>`;
+
+  statusEl.textContent = `Analysed ${rows.length} champions across ${obs.length.toLocaleString()} appearances.`;
+}
 
 // ── Duplicate detection ──────────────────────────────────────────────────────
 let _dupePlan = null;
