@@ -1,9 +1,10 @@
+
 // Draft Logger service worker.
 // VERSION is rewritten with a timestamp every time the app pushes to GitHub,
 // which is what makes the browser treat this file as new and run the update
 // cycle. A fixed version string means the browser byte-compares, sees no
 // change, and never updates anything.
-const VERSION = "__SW_VERSION__";
+const VERSION = "1785531348454";
 const CACHE   = "draft-logger-" + VERSION;
 
 const ASSETS = [
