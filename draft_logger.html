@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <title>Draft Logger</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -379,23 +378,19 @@
 
 <!-- Nav drawer overlay -->
 <div class="nav-overlay" id="nav-overlay" onclick="closeDrawer()"></div>
-<div id="update-pill" onclick="location.reload()" title="Reload to get the new version"
-     style="display:none;position:fixed;bottom:12px;right:12px;z-index:998;align-items:center;gap:6px;
+<div id="update-pill" onclick="location.reload()" title="Reload to get the new version" style="display:none;position:fixed;bottom:12px;right:12px;z-index:998;align-items:center;gap:6px;
             background:var(--blue);color:#fff;border:none;border-radius:999px;
             padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;
-            box-shadow:0 2px 10px rgba(0,0,0,.45);">\u21bb New version \u2014 tap to reload</div>
-<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now"
-     style="display:none;position:fixed;bottom:12px;left:12px;z-index:998;align-items:center;gap:6px;
-            background:var(--surface);border:1px solid var(--border);border-radius:999px;
-            padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;
-            box-shadow:0 2px 8px rgba(0,0,0,.35);opacity:.92;"></div>
+            box-shadow:0 2px 10px rgba(0,0,0,.45);"></div>
+<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
   <div class="nav-drawer-title">Main</div>
-  <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
+  <button onclick="show('dashboard');closeDrawer()" class="">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
   <button onclick="show('watch');closeDrawer()">📺 Watch</button>
+  <button onclick="show('review');closeDrawer()">🕶 Review drafts</button>
   <button onclick="show('log');closeDrawer()">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
@@ -410,14 +405,14 @@
   <button onclick="show('bets');closeDrawer()">Bets</button>
   <button onclick="show('betstats');closeDrawer()">Bet Stats</button>
   <div class="nav-drawer-title">Settings</div>
-  <button onclick="show('settings');closeDrawer()">⚙ Sync</button>
+  <button onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button>
 </div>
 
 
 <nav>
-  <button onclick="show('dashboard')">📡 Live</button>
+  <button onclick="show('dashboard')" class="">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
-  <button class="active" onclick="show('log')">Log Game</button>
+  <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
   <button onclick="show('review')">Game Review</button>
   <button onclick="show('players')">Players</button>
@@ -428,7 +423,7 @@
   <button onclick="show('bets')">Bets</button>
   <button onclick="show('betstats')">Bet Stats</button>
   <button onclick="show('tiers')">⚖ Tiers</button>
-  <button onclick="show('settings')">⚙ Sync</button>
+  <button onclick="show('settings')" class="active">⚙ Sync</button>
 </nav>
 
 <!-- DASHBOARD -->
@@ -438,15 +433,13 @@
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button onclick="openWatchPicker()" id="db-watch-btn" style="display:none;font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--blue);border-radius:6px;cursor:pointer;">📺 Watch</button>
+      <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 4:55:07 PM</div>
     </div>
   </div>
-  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;">
-    <div class="empty">Loading live matches…</div>
-  </div>
+  <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
 
   <!-- Watch picker modal -->
   <div id="watch-picker-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;align-items:center;justify-content:center;padding:16px;">
@@ -464,13 +457,41 @@
 </div>
 
 
+<!-- REVIEW -->
+<div class="screen" id="screen-review">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:15px;font-weight:600;">🕶 Review drafts</div>
+    <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
+  </div>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+    Games you didn't log, with the result hidden. Rate the draft the way you would
+    have live — that's what makes these usable as training data. If you can see who
+    won, the rating just records the answer and the model learns nothing.
+  </p>
+
+  <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+    <select id="review-range" onchange="buildReviewQueue()" style="font-size:12px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+      <option value="1">Yesterday</option>
+      <option value="3">Last 3 days</option>
+      <option value="7" selected="">Last 7 days</option>
+      <option value="30">Last 30 days</option>
+    </select>
+    <label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;">
+      <input type="checkbox" id="review-reveal" style="width:auto;margin:0;">
+      reveal result after saving
+    </label>
+    <span id="review-count" style="font-size:11px;color:var(--muted);margin-left:auto;"></span>
+  </div>
+
+  <div id="review-card"></div>
+</div>
+
 <!-- WATCH -->
 <div class="screen" id="screen-watch">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
     <div style="font-size:15px;font-weight:600;">📺 Watch</div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <select id="watch-cols" onchange="setWatchCols(this.value)"
-        style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+      <select id="watch-cols" onchange="setWatchCols(this.value)" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
         <option value="auto">Auto layout</option>
         <option value="1">1 column</option>
         <option value="2">2 columns</option>
@@ -485,8 +506,7 @@
   </div>
 
   <div style="display:flex;gap:8px;margin-bottom:12px;">
-    <input type="text" id="watch-manual-ch" placeholder="twitch channel or URL"
-      onkeydown="if(event.key==='Enter')addWatchManual()" style="flex:1;" />
+    <input type="text" id="watch-manual-ch" placeholder="twitch channel or URL" onkeydown="if(event.key==='Enter')addWatchManual()" style="flex:1;">
     <button class="btn btn-primary" style="white-space:nowrap;" onclick="addWatchManual()">Add</button>
   </div>
 
@@ -517,7 +537,7 @@
     <span style="font-size:12px;color:var(--muted);">Look ahead:</span>
     <select id="today-lookahead" onchange="loadTodayGames()" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
       <option value="24">Next 24 hours</option>
-      <option value="48" selected>Next 48 hours</option>
+      <option value="48" selected="">Next 48 hours</option>
       <option value="72">Next 72 hours</option>
       <option value="168">Next 7 days</option>
     </select>
@@ -535,22 +555,22 @@
     <div style="background:var(--surface);border-radius:14px;padding:20px;width:100%;max-width:380px;">
       <div style="font-size:14px;font-weight:700;margin-bottom:14px;">Add manual game</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1" /></div>
-        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN" /></div>
+        <div><label>Blue side</label><input type="text" id="tadd-blue" placeholder="e.g. T1"></div>
+        <div><label>Red side</label><input type="text" id="tadd-red" placeholder="e.g. GEN"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK" /></div>
+        <div><label>League</label><input type="text" id="tadd-league" placeholder="e.g. LCK"></div>
         <div><label>Format</label>
           <select id="tadd-format">
             <option value="BO1">BO1</option>
-            <option value="BO3" selected>BO3</option>
+            <option value="BO3" selected="">BO3</option>
             <option value="BO5">BO5</option>
           </select>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Time (optional)</label><input type="time" id="tadd-time" /></div>
-        <div><label>Date</label><input type="date" id="tadd-date" /></div>
+        <div><label>Time (optional)</label><input type="time" id="tadd-time"></div>
+        <div><label>Date</label><input type="date" id="tadd-date"></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn btn-primary" style="flex:1;" onclick="saveTodayGame()">Add</button>
@@ -561,7 +581,7 @@
 </div>
 
 <!-- LOG GAME -->
-<div class="screen active" id="screen-log">
+<div class="screen" id="screen-log">
 
   <!-- Mode toggle -->
   <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -578,14 +598,10 @@
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="loadLiveGames();loadRecentGames()">↺ Refresh</button>
       </div>
     </div>
-    <div id="live-pills">
-      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
-    </div>
+    <div id="live-pills"></div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills">
-        <div style="color:var(--muted);font-size:12px;">Loading today's games…</div>
-      </div>
+      <div id="recent-pills"></div>
     </div>
   </div>
 
@@ -601,9 +617,7 @@
           <option value="all">All leagues</option>
         </select>
       </div>
-      <div id="vod-pills">
-        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
-      </div>
+      <div id="vod-pills"></div>
     </div>
     <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
       VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
@@ -617,12 +631,12 @@
     <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
       <div>
         <label>Blue side team</label>
-        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()" />
+        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()">
       </div>
       <button onclick="swapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
       <div>
         <label>Red side team</label>
-        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()" />
+        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()">
       </div>
     </div>
     <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
@@ -645,32 +659,172 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label>League</label>
-        <input type="text" id="league" placeholder="e.g. LCK" />
+        <input type="text" id="league" placeholder="e.g. LCK">
       </div>
       <div>
         <label>Date</label>
-        <input type="date" id="game-date" />
+        <input type="date" id="game-date">
       </div>
     </div>
     <div>
       <label>Event context <span style="color:var(--muted);font-weight:400;">(auto-filled from live picker)</span></label>
-      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3" />
+      <input type="text" id="event-context" placeholder="e.g. LCK Summer 2026 · Week 3">
     </div>
   </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
       <div class="card-title" style="margin-bottom:0;">Draft picks</div>
-      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks & players</button>
+      <button onclick="swapPicksAndPlayers()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks &amp; players</button>
     </div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
         <div class="draft-col-title" id="blue-col-title">BLUE SIDE</div>
-        <div id="blue-picks"></div>
+        <div id="blue-picks">
+    <div class="champ-row" id="pick-row-blue-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',0)">
+          <span class="champ-name">TOP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',0)" onkeydown="pickKeyNav(event,'blue',0)" autocomplete="off">
+        <div id="pick-list-blue-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',1)">
+          <span class="champ-name">JNG</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',1)" onkeydown="pickKeyNav(event,'blue',1)" autocomplete="off">
+        <div id="pick-list-blue-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',2)">
+          <span class="champ-name">MID</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',2)" onkeydown="pickKeyNav(event,'blue',2)" autocomplete="off">
+        <div id="pick-list-blue-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',3)">
+          <span class="champ-name">BOT</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',3)" onkeydown="pickKeyNav(event,'blue',3)" autocomplete="off">
+        <div id="pick-list-blue-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-blue-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('blue',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('blue',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-blue-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-blue-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('blue',4)" onkeydown="pickKeyNav(event,'blue',4)" autocomplete="off">
+        <div id="pick-list-blue-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
       <div class="draft-col red-col">
         <div class="draft-col-title" id="red-col-title">RED SIDE</div>
-        <div id="red-picks"></div>
+        <div id="red-picks">
+    <div class="champ-row" id="pick-row-red-0">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',0)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',0)">
+          <span class="champ-name">TOP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-0" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-0" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',0)" onkeydown="pickKeyNav(event,'red',0)" autocomplete="off">
+        <div id="pick-list-red-0" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-1">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',1)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',1)">
+          <span class="champ-name">JNG</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-1" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-1" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',1)" onkeydown="pickKeyNav(event,'red',1)" autocomplete="off">
+        <div id="pick-list-red-1" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-2">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',2)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',2)">
+          <span class="champ-name">MID</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-2" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-2" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',2)" onkeydown="pickKeyNav(event,'red',2)" autocomplete="off">
+        <div id="pick-list-red-2" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-3">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',3)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',3)">
+          <span class="champ-name">BOT</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-3" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-3" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',3)" onkeydown="pickKeyNav(event,'red',3)" autocomplete="off">
+        <div id="pick-list-red-3" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div>
+    <div class="champ-row" id="pick-row-red-4">
+      <div class="champ-row-top">
+        <div onclick="openPickEditor('red',4)" style="width:28px;height:28px;border-radius:5px;background:var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);">+</div>
+        <div style="display:flex;flex-direction:column;min-width:0;cursor:pointer;" onclick="openPickEditor('red',4)">
+          <span class="champ-name">SUP</span>
+          
+        </div>
+        
+      </div>
+      <div id="pick-editor-red-4" style="display:none;margin-top:4px;position:relative;">
+        <input id="pick-input-red-4" type="text" placeholder="Type champion name…" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;font-family:inherit;" oninput="filterPickList('red',4)" onkeydown="pickKeyNav(event,'red',4)" autocomplete="off">
+        <div id="pick-list-red-4" style="position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:6px;max-height:160px;overflow-y:auto;width:100%;margin-top:2px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);"></div>
+      </div>
+    </div></div>
       </div>
     </div>
   </div>
@@ -682,36 +836,25 @@
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row">
       <button class="three-btn blue" onclick="setDraftPref(-2)" id="dpref--2"><span id="dpref--2-lbl">Blue +2</span></button>
       <button class="three-btn blue" onclick="setDraftPref(-1)" id="dpref--1"><span id="dpref--1-lbl">Blue +1</span></button>
-      <button class="three-btn even" onclick="setDraftPref(0)"  id="dpref-0">Even</button>
-      <button class="three-btn red"  onclick="setDraftPref(1)"  id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
-      <button class="three-btn red"  onclick="setDraftPref(2)"  id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+      <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
+      <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
     </div>
 
-    <span class="advantage-label">Execution demand — how punishing is this draft if you make mistakes?</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-blue-lbl">Blue side</div>
-        <div style="display:flex;gap:4px;" id="exec-blue-row">
-          <button class="conf-btn" onclick="setExec('blue','low')">Low</button>
-          <button class="conf-btn" onclick="setExec('blue','medium')">Medium</button>
-          <button class="conf-btn" onclick="setExec('blue','high')">High</button>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;" id="exec-red-lbl">Red side</div>
-        <div style="display:flex;gap:4px;" id="exec-red-row">
-          <button class="conf-btn" onclick="setExec('red','low')">Low</button>
-          <button class="conf-btn" onclick="setExec('red','medium')">Medium</button>
-          <button class="conf-btn" onclick="setExec('red','high')">High</button>
-        </div>
-      </div>
+    <span class="advantage-label">Execution demand — whose comp is harder to play well?</span>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="exec-diff-row">
+      <button class="three-btn blue" onclick="setExecDiff(-2)" id="exdiff--2"><span id="exdiff--2-lbl">Blue +2</span></button>
+      <button class="three-btn blue" onclick="setExecDiff(-1)" id="exdiff--1"><span id="exdiff--1-lbl">Blue +1</span></button>
+      <button class="three-btn even" onclick="setExecDiff(0)" id="exdiff-0">Even</button>
+      <button class="three-btn red" onclick="setExecDiff(1)" id="exdiff-1"><span id="exdiff-1-lbl">Red +1</span></button>
+      <button class="three-btn red" onclick="setExecDiff(2)" id="exdiff-2"><span id="exdiff-2-lbl">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row">
       <button class="three-btn blue" onclick="setAdv('skill','blue')"><span id="skill-adv-blue-lbl">Blue side</span></button>
       <button class="three-btn even" onclick="setAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red"  onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
+      <button class="three-btn red" onclick="setAdv('skill','red')"><span id="skill-adv-red-lbl">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -728,7 +871,9 @@
         <span id="model-red-pct" style="font-size:13px;font-weight:700;color:var(--red);"></span>
       </div>
       <div id="model-factors" style="font-size:11px;color:var(--muted);line-height:1.8;"></div>
-      <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
+      <div id="model-streak-note" style="display:none;font-size:11px;line-height:1.6;border-radius:8px;padding:9px 11px;margin-top:8px;"></div>
+  <div id="model-band-note" style="display:none;font-size:11px;line-height:1.6;border-radius:8px;padding:9px 11px;margin-top:8px;color:var(--muted);"></div>
+  <div id="model-warning" style="font-size:11px;color:var(--yellow);margin-top:6px;display:none;"></div>
       <div id="model-bet-sizing" style="display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--green);font-size:12px;line-height:1.8;"></div>
 
       <!-- I disagree -->
@@ -761,11 +906,11 @@
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <label id="mkt-blue-label">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()" />
+        <input type="number" id="mkt-blue-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel()">
       </div>
       <div>
         <label id="mkt-red-label">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()" />
+        <input type="number" id="mkt-red-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="runPredictionModel()">
       </div>
     </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
@@ -776,7 +921,7 @@
         <span style="font-size:13px;font-weight:600;">Did you bet on this game?</span>
         <div style="display:flex;gap:6px;">
           <button class="conf-btn" id="bet-yes-btn" onclick="toggleBetForm(true)">Yes</button>
-          <button class="conf-btn sel" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
+          <button class="conf-btn" id="bet-no-btn" onclick="toggleBetForm(false)">No</button>
         </div>
       </div>
       <div id="bet-form" style="display:none;">
@@ -797,15 +942,15 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label>Your odds</label>
-            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();" />
+            <input type="number" id="bet-odds" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="runPredictionModel();renderValueBetSizing();">
           </div>
           <div>
             <label>Stake</label>
-            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00" />
+            <input type="number" id="bet-stake" step="0.01" min="0.01" placeholder="e.g. 50.00">
           </div>
         </div>
         <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()" />
+          <input type="checkbox" id="bet-value-flag" style="width:16px;height:16px;" onchange="onValueBetToggle()">
           <span>Value bet <span style="color:var(--muted);font-size:11px;">— I'm taking the edge, not disagreeing with the model's pick</span></span>
         </label>
         <div id="value-bet-sizing" style="display:none;margin-top:8px;padding:8px 10px;background:rgba(59,130,246,.08);border:1px solid var(--blue);border-radius:8px;font-size:12px;line-height:1.6;"></div>
@@ -845,24 +990,24 @@
 
   <div class="card">
     <div class="card-title">Log a standalone bet</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&L only, no effect on the model.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">For bets placed outside the normal logging flow — series bets, accidents, etc. Tracks P&amp;L only, no effect on the model.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1" /></div>
-      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN" /></div>
+      <div><label>Team you bet on</label><input type="text" id="sb-team-on" placeholder="e.g. T1"></div>
+      <div><label>Against</label><input type="text" id="sb-team-against" placeholder="e.g. GEN"></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
-      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off" />
+      <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
       <datalist id="sb-league-list"></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10" /></div>
-      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50" /></div>
+      <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
+      <div><label>Stake ($)</label><input type="number" id="sb-stake" step="0.01" min="0.01" placeholder="e.g. 50"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Date</label>
-        <input type="date" id="sb-date" />
+        <input type="date" id="sb-date">
       </div>
       <div>
         <label>Result</label>
@@ -876,7 +1021,7 @@
     </div>
     <div style="margin-bottom:10px;">
       <label>Note <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
-      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1" />
+      <input type="text" id="sb-note" placeholder="e.g. Accidentally bet on series instead of map 1">
     </div>
     <button class="btn btn-primary" style="width:100%;" onclick="saveStandaloneBet()">Save bet</button>
     <div id="sb-status" style="font-size:12px;margin-top:8px;min-height:16px;"></div>
@@ -905,7 +1050,7 @@
     </select>
   </div>
   <div style="margin-bottom:12px;">
-    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()" />
+    <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
   </div>
   <div id="player-profiles-list"></div>
 </div>
@@ -917,7 +1062,7 @@
     <div style="font-size:11px;color:var(--muted);" id="champ-count"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;">
-    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()" />
+    <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()">
     <select id="champ-sort" onchange="renderChampions()" style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;">
       <option value="appearances">Most seen</option>
       <option value="winrate">Win rate</option>
@@ -972,7 +1117,7 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Add a league</div>
     <div style="display:flex;gap:8px;">
-      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;" />
+      <input type="text" id="tier-new-league" placeholder="e.g. LFL2" style="flex:1;">
       <button class="btn btn-ghost" onclick="addTierLeague()">Add</button>
     </div>
   </div>
@@ -1024,11 +1169,102 @@
     <div id="model-calibration"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">🔬 Backtest</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Runs the model against every completed game using only data from <i>other</i> games (leave-one-out). Shows what confidence the model would have assigned and whether it was right. Separate from your moment-captured ratings.</p>
-    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runBacktest()">Run backtest</button>
+    <div class="card-title">📋 Live model track record</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      The real out-of-sample record of the model you actually bet with. Every game you
+      logged stored the prediction the 13-factor model made <i>at the time</i>, before the
+      result was known — so this needs no simulation and cannot leak. This is the number
+      that matters; the backtest below only covers the 5-factor subset.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runLiveModelAudit()">Audit stored predictions</button>
+    <div id="liveaudit-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="liveaudit-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🧑 You vs the model</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Your blinded reads from the review page, scored against the model on exactly
+      the same games. Games you marked as already known are excluded.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runHumanVsModel()">Compare</button>
+    <div id="hvm-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="hvm-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🔥 Bet streaks by champion</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Champions where your last several bets all lost — either backing them or
+      against them. Shown alongside how many runs chance alone should produce,
+      so you can tell a signal from ordinary variance.</p>
+    <div id="streak-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">⚔ Champion reliability</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      For every champion in your logged games, how well the model did when it was on
+      the board — either side. The question is not whether a champion wins, but whether
+      the model can <i>read</i> games containing it. High overshoot means the model is
+      more overconfident than usual when this champion appears.</p>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+      <select id="champ-window" style="font-size:12px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+        <option value="60">Last 60 days</option>
+        <option value="90" selected="">Last 90 days</option>
+        <option value="180">Last 180 days</option>
+        <option value="0">All time</option>
+      </select>
+      <label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <input type="checkbox" id="champ-current-only" style="width:auto;margin:0;">
+        only champions picked recently
+      </label>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="runChampionReliabilityFull()">Test on all games (personal + bulk)</button>
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:10px;" onclick="runChampionReliability()">Test on my logged games only</button>
+    <div id="champrel-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="champrel-results"></div>
+    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:12px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px;">👁 Watchlist</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.6;">
+        Pre-register a suspicion. Only games logged <i>after</i> you add a champion count
+        toward its result, so the hypothesis is fixed before the data exists — which is
+        what makes it a real test rather than a pattern you found by looking.</p>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" id="champ-watch-input" placeholder="champion name" onkeydown="if(event.key==='Enter')addChampWatch()" style="flex:1;">
+        <button class="btn btn-primary" style="white-space:nowrap;" onclick="addChampWatch()">Watch</button>
+      </div>
+      <div id="champ-watch-list"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">📉 Where it fails</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Splits the same stored predictions by league, and by how much history the model
+      actually had for the teams involved. If the damage is concentrated where training
+      data is thin, the fix is more data — not a different model.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runFailureBreakdown()">Break down failures</button>
+    <div id="failbd-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="failbd-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🔬 Backtest <span style="font-size:11px;font-weight:400;color:var(--muted);">· 5-factor subset only</span></div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      <b>Walk-forward</b> predicts each game using only games played <i>before</i> it — the same
+      information you actually have live. <b>Leave-one-out</b> uses every other game, including
+      later ones, so it sees the future and will look better than reality. The gap between them
+      is how much your confidence is borrowed from hindsight.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="runBacktest('walkforward')">Run walk-forward backtest</button>
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runBacktest('compare')">Compare both → show the gap</button>
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:10px;" onclick="runImprovedTest()">Test fixes: all data + shrinkage</button>
     <div id="backtest-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
     <div id="backtest-results"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🧪 Factor diagnostic</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Scores each factor on its own, walk-forward. <b>Direction</b> is how often a factor
+      pointed at the eventual winner — below 50% means it is pointing the wrong way.
+      <b>Drop it</b> re-runs the whole backtest with that factor switched off: a positive
+      number there means the model gets <i>better</i> without it.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="runFactorDiagnostic()">Run factor diagnostic</button>
+    <div id="factordiag-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="factordiag-results"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Factor accuracy</div>
@@ -1088,7 +1324,7 @@
 <div class="screen" id="screen-betstats">
   <div id="bet-summary-grid" class="stat-grid" style="margin-bottom:14px;"></div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">Daily P&L calendar</div>
+    <div class="card-title">Daily P&amp;L calendar</div>
     <div id="bet-calendar"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1118,15 +1354,20 @@
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Team betting performance</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&L from bets placed on each team, sorted by total profit.</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">P&amp;L from bets placed on each team, sorted by total profit.</div>
     <div id="bet-by-team"></div>
   </div>
 
 </div>
 
 <!-- SETTINGS / SYNC -->
-<div class="screen" id="screen-settings">
+<div class="screen active" id="screen-settings">
 
+  <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
+       border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
+    Build <b style="color:var(--text);">2026.07.31-b22</b>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">☁ Device sync</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
@@ -1145,15 +1386,15 @@
     </div>
 
     <label>Worker URL</label>
-    <input type="text" id="sync-url" placeholder="https://draft-logger-sync.you.workers.dev" style="margin-top:4px;" />
+    <input type="text" id="sync-url" placeholder="https://draft-logger-sync.you.workers.dev" style="margin-top:4px;">
     <label style="margin-top:10px;">Sync code <span style="color:var(--muted);font-weight:400;">(the SYNC_CODE secret — identical on every device)</span></label>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <input type="password" id="sync-code" placeholder="your long random string" style="flex:1;" />
+      <input type="password" id="sync-code" placeholder="your long random string" style="flex:1;">
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
 
-    <div id="sync-connected" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+    <div id="sync-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="syncNow({full:true,bulk:true,manual:true})">↻ Sync now</button>
         <button class="btn btn-danger" onclick="disconnectSync()">Disconnect</button>
@@ -1168,14 +1409,23 @@
   </div>
 
   <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🧹 Duplicate games</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      The same match can end up stored twice — imported from two sources, or
+      re-imported after ids changed. Duplicates count twice in training, which
+      quietly inflates whatever they contain.</p>
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="scanDuplicates()">Scan for duplicates</button>
+    <div id="dupe-results" style="font-size:12px;"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
     <div class="card-title">↩ Import from old JSONBin</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
       One-time recovery. Pulls anything still sitting in your old bin that is not
       on this device, then pushes the result to the new sync. Existing local
       games are never overwritten.
     </p>
-    <input type="password" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="margin-bottom:8px;" />
-    <input type="text" id="legacy-jsonbin-bin" placeholder="Bin ID" style="margin-bottom:8px;" />
+    <input type="password" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="margin-bottom:8px;">
+    <input type="text" id="legacy-jsonbin-bin" placeholder="Bin ID" style="margin-bottom:8px;">
     <button class="btn btn-ghost" onclick="importFromJsonBin()">Import once</button>
     <div id="legacy-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
   </div>
@@ -1190,7 +1440,7 @@
   <div class="card">
     <div class="card-title">↑ Import data</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Load a previously exported JSON backup. Merges with existing data — nothing is overwritten or deleted.</p>
-    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)" />
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
     <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">Choose file</button>
     <div id="import-status" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
   </div>
@@ -1208,12 +1458,12 @@
       Map old team names to current ones so historical data (rebrands, acquisitions) is counted in the right team's stats and model.
     </p>
     <div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:6px;align-items:center;margin-bottom:8px;">
-      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;" />
+      <input type="text" id="alias-old" placeholder="Old name (e.g. MAD Lions)" style="font-size:13px;">
       <span style="color:var(--muted);padding:0 4px;">→</span>
-      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;" />
+      <input type="text" id="alias-new" placeholder="Current name (e.g. KOI)" style="font-size:13px;">
       <button class="btn btn-primary" style="padding:8px 12px;white-space:nowrap;" onclick="addTeamAlias()">Add</button>
     </div>
-    <div id="alias-list" style="font-size:12px;"></div>
+    <div id="alias-list" style="font-size:12px;"><div style="color:var(--muted);">No aliases set yet.</div></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1224,7 +1474,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div>
         <label>Starting bankroll ($)</label>
-        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()" />
+        <input type="number" id="bankroll-starting" min="1" step="1" placeholder="e.g. 1000" oninput="saveBankrollSettings()">
       </div>
       <div>
         <label>Unit size</label>
@@ -1237,18 +1487,52 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div>
         <label id="bankroll-unit-label">Unit % of starting</label>
-        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()" />
+        <input type="number" id="bankroll-unit-value" min="0.1" step="0.1" placeholder="e.g. 5" oninput="saveBankrollSettings();updateBankrollDisplay()">
       </div>
       <div>
         <label>Floor (% of starting — scale down below)</label>
-        <input type="number" id="bankroll-floor" min="10" max="90" step="5" value="40" oninput="saveBankrollSettings()" />
+        <input type="number" id="bankroll-floor" min="10" max="90" step="5" oninput="saveBankrollSettings()">
       </div>
     </div>
-    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"></div>
+    <div id="bankroll-display" style="background:var(--bg);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;margin-bottom:10px;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
+        <div style="font-size:17px;font-weight:700;color:var(--muted);">$250.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
+      </div>
+      <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$105.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+42.0%)</div>
+      </div>
+    </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
+        <div style="font-size:20px;font-weight:700;">$355.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
+      </div>
+      <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
+        <div style="font-size:20px;font-weight:700;color:inherit;">$355.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
+      </div>
+    </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.75 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $355)</span></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
+    </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:var(--green);">$150.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
+        </div>
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:var(--muted);">$400.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Deposited</div>
+        </div>
+        <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
+          <div style="font-size:14px;font-weight:700;color:#ff4d5e;">$-250.00</div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Take home</div>
+        </div>
+      </div></div>
     <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:flex-end;">
       <div>
         <label>Set current bankroll to ($)</label>
-        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00" />
+        <input type="number" id="bankroll-manual-current" min="0" step="0.01" placeholder="e.g. 1050.00">
       </div>
       <button class="btn btn-primary" style="padding:8px 14px;white-space:nowrap;" onclick="setManualCurrentBankroll()">Update</button>
     </div>
@@ -1259,7 +1543,7 @@
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half" />
+          <input type="number" id="cashout-amount" min="0" step="0.01" placeholder="Leave blank for half">
         </div>
         <button class="btn btn-ghost" onclick="doCashOut(false)">Cash out amount</button>
         <button class="btn btn-primary" onclick="doCashOut(true)">Cash out half</button>
@@ -1271,21 +1555,45 @@
       <div style="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:flex-end;">
         <div>
           <label>Amount ($)</label>
-          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00" />
+          <input type="number" id="deposit-amount" min="0" step="0.01" placeholder="e.g. 100.00">
         </div>
         <button class="btn btn-primary" onclick="doDeposit()">Add to bankroll</button>
       </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px;" id="pnl-summary-card">
-    <div class="card-title">💵 P&L Summary</div>
-    <div id="pnl-display" style="margin-top:4px;"></div>
+  <div class="card" style="margin-top: 14px; display: block;" id="pnl-summary-card">
+    <div class="card-title">💵 P&amp;L Summary</div>
+    <div id="pnl-display" style="margin-top:4px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--green);">$150.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:var(--muted);">$400.00</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total deposited</div>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-250.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:13px;color:var(--muted);">Total net profit</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-145.00</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($355.00) − starting ($250.00)</div>
+    </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01" /></div>
-        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01" /></div>
+        <div><label>Total cashed out ($)</label><input type="number" id="pnl-edit-cashed" min="0" step="0.01"></div>
+        <div><label>Total deposited ($)</label><input type="number" id="pnl-edit-deposited" min="0" step="0.01"></div>
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-primary" onclick="savePnLEdit()">Save</button>
@@ -1307,17 +1615,17 @@
       3. Copy the token (starts with <code>ghp_</code>) and paste below
     </div>
     <label>GitHub personal access token</label>
-    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;" />
+    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;">
     <label>Repository (owner/repo)</label>
-    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;" />
+    <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;">
     <label>File path in repo</label>
-    <input type="text" id="gh-path" value="draft_logger.html" style="margin-bottom:10px;" />
+    <input type="text" id="gh-path" style="margin-bottom:10px;">
     <div class="btn-row">
       <button class="btn btn-primary" onclick="pushToGitHub()">↑ Push to GitHub</button>
       <button class="btn btn-ghost" onclick="pullFromGitHub()">↓ Pull from GitHub</button>
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
-    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
+    <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"><span style="color:var(--muted);">Pushing app…</span></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -1325,16 +1633,16 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
       Get notified when a game starts or the draft is complete. Only fires while this tab is open.
     </p>
-    <div id="notif-permission-row" style="margin-bottom:12px;"></div>
+    <div id="notif-permission-row" style="margin-bottom:12px;"><button class="btn btn-primary" style="width:100%;" onclick="requestNotifPermission()">Enable notifications</button></div>
     <div id="notif-settings" style="display:none;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">Notify me for:</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
+          <input type="checkbox" id="notif-game-start" onchange="saveNotifSettings()" style="width:16px;height:16px;">
           Game started
         </label>
         <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;" />
+          <input type="checkbox" id="notif-draft-done" onchange="saveNotifSettings()" style="width:16px;height:16px;">
           Draft complete (shows picks)
         </label>
       </div>
@@ -1352,26 +1660,86 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
       <div>
         <label>Leagues to import</label>
-        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;"></div>
+        <div id="bulk-league-checks" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;max-height:160px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;">
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK" style="width:14px;height:14px;">
+      LCK
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LPL" style="width:14px;height:14px;">
+      LPL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LEC" style="width:14px;height:14px;">
+      LEC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCS" style="width:14px;height:14px;">
+      LCS
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCP" style="width:14px;height:14px;">
+      LCP
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="CBLOL" style="width:14px;height:14px;">
+      CBLOL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LCK CL" style="width:14px;height:14px;">
+      LCK CL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LDL" style="width:14px;height:14px;">
+      LDL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NACL" style="width:14px;height:14px;">
+      NACL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LFL" style="width:14px;height:14px;">
+      LFL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="LES" style="width:14px;height:14px;">
+      LES
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Prime League" style="width:14px;height:14px;">
+      Prime League
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="TCL" style="width:14px;height:14px;">
+      TCL
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="NLC" style="width:14px;height:14px;">
+      NLC
+    </label>
+    <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;">
+      <input type="checkbox" class="bulk-league-cb" value="Circuito Desafiante" style="width:14px;height:14px;">
+      Circuito Desafiante
+    </label></div>
       </div>
       <div>
         <label>How far back</label>
         <select id="bulk-weeks" style="width:100%;margin-top:6px;">
           <option value="4">4 weeks</option>
           <option value="8">8 weeks</option>
-          <option value="16" selected>16 weeks (~4 months)</option>
+          <option value="16" selected="">16 weeks (~4 months)</option>
           <option value="26">26 weeks (~6 months)</option>
           <option value="52">52 weeks (full year)</option>
         </select>
         <div style="margin-top:10px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-skip-existing" checked style="width:15px;height:15px;" />
+            <input type="checkbox" id="bulk-skip-existing" style="width:15px;height:15px;">
             Skip games already logged
           </label>
         </div>
         <div style="margin-top:8px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
-            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;" />
+            <input type="checkbox" id="bulk-include-intl" style="width:15px;height:15px;">
             Include Worlds / MSI / First Stand
           </label>
         </div>
@@ -1382,10 +1750,10 @@
     <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
       <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;margin-bottom:8px;">
-        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;" />
+        <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;"></div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 7/31/2026, 4:55:10 PM · Nothing new</div>
     </div>
   </div>
 
@@ -1398,7 +1766,7 @@
       <div>
         <label>Year</label>
         <select id="lpl-year" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
-          <option value="2026" selected>2026</option>
+          <option value="2026" selected="">2026</option>
           <option value="2025">2025</option>
           <option value="2024">2024</option>
         </select>
@@ -1407,12 +1775,12 @@
         <label>Split</label>
         <select id="lpl-split" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
           <option value="Spring">Spring</option>
-          <option value="Summer" selected>Summer</option>
+          <option value="Summer" selected="">Summer</option>
         </select>
       </div>
     </div>
     <label style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;cursor:pointer;">
-      <input type="checkbox" id="lpl-skip-existing" checked style="width:14px;height:14px;" />
+      <input type="checkbox" id="lpl-skip-existing" style="width:14px;height:14px;">
       Skip games already in your data
     </label>
     <button class="btn btn-primary" style="width:100%;" onclick="runLPLImport()">Import LPL data</button>
@@ -1422,12 +1790,122 @@
   <div class="card" style="margin-top:14px;">
     <div class="card-title">📺 League streams</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">All leagues and their streams. Edit any Twitch channel name directly. Add new leagues at the bottom. Edits override the built-in defaults.</p>
-    <div id="streams-list" style="margin-bottom:12px;"></div>
+    <div id="streams-list" style="margin-bottom:12px;"><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Arabian League">Arabian League</span>
+      <input type="text" id="stream-input-Arabian_League" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Arabian League', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="CBLOL">CBLOL</span>
+      <input type="text" id="stream-input-CBLOL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('CBLOL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK">LCK</span>
+      <input type="text" id="stream-input-LCK" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK CL">LCK CL</span>
+      <input type="text" id="stream-input-LCK_CL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCK CL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCO">LCO</span>
+      <input type="text" id="stream-input-LCO" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCO', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCS">LCS</span>
+      <input type="text" id="stream-input-LCS" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LDL">LDL</span>
+      <input type="text" id="stream-input-LDL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LDL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LEC">LEC</span>
+      <input type="text" id="stream-input-LEC" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LEC', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LES">LES</span>
+      <input type="text" id="stream-input-LES" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LES', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LFL">LFL</span>
+      <input type="text" id="stream-input-LFL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LFL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LLA">LLA</span>
+      <input type="text" id="stream-input-LLA" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LLA', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LPL">LPL</span>
+      <input type="text" id="stream-input-LPL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LPL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LVP SL">LVP SL</span>
+      <input type="text" id="stream-input-LVP_SL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('LVP SL', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="La Ligue Française">La Ligue Française</span>
+      <input type="text" id="stream-input-La_Ligue_Fran_aise" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('La Ligue Française', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="NLC">NLC</span>
+      <input type="text" id="stream-input-NLC" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('NLC', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PCS">PCS</span>
+      <input type="text" id="stream-input-PCS" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="PG Nationals">PG Nationals</span>
+      <input type="text" id="stream-input-PG_Nationals" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('PG Nationals', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Prime League">Prime League</span>
+      <input type="text" id="stream-input-Prime_League" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Prime League', this.value)">
+      <button onclick="resetStreamToDefault('Prime League',document.getElementById('stream-input-Prime_League'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Superliga">Superliga</span>
+      <input type="text" id="stream-input-Superliga" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Superliga', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="TCL">TCL</span>
+      <input type="text" id="stream-input-TCL" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('TCL', this.value)">
+      <button onclick="resetStreamToDefault('TCL',document.getElementById('stream-input-TCL'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Ultraliga">Ultraliga</span>
+      <input type="text" id="stream-input-Ultraliga" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('Ultraliga', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div><div style="display:grid;grid-template-columns:140px 1fr auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="VCS">VCS</span>
+      <input type="text" id="stream-input-VCS" placeholder="twitch channel or url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onblur="saveStreamEdit('VCS', this.value)">
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <span></span>
+    </div></div>
     <div style="border-top:1px solid var(--border);padding-top:10px;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">ADD NEW LEAGUE</div>
       <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:flex-end;">
-        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League" /></div>
-        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan" /></div>
+        <div><label>League name</label><input type="text" id="cs-league" placeholder="e.g. Esports Balkan League"></div>
+        <div><label>Twitch channel (or URL)</label><input type="text" id="cs-twitch" placeholder="e.g. eslbalkan"></div>
         <button class="btn btn-primary" onclick="addCustomStream()" style="white-space:nowrap;">Add</button>
       </div>
     </div>
@@ -1439,16 +1917,16 @@
       Add games not on Riot's API — EWC, offline events, or any match you want to appear in the live pill section on the day it's played.
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1" /></div>
-      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN" /></div>
+      <div><label>Blue / Team 1</label><input type="text" id="ms-blue" placeholder="e.g. T1"></div>
+      <div><label>Red / Team 2</label><input type="text" id="ms-red" placeholder="e.g. GEN"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC" /></div>
-      <div><label>Date</label><input type="date" id="ms-date" /></div>
+      <div><label>League / Event</label><input type="text" id="ms-league" placeholder="e.g. EWC"></div>
+      <div><label>Date</label><input type="date" id="ms-date"></div>
     </div>
     <div style="margin-bottom:10px;">
       <label>Block / Round <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals" />
+      <input type="text" id="ms-block" placeholder="e.g. Quarterfinals">
     </div>
     <button class="btn btn-primary" onclick="addManualScheduleGame()" style="width:100%;">Add to schedule</button>
     <div id="ms-sched-status" style="font-size:12px;margin-top:6px;min-height:16px;"></div>
@@ -1465,6 +1943,10 @@ function localDateStr(d) {
     String(d.getDate()).padStart(2,"0");
 }
 // ── Storage ──────────────────────────────────────────────────────────────────
+// Bumped on every build. Published through the existing settings sync, so a
+// device running an older file can notice that a newer one is deployed.
+const BUILD_VERSION = "2026.07.31-b22";
+const BUILD_KEY = "draftlogger_build_v1";
 const STORE_KEY = "draft_logger_entries_v1";
 const PLAYERS_KEY = "draft_logger_players_v1";   // { [summonerName]: { skill: 1-10, updatedAt } }
 const ROSTERS_KEY = "draft_logger_rosters_v1";   // cached team roster data from API
@@ -1501,6 +1983,7 @@ async function loadBulkFromDB() {
 function loadBulkEntries() { return _bulkCache || []; }
 
 async function saveBulkToDB(entries) {
+  if (typeof bumpTrainingPool === "function") bumpTrainingPool();
   _bulkCache = entries;
   try {
     const db = await _openBulkDB();
@@ -1582,7 +2065,11 @@ function saveEntries(entries) {
   const bulk     = entries.filter(e =>  e.isBulkImport);
   if (bulk.length > 0) {
     const existing = loadBulkEntries();
-    const merged = [...existing.filter(e => !bulk.some(b => b.id === e.id)), ...bulk];
+    // Bulk ids embed Date.now(), so matching on id lets a re-import add the same
+    // game again. Match on the natural key instead, which is stable.
+    const _k = e => (typeof gameKey === "function") ? gameKey(e) : e.id;
+    const incoming = new Set(bulk.map(_k));
+    const merged = [...existing.filter(e => !incoming.has(_k(e))), ...bulk];
     saveBulkToDB(merged);
   }
 
@@ -1611,6 +2098,7 @@ function saveEntries(entries) {
   }
 
   writeEntriesRaw(personal);
+  if (typeof bumpTrainingPool === "function") bumpTrainingPool();
 }
 
 // All game data: personal + bulk imports from IndexedDB
@@ -3850,6 +4338,31 @@ function _renderDisagreeSizing() {
   }
   el.innerHTML = lines.join("<br>");
 }
+// Execution demand is now a single comparative scale, \u22122..+2, matching draft
+// preference. Stored as {blue, red, diff} so the ~25 places that read .blue/.red
+// keep working, while the model matches on diff — which also merges nine sparse
+// (blue,red) buckets into five denser ones.
+const EXEC_LEVEL = { low: 1, medium: 2, high: 3 };
+const EXEC_FROM_DIFF = {
+  "-2": { blue: "high",   red: "low"    },
+  "-1": { blue: "high",   red: "medium" },
+  "0":  { blue: "medium", red: "medium" },
+  "1":  { blue: "medium", red: "high"   },
+  "2":  { blue: "low",    red: "high"   }
+};
+function execDiff(ed) {
+  if (ed == null) return null;
+  if (typeof ed === "number") return ed;
+  if (ed.diff != null) return ed.diff;
+  const b = EXEC_LEVEL[ed.blue], r = EXEC_LEVEL[ed.red];
+  if (!b || !r) return null;
+  return r - b;                     // negative = blue's comp is the demanding one
+}
+function execFromDiff(d) {
+  if (d == null) return { blue: null, red: null };
+  return { ...EXEC_FROM_DIFF[String(d)], diff: d };
+}
+
 let execDemand = { blue: null, red: null };
 
 function setDraftPref(val) {
@@ -3869,10 +4382,20 @@ function setAdv(type, side) {
   runPredictionModel();
 }
 
+function setExecDiff(val) {
+  execDemand = execFromDiff(val);
+  [-2,-1,0,1,2].forEach(n => {
+    const btn = document.getElementById("exdiff-" + n);
+    if (btn) btn.classList.toggle("sel", n === val);
+  });
+  runPredictionModel();
+}
+// Kept for any older call sites.
 function setExec(side, level) {
   execDemand[side] = level;
-  document.getElementById("exec-" + side + "-row").querySelectorAll('.conf-btn').forEach(b => b.classList.remove('sel'));
-  event.target.classList.add('sel');
+  const row = document.getElementById("exec-" + side + "-row");
+  if (row) { row.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('sel'));
+             if (event && event.target) event.target.classList.add('sel'); }
   runPredictionModel();
 }
 
@@ -5156,7 +5679,17 @@ function renderFullBreakdown() {
 // ── Backtest ──────────────────────────────────────────────────────────────────
 const BACKTEST_KEY = "draftlogger_backtest_v1";
 
-function modelPredictPure(game, training, fw) {
+function modelPredictPure(game, training, fw, opts) {
+  // Per-factor attribution. add() records where each piece of the log-odds
+  // came from so a factor can be scored, and ablated, on its own.
+  const parts = { f1:0, f5:0, f7:0, f9:0, f12:0 };
+
+  // Shrinkage. A raw wins/n treats 1-of-1 exactly like 50-of-100, which is the
+  // main engine of fake confidence: noise from tiny samples reaches the sigmoid
+  // at full strength. Pulling rates toward 0.5 with K pseudo-games means a
+  // single observation barely moves anything while a large sample still counts.
+  const K = (opts && opts.shrink != null) ? opts.shrink : 0;
+  const rate = (wins, n) => n > 0 ? (wins + K * 0.5) / (n + K) : 0.5;
   const blue = resolveTeam(game.blueTeam), red = resolveTeam(game.redTeam);
   const bChamps = game.champions?.blue || [], rChamps = game.champions?.red || [];
   const bPlayers = game.players?.blue  || [], rPlayers = game.players?.red  || [];
@@ -5168,7 +5701,8 @@ function modelPredictPure(game, training, fw) {
     const games = training.filter(e => resolveTeam(e.blueTeam)===team || resolveTeam(e.redTeam)===team);
     if (games.length < 3) return;
     const wins = games.filter(e => (resolveTeam(e.blueTeam)===team&&e.actualWinner==="blue")||(resolveTeam(e.redTeam)===team&&e.actualWinner==="red")).length;
-    logOdds += (side==="blue"?1:-1) * (wins/games.length - 0.5) * 1.5 * fw1;
+    { const v = (side==="blue"?1:-1) * (rate(wins, games.length) - 0.5) * 1.5 * fw1;
+      if (isFinite(v)) { logOdds += v; parts.f1 += v; } }
   });
 
   // F5: Champion presence
@@ -5180,7 +5714,7 @@ function modelPredictPure(game, training, fw) {
     const cw = cg.filter(e=>{const onBlue=(e.champions?.blue||[]).includes(c);return(onBlue&&e.actualWinner==="blue")||(!onBlue&&e.actualWinner==="red");}).length;
     champC += (s==="blue"?1:-1) * (cw/cg.length - 0.5) * 0.3;
   });
-  logOdds += champC * fw5;
+  { const v = champC * fw5; if (isFinite(v)) { logOdds += v; parts.f5 += v; } }
 
   // F7: Lane matchups
   let mC = 0;
@@ -5191,7 +5725,7 @@ function modelPredictPure(game, training, fw) {
     if (!mg.length) continue;
     mC += (mg.filter(e=>e.actualWinner==="blue").length/mg.length - 0.5) * 1.5;
   }
-  logOdds += mC * fw7;
+  { const v = mC * fw7; if (isFinite(v)) { logOdds += v; parts.f7 += v; } }
 
   // F9: Side preference
   [{ team:blue, side:"blue" }, { team:red, side:"red" }].forEach(({ team, side }) => {
@@ -5200,7 +5734,8 @@ function modelPredictPure(game, training, fw) {
     const sw = sg.filter(e=>e.actualWinner===side).length;
     const ag = training.filter(e=>resolveTeam(e.blueTeam)===team||resolveTeam(e.redTeam)===team);
     const aw = ag.filter(e=>(resolveTeam(e.blueTeam)===team&&e.actualWinner==="blue")||(resolveTeam(e.redTeam)===team&&e.actualWinner==="red")).length;
-    logOdds += (side==="blue"?1:-1) * (sw/sg.length - (ag.length?aw/ag.length:0.5)) * 1.0 * fw9;
+    { const v = (side==="blue"?1:-1) * (rate(sw, sg.length) - rate(aw, ag.length)) * 1.0 * fw9;
+      if (isFinite(v)) { logOdds += v; parts.f9 += v; } }
   });
 
   // F12: Player-champ vs opponent comp
@@ -5222,15 +5757,17 @@ function modelPredictPure(game, training, fw) {
         const pSide=(e.players?.blue||[]).indexOf(player)!==-1?"blue":"red";
         return e.actualWinner===pSide;
       }).length;
-      logOdds += dir*(wins/matched.length-0.5)*1.2*fw12;
+      { const v = dir*(rate(wins, matched.length)-0.5)*1.2*fw12;
+        if (isFinite(v)) { logOdds += v; parts.f12 += v; } }
     }
   });
 
   const bluePct = Math.round(1/(1+Math.exp(-logOdds))*100);
-  return { winner:logOdds>=0?"blue":"red", confidence:Math.max(bluePct,100-bluePct), bluePct };
+  return { winner:logOdds>=0?"blue":"red", confidence:Math.max(bluePct,100-bluePct), bluePct, parts, logOdds };
 }
 
-async function runBacktest() {
+async function runBacktest(mode) {
+  mode = mode || "walkforward";
   const statusEl=document.getElementById("backtest-status"), resultsEl=document.getElementById("backtest-results");
   if (!statusEl||!resultsEl) return;
 
@@ -5242,25 +5779,125 @@ async function runBacktest() {
   if (completed.length < 10) { statusEl.textContent="Need at least 10 completed games with champion data."; return; }
   statusEl.textContent=`Running leave-one-out backtest on ${completed.length} games…`;
   resultsEl.innerHTML="";
-  const fw=loadFactorWeights(), results=[];
+  const fw=loadFactorWeights();
 
-  for (let i=0;i<completed.length;i++) {
-    const pred = modelPredictPure(completed[i], completed.filter((_,j)=>j!==i), fw);
-    results.push({ date:completed[i].date, league:completed[i].league||"",
-      blueTeam:resolveTeam(completed[i].blueTeam), redTeam:resolveTeam(completed[i].redTeam),
-      modelWinner:pred.winner, confidence:pred.confidence, bluePct:pred.bluePct,
-      actualWinner:completed[i].actualWinner, correct:pred.winner===completed[i].actualWinner });
-    if (i%20===0) { statusEl.textContent=`Processing… ${i+1}/${completed.length}`; await new Promise(r=>setTimeout(r,0)); }
+  // Chronological order matters for walk-forward: a game may only be predicted
+  // from games that had already finished when it started.
+  const ordered = [...completed].sort((a,b) => (a.date||"") < (b.date||"") ? -1 : (a.date||"") > (b.date||"") ? 1 : 0);
+  const MIN_TRAIN = 20;
+
+  async function runPass(mode) {
+    const out = [];
+    for (let i=0;i<ordered.length;i++) {
+      const g = ordered[i];
+      let training;
+      if (mode === "walkforward") {
+        training = ordered.filter(o => (o.date||"") < (g.date||""));
+        if (training.length < MIN_TRAIN) continue;   // not enough history yet
+      } else {
+        training = ordered.filter((_,j) => j !== i);
+      }
+      const pred = modelPredictPure(g, training, fw);
+      out.push({ date:g.date, league:g.league||"",
+        blueTeam:resolveTeam(g.blueTeam), redTeam:resolveTeam(g.redTeam),
+        modelWinner:pred.winner, confidence:pred.confidence, bluePct:pred.bluePct,
+        trainN:training.length,
+        actualWinner:g.actualWinner, correct:pred.winner===g.actualWinner });
+      if (i%20===0) {
+        statusEl.textContent=`${mode==="walkforward"?"Walk-forward":"Leave-one-out"}… ${i+1}/${ordered.length}`;
+        await new Promise(r=>setTimeout(r,0));
+      }
+    }
+    return out;
   }
 
-  localStorage.setItem(BACKTEST_KEY, JSON.stringify({ results, ranAt: new Date().toISOString() }));
-  renderBacktestResults(results);
-  statusEl.textContent=`Done — ${completed.length} games backtested.`;
+  if (mode === "compare") {
+    const wf  = await runPass("walkforward");
+    const loo = await runPass("loo");
+    localStorage.setItem(BACKTEST_KEY, JSON.stringify({ results: wf, mode:"walkforward", ranAt: new Date().toISOString() }));
+    renderBacktestCompare(wf, loo);
+    statusEl.textContent = `Done — ${wf.length} walk-forward, ${loo.length} leave-one-out.`;
+    return;
+  }
+
+  const results = await runPass(mode);
+  if (!results.length) {
+    statusEl.textContent = `Not enough history — walk-forward needs at least ${MIN_TRAIN} earlier games before it can predict anything.`;
+    return;
+  }
+  localStorage.setItem(BACKTEST_KEY, JSON.stringify({ results, mode, ranAt: new Date().toISOString() }));
+  renderBacktestResults(results, mode);
+  statusEl.textContent=`Done — ${results.length} games predicted using only prior data.`;
 }
 
-function renderBacktestResults(results) {
+// Brier score splits cleanly into "are my probabilities honest" (reliability)
+// and "do they actually separate winners from losers" (resolution). Overall
+// accuracy hides the difference; this doesn't.
+function calibrationStats(results) {
+  const n = results.length;
+  if (!n) return null;
+  let brier = 0;
+  const base = results.filter(r => r.correct).length / n;
+  const buckets = {};
+  for (const r of results) {
+    const p = Math.min(1, Math.max(0, r.confidence / 100));
+    const y = r.correct ? 1 : 0;
+    brier += (p - y) * (p - y);
+    const b = Math.floor(r.confidence / 5) * 5;
+    (buckets[b] = buckets[b] || { correct: 0, total: 0, psum: 0 });
+    buckets[b].total++; buckets[b].psum += p;
+    if (r.correct) buckets[b].correct++;
+  }
+  brier /= n;
+  let reliability = 0, resolution = 0;
+  for (const d of Object.values(buckets)) {
+    const obs = d.correct / d.total, avgP = d.psum / d.total;
+    reliability += d.total * (avgP - obs) ** 2;
+    resolution  += d.total * (obs - base) ** 2;
+  }
+  reliability /= n; resolution /= n;
+  // Average overshoot across buckets weighted by size: how many points of
+  // confidence are claimed but not delivered.
+  let overshoot = 0;
+  for (const d of Object.values(buckets)) overshoot += d.total * (d.psum / d.total - d.correct / d.total);
+  overshoot = (overshoot / n) * 100;
+  return { n, brier, reliability, resolution, base, overshoot, buckets };
+}
+
+function renderBacktestCompare(wf, loo) {
+  const el = document.getElementById("backtest-results");
+  if (!el) return;
+  const a = calibrationStats(wf), b = calibrationStats(loo);
+  if (!a || !b) { el.innerHTML = '<div class="empty">Not enough data to compare.</div>'; return; }
+  const row = (label, x, y, fmt, better) => `
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="color:var(--muted);">${label}</span>
+      <span><b style="color:${better}">${fmt(x)}</b> <span style="color:var(--muted);">vs ${fmt(y)}</span></span>
+    </div>`;
+  const pc = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+  const n3 = v => v.toFixed(3);
+  el.innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      <b style="color:var(--text);">Walk-forward</b> (honest) vs <b>leave-one-out</b> (sees the future).
+    </div>
+    ${row("Games predicted", a.n, b.n, v => v, "var(--text)")}
+    ${row("Accuracy", a.base * 100, b.base * 100, v => v.toFixed(1) + "%", "var(--text)")}
+    ${row("Confidence overshoot", a.overshoot, b.overshoot, pc, a.overshoot > 5 ? "#ff4d5e" : "var(--green)")}
+    ${row("Brier score (lower better)", a.brier, b.brier, n3, "var(--text)")}
+    ${row("Reliability (lower better)", a.reliability, b.reliability, n3, a.reliability > b.reliability * 1.5 ? "#ff4d5e" : "var(--text)")}
+    ${row("Resolution (higher better)", a.resolution, b.resolution, n3, "var(--text)")}
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+      <b style="color:var(--text);">Confidence overshoot</b> is the headline number: how many points of
+      confidence the model claims but doesn't deliver. Near zero means calibrated. A large positive
+      number under walk-forward while leave-one-out looks fine means the confidence is coming from
+      hindsight, not from signal available at prediction time.
+    </p>`;
+}
+
+function renderBacktestResults(results, mode) {
   const el=document.getElementById("backtest-results");
   if (!el||!results.length) return;
+  const stats = calibrationStats(results);
   const overall=results.filter(r=>r.correct).length/results.length;
   const buckets={};
   results.forEach(r=>{ const b=Math.floor(r.confidence/5)*5; if(!buckets[b])buckets[b]={correct:0,total:0}; buckets[b].total++; if(r.correct)buckets[b].correct++; });
@@ -5281,7 +5918,13 @@ function renderBacktestResults(results) {
   el.innerHTML=`<div style="font-size:13px;margin-bottom:12px;">Overall <b>${Math.round(overall*100)}%</b> across ${results.length} games</div>
     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">CALIBRATION BY CONFIDENCE BUCKET</div>
     ${rows}
-    <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">Built with leave-one-out: each game predicted using only data from other games. If high-confidence buckets are short, use factor weights to bring those factors down.</p>`;
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">
+      ${mode === "walkforward"
+        ? `Walk-forward: each game predicted using only games played before it. Confidence overshoot
+           <b style="color:${stats.overshoot > 5 ? "#ff4d5e" : "var(--green)"};">${(stats.overshoot>=0?"+":"")+stats.overshoot.toFixed(1)}%</b>,
+           Brier ${stats.brier.toFixed(3)}.`
+        : `Leave-one-out: uses later games too, so it sees the future and flatters the model.
+           Prefer walk-forward for anything you act on.`}</p>`;
 }
 // ── End Backtest ──────────────────────────────────────────────────────────────
 
@@ -5332,6 +5975,1336 @@ function fitPlattScaling() {
   return { ok: true, ...params };
 }
 // ── End Platt scaling ─────────────────────────────────────────────────────────
+
+// ── Duplicate detection ──────────────────────────────────────────────────────
+let _dupePlan = null;
+
+function scanDuplicates() {
+  const el = document.getElementById("dupe-results");
+  if (!el) return;
+  const bulk = loadBulkEntries();
+  const groups = {};
+  bulk.forEach(e => {
+    if (!e.date) return;
+    const k = gameKey(e);
+    (groups[k] = groups[k] || []).push(e);
+  });
+  const dupes = Object.entries(groups).filter(([, v]) => v.length > 1);
+  if (!dupes.length) {
+    _dupePlan = null;
+    el.innerHTML = '<span style="color:var(--green);">No duplicates found.</span>';
+    return;
+  }
+  const extra = dupes.reduce((a, [, v]) => a + v.length - 1, 0);
+  // Keep the first of each group, drop the rest.
+  const drop = new Set();
+  dupes.forEach(([, v]) => v.slice(1).forEach(e => drop.add(e.id)));
+  _dupePlan = drop;
+
+  const byLeague = {};
+  dupes.forEach(([, v]) => { const l = v[0].league || "\u2014"; byLeague[l] = (byLeague[l] || 0) + v.length - 1; });
+  el.innerHTML =
+    `<div style="margin-bottom:8px;"><b style="color:#ff4d5e;">${extra}</b> duplicate copies across
+      <b>${dupes.length}</b> matches (${bulk.length} bulk games total).</div>
+     <div style="font-size:11px;color:var(--muted);line-height:1.8;margin-bottom:10px;">` +
+     Object.entries(byLeague).sort((a,b)=>b[1]-a[1]).slice(0,8)
+       .map(([l,c]) => `${l}: ${c}`).join("<br>") +
+     `</div>
+     <button class="btn btn-danger" style="width:100%;" onclick="removeDuplicates()">Remove ${extra} duplicate${extra===1?"":"s"}</button>`;
+}
+
+function removeDuplicates() {
+  if (!_dupePlan || !_dupePlan.size) return;
+  if (!confirm(`Remove ${_dupePlan.size} duplicate games? One copy of each match is kept.`)) return;
+  const kept = loadBulkEntries().filter(e => !_dupePlan.has(e.id));
+  saveBulkToDB(kept);
+  _dupePlan = null;
+  const el = document.getElementById("dupe-results");
+  if (el) el.innerHTML = `<span style="color:var(--green);">Removed. ${kept.length} bulk games remain.</span>`;
+  if (typeof bumpTrainingPool === "function") bumpTrainingPool();
+  if (typeof autoSync === "function") autoSync();
+}
+
+// ── Human vs model ───────────────────────────────────────────────────────────
+const REV_CONF_PCT = { low: 55, medium: 65, high: 78 };
+
+async function runHumanVsModel() {
+  const statusEl = document.getElementById("hvm-status");
+  const el = document.getElementById("hvm-results");
+  if (!statusEl || !el) return;
+
+  const ann = loadAnnotations();
+  const scored = Object.entries(ann)
+    .filter(([, a]) => a.myPick && !a.knewResult && a.actualWinner && a.date)
+    .map(([k, a]) => ({ key: k, ...a }));
+
+  if (scored.length < 10) {
+    statusEl.textContent = "";
+    el.innerHTML = `<div class="empty">${scored.length} blinded prediction${scored.length===1?"":"s"} so far. Need at least 10, and ~40 before the comparison means much.</div>`;
+    return;
+  }
+
+  const hasChamps = e => (e.champions?.blue || []).filter(Boolean).length >= 3
+                      && (e.champions?.red  || []).filter(Boolean).length >= 3;
+  const ordered = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date && hasChamps(e))
+    .sort((a, b) => (a.date || "") < (b.date || "") ? -1 : 1);
+  const byKey = new Map(ordered.map((e, i) => [gameKey(e), i]));
+
+  const fw = loadFactorWeights();
+  const WINDOW = 600;
+  const pairs = [];
+
+  for (let i = 0; i < scored.length; i++) {
+    const a = scored[i];
+    const idx = byKey.get(a.key);
+    if (idx == null || idx < 20) continue;
+    const g = ordered[idx];
+    const training = ordered.slice(Math.max(0, idx - WINDOW), idx);
+    const pred = modelPredictPure(g, training, fw, { shrink: 3 });
+    pairs.push({
+      humanCorrect: a.myPick === a.actualWinner,
+      humanConf: REV_CONF_PCT[a.myConf] || 60,
+      modelCorrect: pred.winner === a.actualWinner,
+      modelConf: pred.confidence,
+      agreed: pred.winner === a.myPick
+    });
+    if (i % 15 === 0) { statusEl.textContent = `Scoring… ${i+1}/${scored.length}`; await new Promise(r => setTimeout(r, 0)); }
+  }
+
+  if (pairs.length < 10) {
+    statusEl.textContent = "";
+    el.innerHTML = '<div class="empty">Not enough of those games have prior history for the model to predict.</div>';
+    return;
+  }
+
+  const n = pairs.length;
+  const hAcc = pairs.filter(p => p.humanCorrect).length / n * 100;
+  const mAcc = pairs.filter(p => p.modelCorrect).length / n * 100;
+  const se = Math.sqrt(0.25 / n) * 100;
+  const hStats = calibrationStats(pairs.map(p => ({ confidence: p.humanConf, correct: p.humanCorrect })));
+  const mStats = calibrationStats(pairs.map(p => ({ confidence: p.modelConf, correct: p.modelCorrect })));
+
+  const agree = pairs.filter(p => p.agreed);
+  const disagree = pairs.filter(p => !p.agreed);
+  const agreeAcc = agree.length ? agree.filter(p => p.humanCorrect).length / agree.length * 100 : null;
+  const disHuman = disagree.length ? disagree.filter(p => p.humanCorrect).length / disagree.length * 100 : null;
+
+  // Paired difference: the same games, so this is more sensitive than
+  // comparing two independent accuracy figures.
+  const diffs = pairs.map(p => (p.humanCorrect ? 1 : 0) - (p.modelCorrect ? 1 : 0));
+  const md = diffs.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.sqrt(diffs.reduce((a, b) => a + (b - md) ** 2, 0) / Math.max(1, n - 1));
+  const tStat = sd > 0 ? md / (sd / Math.sqrt(n)) : 0;
+
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+  const box = (label, val, sub, col) =>
+    `<div style="background:var(--surface2);border-radius:8px;padding:9px 11px;">
+       <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">${label}</div>
+       <div style="font-size:17px;font-weight:700;color:${col || "var(--text)"};">${val}</div>
+       <div style="font-size:10px;color:var(--muted);">${sub}</div></div>`;
+
+  el.innerHTML =
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+       ${box("You", hAcc.toFixed(0) + "%", `\u00B1${se.toFixed(0)} \u00B7 ${n} games`, hAcc > mAcc ? "var(--green)" : "var(--text)")}
+       ${box("Model", mAcc.toFixed(0) + "%", `\u00B1${se.toFixed(0)} \u00B7 same games`, mAcc > hAcc ? "var(--green)" : "var(--text)")}
+       ${box("Your overshoot", signed(hStats.overshoot), "claimed vs delivered", Math.abs(hStats.overshoot) > 10 ? "#ff4d5e" : "var(--green)")}
+       ${box("Model overshoot", signed(mStats.overshoot), "claimed vs delivered", Math.abs(mStats.overshoot) > 10 ? "#ff4d5e" : "var(--green)")}
+     </div>
+     <div style="padding:8px 0;border-top:1px solid var(--border);font-size:12px;">
+       <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">You agreed with the model</span>
+         <b>${agree.length}/${n}</b></div>
+       ${agreeAcc != null ? `<div style="display:flex;justify-content:space-between;margin-top:3px;"><span style="color:var(--muted);">\u2003when you agreed</span><b>${agreeAcc.toFixed(0)}% right</b></div>` : ""}
+       ${disHuman != null ? `<div style="display:flex;justify-content:space-between;margin-top:3px;"><span style="color:var(--muted);">\u2003when you disagreed, you were</span><b style="color:${disHuman>50?"var(--green)":"#ff4d5e"};">${disHuman.toFixed(0)}% right</b></div>` : ""}
+     </div>
+     <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.7;">
+       Paired difference <b style="color:var(--text);">${signed(md * 100)}</b> in your favour,
+       <b style="color:var(--text);">${Math.abs(tStat).toFixed(1)} SD</b>.
+       ${Math.abs(tStat) < 2
+         ? "Too close to call at this sample size \u2014 keep reviewing."
+         : md > 0
+           ? "<span style='color:var(--green);'>Your read is beating the model on the same games. That is worth acting on.</span>"
+           : "<span>The model is beating your read on the same games.</span>"}
+       ${disagree.length >= 10
+         ? ` The disagreement row is the sharpest signal here: when you and the model split, whoever wins those is the one carrying real information.`
+         : ""}
+     </div>`;
+
+  statusEl.textContent = `Compared ${n} blinded predictions.`;
+}
+
+// ── Champion bet streaks ─────────────────────────────────────────────────────
+// A tripwire, not evidence. Streaks of five happen constantly by chance, so
+// every result here is reported next to how many you should expect anyway.
+let _streakCache = null, _streakKey = "";
+
+function championBetStreaks() {
+  const key = `${loadEntries().length}:${_trainDirty}`;
+  if (_streakCache && _streakKey === key) return _streakCache;
+
+  const bets = loadEntries()
+    .filter(e => e.bet && e.bet.on && e.actualWinner && !e.isBulkImport && e.date)
+    .sort((a, b) => (a.date || "") < (b.date || "") ? -1 : 1);
+
+  const backed = {}, opposed = {};
+  let wins = 0;
+  bets.forEach(e => {
+    const won = e.actualWinner === e.bet.on;
+    if (won) wins++;
+    const onSide  = e.bet.on === "red" ? "red" : "blue";
+    const offSide = onSide === "blue" ? "red" : "blue";
+    const clean = side => [...new Set((e.champions?.[side] || [])
+      .filter(Boolean).map(c => String(c).trim()).filter(Boolean))];
+    clean(onSide).forEach(c  => (backed[c]  = backed[c]  || []).push(won));
+    clean(offSide).forEach(c => (opposed[c] = opposed[c] || []).push(won));
+  });
+
+  // Trailing run of lost bets, most recent backwards.
+  const trailing = arr => {
+    let s = 0;
+    for (let i = arr.length - 1; i >= 0; i--) { if (!arr[i]) s++; else break; }
+    return s;
+  };
+
+  const hitRate = bets.length ? wins / bets.length : 0.5;
+  const rows = [];
+  const collect = (map, kind) => {
+    Object.entries(map).forEach(([champ, arr]) => {
+      const streak = trailing(arr);
+      if (streak >= 3) rows.push({ champ, kind, streak, n: arr.length,
+        wins: arr.filter(Boolean).length });
+    });
+  };
+  collect(backed, "backed");
+  collect(opposed, "opposed");
+  rows.sort((a, b) => b.streak - a.streak);
+
+  _streakCache = { rows, hitRate, totalBets: bets.length,
+                   nBacked: Object.keys(backed).length,
+                   nOpposed: Object.keys(opposed).length };
+  _streakKey = key;
+  return _streakCache;
+}
+
+// Chance of a run this long, and how many runs you should expect across every
+// champion being tracked. Without this the warning is just a noise generator.
+function streakContext(streak, s) {
+  const lossRate = 1 - s.hitRate;
+  const pOne = Math.pow(lossRate, streak);
+  const tracked = s.nBacked + s.nOpposed;
+  return { pOne, expected: tracked * pOne, tracked };
+}
+
+function renderStreakCard() {
+  const el = document.getElementById("streak-results");
+  if (!el) return;
+  const s = championBetStreaks();
+  if (s.totalBets < 20) {
+    el.innerHTML = `<div class="empty">Only ${s.totalBets} settled bets logged. Streaks mean nothing until there are a few dozen.</div>`;
+    return;
+  }
+  const live = s.rows.filter(r => r.streak >= 5);
+  const ctx = streakContext(5, s);
+
+  el.innerHTML =
+    `<div style="font-size:12px;margin-bottom:4px;">Bet record: <b>${(s.hitRate*100).toFixed(0)}%</b> across ${s.totalBets} settled bets</div>
+     <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:11px;color:var(--muted);line-height:1.7;">
+       At a ${(s.hitRate*100).toFixed(0)}% hit rate a five-bet losing run has a
+       <b style="color:var(--text);">${(ctx.pOne*100).toFixed(1)}%</b> chance per champion.
+       You are tracking <b style="color:var(--text);">${ctx.tracked}</b> champion-sides, so
+       <b style="color:var(--text);">~${ctx.expected.toFixed(1)}</b> should be on a five-run
+       at any moment even if nothing is wrong.
+       ${live.length > Math.max(1, ctx.expected * 2)
+         ? `<span style="color:#ff4d5e;">You have ${live.length}, which is well above that \u2014 worth a look.</span>`
+         : `<span>You have ${live.length}. ${live.length <= Math.ceil(ctx.expected) ? "That is the expected rate." : "Slightly above expectation, but not alarming."}</span>`}
+     </div>` +
+    (s.rows.length ? s.rows.slice(0, 15).map(r => {
+      const c = streakContext(r.streak, s);
+      const hot = r.streak >= 5;
+      return `<div style="padding:7px 0;border-bottom:1px solid var(--border);opacity:${hot?1:.6};">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <span style="font-size:12px;font-weight:600;">${r.champ}
+            <span style="font-weight:400;color:var(--muted);font-size:11px;">
+              \u00B7 ${r.kind === "backed" ? "bet on" : "bet against"}</span></span>
+          <span style="font-size:12px;font-weight:700;color:${hot?"#ff4d5e":"var(--muted)"};">${r.streak} straight losses</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+          ${r.wins}\u2013${r.n - r.wins} overall on ${r.n} bets
+          \u00B7 a run this long happens ${(c.pOne*100).toFixed(1)}% of the time by chance
+        </div></div>`;
+    }).join("") : '<div class="empty">No active runs of 3 or more.</div>') +
+    `<p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       A streak says nothing about the next bet \u2014 results are independent, and at your hit
+       rate these appear constantly. What it is useful for is noticing when the count is far
+       above expectation, which would suggest something systematic rather than variance.</p>`;
+}
+
+// ── Champion icons ───────────────────────────────────────────────────────────
+// Data Dragon keys don't match display names for about twenty champions
+// ("Wukong" is MonkeyKing, "Cho'Gath" is Chogath). The authoritative list is
+// fetched once a week; this static map covers the gap if that fetch fails, and
+// a broken image falls back to initials so the layout never collapses.
+const DDRAGON_CACHE_KEY = "draftlogger_ddragon_v1";
+const CHAMP_KEY_FIX = {
+  "wukong":"MonkeyKing","nunu & willump":"Nunu","nunu and willump":"Nunu",
+  "renata glasc":"Renata","dr. mundo":"DrMundo","dr mundo":"DrMundo",
+  "jarvan iv":"JarvanIV","kog'maw":"KogMaw","rek'sai":"RekSai","kai'sa":"Kaisa",
+  "kha'zix":"Khazix","cho'gath":"Chogath","vel'koz":"Velkoz","bel'veth":"Belveth",
+  "k'sante":"KSante","master yi":"MasterYi","miss fortune":"MissFortune",
+  "twisted fate":"TwistedFate","xin zhao":"XinZhao","lee sin":"LeeSin",
+  "aurelion sol":"AurelionSol","tahm kench":"TahmKench","leblanc":"Leblanc",
+  "le blanc":"Leblanc","fiddlesticks":"Fiddlesticks","ambessa":"Ambessa"
+};
+let _ddVersion = null, _champNameMap = null;
+
+function _ddReadCache() {
+  try { return JSON.parse(localStorage.getItem(DDRAGON_CACHE_KEY) || "null"); }
+  catch(e) { return null; }
+}
+async function ensureChampionData() {
+  const cached = _ddReadCache();
+  if (cached && Date.now() - cached.at < 7 * 86400000) {
+    _ddVersion = cached.ver; _champNameMap = cached.map; return;
+  }
+  try {
+    const vRes = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
+    const ver = (await vRes.json())[0];
+    const cRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ver}/data/en_US/champion.json`);
+    const data = (await cRes.json()).data;
+    const map = {};
+    Object.values(data).forEach(c => { map[String(c.name).toLowerCase()] = c.id; map[String(c.id).toLowerCase()] = c.id; });
+    _ddVersion = ver; _champNameMap = map;
+    localStorage.setItem(DDRAGON_CACHE_KEY, JSON.stringify({ at: Date.now(), ver, map }));
+  } catch(e) {
+    if (cached) { _ddVersion = cached.ver; _champNameMap = cached.map; }
+    else { _ddVersion = _ddVersion || "14.24.1"; }
+  }
+}
+function champKey(name) {
+  if (!name) return null;
+  const raw = String(name).trim();
+  const lower = raw.toLowerCase();
+  if (_champNameMap && _champNameMap[lower]) return _champNameMap[lower];
+  if (CHAMP_KEY_FIX[lower]) return CHAMP_KEY_FIX[lower];
+  return raw.split(/[^a-zA-Z]+/).filter(Boolean)
+    .map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join("");
+}
+function champIconUrl(name) {
+  const k = champKey(name);
+  if (!k) return null;
+  return `https://ddragon.leagueoflegends.com/cdn/${_ddVersion || "14.24.1"}/img/champion/${k}.png`;
+}
+function champInitials(name) {
+  const s = String(name || "").replace(/[^a-zA-Z]/g, "");
+  return (s.slice(0, 2) || "?").toUpperCase();
+}
+
+// ── Blinded draft review ─────────────────────────────────────────────────────
+// Subjective ratings (draft preference, skill advantage, execution demand) only
+// exist on games you logged personally — roughly 65 of them — which is why those
+// factors are the noisiest in the model. This lets unwatched games be rated
+// without exposing the result.
+const ANNOTATIONS_KEY = "draftlogger_annotations_v1";
+
+// Bulk ids embed Date.now(), so they change on every re-import. Key on
+// something natural instead or annotations orphan themselves.
+function gameKey(e) {
+  const b = (resolveTeam(e.blueTeam || "") || "").toUpperCase().trim();
+  const r = (resolveTeam(e.redTeam  || "") || "").toUpperCase().trim();
+  return [(e.date || "").slice(0, 10), b, r, e.gameNumber || ""].join("|");
+}
+
+function loadAnnotations() {
+  try { return JSON.parse(localStorage.getItem(ANNOTATIONS_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveAnnotations(a) {
+  try { localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(a)); } catch(e) {}
+  if (typeof bumpTrainingPool === "function") bumpTrainingPool();
+  if (typeof autoSync === "function") autoSync();
+}
+
+let _reviewQueue = [], _reviewIdx = 0;
+let _revDraftPref = null, _revSkillAdv = null, _revExec = { blue: null, red: null };
+let _revPred = null, _revConf = null, _revKnew = false;
+
+function buildReviewQueue() {
+  // Refresh the icon map in the background; the board renders either way.
+  ensureChampionData().then(() => { try { renderReviewCard(); } catch(e) {} });
+  const days = parseInt((document.getElementById("review-range") || {}).value) || 7;
+  const cutoff = new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+  const ann = loadAnnotations();
+
+  const hasChamps = e => (e.champions?.blue || []).filter(Boolean).length >= 3
+                      && (e.champions?.red  || []).filter(Boolean).length >= 3;
+  const alreadyRated = e =>
+    e.draftPref != null || e.skillAdv != null ||
+    (e.execDemand && (e.execDemand.blue || e.execDemand.red));
+
+  _reviewQueue = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date && e.date >= cutoff)
+    .filter(hasChamps)
+    .filter(e => !alreadyRated(e))
+    .filter(e => !ann[gameKey(e)])
+    .filter(e => typeof isLeagueVisible !== "function" || isLeagueVisible(e.league || ""))
+    .sort((a, b) => (a.date || "") < (b.date || "") ? 1 : -1);
+
+  // The same match can exist more than once — imported from two sources, or
+  // re-imported under a fresh id. Show it once.
+  const _seen = new Set();
+  _reviewQueue = _reviewQueue.filter(e => {
+    const k = gameKey(e);
+    if (_seen.has(k)) return false;
+    _seen.add(k);
+    return true;
+  });
+
+  _reviewIdx = 0;
+  renderReviewCard();
+}
+
+function renderReviewCard() {
+  const el = document.getElementById("review-card");
+  const cnt = document.getElementById("review-count");
+  if (!el) return;
+  if (cnt) cnt.textContent = _reviewQueue.length
+    ? `${_reviewIdx + 1} of ${_reviewQueue.length}` : "";
+
+  if (_reviewIdx >= _reviewQueue.length) {
+    el.innerHTML = `<div class="empty">${_reviewQueue.length ? "All done \u2014 queue cleared." : "Nothing unrated in this window."}</div>`;
+    return;
+  }
+
+  const g = _reviewQueue[_reviewIdx];
+  const blue = resolveTeam(g.blueTeam) || "Blue";
+  const red  = resolveTeam(g.redTeam)  || "Red";
+
+  // Laid out the way a broadcast draft board is: the two sides facing each
+  // other across a centre line, picks in draft order top to bottom.
+  const pickCell = (c, side) => {
+    const url = champIconUrl(c);
+    const flip = side === "blue";
+    return `<div style="display:flex;align-items:center;gap:8px;padding:3px 0;${flip ? "flex-direction:row-reverse;text-align:right;" : ""}">
+      <div style="position:relative;width:38px;height:38px;flex-shrink:0;border-radius:7px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid ${flip ? "var(--blue)" : "var(--red)"};">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+                     font-size:11px;font-weight:700;color:var(--muted);">${champInitials(c)}</span>
+        ${url ? `<img src="${url}" alt="${c}" loading="lazy"
+             style="position:relative;width:100%;height:100%;object-fit:cover;display:block;"
+             onerror="this.style.display='none'">` : ""}
+      </div>
+      <div style="font-size:11px;line-height:1.25;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c}</div>
+    </div>`;
+  };
+  const column = side => (g.champions?.[side] || []).filter(Boolean).map(c => pickCell(c, side)).join("");
+
+  el.innerHTML = `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px;">
+        <span>${g.league || "\u2014"}${g.gameNumber ? " \u00B7 Game " + g.gameNumber : ""}</span>
+        <span>${g.date || ""}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start;">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--blue);text-align:right;margin-bottom:6px;
+                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${blue}</div>
+          ${column("blue")}
+        </div>
+        <div style="width:1px;background:var(--border);align-self:stretch;margin-top:22px;"></div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px;
+                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${red}</div>
+          ${column("red")}
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <span class="advantage-label" style="margin-top:0;">Draft preference \u2014 which side drew up the better draft?</span>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="rev-dpref-row">
+        <button class="three-btn blue" onclick="revSetPref(-2)">${blue} +2</button>
+        <button class="three-btn blue" onclick="revSetPref(-1)">${blue} +1</button>
+        <button class="three-btn even" onclick="revSetPref(0)">Even</button>
+        <button class="three-btn red"  onclick="revSetPref(1)">${red} +1</button>
+        <button class="three-btn red"  onclick="revSetPref(2)">${red} +2</button>
+      </div>
+
+      <span class="advantage-label">Execution demand \u2014 whose comp is harder to play well?</span>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="rev-exec-row">
+        <button class="three-btn blue" onclick="revSetExecDiff(-2)">${blue} +2</button>
+        <button class="three-btn blue" onclick="revSetExecDiff(-1)">${blue} +1</button>
+        <button class="three-btn even" onclick="revSetExecDiff(0)">Even</button>
+        <button class="three-btn red"  onclick="revSetExecDiff(1)">${red} +1</button>
+        <button class="three-btn red"  onclick="revSetExecDiff(2)">${red} +2</button>
+      </div>
+
+      <span class="advantage-label">Skill advantage \u2014 ignoring the draft, who is the stronger team?</span>
+      <div class="three-way" id="rev-skill-row">
+        <button class="three-btn blue" onclick="revSetSkill('blue')">${blue}</button>
+        <button class="three-btn even" onclick="revSetSkill('unsure')">Not sure</button>
+        <button class="three-btn red"  onclick="revSetSkill('red')">${red}</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;border:1px solid var(--blue);">
+      <span class="advantage-label" style="margin-top:0;">Your read \u2014 who wins?</span>
+      <div class="three-way" id="rev-pred-row">
+        <button class="three-btn blue" onclick="revSetPred('blue')">${blue}</button>
+        <button class="three-btn red"  onclick="revSetPred('red')">${red}</button>
+      </div>
+      <span class="advantage-label">How sure are you?</span>
+      <div style="display:flex;gap:4px;margin-top:6px;" id="rev-conf-row">
+        <button class="conf-btn" onclick="revSetConf('low')">Low</button>
+        <button class="conf-btn" onclick="revSetConf('medium')">Medium</button>
+        <button class="conf-btn" onclick="revSetConf('high')">High</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:9px;line-height:1.6;">
+        Only answer if you genuinely don't know the result. If you remember this game,
+        use <b>I already know this one</b> \u2014 a prediction you know the answer to
+        looks like skill and quietly corrupts the comparison.
+      </p>
+      <button class="btn btn-ghost" style="width:100%;margin-top:4px;font-size:12px;"
+        onclick="markKnownResult()">I already know this one \u2014 ratings only</button>
+    </div>
+
+    <div id="review-reveal-box"></div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="saveReviewRating()">Save &amp; next</button>
+      <button class="btn btn-ghost" onclick="skipReview()">Skip</button>
+    </div>`;
+
+  _revDraftPref = null; _revSkillAdv = null; _revExec = { blue: null, red: null };
+  _revPred = null; _revConf = null; _revKnew = false;
+}
+
+function _revSel(rowId, btn) {
+  const row = document.getElementById(rowId);
+  if (row) row.querySelectorAll("button").forEach(b => b.classList.remove("sel"));
+  if (btn) btn.classList.add("sel");
+}
+function revSetPref(v)  { _revDraftPref = v; _revSel("rev-dpref-row", event.target.closest("button")); }
+function revSetSkill(s) { _revSkillAdv = s;  _revSel("rev-skill-row", event.target.closest("button")); }
+function revSetExecDiff(v) {
+  _revExec = execFromDiff(v);
+  _revSel("rev-exec-row", event.target.closest("button"));
+}
+function revSetPred(side) { _revPred = side; _revSel("rev-pred-row", event.target.closest("button")); }
+function revSetConf(c)    { _revConf = c;    _revSel("rev-conf-row", event.target.closest("button")); }
+function markKnownResult() {
+  // Ratings stay useful; the prediction is dropped rather than recorded as a guess.
+  _revKnew = true; _revPred = null; _revConf = null;
+  _revSel("rev-pred-row", null); _revSel("rev-conf-row", null);
+  saveReviewRating();
+}
+
+function skipReview() {
+  _reviewIdx++;
+  renderReviewCard();
+}
+
+function saveReviewRating() {
+  const g = _reviewQueue[_reviewIdx];
+  if (!g) return;
+  if (_revDraftPref === null && !_revSkillAdv && !_revExec.blue && !_revExec.red) {
+    alert("Rate at least one thing, or hit Skip.");
+    return;
+  }
+  const ann = loadAnnotations();
+  ann[gameKey(g)] = {
+    draftPref: _revDraftPref,
+    skillAdv: _revSkillAdv,
+    execDemand: { ..._revExec },
+    // Blinded human forecast. knewResult excludes it from scoring entirely.
+    myPick: _revKnew ? null : _revPred,
+    myConf: _revKnew ? null : _revConf,
+    knewResult: _revKnew,
+    actualWinner: g.actualWinner,
+    date: g.date,
+    league: g.league || "",
+    ratedAt: new Date().toISOString(),
+    // Tagged so these can be analysed separately from live ratings — a rating
+    // made after the fact is not the same act as one made before kickoff.
+    source: "backfill"
+  };
+  saveAnnotations(ann);
+
+  const reveal = (document.getElementById("review-reveal") || {}).checked;
+  if (reveal) {
+    const box = document.getElementById("review-reveal-box");
+    const won = g.actualWinner === "blue" ? resolveTeam(g.blueTeam) : resolveTeam(g.redTeam);
+    if (box) {
+      box.innerHTML = `<div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;">
+        Winner: <b style="color:${g.actualWinner === "blue" ? "var(--blue)" : "var(--red)"};">${won}</b>
+        <button class="btn btn-ghost" style="float:right;padding:3px 9px;font-size:11px;" onclick="skipReview()">Next \u2192</button></div>`;
+    }
+    return;   // saved; user advances manually so they can see the result
+  }
+  skipReview();
+}
+
+// ── Pre-registered champion watchlist ────────────────────────────────────────
+const CHAMP_WATCH_KEY = "draftlogger_champ_watch_v1";
+
+function loadChampWatch() {
+  try { return JSON.parse(localStorage.getItem(CHAMP_WATCH_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveChampWatch(w) {
+  localStorage.setItem(CHAMP_WATCH_KEY, JSON.stringify(w));
+  if (typeof autoSync === "function") autoSync();
+}
+function addChampWatch() {
+  const inp = document.getElementById("champ-watch-input");
+  const name = (inp?.value || "").trim();
+  if (!name) return;
+  const w = loadChampWatch();
+  if (!w[name]) w[name] = { addedAt: new Date().toISOString().slice(0, 10) };
+  saveChampWatch(w);
+  inp.value = "";
+  renderChampWatch();
+}
+function removeChampWatch(name) {
+  const w = loadChampWatch();
+  delete w[name];
+  saveChampWatch(w);
+  renderChampWatch();
+}
+
+function renderChampWatch() {
+  const el = document.getElementById("champ-watch-list");
+  if (!el) return;
+  const w = loadChampWatch();
+  const names = Object.keys(w);
+  if (!names.length) {
+    el.innerHTML = '<div style="font-size:11px;color:var(--muted);">Nothing being watched.</div>';
+    return;
+  }
+
+  const scored = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null && e.date)
+    .map(e => {
+      const p = parseFloat(e.modelPct);
+      if (!isFinite(p)) return null;
+      return {
+        date: e.date,
+        champs: [...(e.champions?.blue || []), ...(e.champions?.red || [])].filter(Boolean).map(c => String(c).trim()),
+        confidence: Math.max(p, 100 - p),
+        correct: (p >= 50 ? "blue" : "red") === e.actualWinner
+      };
+    })
+    .filter(Boolean);
+
+  // Same confidence-band control as the main test.
+  const bandAcc = {};
+  scored.forEach(g => {
+    const b = Math.floor(g.confidence / 10) * 10;
+    (bandAcc[b] = bandAcc[b] || { hit: 0, n: 0 });
+    bandAcc[b].n++; if (g.correct) bandAcc[b].hit++;
+  });
+  const baseAcc = scored.length ? scored.filter(g => g.correct).length / scored.length * 100 : 50;
+  const expectedFor = g => {
+    const b = Math.floor(g.confidence / 10) * 10;
+    const d = bandAcc[b];
+    return d && d.n >= 4 ? d.hit / d.n * 100 : baseAcc;
+  };
+
+  el.innerHTML = names.map(name => {
+    const since = w[name].addedAt;
+    const mine = scored.filter(g => g.date >= since &&
+      g.champs.some(c => c.toLowerCase() === name.toLowerCase()));
+    const n = mine.length;
+    let verdict;
+    if (n < 10) {
+      // 40 is roughly where a 15-point effect becomes detectable at 2 SD.
+      verdict = `<span style="color:var(--muted);">${n} game${n===1?"":"s"} so far \u2014 need ~40 to say anything.</span>`;
+    } else {
+      const obs = mine.filter(g => g.correct).length / n * 100;
+      const exp = mine.reduce((a, g) => a + expectedFor(g), 0) / n;
+      const se = Math.sqrt(0.25 / n) * 100;
+      const z = (obs - exp) / se;
+      const col = Math.abs(z) > 2 ? (obs < exp ? "#ff4d5e" : "var(--green)") : "var(--muted)";
+      verdict = `<b style="color:${col};">${obs.toFixed(0)}%</b> vs <b>${exp.toFixed(0)}%</b> expected
+        <span style="color:var(--muted);">\u00B7 ${n}g \u00B7 ${Math.abs(z).toFixed(1)} SD
+        ${Math.abs(z) > 2 ? (obs < exp ? "\u2014 real effect" : "\u2014 better than expected") : "\u2014 still noise"}</span>`;
+    }
+    return `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:600;">${name}</div>
+        <div style="font-size:11px;margin-top:2px;">${verdict}</div>
+        <div style="font-size:10px;color:var(--muted);opacity:.7;">watching since ${since}</div>
+      </div>
+      <button onclick="removeChampWatch('${name.replace(/'/g, "\\'")}')"
+        style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;">\u2715</button>
+    </div>`;
+  }).join("");
+}
+
+// ── Champion reliability ─────────────────────────────────────────────────────
+// Presence-based: a champion counts if it was picked by either team, because
+// the hypothesis is about how readable the game is, not who wins.
+// Retroactively predict every game in the pool, walk-forward, so champions can
+// be tested on thousands of games instead of only the ones you happened to log.
+// This scores the 5-factor pure model rather than the 13-factor live one, which
+// is a fair proxy for "can the model read this game" and the only option that
+// gets the sample size anywhere near useful.
+async function runChampionReliabilityFull() {
+  const statusEl = document.getElementById("champrel-status");
+  const el = document.getElementById("champrel-results");
+  if (!statusEl || !el) return;
+
+  const hasChamps = e => (e.champions?.blue || []).filter(Boolean).length >= 3
+                      || (e.champions?.red  || []).filter(Boolean).length >= 3;
+
+  const windowDays = parseInt((document.getElementById("champ-window") || {}).value);
+  const winCutoff = windowDays ? new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10) : null;
+
+  const ordered = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date && hasChamps(e))
+    .sort((a, b) => (a.date || "") < (b.date || "") ? -1 : 1);
+
+  if (ordered.length < 100) {
+    statusEl.textContent = "";
+    el.innerHTML = `<div class="empty">Only ${ordered.length} games available. Import more history first.</div>`;
+    return;
+  }
+
+  const MIN_TRAIN = 30;
+  const WINDOW = 600;   // cap the training slice: keeps this O(n) rather than O(n^2)
+  const fw = loadFactorWeights();
+  const out = [];
+
+  for (let i = MIN_TRAIN; i < ordered.length; i++) {
+    const g = ordered[i];
+    const training = ordered.slice(Math.max(0, i - WINDOW), i);
+    const pred = modelPredictPure(g, training, fw, { shrink: 3 });
+    const champs = [...(g.champions?.blue || []), ...(g.champions?.red || [])]
+      .filter(Boolean).map(c => String(c).trim()).filter(Boolean);
+    // Train on everything before the game, but only SCORE games inside the
+    // window — otherwise a champion's verdict is dominated by a meta that no
+    // longer exists.
+    if (!winCutoff || g.date >= winCutoff) {
+      out.push({
+        champs: [...new Set(champs)],
+        confidence: pred.confidence,
+        correct: pred.winner === g.actualWinner,
+        date: g.date
+      });
+    }
+    if (i % 40 === 0) {
+      statusEl.textContent = `Predicting… ${i}/${ordered.length}`;
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  analyseChampions(out, el, statusEl,
+    `walk-forward over ${out.length} games (personal + bulk, 5-factor model)`);
+}
+
+function runChampionReliability() {
+  const statusEl = document.getElementById("champrel-status");
+  const el = document.getElementById("champrel-results");
+  if (!statusEl || !el) return;
+
+  const games = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null)
+    .map(e => {
+      const p = parseFloat(e.modelPct);
+      if (!isFinite(p)) return null;
+      const champs = [...(e.champions?.blue || []), ...(e.champions?.red || [])]
+        .filter(Boolean).map(c => String(c).trim()).filter(Boolean);
+      return {
+        champs: [...new Set(champs)],
+        confidence: Math.max(p, 100 - p),
+        correct: (p >= 50 ? "blue" : "red") === e.actualWinner,
+        date: e.date
+      };
+    })
+    .filter(Boolean);
+
+  if (games.length < 20) {
+    statusEl.textContent = "";
+    el.innerHTML = '<div class="empty">Need ~20 logged games with stored predictions and champion data.</div>';
+    return;
+  }
+
+  analyseChampions(games, el, statusEl, `${games.length} games you logged (13-factor live model)`);
+}
+
+function analyseChampions(games, el, statusEl, sourceLabel) {
+  const baseStats = calibrationStats(games);
+  const baseAcc = baseStats.base * 100;
+  const baseOver = baseStats.overshoot;
+
+  // With thousands of games a 5-game threshold would flood the list with noise.
+  const MIN_N = games.length > 500 ? 25 : 5;
+  const byChamp = {};
+  games.forEach(g => g.champs.forEach(c => (byChamp[c] = byChamp[c] || []).push(g)));
+
+  // Confidence-band accuracy for the whole population. Comparing a champion
+  // against THIS instead of the flat baseline removes the selection effect:
+  // champions that happen to appear in high-confidence games are no longer
+  // penalised for the model being bad at high confidence generally.
+  const bandAcc = {};
+  games.forEach(g => {
+    const b = Math.floor(g.confidence / 10) * 10;
+    (bandAcc[b] = bandAcc[b] || { hit: 0, n: 0 });
+    bandAcc[b].n++; if (g.correct) bandAcc[b].hit++;
+  });
+  const expectedFor = g => {
+    const b = Math.floor(g.confidence / 10) * 10;
+    const d = bandAcc[b];
+    return d && d.n >= 4 ? d.hit / d.n * 100 : baseAcc;
+  };
+
+  // How often each champion is being picked right now, independent of the
+  // analysis window — so a verdict on a champion nobody drafts can be hidden.
+  const recentCut = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const recentPicks = {};
+  let recentGames = 0;
+  try {
+    loadAllGameData().forEach(e => {
+      if (!e.date || e.date < recentCut) return;
+      recentGames++;
+      [...new Set([...(e.champions?.blue || []), ...(e.champions?.red || [])].filter(Boolean)
+        .map(c => String(c).trim()))].forEach(c => { recentPicks[c] = (recentPicks[c] || 0) + 1; });
+    });
+  } catch(e) {}
+
+  const rows = Object.entries(byChamp)
+    .filter(([, v]) => v.length >= MIN_N)
+    .map(([name, v]) => {
+      const s = calibrationStats(v);
+      const se = Math.sqrt(0.25 / v.length) * 100;
+      const exp = v.reduce((a, g) => a + expectedFor(g), 0) / v.length;
+      const obs = s.base * 100;
+      return {
+        name, n: v.length,
+        acc: obs,
+        over: s.overshoot,
+        dAcc: obs - baseAcc,
+        dOver: s.overshoot - baseOver,
+        conf: v.reduce((a, x) => a + x.confidence, 0) / v.length,
+        se,
+        z: (obs - baseAcc) / se,
+        exp,                       // what similar-confidence games delivered
+        dAdj: obs - exp,           // champion effect, selection removed
+        zAdj: (obs - exp) / se,
+        pickRate: recentGames ? (recentPicks[name] || 0) / recentGames * 100 : 0,
+        recentN: recentPicks[name] || 0
+      };
+    });
+
+  // Empirical-Bayes shrinkage. Raw deltas are dominated by whichever champion
+  // has the fewest games, because small samples swing widest — sorting worst
+  // first then surfaces noise every time. Estimating how much real spread there
+  // is between champions, and pulling each estimate toward zero in proportion
+  // to its own uncertainty, fixes that: big samples keep their signal, small
+  // ones collapse to nothing.
+  const meanD = rows.reduce((a, r) => a + r.dAdj, 0) / (rows.length || 1);
+  const varD  = rows.reduce((a, r) => a + (r.dAdj - meanD) ** 2, 0) / (rows.length || 1);
+  const meanSE2 = rows.reduce((a, r) => a + r.se ** 2, 0) / (rows.length || 1);
+  const tau2 = Math.max(0, varD - meanSE2);       // true between-champion variance
+  rows.forEach(r => {
+    const w = tau2 / (tau2 + r.se ** 2);          // 0 = all noise, 1 = all signal
+    r.shrunk = r.dAdj * w;
+    r.weight = w;
+  });
+
+  const currentOnly = (document.getElementById("champ-current-only") || {}).checked;
+  const visible = rows
+    .filter(r => !currentOnly || r.pickRate >= 3)
+    .sort((a, b) => a.shrunk - b.shrunk);
+
+  // With this many champions tested, some will look extreme purely by chance.
+  const tested = rows.length;
+  const expectedFalse = (tested * 0.05).toFixed(1);
+  const flagged = rows.filter(r => Math.abs(r.z) > 2).length;
+
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1);
+  const html = visible.slice(0, 20).map(r => {
+    const noisy = Math.abs(r.z) < 2;
+    const col = noisy ? "var(--muted)" : r.dAcc < 0 ? "#ff4d5e" : "var(--green)";
+    return `<div style="padding:7px 0;border-bottom:1px solid var(--border);opacity:${noisy ? .65 : 1};">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+        <span style="font-size:12px;font-weight:600;">${r.name}</span>
+        <span style="font-size:12px;font-weight:700;color:${col};">${r.acc.toFixed(0)}%<span style="font-weight:400;color:var(--muted);font-size:11px;"> \u00B1${r.se.toFixed(0)} \u00B7 ${r.n}g</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+        vs flat baseline <b style="color:${r.dAcc < -10 ? "#ff4d5e" : "var(--text)"};">${signed(r.dAcc)}%</b>
+        \u00B7 avg conf ${r.conf.toFixed(0)}%
+      </div>
+      <div style="font-size:11px;margin-top:2px;">
+        <span style="color:var(--muted);">raw vs same-confidence:</span>
+        <b style="color:var(--muted);">${signed(r.dAdj)}%</b>
+        <span style="color:var(--muted);opacity:.7;">(${Math.abs(r.zAdj).toFixed(1)} SD)</span>
+      </div>
+      <div style="font-size:11px;margin-top:2px;">
+        <span style="color:var(--muted);">after shrinkage:</span>
+        <b style="color:${Math.abs(r.shrunk) > 5 ? (r.shrunk < 0 ? "#ff4d5e" : "var(--green)") : "var(--muted)"};">${signed(r.shrunk)}%</b>
+        <span style="color:var(--muted);opacity:.7;">\u00B7 ${(r.weight * 100).toFixed(0)}% of it survives \u00B7 picked in ${r.pickRate.toFixed(0)}% of recent games</span>
+      </div></div>`;
+  }).join("");
+
+  el.innerHTML =
+    `<div style="font-size:12px;margin-bottom:2px;">Baseline: <b>${baseAcc.toFixed(0)}%</b> accuracy,
+       overshoot <b>${signed(baseOver)}%</b>, across ${games.length} games</div>
+     <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Source: ${sourceLabel}</div>
+     <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:11px;color:var(--muted);line-height:1.7;">
+       Tested <b style="color:var(--text);">${tested}</b> champions with ${MIN_N}+ games.
+       <b style="color:var(--text);">${flagged}</b> look extreme (beyond 2 SD);
+       about <b style="color:var(--text);">${expectedFalse}</b> would look that way by pure chance
+       even if every champion behaved identically.
+       ${flagged <= Math.ceil(expectedFalse)
+         ? `<span style="color:#ff4d5e;">That is at or below the chance rate \u2014 treat every row here as noise, not a finding.</span>`
+         : `<span style="color:var(--green);">That is more than chance would produce, so the strongest rows may be real.</span>`}
+     </div>
+     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">
+       WORST AFTER SHRINKAGE FIRST \u00B7 ${visible.length} shown of ${rows.length}</div>
+     ${html || '<div class="empty">No champion has enough games yet.</div>'}
+     <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       <b style="color:var(--text);">After shrinkage</b> is the number to act on. A raw delta of
+       \u221240% on 25 games is mostly noise; shrinkage pulls each estimate toward zero in
+       proportion to its own uncertainty, so what survives is roughly the effect worth believing.
+       The "% survives" figure says how much of the raw number held up \u2014 low means the sample
+       was too thin to carry it. ${tau2 <= 0.01
+         ? `<b style="color:#ff4d5e;">Between-champion variance came out at zero here, meaning the
+            spread is fully explained by sample noise \u2014 no champion is distinguishable from
+            any other.</b>`
+         : `Champions differ by about <b style="color:var(--text);">${Math.sqrt(tau2).toFixed(1)} points</b>
+            genuinely, once noise is removed.`}</p>`;
+
+  statusEl.textContent = `Tested ${tested} champions across ${games.length} games · ${sourceLabel}.`;
+}
+
+// ── Improved-model A/B ───────────────────────────────────────────────────────
+// Two changes, tested together and separately:
+//   1. train on personal + bulk instead of personal alone
+//   2. shrink small-sample rates toward 0.5
+// Both target the same failure: noise from thin samples reaching the sigmoid.
+async function runImprovedTest() {
+  const statusEl = document.getElementById("backtest-status");
+  const el = document.getElementById("backtest-results");
+  if (!statusEl || !el) return;
+
+  const hasChamps = e => (e.champions?.blue||[]).filter(Boolean).length >= 3
+                      || (e.champions?.red||[]).filter(Boolean).length >= 3;
+
+  // Predict the same games in every arm so the comparison is like-for-like.
+  const target = loadEntries()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && hasChamps(e) && e.date)
+    .sort((a,b) => (a.date||"") < (b.date||"") ? -1 : 1);
+
+  const personalPool = target;
+  const fullPool = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && hasChamps(e) && e.date)
+    .sort((a,b) => (a.date||"") < (b.date||"") ? -1 : 1);
+
+  if (target.length < 25) { statusEl.textContent = "Need ~25 completed games to compare."; return; }
+
+  const fw = loadFactorWeights();
+  const MIN_TRAIN = 20;
+
+  async function arm(pool, shrink, label, games) {
+    const out = [];
+    const list = games || target;
+    for (let i = 0; i < list.length; i++) {
+      const g = list[i];
+      const training = pool.filter(o => (o.date||"") < (g.date||"") && o.id !== g.id);
+      if (training.length < MIN_TRAIN) continue;
+      const pred = modelPredictPure(g, training, fw, { shrink });
+      out.push({ confidence: pred.confidence, correct: pred.winner === g.actualWinner });
+      if (i % 20 === 0) { statusEl.textContent = `${label}… ${i+1}/${list.length}`; await new Promise(r => setTimeout(r, 0)); }
+    }
+    return out;
+  }
+
+  // Only compare games EVERY arm can predict. Otherwise the richer pool
+  // qualifies extra early games under MIN_TRAIN and the accuracy difference
+  // partly reflects which games were predicted, not how well.
+  const eligible = target.filter(g =>
+    personalPool.filter(o => (o.date||"") < (g.date||"") && o.id !== g.id).length >= MIN_TRAIN &&
+    fullPool.filter(o => (o.date||"") < (g.date||"") && o.id !== g.id).length >= MIN_TRAIN
+  );
+  const skipped = target.length - eligible.length;
+
+  const arms = [
+    ["Current (personal, no shrinkage)", personalPool, 0],
+    ["+ all data, K=0",                  fullPool,     0],
+    ["+ all data, K=3",                  fullPool,     3],
+    ["+ all data, K=5",                  fullPool,     5],
+    ["+ all data, K=10",                 fullPool,     10],
+    ["+ all data, K=20",                 fullPool,     20]
+  ];
+
+  const results = [];
+  for (const [label, pool, shrink] of arms) {
+    const r = await arm(pool, shrink, label, eligible);
+    results.push([label, r.length ? calibrationStats(r) : null, r]);
+  }
+
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+  const best = results.filter(r => r[1]).sort((a,b) => a[1].brier - b[1].brier)[0];
+
+  el.innerHTML =
+    `<div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+       Walk-forward on the ${eligible.length} games every arm can predict${skipped ? ` (${skipped} skipped for lack of history)` : ""}.
+       K is the shrinkage strength: 0 is none, higher pulls small samples harder toward 50%.
+       Lower Brier is better.</div>` +
+    results.map(([label, s, r]) => {
+      if (!s) return `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);">${label} — not enough history</div>`;
+      const hi = r.filter(x => x.confidence >= 80);
+      const hiAcc = hi.length ? hi.filter(x => x.correct).length / hi.length * 100 : null;
+      const isBest = best && label === best[0];
+      const se = Math.sqrt(0.25 / s.n) * 100;
+      return `<div style="padding:9px 0;border-bottom:1px solid var(--border);${isBest?"background:rgba(91,140,255,.07);border-radius:6px;padding-left:8px;padding-right:8px;":""}">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <span style="font-size:12px;font-weight:600;">${label}${isBest?' <span style="color:var(--blue);font-size:10px;">BEST</span>':""}</span>
+          <span style="font-size:12px;font-weight:700;">${(s.base*100).toFixed(0)}%<span style="font-weight:400;color:var(--muted);font-size:11px;"> ±${se.toFixed(0)} · ${s.n}g</span></span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+          Brier <b style="color:var(--text);">${s.brier.toFixed(3)}</b>
+          · overshoot <b style="color:${s.overshoot>15?"#ff4d5e":s.overshoot>5?"var(--text)":"var(--green)"};">${signed(s.overshoot)}</b>
+          · resolution <b style="color:var(--text);">${s.resolution.toFixed(3)}</b>
+          · 80%+ <b style="color:${hiAcc!=null&&hiAcc<55?"#ff4d5e":"var(--text)"};">${hiAcc!=null?hiAcc.toFixed(0)+"%":"—"}</b>
+          <span style="opacity:.6;">(${hi.length}g)</span>
+        </div></div>`;
+    }).join("") +
+    `<p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       If overshoot drops sharply while accuracy holds, shrinkage is doing its job — the model
+       stops manufacturing confidence from thin samples. If accuracy stays at coin-flip in every
+       arm, the factors themselves don't predict outcomes and no amount of data or shrinkage
+       will change that.</p>`;
+
+  statusEl.textContent = `Compared ${arms.length} configurations across ${eligible.length} identical games.`;
+}
+
+// ── Failure breakdown ────────────────────────────────────────────────────────
+// Training depth = how many completed games (personal AND bulk) existed before
+// this game involving either team. That is the pool the factors were estimated
+// from, so it is the honest measure of how much the model actually knew.
+function runFailureBreakdown() {
+  const statusEl = document.getElementById("failbd-status");
+  const el = document.getElementById("failbd-results");
+  if (!statusEl || !el) return;
+
+  const pool = loadAllGameData()
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date)
+    .map(e => ({ date: e.date, b: resolveTeam(e.blueTeam), r: resolveTeam(e.redTeam) }));
+
+  const scored = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null && e.date)
+    .map(e => {
+      const p = parseFloat(e.modelPct);
+      if (!isFinite(p)) return null;
+      const bt = resolveTeam(e.blueTeam), rt = resolveTeam(e.redTeam);
+      const depth = pool.filter(o => o.date < e.date && (o.b === bt || o.r === bt || o.b === rt || o.r === rt)).length;
+      return {
+        league: (e.league || "\u2014").trim() || "\u2014",
+        confidence: Math.max(p, 100 - p),
+        correct: (p >= 50 ? "blue" : "red") === e.actualWinner,
+        depth
+      };
+    })
+    .filter(Boolean);
+
+  if (scored.length < 10) {
+    statusEl.textContent = "";
+    el.innerHTML = '<div class="empty">Not enough stored predictions to break down yet.</div>';
+    return;
+  }
+
+  const summarise = list => {
+    const s = calibrationStats(list);
+    const hi = list.filter(r => r.confidence >= 80);
+    return {
+      n: list.length,
+      acc: s.base * 100,
+      over: s.overshoot,
+      hiN: hi.length,
+      hiAcc: hi.length ? hi.filter(r => r.correct).length / hi.length * 100 : null,
+      depth: list.reduce((a, r) => a + r.depth, 0) / list.length
+    };
+  };
+
+  const groupBy = (list, fn) => {
+    const m = {};
+    list.forEach(r => { const k = fn(r); (m[k] = m[k] || []).push(r); });
+    return m;
+  };
+
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+  const se = n => Math.sqrt(0.25 / n) * 100;
+
+  const row = (label, d, extra) => {
+    // Flag only what is outside coin-flip noise for that sample size.
+    const meaningful = Math.abs(d.acc - 50) > 2 * se(d.n);
+    const col = !meaningful ? "var(--muted)" : d.acc > 50 ? "var(--green)" : "#ff4d5e";
+    return `<div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+        <span style="font-size:12px;font-weight:600;">${label}</span>
+        <span style="font-size:12px;font-weight:700;color:${col};">${d.acc.toFixed(0)}%<span style="font-weight:400;color:var(--muted);font-size:11px;"> \u00B1${se(d.n).toFixed(0)} \u00B7 ${d.n}g</span></span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+        overshoot <b style="color:${d.over > 15 ? "#ff4d5e" : "var(--text)"};">${signed(d.over)}</b>
+        \u00B7 80%+ picks <b style="color:${d.hiAcc != null && d.hiAcc < 55 ? "#ff4d5e" : "var(--text)"};">${d.hiAcc != null ? d.hiAcc.toFixed(0) + "%" : "\u2014"}</b>
+        <span style="opacity:.6;">(${d.hiN}g)</span>${extra || ""}
+      </div></div>`;
+  };
+
+  // ── by league ──
+  const byLeague = groupBy(scored, r => r.league);
+  const leagueRows = Object.entries(byLeague)
+    .map(([k, v]) => [k, summarise(v)])
+    .sort((a, b) => b[1].n - a[1].n)
+    .map(([k, d]) => row(k, d, ` \u00B7 avg history <b style="color:${d.depth < 15 ? "#ff4d5e" : "var(--text)"};">${d.depth.toFixed(0)}g</b>`))
+    .join("");
+
+  // ── by training depth ──
+  const bands = [
+    ["Almost no history (0\u20139 prior games)", r => r.depth < 10],
+    ["Thin (10\u201324)",   r => r.depth >= 10 && r.depth < 25],
+    ["Moderate (25\u201349)", r => r.depth >= 25 && r.depth < 50],
+    ["Deep (50+)",        r => r.depth >= 50]
+  ];
+  const depthRows = bands.map(([label, fn]) => {
+    const v = scored.filter(fn);
+    return v.length >= 5 ? row(label, summarise(v)) : "";
+  }).join("");
+
+  const thin = scored.filter(r => r.depth < 15), deep = scored.filter(r => r.depth >= 15);
+  let verdict = "";
+  if (thin.length >= 8 && deep.length >= 8) {
+    const t = summarise(thin), d = summarise(deep);
+    const gap = d.acc - t.acc;
+    verdict = `<div style="background:var(--surface2);border-radius:8px;padding:11px 13px;margin-top:12px;font-size:12px;line-height:1.7;">
+      <b>Thin history:</b> ${t.acc.toFixed(0)}% over ${t.n} games \u00B7 <b>deeper history:</b> ${d.acc.toFixed(0)}% over ${d.n} games.
+      ${Math.abs(gap) < 2 * Math.sqrt(se(t.n) ** 2 + se(d.n) ** 2)
+        ? `<span style="color:var(--muted);">That gap is inside noise at these sample sizes \u2014 more training data alone probably won't rescue this, so the model structure is the thing to change.</span>`
+        : gap > 0
+          ? `<span style="color:var(--green);">The model is measurably better when it has history. More training data is the highest-value fix.</span>`
+          : `<span style="color:#ff4d5e;">It performs worse <i>with</i> more history, which points at the model structure rather than the data.</span>`}
+    </div>`;
+  }
+
+  el.innerHTML =
+    `<div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">BY LEAGUE</div>${leagueRows}
+     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:14px 0 6px;">BY TRAINING DEPTH</div>${depthRows || '<div class="empty">Not enough games per band.</div>'}
+     ${verdict}
+     <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       \u00B1 values are the coin-flip standard error for that sample. Anything inside it is
+       indistinguishable from random and is greyed out \u2014 with 65 games spread across leagues,
+       most individual rows will be. Read the depth bands and the summary, not single leagues.</p>`;
+
+  statusEl.textContent = `Broke down ${scored.length} predictions across ${Object.keys(byLeague).length} leagues.`;
+}
+
+// ── Live model audit ─────────────────────────────────────────────────────────
+// Reads modelPct, which runPredictionModel() wrote at prediction time. No
+// retraining, no simulation — just what the model said versus what happened.
+function calibrationBucketRows(stats) {
+  return Object.entries(stats.buckets).sort((a,b)=>+a[0]-+b[0]).map(([b,d]) => {
+    const pct = Math.round(d.correct/d.total*100);
+    const exp = Math.round(d.psum/d.total*100);
+    const diff = pct - exp;
+    const color = Math.abs(diff) <= 5 ? "var(--green)" : diff > 0 ? "var(--blue)" : "#ff4d5e";
+    const small = d.total < 5;
+    return `<div style="padding:6px 0;border-bottom:1px solid var(--border);opacity:${small?.6:1};">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">
+        <span>${b}\u2013${+b+4}%${small?" \u00B7 small":""} \u00B7 ${d.total}g</span>
+        <span style="font-weight:700;color:${color};">Actual ${pct}% (${diff>=0?"+":""}${diff}%)</span>
+      </div>
+      <div style="background:var(--bg);border-radius:3px;height:7px;position:relative;">
+        <div style="height:100%;width:${Math.min(100,pct)}%;background:${color};border-radius:3px;"></div>
+        <div style="position:absolute;left:${Math.min(100,exp)}%;top:-2px;height:11px;width:1px;background:var(--muted);"></div>
+      </div></div>`;
+  }).join("");
+}
+
+function runLiveModelAudit() {
+  const statusEl = document.getElementById("liveaudit-status");
+  const el = document.getElementById("liveaudit-results");
+  if (!statusEl || !el) return;
+
+  const rows = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null)
+    .map(e => {
+      const p = parseFloat(e.modelPct);
+      if (!isFinite(p)) return null;
+      const winner = p >= 50 ? "blue" : "red";
+      return {
+        confidence: Math.max(p, 100 - p),
+        correct: winner === e.actualWinner,
+        date: e.date, league: e.league || ""
+      };
+    })
+    .filter(Boolean);
+
+  if (rows.length < 15) {
+    statusEl.textContent = "";
+    el.innerHTML = `<div class="empty">Only ${rows.length} logged games carry a stored model prediction. Need about 15 before this means anything.</div>`;
+    return;
+  }
+
+  const s = calibrationStats(rows);
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+
+  // High-confidence slice is where the complaint lives, so call it out directly.
+  const hi = rows.filter(r => r.confidence >= 80);
+  const hiHit = hi.length ? hi.filter(r => r.correct).length / hi.length * 100 : null;
+  // Coin-flip standard error, to separate "unlucky" from "broken".
+  const se = Math.sqrt(0.25 / s.n) * 100;
+  const zAcc = (s.base * 100 - 50) / se;
+
+  el.innerHTML =
+    `<div style="font-size:13px;margin-bottom:4px;">Overall <b>${(s.base*100).toFixed(1)}%</b> across ${s.n} logged predictions</div>
+     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+       A coin flip on ${s.n} games has a standard error of \u00B1${se.toFixed(1)}%.
+       You are <b style="color:${Math.abs(zAcc)>2?"var(--text)":"#ff4d5e"};">${zAcc.toFixed(1)} SD</b> from random
+       \u2014 ${Math.abs(zAcc) < 2 ? "not distinguishable from guessing at this sample size" : "a real edge over guessing"}.
+     </div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+       <div style="background:var(--surface2);border-radius:8px;padding:9px 11px;">
+         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Overshoot</div>
+         <div style="font-size:17px;font-weight:700;color:${s.overshoot>5?"#ff4d5e":"var(--green)"};">${signed(s.overshoot)}</div>
+       </div>
+       <div style="background:var(--surface2);border-radius:8px;padding:9px 11px;">
+         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">80%+ picks</div>
+         <div style="font-size:17px;font-weight:700;color:${hiHit!=null&&hiHit<60?"#ff4d5e":"var(--text)"};">${hiHit!=null?hiHit.toFixed(0)+"%":"\u2014"}</div>
+         <div style="font-size:10px;color:var(--muted);">${hi.length} games</div>
+       </div>
+       <div style="background:var(--surface2);border-radius:8px;padding:9px 11px;">
+         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Reliability</div>
+         <div style="font-size:17px;font-weight:700;">${s.reliability.toFixed(3)}</div>
+       </div>
+       <div style="background:var(--surface2);border-radius:8px;padding:9px 11px;">
+         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Resolution</div>
+         <div style="font-size:17px;font-weight:700;color:${s.resolution<0.01?"#ff4d5e":"var(--text)"};">${s.resolution.toFixed(3)}</div>
+       </div>
+     </div>
+     <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:6px;">CALIBRATION BY CONFIDENCE BUCKET</div>
+     ${calibrationBucketRows(s)}
+     <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7;">
+       Resolution below 0.01 means the confidence number carries almost no information about
+       who wins \u2014 recalibrating it would make it honest but still uninformative. Resolution
+       well above that with a large overshoot is the good case: real signal, wrong scale,
+       and calibration fixes it.</p>`;
+
+  statusEl.textContent = `Audited ${s.n} stored predictions.`;
+}
+
+// ── Factor diagnostic ────────────────────────────────────────────────────────
+// Only these five weights are read by modelPredictPure — the other sliders
+// (f2, f3, f4, f6, f8, f10, f11, f13) exist in runPredictionModel but have no
+// effect on anything the backtest measures.
+const DIAG_FACTORS = ["f1", "f5", "f7", "f9", "f12"];
+
+async function runFactorDiagnostic() {
+  const statusEl = document.getElementById("factordiag-status");
+  const el = document.getElementById("factordiag-results");
+  if (!statusEl || !el) return;
+
+  const completed = loadEntries().filter(e =>
+    e.actualWinner && !e.isStandaloneBet &&
+    ((e.champions?.blue||[]).filter(Boolean).length >= 3 || (e.champions?.red||[]).filter(Boolean).length >= 3)
+  );
+  const ordered = [...completed].sort((a,b) => (a.date||"") < (b.date||"") ? -1 : (a.date||"") > (b.date||"") ? 1 : 0);
+  const MIN_TRAIN = 20;
+  const baseFw = loadFactorWeights();
+  const keys = DIAG_FACTORS;
+
+  // One walk-forward pass under a given weight set.
+  async function pass(fw, label) {
+    const out = [];
+    for (let i=0;i<ordered.length;i++) {
+      const g = ordered[i];
+      const training = ordered.filter(o => (o.date||"") < (g.date||""));
+      if (training.length < MIN_TRAIN) continue;
+      const pred = modelPredictPure(g, training, fw);
+      out.push({ confidence: pred.confidence, bluePct: pred.bluePct, parts: pred.parts,
+                 correct: pred.winner === g.actualWinner, actual: g.actualWinner });
+      if (i % 25 === 0) { statusEl.textContent = `${label}\u2026 ${i+1}/${ordered.length}`; await new Promise(r=>setTimeout(r,0)); }
+    }
+    return out;
+  }
+
+  statusEl.textContent = "Baseline walk-forward\u2026";
+  const base = await pass(baseFw, "Baseline");
+  if (base.length < 20) { statusEl.textContent = "Not enough history for a diagnostic."; return; }
+  const baseStats = calibrationStats(base);
+
+  const rows = [];
+  for (const k of keys) {
+    // How often did this factor, on its own, point at the winner?
+    let n = 0, hit = 0, nHigh = 0, hitHigh = 0, mag = 0;
+    for (const r of base) {
+      const v = r.parts[k] || 0;
+      mag += Math.abs(v);
+      if (Math.abs(v) < 0.01) continue;
+      const saysBlue = v > 0;
+      const right = (saysBlue && r.actual === "blue") || (!saysBlue && r.actual === "red");
+      n++; if (right) hit++;
+      if (r.confidence >= 75) { nHigh++; if (right) hitHigh++; }
+    }
+
+    // Ablation: same backtest with this factor switched off.
+    const fw2 = { ...baseFw }; fw2[k] = 0;
+    statusEl.textContent = `Testing without ${FACTOR_LABELS[k]}\u2026`;
+    const abl = await pass(fw2, `Without ${k}`);
+    const ablStats = calibrationStats(abl);
+
+    rows.push({
+      key: k,
+      dir: n ? hit / n * 100 : null,
+      n,
+      dirHigh: nHigh ? hitHigh / nHigh * 100 : null,
+      nHigh,
+      mag: mag / base.length,
+      dAcc: ablStats ? (ablStats.base - baseStats.base) * 100 : 0,
+      dOver: ablStats ? (ablStats.overshoot - baseStats.overshoot) : 0
+    });
+  }
+
+  const totalMag = rows.reduce((s,r)=>s+r.mag,0) || 1;
+  rows.forEach(r => r.share = r.mag / totalMag * 100);
+
+  const verdict = r => {
+    if (r.dir != null && r.dir < 47) return { t: "backwards", c: "#ff4d5e" };
+    if (r.dAcc > 2) return { t: "hurting", c: "#ff4d5e" };
+    if (r.dir != null && r.dir > 55 && r.dAcc < -1) return { t: "helping", c: "var(--green)" };
+    return { t: "neutral", c: "var(--muted)" };
+  };
+
+  const fmt = (v, suffix="%") => v == null ? "\u2014" : (v >= 0 ? "" : "") + v.toFixed(1) + suffix;
+  const signed = v => (v >= 0 ? "+" : "") + v.toFixed(1) + "%";
+
+  el.innerHTML =
+    `<div style="font-size:12px;margin-bottom:10px;">Baseline: <b>${(baseStats.base*100).toFixed(1)}%</b>
+       accuracy, overshoot <b style="color:${baseStats.overshoot>5?"#ff4d5e":"var(--green)"};">${signed(baseStats.overshoot)}</b>
+       across ${baseStats.n} games</div>` +
+    rows.sort((a,b)=>b.share-a.share).map(r => {
+      const v = verdict(r);
+      return `<div style="padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <span style="font-size:12px;font-weight:600;">${FACTOR_LABELS[r.key]}</span>
+          <span style="font-size:11px;font-weight:700;color:${v.c};text-transform:uppercase;">${v.t}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin-top:5px;font-size:11px;color:var(--muted);">
+          <span>Direction: <b style="color:${r.dir!=null&&r.dir<50?"#ff4d5e":"var(--text)"};">${fmt(r.dir)}</b> <span style="opacity:.6;">(${r.n}g)</span></span>
+          <span>When confident: <b style="color:${r.dirHigh!=null&&r.dirHigh<50?"#ff4d5e":"var(--text)"};">${fmt(r.dirHigh)}</b> <span style="opacity:.6;">(${r.nHigh}g)</span></span>
+          <span>Share of signal: <b style="color:var(--text);">${r.share.toFixed(0)}%</b></span>
+          <span>Drop it: acc <b style="color:${r.dAcc>1?"var(--green)":"var(--text)"};">${signed(r.dAcc)}</b>, overshoot <b style="color:${r.dOver<-1?"var(--green)":"var(--text)"};">${signed(r.dOver)}</b></span>
+        </div></div>`;
+    }).join("") +
+    `<p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.7;">
+       <b style="color:var(--text);">Direction</b> below 50% means the factor pointed away from the winner
+       more often than towards it. <b style="color:var(--text);">Drop it</b> is the honest test: a positive
+       accuracy change means removing that factor improves the model. Anything marked
+       <b style="color:#ff4d5e;">backwards</b> or <b style="color:#ff4d5e;">hurting</b> is worth zeroing
+       in the factor weights before touching calibration.</p>`;
+
+  statusEl.textContent = `Done \u2014 ${keys.length} factors tested across ${baseStats.n} games.`;
+}
 
 function renderModelPage() {
   const allEntries = loadEntries();
@@ -6128,15 +8101,75 @@ function historicalRate(subset, winCondition) {
   return { rate: wins / subset.length, n: subset.length };
 }
 
+// Training pool for the live model. Cached because runPredictionModel() is
+// wired to oninput on the odds fields — it fires on every keystroke, and
+// rebuilding a spread-mapped array over thousands of bulk games each time
+// would make the form crawl.
+let _trainPool = null, _trainPoolKey = "";
+let _trainDirty = 0;
+
+function bumpTrainingPool() { _trainDirty++; }
+
+function getTrainingPool() {
+  const personal = loadEntries();
+  const bulk     = loadBulkEntries();
+  // Rebuild when the data changes, or once an hour so recency decay stays fresh.
+  const key = `${personal.length}:${bulk.length}:${_trainDirty}:${Math.floor(Date.now()/3600000)}`;
+  if (_trainPool && _trainPoolKey === key) return _trainPool;
+
+  const now = Date.now();
+  const ann = (typeof loadAnnotations === "function") ? loadAnnotations() : {};
+  _trainPool = [...personal, ...bulk]
+    .filter(e => e.actualWinner && !e.isStandaloneBet && e.date)
+    .map(e => {
+      const ageDays = (now - new Date(e.date).getTime()) / 86400000;
+      const weight  = Math.pow(0.995, ageDays);
+      const row = { ...e, _weight: weight, blueTeam: resolveTeam(e.blueTeam), redTeam: resolveTeam(e.redTeam) };
+      // Backfilled ratings fill gaps only — a rating made live always wins.
+      const a = (typeof gameKey === "function") ? ann[gameKey(e)] : null;
+      if (a) {
+        if (row.draftPref == null && a.draftPref != null) row.draftPref = a.draftPref;
+        if (row.skillAdv == null && a.skillAdv) row.skillAdv = a.skillAdv;
+        if (!row.execDemand || (!row.execDemand.blue && !row.execDemand.red)) {
+          if (a.execDemand) row.execDemand = a.execDemand;
+        }
+        row._ratingSource = "backfill";
+      }
+      return row;
+    });
+  _trainPoolKey = key;
+  return _trainPool;
+}
+
+// What a confidence reading has historically been worth. Purely empirical —
+// no curve fitted, no assumptions. "The model has said 75-85% this many times,
+// and been right this often." Updates itself as games are logged.
+function confidenceBandHistory(conf, bandWidth) {
+  const w = bandWidth || 10;
+  const lo = Math.max(50, Math.floor(conf / w) * w);
+  const hi = lo + w;
+  const rows = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null)
+    .map(e => {
+      const p = parseFloat(e.modelPct);
+      if (!isFinite(p)) return null;
+      return { c: Math.max(p, 100 - p), correct: (p >= 50 ? "blue" : "red") === e.actualWinner };
+    })
+    .filter(Boolean)
+    .filter(r => r.c >= lo && r.c < hi);
+  if (rows.length < 5) return null;
+  const hit = rows.filter(r => r.correct).length;
+  return { lo, hi, n: rows.length, acc: hit / rows.length * 100,
+           se: Math.sqrt(0.25 / rows.length) * 100 };
+}
+
 function runPredictionModel() {
   // Use all completed games for training, with recency decay
   // Games older than 90 days count progressively less
-  const now = Date.now();
-  const completed = loadEntries().filter(e => e.actualWinner && !e.isStandaloneBet).map(e => {
-    const ageDays = (now - new Date(e.date).getTime()) / 86400000;
-    const weight  = Math.pow(0.995, ageDays);
-    return { ...e, _weight: weight, blueTeam: resolveTeam(e.blueTeam), redTeam: resolveTeam(e.redTeam) };
-  });
+  // Personal games AND bulk imports. Previously personal only, which left the
+  // model estimating 13 factors from ~65 games — the direct cause of the
+  // confidence it could not back up.
+  const completed = getTrainingPool();
   const blueTeam  = resolveTeam((document.getElementById("blue-team")  || {}).value || "");
   const redTeam   = resolveTeam((document.getElementById("red-team")   || {}).value || "");
   const el        = document.getElementById("model-prediction");
@@ -6230,15 +8263,18 @@ function runPredictionModel() {
   }
 
   // ── Factor 4: Execution demand ──────────────────────────────────────────────
-  if (execDemand.blue && execDemand.red && execDemand.blue !== execDemand.red) {
-    const execGames = completed.filter(e => e.execDemand&&e.execDemand.blue===execDemand.blue&&e.execDemand.red===execDemand.red);
+  const _exd = execDiff(execDemand);
+  if (_exd != null && _exd !== 0) {
+    // Match on the comparative value, so (high,medium) and (medium,low) —
+    // both "blue is the demanding side by one step" — pool together.
+    const execGames = completed.filter(e => execDiff(e.execDemand) === _exd);
     if (execGames.length >= 3) {
       const wTotal = execGames.reduce((s,e)=>s+e._weight,0);
       const wWins  = execGames.filter(e=>e.actualWinner==="blue").reduce((s,e)=>s+e._weight,0);
       const wr = wWins/wTotal;
       const contribution = (wr-0.5)*1.0;
       logOdds += contribution*fw4; minGames = Math.min(minGames,execGames.length);
-      factors.push(`${contribution>0?"↑":"↓"} Exec ${execDemand.blue}/${execDemand.red}: blue wins ${Math.round(wr*100)}% (${execGames.length}g)`);
+      factors.push(`${contribution>0?"↑":"↓"} Exec demand ${_exd>0?"red":"blue"} +${Math.abs(_exd)}: blue wins ${Math.round(wr*100)}% (${execGames.length}g)`);
     }
   }
 
@@ -6514,6 +8550,52 @@ function runPredictionModel() {
   // Store for use when saving the entry — store raw so Platt can be refit later
   window._lastModelBluePct = rawBluePct;
   window._lastModelCalBluePct = calBluePct;
+
+  // Track record for this confidence band. The model saying 82% means nothing
+  // on its own; what it has delivered at 80-90% in the past is the useful number.
+  // Flag champions in this draft that are on a losing run of bets.
+  const _sn = document.getElementById("model-streak-note");
+  if (_sn) {
+    try {
+      const s = championBetStreaks();
+      const cur = { blue: (pickedChamps.blue || []).filter(Boolean).map(c => String(c).trim()),
+                    red:  (pickedChamps.red  || []).filter(Boolean).map(c => String(c).trim()) };
+      const hits = s.rows.filter(r => r.streak >= 5).filter(r =>
+        cur.blue.includes(r.champ) || cur.red.includes(r.champ));
+      if (hits.length && s.totalBets >= 20) {
+        const c = streakContext(5, s);
+        _sn.style.display = "block";
+        _sn.style.background = "rgba(255,77,94,.10)";
+        _sn.style.border = "1px solid #ff4d5e";
+        _sn.innerHTML = `<b style="color:#ff4d5e;">\u26a0 Losing run in this draft.</b> ` +
+          hits.map(h => `<b>${h.champ}</b> \u2014 ${h.streak} straight losses ${h.kind === "backed" ? "backing it" : "against it"}`).join("; ") +
+          `. <span style="color:var(--muted);">A run this long turns up ${(c.pOne*100).toFixed(1)}% of the time per champion, and you track ${c.tracked}, so this is probably variance \u2014 flagged so you can judge, not so you avoid the bet.</span>`;
+      } else {
+        _sn.style.display = "none";
+      }
+    } catch(e) { _sn.style.display = "none"; }
+  }
+
+  const _shownConf = Math.max(bluePct, 100 - bluePct);
+  const _band = confidenceBandHistory(_shownConf);
+  const _bandEl = document.getElementById("model-band-note");
+  if (_bandEl) {
+    if (!_band) {
+      _bandEl.style.display = "none";
+    } else {
+      const shortfall = _shownConf - _band.acc;
+      const bad = shortfall > 10 && _band.acc < 60;
+      _bandEl.style.display = "block";
+      _bandEl.style.background = bad ? "rgba(255,77,94,.10)" : "var(--surface2)";
+      _bandEl.style.border = "1px solid " + (bad ? "#ff4d5e" : "var(--border)");
+      _bandEl.innerHTML =
+        `${bad ? '<b style="color:#ff4d5e;">\u26a0 Weak track record in this band. </b>' : ""}` +
+        `At <b>${_band.lo}\u2013${_band.hi}%</b> confidence the model has been right ` +
+        `<b style="color:${_band.acc < 55 ? "#ff4d5e" : _band.acc < 65 ? "var(--text)" : "var(--green)"};">` +
+        `${_band.acc.toFixed(0)}%</b> of the time <span style="opacity:.7;">(\u00B1${_band.se.toFixed(0)}, ${_band.n} games)</span>.` +
+        (shortfall > 5 ? ` It is claiming <b>${shortfall.toFixed(0)} points</b> more than it has delivered.` : "");
+    }
+  }
   const blueLabel = blueTeam || "Blue";
   const redLabel  = redTeam  || "Red";
   const isCalibrated = loadPlattParams() !== null;
@@ -6575,9 +8657,18 @@ function runPredictionModel() {
   if (_modelDisagreement) _renderDisagreeSizing();
 
   const warnEl = document.getElementById("model-warning");
+  // Effective pool size, not raw. Recency decay (0.995^ageDays) means a game
+  // from a year ago counts about 16% of one from today, so the number that
+  // matters is the weighted total.
+  const _effN = Math.round(completed.reduce((s, e) => s + (e._weight || 0), 0));
   if (minGames < Infinity && minGames < 10) {
-    warnEl.textContent = `⚠ Some factors based on only ${minGames} games — treat with caution.`;
+    warnEl.textContent = `⚠ Some factors based on only ${minGames} games — treat with caution. `
+      + `Pool: ${completed.length} games (${_effN} effective after recency decay).`;
     warnEl.style.display = "block";
+  } else if (completed.length) {
+    warnEl.textContent = `Pool: ${completed.length} games (${_effN} effective after recency decay).`;
+    warnEl.style.display = "block";
+    warnEl.style.opacity = ".7";
   } else {
     warnEl.style.display = "none";
   }
@@ -7104,6 +9195,21 @@ function setSyncStatus(state, msg) {
   if (el) el.innerHTML = `<span style="color:${color};">${msg}</span>`;
 }
 
+// A remote device reported a build newer than this one, so this file is stale.
+function checkBuildVersion() {
+  let seen;
+  try { seen = localStorage.getItem(BUILD_KEY); } catch(e) { return; }
+  if (!seen || seen === BUILD_VERSION) return;
+  if (seen <= BUILD_VERSION) return;           // string sort works: YYYY.MM.DD-bNN
+  const el = document.getElementById("build-note");
+  if (el) {
+    el.style.display = "block";
+    el.innerHTML = `<b style="color:var(--yellow);">\u26a0 This device is running an older build.</b>
+      Another device reports <b>${seen}</b>; this one is <b>${BUILD_VERSION}</b>.
+      Hard-refresh (Ctrl/Cmd+Shift+R) to pick it up.`;
+  }
+}
+
 function updateSyncConnectedUI() {
   const connected = syncConfigured();
   const panel = document.getElementById("sync-connected");
@@ -7139,11 +9245,19 @@ function syncSettingsKeys() {
     manualStandings: STANDINGS_KEY,
     todayPlan:       TODAY_PLAN_KEY,
     bankroll:        BANKROLL_KEY,
-    factorWeights:   FACTOR_WEIGHTS_KEY
+    factorWeights:   FACTOR_WEIGHTS_KEY,
+    annotations:     ANNOTATIONS_KEY,
+    buildVersion:    BUILD_KEY,
+    champWatch:      CHAMP_WATCH_KEY
   };
 }
 
 function collectChangedSettings(full) {
+  // Record which build this device is running so the change-detection hash
+  // picks it up and pushes it like any other setting.
+  try {
+    if (localStorage.getItem(BUILD_KEY) !== BUILD_VERSION) localStorage.setItem(BUILD_KEY, BUILD_VERSION);
+  } catch(e) {}
   const keys   = syncSettingsKeys();
   const hashes = JSON.parse(localStorage.getItem(SYNC_SHASH_KEY) || "{}");
   const meta   = JSON.parse(localStorage.getItem(SYNC_SMETA_KEY) || "{}");
@@ -7476,6 +9590,7 @@ async function syncNow(opts = {}) {
     localStorage.setItem(SYNC_WM_KEY, String(started - 5000));
     localStorage.setItem(SYNC_LAST_KEY, new Date().toLocaleString());
     setSyncStatus("ok", "Synced");
+    try { checkBuildVersion(); } catch(e) {}
     updateSyncConnectedUI();
     if (changed) refreshAfterSync();
   } catch(e) {
@@ -9050,10 +11165,31 @@ async function pushToGitHub() {
     // 1. Push the app HTML
     setGhStatus("Pushing app…", "var(--muted)");
     const clone = document.documentElement.cloneNode(true);
+    // Everything the app fills in at runtime has to be emptied, or it gets
+    // baked into the deployed file. Live Twitch iframes were the dangerous
+    // one — they would ship embedded in the HTML.
     ["db-live-grid","live-pills","recent-pills","vod-pills",
      "player-profiles-list","standings-content","standings-league-tabs",
-     "tier-legend","tier-league-list","ms-sched-list","model-market-compare"]
+     "tier-legend","tier-league-list","ms-sched-list","model-market-compare",
+     "watch-grid","watch-chat-panel","review-card","champ-watch-list",
+     "backtest-results","factordiag-results","liveaudit-results","failbd-results",
+     "champrel-results","hvm-results","streak-results","dupe-results",
+     "model-band-note","model-streak-note","build-note","sync-counts","sync-last",
+     "backtest-status","factordiag-status","liveaudit-status","failbd-status",
+     "champrel-status","hvm-status","review-count","sync-status","legacy-status"]
       .forEach(id => { const el = clone.querySelector("#" + id); if (el) el.innerHTML = ""; });
+    // Any stray iframe or transient pill, wherever it ended up.
+    clone.querySelectorAll("iframe").forEach(f => f.remove());
+    ["sync-pill","update-pill"].forEach(id => {
+      const el = clone.querySelector("#" + id);
+      if (el) { el.innerHTML = ""; el.style.display = "none"; }
+    });
+    // Credentials live in localStorage, but never ship a populated field.
+    clone.querySelectorAll("input").forEach(i => {
+      if (i.type === "checkbox" || i.type === "radio") i.removeAttribute("checked");
+      else i.removeAttribute("value");
+    });
+    clone.querySelectorAll(".sel").forEach(b => b.classList.remove("sel"));
     const html    = "<!DOCTYPE html>\n" + clone.outerHTML;
     const encoded = btoa(unescape(encodeURIComponent(html)));
     await pushFileToGitHub(token, repo, path, encoded, msg, headers);
@@ -11163,6 +13299,8 @@ function show(screen) {
     if (screen === "betstats")  renderBetStats();
     if (screen === "today")     { loadTodayGames(); }
     if (screen === "watch")     { renderWatchPage(); }
+    if (screen === "review")    { buildReviewQueue(); }
+    if (screen === "model")     { try { renderChampWatch(); renderStreakCard(); } catch(e) {} }
     if (screen === "settings")  { updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
@@ -11253,7 +13391,7 @@ if ("serviceWorker" in navigator) {
     </div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Unchecked leagues are hidden on the dashboard, log game, and schedule pages. Data is still tracked for all leagues.</p>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <button onclick="setAllLeagues(true)"  style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
+      <button onclick="setAllLeagues(true)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Check all</button>
       <button onclick="setAllLeagues(false)" style="flex:1;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;">Uncheck all</button>
     </div>
     <div id="league-filter-list"></div>
@@ -11392,5 +13530,6 @@ self.addEventListener("notificationclick", e => {
 }
 </script>
 
-</body>
-</html>
+
+
+</body></html>
