@@ -320,7 +320,7 @@
   <button onclick="show('watch');closeDrawer()" class="">📺 Watch</button>
   <button onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button>
 
-  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Player impact (old review)</button>
@@ -365,8 +365,8 @@
     <div style="display:flex;align-items:center;gap:8px;">
       <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
-      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 4:04:45 PM</div>
+      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;">↺ 3s</span>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 4:16:17 PM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -442,6 +442,7 @@
       <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues (21)</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openWatchPicker()">+ Add live</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="popoutAll()" title="Open each stream in its own Twitch window — works when embeds don't">↗ Pop out all</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="reresolveWatchChannels()" title="Re-read the stream links from Settings">↻ Relink</button>
       <button class="btn btn-danger" style="font-size:12px;padding:5px 10px;" onclick="clearWatch()">Clear</button>
     </div>
@@ -1748,7 +1749,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 4:04:46 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 4:16:16 PM</div>
     </div>
   </div>
 
@@ -13116,6 +13117,49 @@ function reresolveWatchChannels() {
   if (document.getElementById("screen-watch")?.classList.contains("active")) renderWatchPage();
 }
 
+// A Twitch embed runs in an iframe, so its session storage is third-party.
+// When the browser partitions or blocks that, the player renders black while
+// twitch.tv itself works fine in a tab — which is exactly the confusing case.
+// The page cannot override the policy, but it can name it.
+let _storageAccessState = null;
+async function checkEmbedStorage() {
+  if (_storageAccessState !== null) return _storageAccessState;
+  try {
+    if (document.hasStorageAccess) {
+      _storageAccessState = await document.hasStorageAccess() ? "ok" : "partitioned";
+    } else {
+      _storageAccessState = "unknown";
+    }
+  } catch(e) { _storageAccessState = "unknown"; }
+  return _storageAccessState;
+}
+async function requestEmbedStorage() {
+  try {
+    if (document.requestStorageAccess) {
+      await document.requestStorageAccess();
+      _storageAccessState = "ok";
+      renderWatchPage();
+      return true;
+    }
+  } catch(e) {}
+  alert("The browser declined. Allow third-party cookies for twitch.tv in site settings, or use Pop out below.");
+  return false;
+}
+
+// Twitch's own popout player is a real window on twitch.tv, so it is
+// first-party: no iframe, no parent check, no third-party storage. This works
+// when the embed cannot, including behind a VPN.
+function popoutChannel(ch) {
+  const url = isYouTube(ch) ? ch : `https://www.twitch.tv/popout/${encodeURIComponent(ch)}/`;
+  window.open(url, "watch_" + ch.replace(/\W/g, "_"),
+              "width=860,height=520,menubar=no,toolbar=no,location=no,status=no");
+}
+function popoutAll() {
+  const list = loadWatchChannels();
+  if (!list.length) { alert("No streams to pop out."); return; }
+  list.forEach((ch, i) => setTimeout(() => popoutChannel(ch), i * 350));
+}
+
 function renderWatchPage() {
   const grid = document.getElementById("watch-grid");
   const warn = document.getElementById("watch-warning");
@@ -13127,6 +13171,22 @@ function renderWatchPage() {
 
   updateWatchAutoBtn();
   updateWatchWideBtn();
+
+  checkEmbedStorage().then(state => {
+    const w = document.getElementById("watch-warning");
+    if (!w || state === "ok") return;
+    if (state !== "partitioned") return;
+    w.style.display = "block";
+    w.innerHTML =
+      `<b style="color:var(--yellow);">Embedded players are blocked by this browser.</b>
+       Twitch runs inside an iframe here, so its session counts as third-party — which is why
+       twitch.tv works in a tab but the tiles stay black. A VPN does not cause this on its own.
+       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+         <button class="btn btn-primary" style="font-size:12px;padding:5px 10px;" onclick="requestEmbedStorage()">Allow embeds</button>
+         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="popoutAll()">↗ Pop out instead</button>
+       </div>
+       <div style="margin-top:6px;opacity:.8;">Or allow third-party cookies for <b>twitch.tv</b> in site settings.</div>`;
+  });
 
   // On a file:// or content:// origin Twitch cannot validate `parent`, so the
   // players can never load. Say so plainly rather than rendering broken tiles.
@@ -13191,11 +13251,14 @@ function renderWatchPage() {
              </div>
              <button class="watch-audio" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;"></button>
              <button class="watch-reload" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px;" title="Reload this player">\u21bb</button>
+             <button class="watch-popout" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px;" title="Pop out into its own window">\u2750</button>
              <a href="${isYouTube(ch) ? ch : "https://twitch.tv/" + ch}" target="_blank" rel="noopener"
                 style="color:var(--muted);text-decoration:none;font-size:12px;padding:2px 4px;" title="Open in a new tab">\u2197</a>
              <button class="watch-remove" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px;" title="Remove">\u2715</button>
            </div>`;
         tile.querySelector(".watch-audio").onclick = () => soloAudio(ch);
+        const po = tile.querySelector(".watch-popout");
+        if (po) po.onclick = () => popoutChannel(ch);
         const rl = tile.querySelector(".watch-reload");
         if (rl) rl.onclick = () => {
           const f = tile.querySelector("iframe");
