@@ -365,8 +365,8 @@
     <div style="display:flex;align-items:center;gap:8px;">
       <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
-      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;">↺ 1s</span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 3:58:46 PM</div>
+      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 4:04:45 PM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -433,7 +433,9 @@
       </select>
       <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);">
         size
-        <input type="range" id="watch-size" min="240" max="900" step="20" oninput="setWatchSize(this.value)" style="width:90px;accent-color:var(--blue);">
+        <input type="range" id="watch-size" min="240" max="900" step="20" oninput="setWatchSize(this.value)" style="width:110px;height:4px;padding:0;margin:0;border:none;border-radius:2px;
+                 background:var(--border);accent-color:var(--blue);cursor:pointer;">
+        <span id="watch-size-val" style="font-variant-numeric:tabular-nums;min-width:34px;"></span>
       </label>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchWide()" id="watch-wide-btn" title="Use the full window width">↔ Wide</button>
       <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
@@ -462,6 +464,23 @@
     Streams play muted — tap 🔇 on a tile to move audio to it. Keeping the
     logger tab in front means the live feed keeps polling at full speed.
   </div>
+  <details style="margin-top:10px;">
+    <summary style="font-size:11px;color:var(--muted);cursor:pointer;">Players black, or "failed to determine content classification"?</summary>
+    <div style="font-size:11px;color:var(--muted);line-height:1.7;margin-top:8px;padding:10px 12px;background:var(--surface2);border-radius:8px;">
+      That message comes from Twitch's own player when it cannot load the channel's
+      classification data, which usually means something is blocking its background
+      requests. Worth trying, roughly in order:
+      <ul style="margin:6px 0 0 16px;padding:0;">
+        <li>Pause any ad blocker or privacy extension for this site — the usual cause.</li>
+        <li>Allow third-party cookies for <b>twitch.tv</b>; the player keeps its session there.</li>
+        <li>Hit ↻ on a tile to reload just that player.</li>
+        <li>Check the channel is actually live — an offline channel renders black.</li>
+        <li>Open ↗ to confirm the stream plays on Twitch itself.</li>
+      </ul>
+      This is Twitch's player running inside the page, so its restrictions apply exactly
+      as they would on twitch.tv.
+    </div>
+  </details>
 </div>
 
 <!-- TODAY'S GAMES -->
@@ -1729,7 +1748,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 3:58:46 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 4:04:46 PM · Nothing new</div>
     </div>
   </div>
 
@@ -12845,6 +12864,15 @@ function youtubeEmbed(url, muted) {
 }
 function isYouTube(v) { return /youtu\.?be/i.test(String(v || "")); }
 
+// lolesports.com and similar cannot be embedded, so adding them produces a
+// permanently black tile. Only add what can actually play.
+function isEmbeddable(v) {
+  const s = String(v || "");
+  if (isYouTube(s)) return !!youtubeEmbed(s, true);
+  if (/^https?:\/\//i.test(s)) return /twitch\.tv/i.test(s);
+  return /^[a-z0-9_]{3,25}$/i.test(s);          // bare twitch channel name
+}
+
 function watchEmbedUrl(ch) {
   const muted = (_watchAudio !== ch);
   if (isYouTube(ch)) {
@@ -12935,6 +12963,8 @@ function applyWatchLayout() {
 
   const sl = document.getElementById("watch-size");
   if (sl && sl.value !== String(size)) sl.value = String(size);
+  const sv = document.getElementById("watch-size-val");
+  if (sv) sv.textContent = size + "px";
 }
 function toggleWatchChat() {
   _watchChat = !_watchChat;
@@ -13007,9 +13037,14 @@ function syncWatchFromLive(cards) {
   const liveChannels = new Set();
   for (const c of _lastVisibleCards) {
     const info = getLeagueStream(c.league);
-    if (!info || !info.twitch) continue;
-    const ch = normaliseChannel(info.twitch);
-    if (!ch) continue;
+    if (!info) continue;
+    // getLeagueStream returns {url} for anything starting with http, so a
+    // YouTube mapping arrives here as a url, not a twitch channel. Taking only
+    // .twitch meant YouTube-mapped leagues were skipped without a word.
+    const target = info.twitch || info.url;
+    if (!target) continue;
+    const ch = normaliseChannel(target);
+    if (!ch || !isEmbeddable(ch)) continue;
     liveChannels.add(ch);
     (meta[ch] = meta[ch] || []).push({
       league: c.league || "",
@@ -13145,6 +13180,8 @@ function renderWatchPage() {
         tile.innerHTML =
           `<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
              <iframe title="${ch}" allowfullscreen
+               allow="autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write"
+               referrerpolicy="strict-origin-when-cross-origin"
                style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
            </div>
            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;">
@@ -13153,16 +13190,41 @@ function renderWatchPage() {
                <div class="watch-meta" style="font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
              </div>
              <button class="watch-audio" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;"></button>
+             <button class="watch-reload" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px;" title="Reload this player">\u21bb</button>
              <a href="${isYouTube(ch) ? ch : "https://twitch.tv/" + ch}" target="_blank" rel="noopener"
-                style="color:var(--muted);text-decoration:none;font-size:12px;padding:2px 4px;" title="Open on Twitch">\u2197</a>
+                style="color:var(--muted);text-decoration:none;font-size:12px;padding:2px 4px;" title="Open in a new tab">\u2197</a>
              <button class="watch-remove" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px;" title="Remove">\u2715</button>
            </div>`;
         tile.querySelector(".watch-audio").onclick = () => soloAudio(ch);
+        const rl = tile.querySelector(".watch-reload");
+        if (rl) rl.onclick = () => {
+          const f = tile.querySelector("iframe");
+          const src = f.getAttribute("src");
+          if (src) { f.setAttribute("src", ""); setTimeout(() => f.setAttribute("src", src), 60); }
+        };
         tile.querySelector(".watch-remove").onclick = () => removeWatchChannel(ch);
         grid.appendChild(tile);
       }
       const f = tile.querySelector("iframe");
-      if (f.getAttribute("src") !== wanted) f.setAttribute("src", wanted);
+      const playable = isEmbeddable(ch);
+      if (!playable) {
+        // A black rectangle with no explanation is the worst possible outcome.
+        f.removeAttribute("src");
+        const box = f.parentElement;
+        if (box && !box.querySelector(".watch-unplayable")) {
+          const d = document.createElement("div");
+          d.className = "watch-unplayable";
+          d.style.cssText = "position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-size:11px;color:var(--muted);line-height:1.6;";
+          d.innerHTML = `<div><b style="color:var(--yellow);">Can't embed this link.</b><br>
+            Only Twitch channels and YouTube links can play here.<br>
+            Update it under <b>Settings \u2192 Streams</b>.</div>`;
+          box.appendChild(d);
+        }
+      } else if (f.getAttribute("src") !== wanted) {
+        const stale = tile.querySelector(".watch-unplayable");
+        if (stale) stale.remove();
+        f.setAttribute("src", wanted);
+      }
       const metaEl = tile.querySelector(".watch-meta");
       if (metaEl) {
         const games = _watchLiveMeta[ch] || [];
