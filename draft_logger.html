@@ -321,7 +321,7 @@
   <button onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button>
 
   <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Player impact (old review)</button>
   <button onclick="show('players');closeDrawer()">Players</button>
@@ -342,7 +342,7 @@
   <button onclick="show('dashboard')">📡 Live</button>
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('draftreview')">Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
@@ -917,8 +917,415 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
+    <div id="pending-clear" style="display: none; background: var(--surface2); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; line-height: 1.6;"><b>62 finished games are waiting for input.</b>
+         <span style="color:var(--muted);">These are from before this list started tracking your
+         acknowledgement, so it can't tell which you already handled. Rate any you care about,
+         then clear the rest.</span>
+         <button class="btn btn-ghost" style="margin-top:8px;font-size:12px;padding:5px 10px;" onclick="clearResolvedPending()">Mark all 62 as handled</button></div>
+    <div id="pending-list"><div class="empty">✓ All caught up — no pending games.</div></div>
+    <div id="recent-resolved"><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:18px 0 6px;">
+       RECENTLY RESOLVED · last 14 days</div><div class="pending-entry" id="pending-1785600701558">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--blue);">GX won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785600701558','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785600701558"></div>
+      </div><div class="pending-entry" id="pending-1785597158958">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--red);">SK won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785597158958','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785597158958"></div>
+      </div><div class="pending-entry" id="pending-1785600827447">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">VKS vs FUR</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · CBLOL ·
+              <span style="color:var(--blue);">VKS won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785600827447','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785600827447"></div>
+      </div><div class="pending-entry" id="pending-1785603532154">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">VKS vs FUR</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · CBLOL ·
+              <span style="color:var(--blue);">VKS won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785603532154','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785603532154"></div>
+      </div><div class="pending-entry" id="pending-1785607156682">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--red);">SK won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785607156682','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785607156682"></div>
+      </div><div class="pending-entry" id="pending-1785501924151">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">KRX vs BRO</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-31 · LCK ·
+              <span style="color:var(--blue);">KRX won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785501924151','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785501924151"></div>
+      </div><div class="pending-entry" id="pending-1785498126690">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">CFO vs GAM</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-31 · LCP ·
+              <span style="color:var(--red);">GAM won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785498126690','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785498126690"></div>
+      </div><div class="pending-entry" id="pending-1785419757349">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">TT vs JDG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · LPL ·
+              <span style="color:var(--red);">JDG won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785419757349','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785419757349"></div>
+      </div><div class="pending-entry" id="pending-1785418903997">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GZ vs DCG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · LCP ·
+              <span style="color:var(--blue);">GZ won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785418903997','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785418903997"></div>
+      </div><div class="pending-entry" id="pending-1785466962778">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">DOG vs CNV</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · NACL ·
+              <span style="color:var(--blue);">DOG won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785466962778','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785466962778"></div>
+      </div><div class="pending-entry" id="pending-1785434843439">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">SC vs JL</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · La Ligue Française ·
+              <span style="color:var(--blue);">SC won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785434843439','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785434843439"></div>
+      </div><div class="pending-entry" id="pending-1785446211022">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">WU vs NRG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · NACL ·
+              <span style="color:var(--red);">NRG won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785446211022','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785446211022"></div>
+      </div><div class="pending-entry" id="pending-1785341831164">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">TLNP vs ZYB</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · La Ligue Française ·
+              <span style="color:var(--red);">ZYB won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785341831164','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785341831164"></div>
+      </div><div class="pending-entry" id="pending-1785320306556">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">T1 vs KT</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · LCK ·
+              <span style="color:var(--red);">KT won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785320306556','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785320306556"></div>
+      </div><div class="pending-entry" id="pending-1785320759312">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">AL vs TES</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · LPL ·
+              <span style="color:var(--blue);">AL won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785320759312','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785320759312"></div>
+      </div><div class="pending-entry" id="pending-1785355940895">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GL vs SC</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · La Ligue Française ·
+              <span style="color:var(--blue);">GL won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785355940895','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785355940895"></div>
+      </div><div class="pending-entry" id="pending-1785355750328">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">INTZ vs NERD</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · Circuito Desafiante ·
+              <span style="color:var(--red);">NERD won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785355750328','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785355750328"></div>
+      </div><div class="pending-entry" id="pending-1785352420704">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">JL vs KCB</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · La Ligue Française ·
+              <span style="color:var(--red);">KCB won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785352420704','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785352420704"></div>
+      </div><div class="pending-entry" id="pending-1785351820087">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">USE vs TOG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · Prime League ·
+              <span style="color:var(--blue);">USE won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785351820087','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785351820087"></div>
+      </div><div class="pending-entry" id="pending-1785347784664">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">USE vs TOG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · Prime League ·
+              <span style="color:var(--red);">TOG won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785347784664','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785347784664"></div>
+      </div><div class="pending-entry" id="pending-1785270183731">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">PAIN vs TSS</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-28 · Circuito Desafiante ·
+              <span style="color:var(--red);">TSS won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785270183731','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785270183731"></div>
+      </div><div class="pending-entry" id="pending-1785268670908">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">IJC vs SLY</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-28 · La Ligue Française ·
+              <span style="color:var(--red);">SLY won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785268670908','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785268670908"></div>
+      </div><div class="pending-entry" id="pending-1785237299317">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">DK vs KT</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-28 · LCK Challengers ·
+              <span style="color:var(--red);">KT won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785237299317','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785237299317"></div>
+      </div><div class="pending-entry" id="pending-1785255111016">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">SC vs TLNP</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-28 · La Ligue Française ·
+              <span style="color:var(--blue);">SC won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785255111016','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785255111016"></div>
+      </div><div class="pending-entry" id="pending-1785257276471">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs BAR</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-28 · LES ·
+              <span style="color:var(--red);">BAR won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785257276471','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785257276471"></div>
+      </div></div>
   </div>
 
   <div class="card">
@@ -931,7 +1338,7 @@
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"></datalist>
+      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCK Challengers"></option><option value="LCP"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -1245,26 +1652,163 @@
 
 <!-- STATS -->
 <div class="screen" id="screen-stats">
-  <div class="stat-grid" id="stat-grid"></div>
+  <div class="stat-grid" id="stat-grid">
+    <div class="stat-box"><div class="val">164</div><div class="lbl">Games logged</div></div>
+    <div class="stat-box"><div class="val green">60%</div><div class="lbl">Accuracy</div></div>
+    <div class="stat-box"><div class="val green">97</div><div class="lbl">Correct</div></div>
+    <div class="stat-box"><div class="val red">64</div><div class="lbl">Wrong</div></div>
+    <div class="stat-box"><div class="val yellow">0</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="val">83</div><div class="lbl">Watched</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">78</div><div class="lbl">Didn't watch</div></div>
+    <div class="stat-box"><div class="val" style="color:var(--muted);">3</div><div class="lbl">VOD reviews</div></div>
+  </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Prediction accuracy over time</div>
-    <div id="rolling-accuracy"></div>
+    <div id="rolling-accuracy">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:6px;"><div title="Game 1: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 2: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 3: 100%" style="flex:1;height:60px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 4: 75%" style="flex:1;height:45px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 5: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 6: 83%" style="flex:1;height:50px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 7: 86%" style="flex:1;height:52px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 8: 88%" style="flex:1;height:53px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 9: 78%" style="flex:1;height:47px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 10: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 11: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 12: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 13: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 14: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 15: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 16: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 17: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 18: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 19: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 20: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 21: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 22: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 23: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 24: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 25: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 26: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 27: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 28: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 29: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 30: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 31: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 32: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 33: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 34: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 35: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 36: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 37: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 38: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 39: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 40: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 41: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 42: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 43: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 44: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 45: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 46: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 47: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 48: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 49: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 50: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 51: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 52: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 53: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 54: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 55: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 56: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 57: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 58: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 59: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 60: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 61: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 62: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 63: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 64: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 65: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 66: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 67: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 68: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 69: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 70: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 71: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 72: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 73: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 74: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 75: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 76: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 77: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 78: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 79: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 80: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 81: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 82: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 83: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 84: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 85: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 86: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 87: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 88: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 89: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 90: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 91: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 92: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 93: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 94: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 95: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 96: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 97: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 98: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 99: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 100: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 101: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 102: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 103: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 104: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 105: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 106: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 107: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 108: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 109: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 110: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 111: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 112: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 113: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 114: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 115: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 116: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 117: 30%" style="flex:1;height:18px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 118: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 119: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 120: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 121: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 122: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 123: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 124: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 125: 90%" style="flex:1;height:54px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 126: 80%" style="flex:1;height:48px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 127: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 128: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 129: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 130: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 131: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 132: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 133: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 134: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 135: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 136: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 137: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 138: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 139: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 140: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 141: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 142: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 143: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 144: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 145: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 146: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 147: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 148: 40%" style="flex:1;height:24px;background:#ff4d5e;border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 149: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 150: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 151: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 152: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 153: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 154: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 155: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 156: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 157: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 158: 70%" style="flex:1;height:42px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 159: 60%" style="flex:1;height:36px;background:var(--green);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 160: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div><div title="Game 161: 50%" style="flex:1;height:30px;background:var(--blue);border-radius:2px 2px 0 0;min-width:4px;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span>Game 1</span>
+        <span>Last 10-game rolling avg: <b style="color:#ff4d5e;">50% ▼ 10pp</b></span>
+        <span>Game 161</span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Draft preference accuracy</div>
-    <div id="draft-pref-stats"></div>
+    <div id="draft-pref-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Strong preference (±2)</div>
+          <div style="font-size:11px;color:var(--muted);">86 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:var(--yellow);">58%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Slight preference (±1)</div>
+          <div style="font-size:11px;color:var(--muted);">41 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:#ff4d5e;">49%</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;">Even (0)</div>
+          <div style="font-size:11px;color:var(--muted);">8 games — preferred side won</div>
+        </div>
+        <span style="font-weight:700;color:#ff4d5e;">38%</span>
+      </div>
+    <div style="padding:8px 0;border-top:1px solid var(--border);margin-top:6px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">VOD reviews — draft preference outcomes</div>
+      <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+        <span style="color:var(--green);">Draft won: 2</span>
+        <span style="color:var(--yellow);">Skill overcame draft: 1</span>
+        <span style="color:#ff4d5e;">Draft didn't prevail: 0</span>
+        <span style="color:var(--muted);">3 games · preferred draft won 67%</span>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Accuracy by confidence level</div>
-    <div id="conf-stats"></div>
+    <div id="conf-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">low confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          20 games ·
+          <span style="color:var(--red);">
+            35% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">medium confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          39 games ·
+          <span style="color:var(--green);">
+            72% accurate
+          </span>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;text-transform:capitalize;">high confidence</span>
+        <span style="font-size:12px;color:var(--muted);">
+          13 games ·
+          <span style="color:var(--green);">
+            92% accurate
+          </span>
+        </span>
+      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">When draft preference and skill disagree</div>
-    <div id="skew-stats"></div>
+    <div id="skew-stats">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Includes live predictions and VOD reviews — 164 total games.</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft &amp; skill agree → correct</span>
+        <span style="color:var(--green);">
+          77% (44 games)
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When both point the same way, your read should be most reliable.</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Draft beats skill (upset)</span>
+        <span style="color:var(--muted);">
+          29% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When you saw better draft but worse team — how often does draft actually win?</div>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Skill overcomes draft</span>
+        <span style="color:var(--muted);">
+          71% of 21 conflicts
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">When skill and draft disagree, the stronger team winning is this common.</div>
+    </div>
+    <div style="padding:8px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>Predicted correctly when skill was "Not sure"</span>
+        <span style="color:var(--muted);">
+          51% of 63 games
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">Live predictions only — how well draft read alone predicts winners when you're unsure of the skill gap.</div>
+    </div>
+  </div>
   </div>
   <div class="card">
     <div class="card-title">Execution demand vs outcomes</div>
-    <div id="exec-stats"></div>
+    <div id="exec-stats">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">low execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the low-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          80% (5 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">medium execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the medium-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (2 games)
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;text-transform:capitalize;">high execution draft won</div>
+          <div style="font-size:11px;color:var(--muted);">When you preferred the high-execution side, they won this often</div>
+        </div>
+        <span style="color:var(--green);font-size:12px;white-space:nowrap;margin-left:10px;">
+          100% (1 games)
+        </span>
+      </div></div>
   </div>
 </div>
 
@@ -1466,20 +2010,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:#ff4d5e;">$-133.29</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (-53.3%)</div>
+        <div style="font-size:17px;font-weight:700;color:#ff4d5e;">$-167.28</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (-66.9%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$116.71</div>
+        <div style="font-size:20px;font-weight:700;">$82.72</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$94.01</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$22.70 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$82.72</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$4.42 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit · scaled down  (5% of $94)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$3.42 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit · scaled down  (5% of $83)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="font-size:11px;color:var(--yellow);margin-bottom:6px;">⚠ Available below floor ($100) — unit size scaled down to protect bankroll.</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -1551,9 +2095,9 @@
     <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-273.00</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-417.28</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($227.00) − starting ($250.00)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($82.72) − starting ($250.00)</div>
     </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
@@ -1719,7 +2263,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 12:41:51 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 3:33:39 PM</div>
     </div>
   </div>
 
@@ -4611,11 +5155,64 @@ function clearForm() {
 }
 
 // ── Results screen ────────────────────────────────────────────────────────────
+// resultAck did not exist before this build, so every previously-resolved game
+// looks unacknowledged. Infer it once from evidence the game was already dealt
+// with, rather than making you re-clear work you have already done.
+let _ackBackfilled = false;
+function backfillResultAck() {
+  if (_ackBackfilled) return;
+  _ackBackfilled = true;
+  try {
+    const reviews = loadReviews();
+    const entries = loadEntries();
+    let n = 0;
+    entries.forEach(e => {
+      if (!e.actualWinner || e.resultAck) return;
+      const rated   = Object.keys(reviews[e.id] || {}).length > 0;
+      const watched = e.watched === true;          // explicitly marked watched
+      const noted   = !!(e.gameNote && e.gameNote.trim());
+      const vod     = !!e.isVod;
+      if (rated || watched || noted || vod) { e.resultAck = true; n++; }
+    });
+    if (n) { saveEntries(entries); autoSync(); }
+    if (n) console.info(`[migration] marked ${n} games as already acknowledged`);
+  } catch(err) {
+    if (typeof logAppError === "function") logAppError("migration", err.message, "backfillResultAck");
+  }
+}
+
 function renderPending() {
+  backfillResultAck();
   const allEntries = loadEntries();
   // Show: unresolved entries + auto-resolved entries still needing a watch status
-  const entries = allEntries.filter(e => !e.actualWinner || (e.autoResolved && e.watched === null));
+  // A game stays here until you explicitly say watched or didn't watch. The old
+  // test used `watched === null`, but entries are created with watched:false, so
+  // an auto-resolved result vanished before you ever saw it.
+  const ackCutoff = new Date(Date.now() - 21 * 86400000).toISOString().slice(0, 10);
+  const entries = allEntries.filter(e =>
+    !e.isBulkImport && !e.isStandaloneBet &&
+    (!e.actualWinner || (!e.resultAck && (e.date || "") >= ackCutoff)));
   const el = document.getElementById("pending-list");
+  renderRecentlyResolved();
+
+  // Anything still here that already has a result is a game the backfill could
+  // not confirm either way. Offer to clear them in one go.
+  const resolvedWaiting = entries.filter(e => e.actualWinner).length;
+  const clearEl = document.getElementById("pending-clear");
+  if (clearEl) {
+    if (resolvedWaiting >= 5) {
+      clearEl.style.display = "block";
+      clearEl.innerHTML =
+        `<b>${resolvedWaiting} finished games are waiting for input.</b>
+         <span style="color:var(--muted);">These are from before this list started tracking your
+         acknowledgement, so it can't tell which you already handled. Rate any you care about,
+         then clear the rest.</span>
+         <button class="btn btn-ghost" style="margin-top:8px;font-size:12px;padding:5px 10px;"
+           onclick="clearResolvedPending()">Mark all ${resolvedWaiting} as handled</button>`;
+    } else {
+      clearEl.style.display = "none";
+    }
+  }
   if (!entries.length) {
     el.innerHTML = '<div class="empty">✓ All caught up — no pending games.</div>';
     return;
@@ -4635,6 +5232,7 @@ function renderPending() {
                 ${e.date} · ${e.league||"—"} ·
                 <span style="color:${winColor};">${winTeam} won</span> ·
                 <span style="color:${correct?"var(--green)":"#ff4d5e"};">${correct?"✓ You called it":"✗ Wrong call"}</span>
+                · <span style="color:var(--yellow);">awaiting your input</span>
               </div>
             </div>
             <div class="result-btns">
@@ -4804,11 +5402,69 @@ function removeBetIdx(id, idx) {
 }
 
 
+// A game drops out of the pending list as soon as it has a watch status, so
+// there was no route back to add ratings afterwards. Keep the last fortnight.
+function renderRecentlyResolved() {
+  const el = document.getElementById("recent-resolved");
+  if (!el) return;
+  const cutoff = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
+  const recent = loadEntries()
+    .filter(e => e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && (e.date || "") >= cutoff)
+    .filter(e => e.watched !== null && e.watched !== undefined)
+    .sort((a, b) => (a.date || "") < (b.date || "") ? 1 : -1)
+    .slice(0, 25);
+  if (!recent.length) { el.innerHTML = ""; return; }
+
+  const allReviews = loadReviews();
+  const rated = e => Object.keys(allReviews[e.id] || {}).length > 0;
+
+  el.innerHTML =
+    `<div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:18px 0 6px;">
+       RECENTLY RESOLVED \u00B7 last 14 days</div>` +
+    recent.map(e => {
+      const winTeam = e.actualWinner === "blue" ? e.blueTeam : e.redTeam;
+      const correct = e.predWinner === e.actualWinner;
+      const has = rated(e);
+      return `<div class="pending-entry" id="pending-${e.id}">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">${e.blueTeam} vs ${e.redTeam}</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              ${e.date} \u00B7 ${e.league || "\u2014"} \u00B7
+              <span style="color:${e.actualWinner === "blue" ? "var(--blue)" : "var(--red)"};">${winTeam} won</span> \u00B7
+              <span style="color:${correct ? "var(--green)" : "#ff4d5e"};">${correct ? "\u2713" : "\u2717"}</span>
+              ${has ? ' \u00B7 <span style="color:var(--green);">rated</span>' : ""}
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('${e.id}','${e.actualWinner}')">${has ? "Edit ratings" : "Add ratings"}</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-${e.id}"></div>
+      </div>`;
+    }).join("");
+}
+
+function clearResolvedPending() {
+  const entries = loadEntries();
+  const cutoff = new Date(Date.now() - 21 * 86400000).toISOString().slice(0, 10);
+  const targets = entries.filter(e => e.actualWinner && !e.resultAck &&
+    !e.isBulkImport && !e.isStandaloneBet && (e.date || "") >= cutoff);
+  if (!targets.length) return;
+  if (!confirm(`Mark ${targets.length} finished games as handled? They stay in Recently resolved for two weeks if you want to add ratings later.`)) return;
+  targets.forEach(e => { e.resultAck = true; });
+  saveEntries(entries);
+  autoSync();
+  renderPending();
+  renderStats();
+}
+
 function markDidntWatch(id) {
   const entries = loadEntries();
   const entry = entries.find(e => e.id === id);
   if (!entry) return;
   entry.watched = false;
+  entry.resultAck = true;
   saveEntries(entries);
   autoSync();
   renderPending();
@@ -4988,6 +5644,7 @@ function saveResult(id, winner, mode = 'watched') {
 
   if (!entry.actualWinner) entry.actualWinner = winner;
   entry.watched = (mode === 'watched' || mode === true);
+  entry.resultAck = true;
 
   if (entry.watched) {
     const noteEl = document.getElementById("result-game-note-" + id);
@@ -5092,7 +5749,7 @@ async function autoCheckResults() {
     }
 
     if (resolved > 0) {
-      statusEl.innerHTML = `<span style="color:var(--green);">✓ Auto-resolved ${resolved} result${resolved>1?"s":""}.</span> You can still add performance ratings from History.`;
+      statusEl.innerHTML = `<span style="color:var(--green);">✓ Auto-resolved ${resolved} result${resolved>1?"s":""}.</span> Hit <b>✓ I watched</b> below to add player ratings.`;
     } else if (checked > 0) {
       statusEl.textContent = `Checked ${checked} matching game${checked>1?"s":""} — no completed results found yet. Try again after the game ends.`;
     } else {
