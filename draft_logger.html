@@ -318,9 +318,9 @@
   <button onclick="show('dashboard');closeDrawer()">📡 Live Dashboard</button>
   <button onclick="show('today');closeDrawer()">📅 Schedule</button>
   <button onclick="show('watch');closeDrawer()">📺 Watch</button>
-  <button onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button>
+  <button onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button>
 
-  <button onclick="show('log');closeDrawer()">Log Game</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
   <button onclick="show('results');closeDrawer()">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Player impact (old review)</button>
@@ -343,7 +343,7 @@
   <button onclick="show('today')">📅 Schedule</button>
   <button class="" onclick="show('log')">Log Game</button>
   <button onclick="show('results')">Log Results</button>
-  <button onclick="show('draftreview')" class="">Review</button>
+  <button onclick="show('draftreview')">Review</button>
   <button onclick="show('players')">Players</button>
   <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
@@ -1365,6 +1365,14 @@
   </div>
 
   <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🔎 Data health</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      What is actually in your stored games, broken down by source. Tells you whether a
+      re-import would gain anything before you spend time on one.</p>
+    <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runDataHealth()">Check data</button>
+    <div id="datahealth-results" style="font-size:12px;"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🧹 Duplicate games</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
       The same match can end up stored twice — imported from two sources, or
@@ -1456,20 +1464,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:#ff4d5e;">$-50.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (-20.0%)</div>
+        <div style="font-size:17px;font-weight:700;color:#ff4d5e;">$-23.00</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (-9.2%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$200.00</div>
+        <div style="font-size:20px;font-weight:700;">$227.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$200.00</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$227.00</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$10.00 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $200)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$11.35 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $227)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -1541,9 +1549,9 @@
     <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-300.00</span>
+        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-273.00</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($200.00) − starting ($250.00)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($227.00) − starting ($250.00)</div>
     </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
@@ -1709,7 +1717,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 11:07:27 AM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 12:03:46 PM</div>
     </div>
   </div>
 
@@ -6212,6 +6220,71 @@ async function runSwingAnalysis(opts) {
   setStatus(`Analysed ${rows.length} champions across ${obs.length.toLocaleString()} appearances.`);
 }
 
+// ── Data health ──────────────────────────────────────────────────────────────
+// Several importers exist and they capture different fields. Rather than guess
+// which one produced what, count it.
+function runDataHealth() {
+  const el = document.getElementById("datahealth-results");
+  if (!el) return;
+  const all = loadAllGameData();
+  if (!all.length) { el.innerHTML = '<div class="empty">No games stored.</div>'; return; }
+
+  const srcOf = e => {
+    if (e.source) return e.source;
+    const id = String(e.id || "");
+    if (id.startsWith("autolog_")) return "riot bulk";
+    if (id.startsWith("lpl_")) return "leaguepedia";
+    if (id.startsWith("ql_")) return "quick log";
+    if (e.isBulkImport) return "bulk (other)";
+    return "logged by hand";
+  };
+
+  const groups = {};
+  all.forEach(e => {
+    const k = srcOf(e);
+    const g = (groups[k] = groups[k] || { n: 0, players: 0, champs: 0, result: 0,
+                                          subjective: 0, oldest: null, newest: null });
+    g.n++;
+    const pl = [...(e.players?.blue || []), ...(e.players?.red || [])].filter(Boolean);
+    const ch = [...(e.champions?.blue || []), ...(e.champions?.red || [])].filter(Boolean);
+    if (pl.length >= 8) g.players++;
+    if (ch.length >= 8) g.champs++;
+    if (e.actualWinner) g.result++;
+    if (e.draftPref != null || e.skillAdv || (e.execDemand && (e.execDemand.blue || e.execDemand.red))) g.subjective++;
+    if (e.date) {
+      if (!g.oldest || e.date < g.oldest) g.oldest = e.date;
+      if (!g.newest || e.date > g.newest) g.newest = e.date;
+    }
+  });
+
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const rows = Object.entries(groups).sort((a, b) => b[1].n - a[1].n);
+  const totalPlayers = rows.reduce((a, [, g]) => a + g.players, 0);
+
+  el.innerHTML =
+    `<div style="margin-bottom:10px;">${all.length.toLocaleString()} games stored \u00B7
+       <b style="color:${totalPlayers ? "var(--green)" : "#ff4d5e"};">${totalPlayers.toLocaleString()}</b>
+       have player names</div>` +
+    rows.map(([src, g]) => {
+      const pp = pct(g.players, g.n);
+      return `<div style="padding:8px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <b style="font-size:12px;">${src}</b>
+          <span style="font-size:11px;color:var(--muted);">${g.n.toLocaleString()}g \u00B7 ${g.oldest || "?"} \u2192 ${g.newest || "?"}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+          champions <b style="color:var(--text);">${pct(g.champs, g.n)}%</b> \u00B7
+          players <b style="color:${pp > 80 ? "var(--green)" : pp > 0 ? "var(--yellow)" : "#ff4d5e"};">${pp}%</b> \u00B7
+          results <b style="color:var(--text);">${pct(g.result, g.n)}%</b> \u00B7
+          your ratings <b style="color:var(--text);">${pct(g.subjective, g.n)}%</b>
+        </div></div>`;
+    }).join("") +
+    `<p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.7;">
+       <b style="color:var(--text);">players</b> is the one that matters for a re-import decision:
+       the player-based factors can only use games that have it. If a source already reads high
+       there is nothing to gain by re-importing it.</p>`;
+}
+
 // ── Duplicate detection ──────────────────────────────────────────────────────
 let _dupePlan = null;
 
@@ -9760,7 +9833,6 @@ function fullDataBundle() {
     reviews:   loadReviews(),
     tierConfig:      loadTierConfig(),
     manualStandings: loadManualStandings(),
-    rosters:   loadRosters(),
     todayPlan: loadTodayPlanRaw(),
     bankroll:  loadBankrollSettings(),
     factorWeights: loadFactorWeights(),
@@ -13657,7 +13729,15 @@ function show(screen) {
     if (screen === "champions")  renderChampions();
     if (screen === "players")    renderPlayerProfiles();
     if (screen === "tiers")     renderTiers();
-    if (screen === "model")     { renderModelPage(); renderHighConfidence(); renderFactorWeightsGrid(); }
+    // renderHighConfidence() was removed with its card but the call was left
+    // behind, throwing on every visit to this screen. Each call is guarded now
+    // so one missing renderer cannot take down the rest of the page.
+    if (screen === "model")     {
+      [renderModelPage, renderFactorWeightsGrid].forEach(fn => {
+        try { if (typeof fn === "function") fn(); }
+        catch(err) { logAppError("render", "Model page: " + err.message, fn.name); }
+      });
+    }
     if (screen === "stats")     renderStats();
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
