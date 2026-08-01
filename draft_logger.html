@@ -363,10 +363,10 @@
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
+      <button onclick="openWatchPicker()" id="db-watch-btn" style="display:none;font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--blue);border-radius:6px;cursor:pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
-      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 4:22:47 PM</div>
+      <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;">↺ 2s</span>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 4:27:08 PM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -443,7 +443,7 @@
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openWatchPicker()">+ Add live</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="popoutAll()" title="Open each stream in its own Twitch window — works when embeds don't">↗ Pop out all</button>
-      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="requestEmbedStorage()" title="Ask the browser to let Twitch's player use its session here">🔓 Fix black players</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="diagnoseWatch()" title="Show the exact player URLs so they can be tested directly">🔎 Diagnose</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="reresolveWatchChannels()" title="Re-read the stream links from Settings">↻ Relink</button>
       <button class="btn btn-danger" style="font-size:12px;padding:5px 10px;" onclick="clearWatch()">Clear</button>
     </div>
@@ -1750,7 +1750,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 4:22:48 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 4:27:09 PM</div>
     </div>
   </div>
 
@@ -13162,6 +13162,39 @@ async function requestEmbedStorage() {
 // Twitch's own popout player is a real window on twitch.tv, so it is
 // first-party: no iframe, no parent check, no third-party storage. This works
 // when the embed cannot, including behind a VPN.
+// Rather than guessing at causes: show the exact URL each tile is loading, and
+// give a way to open it standalone. If the same URL fails in its own tab, the
+// problem is the channel or Twitch; if it works there but not here, the problem
+// is embedding.
+function diagnoseWatch() {
+  const w = document.getElementById("watch-warning");
+  if (!w) return;
+  const list = loadWatchChannels();
+  if (!list.length) { w.style.display = "block"; w.innerHTML = "No streams to test."; return; }
+  w.style.display = "block";
+  w.innerHTML =
+    `<b>Player URLs in use</b>
+     <div style="font-size:11px;color:var(--muted);margin:6px 0 10px;line-height:1.6;">
+       Open one. If it plays there but not in the tile above, embedding is being blocked.
+       If it fails there too, the channel name is wrong or that channel is offline.
+     </div>` +
+    list.map(ch => {
+      const src = watchEmbedUrl(ch);
+      const direct = isYouTube(ch) ? ch : `https://www.twitch.tv/${ch}`;
+      return `<div style="padding:6px 0;border-top:1px solid var(--border);font-size:11px;">
+        <b>${watchLabel(ch)}</b>
+        <div style="word-break:break-all;color:var(--muted);margin:3px 0;">${src}</div>
+        <a href="${src}" target="_blank" rel="noopener" style="color:var(--blue);">test player URL \u2197</a>
+        &nbsp;\u00B7&nbsp;
+        <a href="${direct}" target="_blank" rel="noopener" style="color:var(--blue);">open channel \u2197</a>
+      </div>`;
+    }).join("") +
+    `<div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.6;">
+       Parent domain sent to Twitch: <b>${twitchParent()}</b>
+       ${location.protocol !== "https:" ? ' \u2014 <span style="color:#ff4d5e;">not https, embeds cannot work here</span>' : ""}
+     </div>`;
+}
+
 function popoutChannel(ch) {
   const url = isYouTube(ch) ? ch : `https://www.twitch.tv/popout/${encodeURIComponent(ch)}/`;
   window.open(url, "watch_" + ch.replace(/\W/g, "_"),
@@ -13239,7 +13272,6 @@ function renderWatchPage() {
           `<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
              <iframe title="${ch}" allowfullscreen
                allow="autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write"
-               referrerpolicy="strict-origin-when-cross-origin"
                style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
            </div>
            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;">
