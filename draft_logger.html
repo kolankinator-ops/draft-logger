@@ -369,7 +369,7 @@
       <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 5:28:05 PM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 9:21:26 AM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -1430,8 +1430,11 @@
        <b style="color:var(--text);">0</b> snapshots ·
        ~0 KB
        
-       <br><span style="opacity:.8;">A win-probability model needs a few thousand labelled games. This
-       cannot be backfilled — the feed only serves live and recent matches.</span>
+       <br><span style="opacity:.8;">Collecting every 45s while the app is
+       open, on any screen, across all leagues — the league filter is not applied here because game
+       state predicts outcomes regardless of league. Needs a few thousand labelled games to fit a
+       model, and cannot be backfilled: the feed only serves live and recent matches.</span>
+       
      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1534,20 +1537,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$156.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+62.4%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$309.57</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+123.8%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$406.00</div>
+        <div style="font-size:20px;font-weight:700;">$559.57</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$355.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$51.00 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$391.70</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$167.87 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$17.75 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $355)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$19.59 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $392)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -1616,12 +1619,12 @@
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
     </div>
-    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--green);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-94.00</span>
+        <span style="font-size:24px;font-weight:800;color:var(--green);">+$59.57</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($406.00) − starting ($250.00)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($559.57) − starting ($250.00)</div>
     </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
@@ -1787,7 +1790,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/1/2026, 5:27:58 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/2/2026, 9:21:29 AM · Nothing new</div>
     </div>
   </div>
 
@@ -2277,7 +2280,17 @@ async function loadRecentGames() {
         if (e.type !== "match" || e.state !== "completed") return false;
         if ((e.startTime || "").slice(0, 10) !== today) return false;
         const teams = (e.match?.teams || []).map(t => t.code || t.name || "");
-        if (teams.length >= 2 && isGameLogged(teams[0], teams[1], today)) return false;
+        // A BO3 was disappearing after game 1: isGameLogged() was called
+        // without a game number, so any single logged game marked the whole
+        // series done. Count games instead, and keep the series listed until
+        // every one of them is in.
+        if (teams.length >= 2) {
+          const played = e.match?.strategy?.count || 0;   // best-of N
+          const logged = loggedGameCount(teams[0], teams[1], today);
+          if (logged > 0 && played && logged >= played) return false;
+          if (logged > 0 && !played && logged >= 5) return false;
+          e._loggedCount = logged;
+        }
         const eid = e.match?.id || e.id || "";
         if (dismissed.has(eid)) return false;
         return true;
@@ -2300,7 +2313,10 @@ async function loadRecentGames() {
         <span style="flex:1;min-width:0;cursor:pointer;" onclick="loadRecentGame(${idx})">
           <b>${teamNames}</b>
           <span style="color:var(--muted);"> · ${league}</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
+          <span style="color:var(--muted);font-size:11px;display:block;">${
+            ev._loggedCount ? `${ev._loggedCount} game${ev._loggedCount===1?"":"s"} logged \u2014 tap for the next one`
+                            : "Completed today \u2014 log your missed prediction"
+          }</span>
         </span>
         <button onclick="dismissRecentGame('${eid}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
       </div>`;
@@ -2349,7 +2365,17 @@ async function loadRecentGame(idx) {
     _recentMatchGames = allGames;
     _recentMatchMeta  = { event, tById, winner, ev };
 
-    await _loadRecentGameN(0, banner);
+    // Jump to the first game of the series that is not already logged, so a
+    // BO3 can be worked through one tap at a time.
+    const codes = (event.match?.teams || []).map(t => t.code || t.name || "");
+    const date  = (ev.startTime || "").slice(0, 10) || localDateStr();
+    const missing = codes.length >= 2 ? missingGameNumbers(codes[0], codes[1], date, allGames.length) : [];
+    let startIdx = 0;
+    if (missing.length) {
+      const i = allGames.findIndex(g => (g.number || 0) === missing[0]);
+      if (i >= 0) startIdx = i;
+    }
+    await _loadRecentGameN(startIdx, banner);
   } catch(e) {
     console.error("loadRecentGame error:", e);
     if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Error: ${e.message}</span>`;
@@ -4600,6 +4626,7 @@ function saveEntry() {
       league: document.getElementById("league").value.trim(),
       eventContext: document.getElementById("event-context").value.trim(),
       gameNumber: currentGameNumber,
+      gameId: (typeof currentGameId !== "undefined" && currentGameId) || null,
       blueTeam, redTeam,
       champions: JSON.parse(JSON.stringify(pickedChamps)),
       players:   JSON.parse(JSON.stringify(pickedPlayers)),
@@ -4666,7 +4693,7 @@ function saveEntry() {
   // an unlabelled sequence into training data.
   try {
     const gid = entry.gameId || (typeof currentGameId !== "undefined" ? currentGameId : null);
-    if (gid && entry.actualWinner) labelGameState(gid, entry.actualWinner);
+    if (entry.actualWinner) labelGameState(gid, entry.actualWinner, entry);
   } catch(err) {}
 
   // Recalibrate on every save, excluding the game just logged so the fit can
@@ -8556,6 +8583,34 @@ function isGameLogged(teamA, teamB, date, gameNumber) {
   });
 }
 
+// How many games of a series are already logged, so the rest stay reachable.
+function loggedGameCount(teamA, teamB, date) {
+  const rA = resolveTeam(teamA), rB = resolveTeam(teamB);
+  const nums = new Set();
+  let unnumbered = 0;
+  loadEntries().forEach(e => {
+    const eA = resolveTeam(e.blueTeam), eB = resolveTeam(e.redTeam);
+    const teamsMatch = (eA === rA && eB === rB) || (eA === rB && eB === rA);
+    if (!teamsMatch || e.date !== date) return;
+    if (e.gameNumber) nums.add(e.gameNumber); else unnumbered++;
+  });
+  return nums.size + unnumbered;
+}
+
+// Which game numbers of a series are still missing.
+function missingGameNumbers(teamA, teamB, date, total) {
+  const rA = resolveTeam(teamA), rB = resolveTeam(teamB);
+  const have = new Set();
+  loadEntries().forEach(e => {
+    const eA = resolveTeam(e.blueTeam), eB = resolveTeam(e.redTeam);
+    const teamsMatch = (eA === rA && eB === rB) || (eA === rB && eB === rA);
+    if (teamsMatch && e.date === date && e.gameNumber) have.add(e.gameNumber);
+  });
+  const out = [];
+  for (let i = 1; i <= (total || 5); i++) if (!have.has(i)) out.push(i);
+  return out;
+}
+
 function isGameReviewed(teamA, teamB, date, gameNumber) {
   return loadEntries().some(e => {
     const teamsMatch = (
@@ -9013,6 +9068,7 @@ let _lastSnapshotAt = {};
 function statesEnabled() { return localStorage.getItem("draftlogger_states_on") !== "0"; }
 function setStatesEnabled(on) {
   localStorage.setItem("draftlogger_states_on", on ? "1" : "0");
+  if (on) startStateCollector(); else stopStateCollector();
   renderStatesPanel();
 }
 
@@ -9113,12 +9169,54 @@ async function recordGameState(gameId, feedData, context) {
 }
 
 // A timeline is only training data once the result is known.
-async function labelGameState(gameId, winner) {
-  if (!gameId || !winner) return;
+async function labelGameState(gameId, winner, entry) {
+  if (!winner) return;
   try {
-    const rec = await loadGameStates(gameId);
-    if (rec && !rec.winner) { rec.winner = winner; await saveGameStates(gameId, rec); }
+    if (gameId) {
+      const rec = await loadGameStates(gameId);
+      if (rec) {
+        if (!rec.winner) { rec.winner = winner; await saveGameStates(gameId, rec); }
+        return;
+      }
+    }
+    // Entries logged by hand carry no feed id, so match on teams and date
+    // instead. Without this, most timelines would stay unlabelled and therefore
+    // useless as training data.
+    if (!entry) return;
+    const bt = (resolveTeam(entry.blueTeam) || "").toUpperCase();
+    const rt = (resolveTeam(entry.redTeam) || "").toUpperCase();
+    const d  = (entry.date || "").slice(0, 10);
+    if (!bt || !rt || !d) return;
+    const all = await allStateRecords();
+    const hit = all.find(r => !r.winner &&
+      (r.date || "").slice(0, 10) === d &&
+      (r.blueTeam || "").toUpperCase() === bt &&
+      (r.redTeam || "").toUpperCase() === rt);
+    if (hit) { hit.winner = winner; await saveGameStates(hit.key, hit); }
   } catch(e) {}
+}
+
+// Sweep unlabelled timelines against everything already logged. Runs on
+// startup so results logged on another device, or before this feature existed,
+// still get matched up.
+async function backfillStateLabels() {
+  try {
+    const all = await allStateRecords();
+    const pending = all.filter(r => !r.winner);
+    if (!pending.length) return 0;
+    const entries = loadEntries().filter(e => e.actualWinner);
+    let n = 0;
+    for (const r of pending) {
+      const bt = (r.blueTeam || "").toUpperCase(), rt = (r.redTeam || "").toUpperCase();
+      const d = (r.date || "").slice(0, 10);
+      const m = entries.find(e =>
+        (e.date || "").slice(0, 10) === d &&
+        (resolveTeam(e.blueTeam) || "").toUpperCase() === bt &&
+        (resolveTeam(e.redTeam) || "").toUpperCase() === rt);
+      if (m) { r.winner = m.actualWinner; await saveGameStates(r.key, r); n++; }
+    }
+    return n;
+  } catch(e) { return 0; }
 }
 
 async function pruneGameStates() {
@@ -9162,8 +9260,11 @@ async function renderStatesPanel() {
        <b style="color:var(--text);">${snaps.toLocaleString()}</b> snapshots \u00b7
        ~${bytes < 1048576 ? (bytes / 1024).toFixed(0) + " KB" : (bytes / 1048576).toFixed(1) + " MB"}
        ${days ? `<br>collecting for ${days} day${days === 1 ? "" : "s"} \u00b7 about ${(snaps / days).toFixed(0)} snapshots a day` : ""}
-       <br><span style="opacity:.8;">A win-probability model needs a few thousand labelled games. This
-       cannot be backfilled \u2014 the feed only serves live and recent matches.</span>
+       <br><span style="opacity:.8;">Collecting every ${COLLECTOR_INTERVAL_MS / 1000}s while the app is
+       open, on any screen, across all leagues \u2014 the league filter is not applied here because game
+       state predicts outcomes regardless of league. Needs a few thousand labelled games to fit a
+       model, and cannot be backfilled: the feed only serves live and recent matches.</span>
+       ${_collectorLast ? `<br><span style="opacity:.7;">last sweep ${Math.round((Date.now() - _collectorLast) / 1000)}s ago</span>` : ""}
      </div>`;
 }
 
@@ -9181,6 +9282,85 @@ async function exportGameStates() {
   a.download = `game-states-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// ── Background state collector ───────────────────────────────────────────────
+// Runs on its own timer rather than piggybacking on the dashboard, so it keeps
+// collecting whatever screen is open. Deliberately ignores the league filter:
+// that filter is about what is worth betting on, while a win-probability model
+// learns from game state regardless of league. The league is recorded on every
+// timeline so ERLs can be excluded later if their comeback rates differ.
+let _collectorTimer = null, _collectorBusy = false, _collectorLast = 0;
+const COLLECTOR_INTERVAL_MS = 45000;
+
+async function collectLiveStates() {
+  if (!statesEnabled() || _collectorBusy) return;
+  _collectorBusy = true;
+  try {
+    // Its own schedule request, so it does not depend on the dashboard having
+    // populated liveGameData.
+    const sched = await apiGet("/getSchedule");
+    const live = (sched.data?.schedule?.events || [])
+      .filter(e => e.type === "match" && e.state === "inProgress");
+    if (!live.length) { _collectorLast = Date.now(); return; }
+
+    for (const ev of live) {
+      try {
+        const det = await apiGet("/getEventDetails", { id: ev.id });
+        const event = det.data && det.data.event;
+        if (!event) continue;
+        const league = event.league?.name || ev.league?.name || "";
+        const teams = event.match?.teams || [];
+        const games = (event.match?.games || []).filter(g => g.state === "inProgress");
+        for (const g of games) {
+          const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${g.id}`);
+          if (!res.ok) continue;
+          const txt = await res.text();
+          const fd = txt ? JSON.parse(txt) : null;
+          if (!fd || !(fd.frames || []).length) continue;
+          const meta = fd.gameMetadata || {};
+          // Feed order is authoritative for which side is which.
+          const blueName = meta.blueTeamMetadata?.esportsTeamId
+            ? (teams.find(t => t.id === meta.blueTeamMetadata.esportsTeamId)?.code || "")
+            : (teams[0]?.code || "");
+          const redName = meta.redTeamMetadata?.esportsTeamId
+            ? (teams.find(t => t.id === meta.redTeamMetadata.esportsTeamId)?.code || "")
+            : (teams[1]?.code || "");
+          await recordGameState(g.id, fd, {
+            league,
+            blueTeam: blueName,
+            redTeam: redName,
+            date: (typeof localDateStr === "function" ? localDateStr() : new Date().toISOString().slice(0,10)),
+            champions: meta.blueTeamMetadata ? {
+              blue: (meta.blueTeamMetadata.participantMetadata || []).map(p => p.championId).filter(Boolean),
+              red:  (meta.redTeamMetadata?.participantMetadata  || []).map(p => p.championId).filter(Boolean)
+            } : null
+          });
+        }
+      } catch(e) { /* one bad event must not stop the sweep */ }
+    }
+    _collectorLast = Date.now();
+  } catch(err) {
+    if (typeof logAppError === "function") logAppError("collector", err.message, "collectLiveStates");
+  } finally {
+    _collectorBusy = false;
+  }
+}
+
+function startStateCollector() {
+  if (_collectorTimer) clearInterval(_collectorTimer);
+  if (!statesEnabled()) return;
+  collectLiveStates();
+  _collectorTimer = setInterval(collectLiveStates, COLLECTOR_INTERVAL_MS);
+  // Backgrounded tabs get their timers throttled, so catch up on return.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" &&
+        Date.now() - _collectorLast > COLLECTOR_INTERVAL_MS) collectLiveStates();
+  });
+}
+function stopStateCollector() {
+  if (_collectorTimer) clearInterval(_collectorTimer);
+  _collectorTimer = null;
 }
 
 // ── Model core ───────────────────────────────────────────────────────────────
@@ -14282,22 +14462,8 @@ async function dbFetchFeed(gameId) {
   if (dFrames.length) cached.lastDetailsFrame = dFrames[dFrames.length - 1];
   dbGameCache.set(gameId, cached);
 
-  // Snapshot the live state. Fire-and-forget: a storage failure must never
-  // interrupt the dashboard.
-  if (frames.length && wData) {
-    const g = (typeof liveGameData !== "undefined" ? liveGameData : []).find(x => x.gameId === gameId) || {};
-    const meta = cached.meta || {};
-    recordGameState(gameId, wData, {
-      league: g.league || "",
-      blueTeam: g.blueTeam || "",
-      redTeam: g.redTeam || "",
-      date: (typeof localDateStr === "function" ? localDateStr() : new Date().toISOString().slice(0,10)),
-      champions: meta.blueTeamMetadata ? {
-        blue: (meta.blueTeamMetadata.participantMetadata || []).map(p => p.championId).filter(Boolean),
-        red:  (meta.redTeamMetadata?.participantMetadata  || []).map(p => p.championId).filter(Boolean)
-      } : null
-    }).catch(() => {});
-  }
+  // State collection runs on its own timer now (see collectLiveStates), so it
+  // keeps working whatever screen is open and covers leagues filtered out here.
   return cached;
 }
 
@@ -14876,7 +15042,8 @@ if (syncConfigured()) {
 
 // Deferred so it never delays first paint.
 setTimeout(() => { try { maybeRefreshSwingStats(); } catch(e) {} }, 4000);
-setTimeout(() => { try { pruneGameStates(); } catch(e) {} }, 9000);
+setTimeout(() => { try { pruneGameStates(); backfillStateLabels(); } catch(e) {} }, 9000);
+setTimeout(() => { try { startStateCollector(); } catch(e) {} }, 6000);
 // Register service worker for PWA / offline support
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").then(reg => {
