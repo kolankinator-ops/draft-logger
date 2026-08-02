@@ -323,11 +323,11 @@
   <button onclick="show('watch');closeDrawer()" class="">📺 Watch</button>
   <button onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button>
 
-  <button onclick="show('log');closeDrawer()">Log Game</button>
-  <button onclick="show('results');closeDrawer()">Log Results</button>
+  <button onclick="show('log');closeDrawer()" class="">Log Game</button>
+  <button onclick="show('results');closeDrawer()" class="">Log Results</button>
   <div class="nav-drawer-title">Analysis</div>
   <button onclick="show('review');closeDrawer()">Player impact (old review)</button>
-  <button onclick="show('players');closeDrawer()">Players</button>
+  <button onclick="show('players');closeDrawer()" class="">Players</button>
   <button onclick="show('champions');closeDrawer()">Champions</button>
   <button onclick="show('standings');closeDrawer()">Standings</button>
   <button onclick="show('tiers');closeDrawer()">⚖ Tiers</button>
@@ -346,9 +346,10 @@
   <button onclick="show('today')">📅 Schedule</button>
   <button onclick="show('watch')" class="">📺 Watch</button>
   <button class="" onclick="show('log')">Log Game</button>
-  <button onclick="show('results')">Log Results</button>
+  <button onclick="show('results')" class="">Log Results</button>
   <button onclick="show('draftreview')">🕶 Review</button>
-  <button onclick="show('players')">Players</button>
+  <button onclick="show('vodrate')" class="">🎬 Rate VODs</button>
+  <button onclick="show('players')" class="">Players</button>
   <button onclick="show('champions')">Champions</button>
   <button onclick="show('standings')">Standings</button>
   <button onclick="show('model')">📊 Model</button>
@@ -369,7 +370,7 @@
       <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">1 live — 9:21:26 AM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 3:26:42 PM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -389,6 +390,172 @@
   </div>
 </div>
 
+
+<!-- VOD RATING -->
+<div class="screen" id="screen-vodrate">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:15px;font-weight:600;">🎬 Rate VODs</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="vodrate-scope" onchange="pickVodGame()" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+        <option value="unrated">Unrated only</option>
+        <option value="all">Any game</option>
+      </select>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="pickVodGame()">🎲 Another game</button>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+    Picks a game at random from your logged history, embeds the VOD, and collects
+    player ratings underneath. Unlike the draft review the result is shown — you are
+    judging how people played, which needs the game visible.
+  </p>
+  <div id="vodrate-card">
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;">
+        <span>Prime League · Game 2</span>
+        <span>2026-07-29 · 82 left</span>
+      </div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;">
+        <span style="color:var(--blue);">USE</span> vs <span style="color:var(--red);">TOG</span>
+        <span style="font-weight:400;color:var(--muted);font-size:11px;"> · TOG won</span>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:14px;font-size:12px;color:var(--muted);line-height:1.6;">
+             No VOD found for this game — the schedule API only carries them for a limited window.
+             You can still rate from memory, or
+             <a href="https://www.youtube.com/results?search_query=USE%20vs%20TOG%20Prime%20League%20game%202" target="_blank" rel="noopener" style="color:var(--blue);">search YouTube ↗</a>.
+           </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:5px;">USE</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--blue);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">KS</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/KSante.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">USE FornoReason</div>
+        <div style="font-size:10px;color:var(--muted);">KSante</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--blue);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">LE</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/LeeSin.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">USE White</div>
+        <div style="font-size:10px;color:var(--muted);">LeeSin</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--blue);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">SY</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Sylas.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">USE Kanin</div>
+        <div style="font-size:10px;color:var(--muted);">Sylas</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--blue);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">EZ</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Jade_Ezreal.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">USE DenVoksne</div>
+        <div style="font-size:10px;color:var(--muted);">Ezreal</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--blue);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">KA</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Karma.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">USE Twiizt</div>
+        <div style="font-size:10px;color:var(--muted);">Karma</div>
+      </div>
+    </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:5px;">TOG</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--red);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">RU</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Rumble.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">TOG Whiteknight</div>
+        <div style="font-size:10px;color:var(--muted);">Rumble</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--red);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">SK</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Skarner.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">TOG Woldjo</div>
+        <div style="font-size:10px;color:var(--muted);">Skarner</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--red);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">YO</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Yone.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">TOG Sajator</div>
+        <div style="font-size:10px;color:var(--muted);">Yone</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--red);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">YU</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Yunara.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">TOG Ryuk</div>
+        <div style="font-size:10px;color:var(--muted);">Yunara</div>
+      </div>
+    </div><div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid var(--red);">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">PY</span>
+        <img src="https://ddragon.leagueoflegends.com/cdn/16.15.1/img/champion/Pyke.png" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">TOG Lilipp</div>
+        <div style="font-size:10px;color:var(--muted);">Pyke</div>
+      </div>
+    </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">Player impact</div>
+      <div class="perf-form open" id="perf-form-1785347784664">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+      <span style="color:var(--red);font-weight:700;">TOG</span> won —
+      did you watch this game?
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:4px;">
+      <button class="btn btn-primary" style="flex:1;padding:9px;" onclick="expandRankForm('1785347784664','red')">✓ I watched</button>
+      <button class="btn btn-ghost" style="flex:1;padding:9px;" onclick="saveResult('1785347784664','red','skip')">✗ Didn't watch</button>
+    </div>
+  </div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="pickVodGame()">Skip — another game</button>
+    </div></div>
+</div>
 
 <!-- BLINDED DRAFT REVIEW -->
 <div class="screen" id="screen-draftreview">
@@ -949,10 +1116,411 @@
       <div class="card-title" style="margin-bottom:0;">Pending results</div>
       <button class="btn btn-ghost" style="font-size:12px;padding:7px 12px;" onclick="autoCheckResults()">↺ Check results from API</button>
     </div>
-    <div id="auto-check-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;display:none;"></div>
+    <div id="auto-check-status" style="font-size: 12px; color: var(--muted); margin-bottom: 10px; display: block;">No pending entries to check.</div>
     <div id="pending-clear" style="display:none;background:var(--surface2);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.6;"></div>
-    <div id="pending-list"><div class="empty">No pending games — log a prediction first.</div></div>
-    <div id="recent-resolved"></div>
+    <div id="pending-list"><div class="empty">✓ All caught up — no pending games.</div></div>
+    <div id="recent-resolved"><div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:18px 0 6px;">
+       RECENTLY RESOLVED · last 14 days</div><div class="pending-entry" id="pending-1785676813128">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">KT vs HLE</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LCK ·
+              <span style="color:var(--blue);">KT won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785676813128','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785676813128"></div>
+      </div><div class="pending-entry" id="pending-1785674389797">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">KT vs HLE</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LCK ·
+              <span style="color:var(--red);">HLE won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785674389797','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785674389797"></div>
+      </div><div class="pending-entry" id="pending-1785673264301">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">TES vs JDG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LPL ·
+              <span style="color:var(--blue);">TES won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785673264301','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785673264301"></div>
+      </div><div class="pending-entry" id="pending-1785687719416">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">FX vs LOUD</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · CBLOL ·
+              <span style="color:var(--red);">LOUD won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785687719416','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785687719416"></div>
+      </div><div class="pending-entry" id="pending-1785687827256">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">G2 vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LEC ·
+              <span style="color:var(--blue);">G2 won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785687827256','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785687827256"></div>
+      </div><div class="pending-entry" id="pending-1785690112835">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">LOUD vs FX</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · CBLOL ·
+              <span style="color:var(--blue);">LOUD won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785690112835','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785690112835"></div>
+      </div><div class="pending-entry" id="pending-1785691684763">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">MKOI vs FNC</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LEC ·
+              <span style="color:var(--blue);">MKOI won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785691684763','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785691684763"></div>
+      </div><div class="pending-entry" id="pending-1785693028929">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">LOS vs RED</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · CBLOL ·
+              <span style="color:var(--blue);">LOS won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785693028929','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785693028929"></div>
+      </div><div class="pending-entry" id="pending-1785694350498">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">MKOI vs FNC</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-02 · LEC ·
+              <span style="color:var(--red);">FNC won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785694350498','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785694350498"></div>
+      </div><div class="pending-entry" id="pending-1785617379229">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">DIG vs C9</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LCS ·
+              <span style="color:var(--blue);">DIG won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785617379229','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785617379229"></div>
+      </div><div class="pending-entry" id="pending-1785607156682">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--red);">SK won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785607156682','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785607156682"></div>
+      </div><div class="pending-entry" id="pending-1785603532154">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">VKS vs FUR</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · CBLOL ·
+              <span style="color:var(--blue);">VKS won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785603532154','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785603532154"></div>
+      </div><div class="pending-entry" id="pending-1785600827447">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">VKS vs FUR</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · CBLOL ·
+              <span style="color:var(--blue);">VKS won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785600827447','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785600827447"></div>
+      </div><div class="pending-entry" id="pending-1785597158958">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--red);">SK won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785597158958','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785597158958"></div>
+      </div><div class="pending-entry" id="pending-1785600701558">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GX vs SK</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LEC ·
+              <span style="color:var(--blue);">GX won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785600701558','blue')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785600701558"></div>
+      </div><div class="pending-entry" id="pending-1785619495141">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">DIG vs C9</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-08-01 · LCS ·
+              <span style="color:var(--red);">C9 won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785619495141','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785619495141"></div>
+      </div><div class="pending-entry" id="pending-1785498126690">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">CFO vs GAM</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-31 · LCP ·
+              <span style="color:var(--red);">GAM won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785498126690','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785498126690"></div>
+      </div><div class="pending-entry" id="pending-1785501924151">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">KRX vs BRO</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-31 · LCK ·
+              <span style="color:var(--blue);">KRX won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785501924151','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785501924151"></div>
+      </div><div class="pending-entry" id="pending-1785446211022">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">WU vs NRG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · NACL ·
+              <span style="color:var(--red);">NRG won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785446211022','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785446211022"></div>
+      </div><div class="pending-entry" id="pending-1785434843439">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">SC vs JL</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · La Ligue Française ·
+              <span style="color:var(--blue);">SC won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785434843439','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785434843439"></div>
+      </div><div class="pending-entry" id="pending-1785466962778">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">DOG vs CNV</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · NACL ·
+              <span style="color:var(--blue);">DOG won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785466962778','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785466962778"></div>
+      </div><div class="pending-entry" id="pending-1785418903997">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">GZ vs DCG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · LCP ·
+              <span style="color:var(--blue);">GZ won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785418903997','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785418903997"></div>
+      </div><div class="pending-entry" id="pending-1785419757349">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">TT vs JDG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-30 · LPL ·
+              <span style="color:var(--red);">JDG won</span> ·
+              <span style="color:var(--green);">✓</span>
+               · <span style="color:var(--green);">rated</span>
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785419757349','red')">Edit ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785419757349"></div>
+      </div><div class="pending-entry" id="pending-1785347784664">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">USE vs TOG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · Prime League ·
+              <span style="color:var(--red);">TOG won</span> ·
+              <span style="color:#ff4d5e;">✗</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785347784664','red')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785347784664"></div>
+      </div><div class="pending-entry" id="pending-1785351820087">
+        <div class="pending-entry-header">
+          <div style="min-width:0;">
+            <div style="font-weight:600;font-size:13px;">USE vs TOG</div>
+            <div class="pending-pred" style="color:var(--muted);">
+              2026-07-29 · Prime League ·
+              <span style="color:var(--blue);">USE won</span> ·
+              <span style="color:var(--green);">✓</span>
+              
+            </div>
+          </div>
+          <div class="result-btns">
+            <button class="win-btn" onclick="openPerfForm('1785351820087','blue')">Add ratings</button>
+          </div>
+        </div>
+        <div class="perf-form" id="perf-form-1785351820087"></div>
+      </div></div>
   </div>
 
   <div class="card">
@@ -965,7 +1533,7 @@
     <div style="margin-bottom:10px;">
       <label>League / Tournament</label>
       <input type="text" id="sb-league" placeholder="e.g. LCK, Worlds" list="sb-league-list" autocomplete="off">
-      <datalist id="sb-league-list"></datalist>
+      <datalist id="sb-league-list"><option value="CBLOL"></option><option value="Circuito Desafiante"></option><option value="Esports World Cup"></option><option value="KeSPA Cup"></option><option value="LCK"></option><option value="LCK Challengers"></option><option value="LCP"></option><option value="LCS"></option><option value="LEC"></option><option value="LES"></option><option value="LPL"></option><option value="LRN"></option><option value="La Ligue Française"></option><option value="MSI"></option><option value="NACL"></option><option value="NLC"></option><option value="Prime League"></option><option value="Road of Legends"></option></datalist>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       <div><label>Odds</label><input type="number" id="sb-odds" step="0.01" min="1.01" placeholder="e.g. 2.10"></div>
@@ -1012,9 +1580,17 @@
 <div class="screen" id="screen-players">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Player profiles</div>
-    <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
-      <option value="all">All leagues</option>
-    </select>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <select id="profile-role-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
+        <option value="all">All positions</option>
+        <option value="top">Top</option>
+        <option value="jungle">Jungle</option>
+        <option value="mid">Mid</option>
+        <option value="bottom">Bot</option>
+        <option value="support">Support</option>
+      </select>
+      <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;"><option value="all">All leagues</option><option value="CBLOL">CBLOL</option><option value="Circuito Desafiante">Circuito Desafiante</option><option value="Esports World Cup">Esports World Cup</option><option value="KeSPA Cup">KeSPA Cup</option><option value="LCK">LCK</option><option value="LCK Challengers">LCK Challengers</option><option value="LCP">LCP</option><option value="LCS">LCS</option><option value="LEC" selected="">LEC</option><option value="LES">LES</option><option value="LPL">LPL</option><option value="LRN">LRN</option><option value="La Ligue Française">La Ligue Française</option><option value="MSI">MSI</option><option value="NACL">NACL</option><option value="NLC">NLC</option><option value="Prime League">Prime League</option><option value="Road of Legends">Road of Legends</option></select>
+    </div>
   </div>
   <div style="margin-bottom:12px;">
     <input type="text" id="profile-search" placeholder="Search player…" oninput="renderPlayerProfiles()">
@@ -1434,7 +2010,7 @@
        open, on any screen, across all leagues — the league filter is not applied here because game
        state predicts outcomes regardless of league. Needs a few thousand labelled games to fit a
        model, and cannot be backfilled: the feed only serves live and recent matches.</span>
-       
+       <br><span style="opacity:.7;">last sweep 12s ago</span>
      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1537,20 +2113,20 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$309.57</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+123.8%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$306.26</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+122.5%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$559.57</div>
+        <div style="font-size:20px;font-weight:700;">$556.26</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$391.70</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$167.87 staked)</div>
+        <div style="font-size:20px;font-weight:700;color:var(--yellow);">$472.82</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available (−$83.44 staked)</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$19.59 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $392)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$23.64 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $473)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -1622,9 +2198,9 @@
     <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--green);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:var(--green);">+$59.57</span>
+        <span style="font-size:24px;font-weight:800;color:var(--green);">+$56.26</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($559.57) − starting ($250.00)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($556.26) − starting ($250.00)</div>
     </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
@@ -1790,7 +2366,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/2/2026, 9:21:29 AM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/2/2026, 3:19:41 PM</div>
     </div>
   </div>
 
@@ -4217,6 +4793,41 @@ function assignRank(entryId, playerName, rank) {
 }
 
 // ── Player Profiles ───────────────────────────────────────────────────────────
+// Position is not stored on entries, but the feed returns picks in role order,
+// so slot index gives it: 0 top, 1 jungle, 2 mid, 3 bot, 4 support. A player who
+// has moved role appears under whichever they have played most.
+const PROFILE_ROLES = ["top", "jungle", "mid", "bottom", "support"];
+let _roleCache = null, _roleCacheKey = "";
+
+function playerRoleMap() {
+  const entries = loadEntries();
+  const key = entries.length + ":" + (entries[0]?.id || "");
+  if (_roleCache && _roleCacheKey === key) return _roleCache;
+
+  const counts = {};
+  entries.forEach(e => {
+    ["blue", "red"].forEach(side => {
+      (e.players?.[side] || []).forEach((name, i) => {
+        if (!name || i > 4) return;
+        const n = String(name).trim();
+        if (!n) return;
+        (counts[n] = counts[n] || {})[PROFILE_ROLES[i]] =
+          ((counts[n] || {})[PROFILE_ROLES[i]] || 0) + 1;
+      });
+    });
+  });
+
+  const out = {};
+  for (const [name, roles] of Object.entries(counts)) {
+    const sorted = Object.entries(roles).sort((a, b) => b[1] - a[1]);
+    const total = sorted.reduce((a, [, n]) => a + n, 0);
+    out[name] = { role: sorted[0][0], games: sorted[0][1], total,
+                  share: sorted[0][1] / total, all: roles };
+  }
+  _roleCache = out; _roleCacheKey = key;
+  return out;
+}
+
 function renderPlayerProfiles() {
   const entries  = loadEntries();
   const reviews  = loadReviews();
@@ -4240,10 +4851,14 @@ function renderPlayerProfiles() {
     Object.keys(ranks).forEach(n => playerSet.add(n));
   });
 
+  const roleFilter = (document.getElementById("profile-role-filter") || {}).value || "all";
+  const roleMap = playerRoleMap();
+
   // Pre-compute all ratings once — avoids recomputing N log N times during sort
   const ratingCache = new Map();
   for (const name of playerSet) {
     if (q && !name.toLowerCase().includes(q)) continue;
+    if (roleFilter !== "all" && (roleMap[name]?.role || "") !== roleFilter) continue;
     const r = playerImpactRating(name, leagueFilter, entries, reviews);
     if (r) ratingCache.set(name, r);
   }
@@ -4253,7 +4868,10 @@ function renderPlayerProfiles() {
   );
 
   if (!players.length) {
-    el.innerHTML = '<div class="empty">No impact ratings yet — rank players in Game Review.</div>';
+    el.innerHTML = (roleFilter !== "all" || leagueFilter !== "all")
+      ? `<div class="empty">No rated players match that filter. Positions come from pick order,
+         so a player only appears once they have been rated in a game with player names recorded.</div>`
+      : '<div class="empty">No impact ratings yet \u2014 rank players in Rate VODs or Game Review.</div>';
     return;
   }
 
@@ -4286,7 +4904,17 @@ function renderPlayerProfiles() {
       <div class="profile-card">
         <div class="profile-header" onclick="this.nextElementSibling.classList.toggle('open')">
           <div style="flex:1;">
-            <div class="profile-name">${name}</div>
+            <div class="profile-name">${name}${(() => {
+              const rm = roleMap[name];
+              if (!rm) return "";
+              // Flag anyone who splits time between roles, since the position
+              // shown is only their most common one.
+              const mixed = rm.share < 0.8;
+              return ` <span style="font-size:10px;font-weight:600;color:${mixed ? "var(--yellow)" : "var(--muted)"};
+                border:1px solid var(--border);border-radius:4px;padding:1px 5px;vertical-align:middle;"
+                title="${Object.entries(rm.all).map(([k,v]) => `${k}: ${v}`).join(", ")}">${
+                  (ROLE_ABBR[rm.role] || rm.role).toUpperCase()}${mixed ? "*" : ""}</span>`;
+            })()}</div>
             <div style="font-size:11px;color:var(--muted);">${r.games} game${r.games!==1?"s":""} rated</div>
           </div>
           <div style="text-align:right;margin-right:8px;">
@@ -6913,6 +7541,162 @@ function watchLabel(ch) {
 function champInitials(name) {
   const s = String(name || "").replace(/[^a-zA-Z]/g, "");
   return (s.slice(0, 2) || "?").toUpperCase();
+}
+
+// ── VOD rating ───────────────────────────────────────────────────────────────
+// The blinded review page deliberately hides the result, because a draft rating
+// made knowing the outcome is worthless. Player performance is the opposite: you
+// have to see the game. So this one shows everything and embeds the VOD.
+const VOD_CACHE_KEY = "draftlogger_vod_ids_v1";
+let _vodCurrent = null;
+
+function loadVodIds() {
+  try { return JSON.parse(localStorage.getItem(VOD_CACHE_KEY) || "{}"); }
+  catch(e) { return {}; }
+}
+function saveVodIds(m) {
+  try { localStorage.setItem(VOD_CACHE_KEY, JSON.stringify(m)); } catch(e) {}
+}
+
+// Candidates need players to rate and a result to show.
+function vodCandidates() {
+  const scope = (document.getElementById("vodrate-scope") || {}).value || "unrated";
+  const reviews = loadReviews();
+  return loadEntries().filter(e => {
+    if (!e.actualWinner || e.isStandaloneBet) return false;
+    const players = [...(e.players?.blue || []), ...(e.players?.red || [])].filter(Boolean);
+    if (players.length < 8) return false;
+    if (scope === "unrated" && Object.keys(reviews[e.id] || {}).length) return false;
+    return true;
+  });
+}
+
+async function pickVodGame() {
+  const el = document.getElementById("vodrate-card");
+  if (!el) return;
+  const pool = vodCandidates();
+  if (!pool.length) {
+    el.innerHTML = `<div class="empty">No games available. Games need player names and a known result \u2014
+      switch the filter to <b>Any game</b> if you have already rated everything.</div>`;
+    return;
+  }
+  const g = pool[Math.floor(Math.random() * pool.length)];
+  _vodCurrent = g;
+  el.innerHTML = '<div class="empty">Finding the VOD\u2026</div>';
+  const vid = await findVodId(g);
+  renderVodCard(g, vid);
+}
+
+// The schedule API carries YouTube ids per game; cache them so re-picking the
+// same match does not re-hit the API.
+async function findVodId(entry) {
+  const cache = loadVodIds();
+  const key = gameKey(entry);
+  if (cache[key] !== undefined) return cache[key];
+  let vid = null;
+  try {
+    const date = (entry.date || "").slice(0, 10);
+    const sched = await apiGet("/getSchedule");
+    const events = (sched.data?.schedule?.events || []).filter(e => (e.startTime || "").slice(0, 10) === date);
+    const bt = (resolveTeam(entry.blueTeam) || "").toUpperCase();
+    const rt = (resolveTeam(entry.redTeam) || "").toUpperCase();
+    const ev = events.find(e => {
+      const codes = (e.match?.teams || []).map(t => (t.code || "").toUpperCase());
+      return codes.includes(bt) && codes.includes(rt);
+    });
+    if (ev) {
+      const det = await apiGet("/getEventDetails", { id: ev.match?.id || ev.id });
+      const games = det.data?.event?.match?.games || [];
+      const target = games.find(x => (x.number || 0) === (entry.gameNumber || 1)) || games[0];
+      const vod = (target?.vods || []).find(v => v.parameter);
+      if (vod) vid = vod.parameter;
+    }
+  } catch(e) { /* older games fall off the schedule endpoint */ }
+  cache[key] = vid;
+  saveVodIds(cache);
+  return vid;
+}
+
+function renderVodCard(g, vid) {
+  const el = document.getElementById("vodrate-card");
+  if (!el) return;
+  const blue = resolveTeam(g.blueTeam) || "Blue";
+  const red  = resolveTeam(g.redTeam) || "Red";
+  const winTeam = g.actualWinner === "blue" ? blue : red;
+  const pool = vodCandidates().length;
+
+  const player = (side, i) => {
+    const name = (g.players?.[side] || [])[i] || "";
+    const champ = (g.champions?.[side] || [])[i] || "";
+    return { name, champ };
+  };
+  const roster = side => [0,1,2,3,4].map(i => player(side, i)).filter(p => p.name || p.champ);
+
+  const champCell = (p, side) => {
+    const url = champIconUrl(p.champ);
+    return `<div style="display:flex;align-items:center;gap:7px;padding:3px 0;">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0;border-radius:6px;overflow:hidden;
+                  background:var(--surface2);border:1.5px solid ${side === "blue" ? "var(--blue)" : "var(--red)"};">
+        <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--muted);">${champInitials(p.champ)}</span>
+        ${url ? `<img src="${url}" loading="lazy" style="position:relative;width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none'">` : ""}
+      </div>
+      <div style="min-width:0;">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.name || "\u2014"}</div>
+        <div style="font-size:10px;color:var(--muted);">${p.champ || ""}</div>
+      </div>
+    </div>`;
+  };
+
+  el.innerHTML = `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;">
+        <span>${g.league || "\u2014"}${g.gameNumber ? " \u00b7 Game " + g.gameNumber : ""}</span>
+        <span>${g.date || ""} \u00b7 ${pool} left</span>
+      </div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;">
+        <span style="color:var(--blue);">${blue}</span> vs <span style="color:var(--red);">${red}</span>
+        <span style="font-weight:400;color:var(--muted);font-size:11px;"> \u00b7 ${winTeam} won</span>
+      </div>
+      ${vid
+        ? `<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;">
+             <iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen
+               allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+               style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+           </div>`
+        : `<div style="background:var(--surface2);border-radius:8px;padding:14px;font-size:12px;color:var(--muted);line-height:1.6;">
+             No VOD found for this game \u2014 the schedule API only carries them for a limited window.
+             You can still rate from memory, or
+             <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(`${blue} vs ${red} ${g.league||""} game ${g.gameNumber||1}`)}"
+                target="_blank" rel="noopener" style="color:var(--blue);">search YouTube \u2197</a>.
+           </div>`}
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:5px;">${blue}</div>
+          ${roster("blue").map(p => champCell(p, "blue")).join("")}
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:5px;">${red}</div>
+          ${roster("red").map(p => champCell(p, "red")).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">Player impact</div>
+      <div class="perf-form open" id="perf-form-${g.id}"></div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="pickVodGame()">Skip \u2014 another game</button>
+    </div>`;
+
+  // Reuse the existing rating form rather than duplicating it.
+  try { openPerfForm(g.id, g.actualWinner); } catch(err) {
+    if (typeof logAppError === "function") logAppError("vodrate", err.message, "openPerfForm");
+  }
 }
 
 // ── Blinded draft review ─────────────────────────────────────────────────────
@@ -13815,6 +14599,10 @@ function renderWatchPage() {
       ? '<div class="empty">Auto-follow is on — streams will appear here as games go live in the leagues you have enabled.</div>'
       : '<div class="empty">No streams yet. Turn on <b>Auto-follow</b>, use <b>+ Add live</b>, or type a channel above.</div>';
   } else {
+    // The empty-state message is a grid child like any other, and the cleanup
+    // below only removes elements carrying data-ch. Left alone it kept its cell
+    // forever, pushing the first stream out of position.
+    [...grid.children].forEach(el => { if (!el.dataset.ch) el.remove(); });
     applyWatchLayout();
 
     // Only touch tiles whose src actually changed, so switching audio or
@@ -14972,6 +15760,7 @@ function show(screen) {
     if (screen === "today")     { loadTodayGames(); }
     if (screen === "watch")     { renderWatchPage(); }
     if (screen === "draftreview") { buildReviewQueue(); }
+    if (screen === "vodrate") { ensureChampionData().then(() => {}); pickVodGame(); }
     if (screen === "champions") {
       ensureChampionData().then(() => { try { renderChampions(); } catch(e) {} });
       setTimeout(() => { try { maybeRefreshSwingStats(); } catch(e) {} }, 200);
