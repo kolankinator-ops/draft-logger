@@ -1106,12 +1106,16 @@
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">📐 Probability calibration (Platt scaling)</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Fits a calibration curve to your historical prediction outcomes so the model reports honest probabilities. The model still ranks the same game as most confident — it just shows an accurate number instead of an inflated one. Refit whenever you've logged enough new games.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      Fits a curve to your prediction outcomes so the model reports honest probabilities. It still
+      ranks the same game as most confident — it just stops inflating the number.
+      <b>This refits automatically every time you log a game</b>, so the button is only needed to force it.</p>
     <div id="platt-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="platt-progress" style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;"></div>
     <button class="btn btn-primary" style="width:100%;" onclick="(function(){
       const r = fitPlattScaling();
       const el = document.getElementById('platt-status');
-      if (!r.ok) { el.textContent = 'Need at least 15 completed predictions to fit — have ' + r.n + '.'; el.style.color='#ff4d5e'; return; }
+      if (!r.ok) { el.textContent = 'Need ' + (r.need || 25) + ' predictions from the current model to fit — have ' + r.n + '.'; el.style.color='#ff4d5e'; return; }
       el.innerHTML = '✓ Fitted on ' + r.n + ' predictions · a=' + r.a + ' b=' + r.b + ' · Rerender the calibration chart by scrolling down.';
       el.style.color = 'var(--green)';
       renderModelPage();
@@ -1528,24 +1532,24 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Starting bankroll</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:6px;padding:8px;border:1px solid var(--border);">
-        <div style="font-size:17px;font-weight:700;color:var(--green);">+$50.00</div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+20.0%)</div>
+        <div style="font-size:17px;font-weight:700;color:var(--green);">+$2.15</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">P&amp;L (+0.9%)</div>
       </div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;">$300.00</div>
+        <div style="font-size:20px;font-weight:700;">$252.15</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Current bankroll</div>
       </div>
       <div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;">
-        <div style="font-size:20px;font-weight:700;color:inherit;">$300.00</div>
+        <div style="font-size:20px;font-weight:700;color:inherit;">$252.15</div>
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Available</div>
       </div>
     </div><div style="text-align:center;background:var(--surface2);border-radius:6px;padding:8px;margin-bottom:8px;">
-      <div style="font-size:18px;font-weight:700;color:var(--green);">$15.00 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $300)</span></div>
+      <div style="font-size:18px;font-weight:700;color:var(--green);">$12.61 <span style="font-size:12px;font-weight:400;color:var(--muted);">per unit  (5% of $252)</span></div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px;">1u · 2u(60%+) · 3u(65%+) · 4u(70%+) · +1u(10%+ edge) · +2u(15%+ edge)</div>
     </div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:700;color:var(--green);">$150.00</div>
+          <div style="font-size:14px;font-weight:700;color:var(--green);">$402.14</div>
           <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Cashed out</div>
         </div>
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
@@ -1553,7 +1557,7 @@
           <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Deposited</div>
         </div>
         <div style="text-align:center;background:var(--bg);border-radius:6px;padding:7px;border:1px solid var(--border);">
-          <div style="font-size:14px;font-weight:700;color:#ff4d5e;">$-250.00</div>
+          <div style="font-size:14px;font-weight:700;color:var(--green);">+$2.14</div>
           <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Take home</div>
         </div>
       </div></div>
@@ -1595,7 +1599,7 @@
     <div id="pnl-display" style="margin-top:4px;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
       <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:22px;font-weight:800;color:var(--green);">$150.00</div>
+        <div style="font-size:22px;font-weight:800;color:var(--green);">$402.14</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px;">Total cashed out</div>
       </div>
       <div style="background:var(--bg);border-radius:8px;padding:12px;border:1px solid var(--border);text-align:center;">
@@ -1606,16 +1610,16 @@
     <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--border);margin-bottom:8px;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Money in your pocket</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-250.00</span>
+        <span style="font-size:24px;font-weight:800;color:var(--green);">+$2.14</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px;">Cashed out minus deposits</div>
     </div>
-    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid #ff4d5e;">
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;border:1px solid var(--green);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <span style="font-size:13px;color:var(--muted);">Total net profit</span>
-        <span style="font-size:24px;font-weight:800;color:#ff4d5e;">$-200.00</span>
+        <span style="font-size:24px;font-weight:800;color:var(--green);">+$4.29</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($300.00) − starting ($250.00)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">Take home + current bankroll ($252.15) − starting ($250.00)</div>
     </div></div>
     <div id="pnl-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:8px;">CORRECT TOTALS</div>
@@ -1781,7 +1785,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/2/2026, 6:38:32 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/3/2026, 11:09:37 AM · Nothing new</div>
     </div>
   </div>
 
@@ -6275,6 +6279,37 @@ function applyPlatt(rawPct) {
 // model's own confidence in the game being logged (circular), and mix
 // predictions from different model versions (the shrinkage and swing changes
 // altered what a given number means, so older ones are not comparable).
+// The eligible count is much smaller than the number of logged games, because
+// only predictions made by the current model are comparable. Say so plainly
+// rather than leaving the difference unexplained.
+function renderPlattProgress() {
+  const el = document.getElementById("platt-progress");
+  if (!el) return;
+  const MODEL_EPOCH = "2026.07.31-b22";
+  const all = loadEntries().filter(e =>
+    e.actualWinner && !e.isBulkImport && !e.isStandaloneBet && e.modelPct != null);
+  const eligible = all.filter(e => (e.modelSnapshot?.build || "") >= MODEL_EPOCH);
+  const params = loadPlattParams();
+  const NEED = 25;
+
+  if (params) {
+    el.innerHTML = `<span style="color:var(--green);">\u2713 Calibrated</span> on ${params.n}
+      prediction${params.n === 1 ? "" : "s"} \u00b7 fitted ${new Date(params.fittedAt).toLocaleDateString()}
+      \u00b7 refits automatically as you log games.`;
+    return;
+  }
+  const pct = Math.min(100, Math.round(eligible.length / NEED * 100));
+  el.innerHTML =
+    `<b style="color:var(--text);">${eligible.length}/${NEED}</b> predictions from the current model.
+     <div style="background:var(--bg);border-radius:3px;height:6px;margin:5px 0;overflow:hidden;">
+       <div style="height:100%;width:${pct}%;background:var(--blue);"></div></div>
+     ${all.length > eligible.length
+       ? `${all.length - eligible.length} older prediction${all.length - eligible.length === 1 ? "" : "s"}
+          excluded \u2014 they came from a previous version of the model, so a given number meant
+          something different and mixing them would skew the fit.`
+       : ""}`;
+}
+
 function fitPlattScaling(opts) {
   const excludeId = opts && opts.excludeId;
   // Only predictions from builds at or after the model unification are
@@ -10811,10 +10846,12 @@ function loadTodayPlan() {
       if (!g.scheduledTime) return true;
       const t = new Date(g.scheduledTime).getTime();
       if (isNaN(t)) return true;
-      // Keep games with odds entered regardless of when they started
-      const hasOdds = (g.slots || []).some(s => s.blueOdds || s.redOdds);
-      if (hasOdds) return (now - t) < 8 * 3600000; // 8h if odds entered
-      return (now - t) < 4 * 3600000; // 4h otherwise
+      // Anything you typed is kept. Expiring odds on read meant that editing one
+      // game silently discarded odds on an older one, because the pruned list
+      // was written straight back by saveTodayPlan().
+      const hasData = (g.slots || []).some(s => s.blueOdds || s.redOdds || (s.notes || "").trim());
+      if (hasData) return (now - t) < 14 * 86400000;   // keep entered data a fortnight
+      return (now - t) < 4 * 3600000;                  // untouched rows still clear quickly
     });
     // Deduplicate on load (cleans up any existing doubles)
     const seen = new Set();
@@ -14477,9 +14514,18 @@ function saveTodayOddsLive(gameId, gameNum, side, value) {
   if (!game) return;
   const slot = game.slots.find(s => s.gameNum === gameNum);
   if (!slot) return;
-  const val = parseFloat(value);
-  slot[side === "blue" ? "blueOdds" : "redOdds"] = isNaN(val) || val < 1 ? null : val;
+  const raw = String(value).trim();
+  const key = side === "blue" ? "blueOdds" : "redOdds";
+  const val = parseFloat(raw);
+  if (raw === "") {
+    slot[key] = null;                 // cleared on purpose
+  } else if (!isNaN(val) && val >= 1) {
+    slot[key] = val;
+  }
+  // A partial entry like "2." leaves the previous value intact rather than
+  // nulling it, so mid-typing never destroys what was already saved.
   saveTodayPlan(plan);
+  if (typeof autoSync === "function") autoSync();
 }
 
 function updateTodayOdds(gameId, gameNum, side, value) {
@@ -15217,7 +15263,7 @@ function show(screen) {
     // behind, throwing on every visit to this screen. Each call is guarded now
     // so one missing renderer cannot take down the rest of the page.
     if (screen === "model")     {
-      [renderModelPage, renderFactorWeightsGrid].forEach(fn => {
+      [renderModelPage, renderFactorWeightsGrid, renderPlattProgress].forEach(fn => {
         try { if (typeof fn === "function") fn(); }
         catch(err) { logAppError("render", "Model page: " + err.message, fn.name); }
       });
