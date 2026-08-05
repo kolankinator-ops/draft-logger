@@ -322,12 +322,12 @@
             background:var(--blue);color:#fff;border:none;border-radius:999px;
             padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;
             box-shadow:0 2px 10px rgba(0,0,0,.45);"></div>
-<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--muted);"></div>
+<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()" class="">📺 Watch</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel');closeDrawer()">⏱ Log Game (no model)</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()" class="">📺 Watch</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()" class="">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')" class="">📺 Watch</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel')">⏱ No model</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')" class="">📺 Watch</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')" class="">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -339,7 +339,7 @@
       <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 10:19:05 AM</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">6 live — 3:54:40 PM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -380,242 +380,6 @@
   <div id="vodrate-card"></div>
 </div>
 
-<!-- LOG GAME (NO MODEL) -->
-<div class="screen" id="screen-lognomodel">
-  <div style="font-size:12px;color:var(--muted);background:var(--surface2);border-radius:8px;
-              padding:9px 12px;margin-bottom:12px;line-height:1.6;">
-    Identical to <b>Log Game</b>, with the model prediction removed. Your draft rating,
-    skill read and call are made with nothing to anchor to.
-  </div>
-
-  <!-- Mode toggle -->
-  <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button id="mode-live-btn-ng" class="btn btn-primary" style="flex:1;" onclick="ngSetLogMode('live')">📡 Live game</button>
-    <button id="mode-vod-btn-ng" class="btn btn-ghost" style="flex:1;" onclick="ngSetLogMode('vod')">🎬 VOD review</button>
-  </div>
-
-  <!-- Live games section -->
-  <div id="live-games-section-ng" class="card" style="margin-bottom:14px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <div class="card-title" style="margin-bottom:0;">Live games</div>
-      <div style="display:flex;gap:6px;">
-        <button onclick="openLeagueFilter()" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
-        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="ngLoadLiveGames();ngLoadRecentGames()">↺ Refresh</button>
-      </div>
-    </div>
-    <div id="live-pills-ng">
-      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
-    </div>
-    <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
-      <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills-ng">
-        <div style="color:var(--muted);font-size:12px;">Loading today's games…</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- VOD browser section -->
-  <div id="vod-section-ng" style="display:none;margin-bottom:14px;">
-    <div class="card" style="margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div class="card-title" style="margin-bottom:0;">Browse past games</div>
-        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="ngLoadVodSchedule()">↺ Refresh</button>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px;">
-        <select id="vod-league-filter-ng" onchange="renderVodList()" style="flex:1;">
-          <option value="all">All leagues</option>
-        </select>
-      </div>
-      <div id="vod-pills-ng">
-        <div style="color:var(--muted);font-size:13px;">Loading past games…</div>
-      </div>
-    </div>
-    <div style="background:rgba(224,178,63,.08);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);line-height:1.6;">
-      VOD mode — fill in the draft as you watch. Your "prediction" field will be hidden since you already know the result. These games contribute to draft patterns and player rankings but not prediction accuracy stats.
-    </div>
-  </div>
-
-  <div id="retroactive-banner-ng" style="display:none;background:rgba(224,178,63,.1);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;line-height:1.5;"></div>
-
-  <div class="card">
-    <div class="card-title">Match info</div>
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
-      <div>
-        <label>Blue side team</label>
-        <input type="text" id="blue-team-ng" placeholder="e.g. T1" oninput="hideSideConfirm()">
-      </div>
-      <button onclick="ngSwapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
-      <div>
-        <label>Red side team</label>
-        <input type="text" id="red-team-ng" placeholder="e.g. GEN" oninput="hideSideConfirm()">
-      </div>
-    </div>
-    <div id="side-confirm-banner-ng" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
-      <div style="font-size:12px;color:var(--yellow);font-weight:700;margin-bottom:8px;">⚠ Confirm team sides before logging a bet</div>
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:10px;">
-        <div style="background:rgba(59,130,246,.15);border:1px solid var(--blue);border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:10px;color:var(--blue);font-weight:700;margin-bottom:2px;">🟦 BLUE SIDE</div>
-          <div id="side-confirm-blue-ng" style="font-size:17px;font-weight:700;"></div>
-        </div>
-        <button onclick="ngSwapSides()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:16px;cursor:pointer;" title="Swap sides">⇄</button>
-        <div style="background:rgba(239,68,68,.15);border:1px solid var(--red);border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-bottom:2px;">🟥 RED SIDE</div>
-          <div id="side-confirm-red-ng" style="font-size:17px;font-weight:700;"></div>
-        </div>
-      </div>
-      <button onclick="ngConfirmSides()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">✓ Sides are correct</button>
-    </div>
-    <div id="draft-rating-indicator-ng" style="font-size:12px;min-height:16px;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;"></div>
-    <div id="standings-indicator-ng" style="font-size:12px;min-height:16px;margin-top:4px;color:var(--muted);"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div>
-        <label>League</label>
-        <input type="text" id="league-ng" placeholder="e.g. LCK">
-      </div>
-      <div>
-        <label>Date</label>
-        <input type="date" id="game-date-ng">
-      </div>
-    </div>
-    <div>
-      <label>Event context <span style="color:var(--muted);font-weight:400;">(auto-filled from live picker)</span></label>
-      <input type="text" id="event-context-ng" placeholder="e.g. LCK Summer 2026 · Week 3">
-    </div>
-  </div>
-
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <div class="card-title" style="margin-bottom:0;">Draft picks</div>
-      <button onclick="ngSwapPicks()" style="font-size:11px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">⇄ Swap picks &amp; players</button>
-    </div>
-    <div class="draft-grid">
-      <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title-ng">BLUE SIDE</div>
-        <div id="blue-picks-ng"></div>
-      </div>
-      <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title-ng">RED SIDE</div>
-        <div id="red-picks-ng"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" id="prediction-card-ng">
-    <div class="card-title">Prediction</div>
-
-    <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row-ng">
-      <button class="three-btn blue" onclick="ngSetDraftPref(-2)" id="dpref--2-ng"><span id="dpref--2-lbl-ng">Blue +2</span></button>
-      <button class="three-btn blue" onclick="ngSetDraftPref(-1)" id="dpref--1-ng"><span id="dpref--1-lbl-ng">Blue +1</span></button>
-      <button class="three-btn even" onclick="ngSetDraftPref(0)" id="dpref-0-ng">Even</button>
-      <button class="three-btn red" onclick="ngSetDraftPref(1)" id="dpref-1-ng"><span id="dpref-1-lbl-ng">Red +1</span></button>
-      <button class="three-btn red" onclick="ngSetDraftPref(2)" id="dpref-2-ng"><span id="dpref-2-lbl-ng">Red +2</span></button>
-    </div>
-
-    <span class="advantage-label">Execution demand — whose comp is harder to play well?</span>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="exec-diff-row-ng">
-      <button class="three-btn blue" onclick="ngSetExecDiff(-2)" id="exdiff--2-ng"><span id="exdiff--2-lbl-ng">Blue +2</span></button>
-      <button class="three-btn blue" onclick="ngSetExecDiff(-1)" id="exdiff--1-ng"><span id="exdiff--1-lbl-ng">Blue +1</span></button>
-      <button class="three-btn even" onclick="ngSetExecDiff(0)" id="exdiff-0-ng">Even</button>
-      <button class="three-btn red" onclick="ngSetExecDiff(1)" id="exdiff-1-ng"><span id="exdiff-1-lbl-ng">Red +1</span></button>
-      <button class="three-btn red" onclick="ngSetExecDiff(2)" id="exdiff-2-ng"><span id="exdiff-2-lbl-ng">Red +2</span></button>
-    </div>
-
-    <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
-    <div class="three-way" id="skill-adv-row-ng">
-      <button class="three-btn blue" onclick="ngSetAdv('skill','blue')"><span id="skill-adv-blue-lbl-ng">Blue side</span></button>
-      <button class="three-btn even" onclick="ngSetAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="ngSetAdv('skill','red')"><span id="skill-adv-red-lbl-ng">Red side</span></button>
-    </div>
-
-    <span class="advantage-label">Predicted winner — taking everything into account</span>
-
-    <!-- Model prediction -->
-
-    <div id="pred-winner-section-ng">
-    <span class="advantage-label">Predicted winner — taking everything into account</span>
-    <div class="pred-grid">
-      <button class="pred-btn blue" id="pred-blue-ng" onclick="ngSetPred('blue')">
-        <span id="pred-blue-label-ng">Blue side wins</span>
-      </button>
-      <button class="pred-btn red" id="pred-red-ng" onclick="ngSetPred('red')">
-        <span id="pred-red-label-ng">Red side wins</span>
-      </button>
-    </div>
-    </div>
-    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div>
-        <label id="mkt-blue-label-ng">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-blue-odds-ng" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="ngNoop()">
-      </div>
-      <div>
-        <label id="mkt-red-label-ng">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
-        <input type="number" id="mkt-red-odds-ng" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="ngNoop()">
-      </div>
-    </div>
-    <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
-    <textarea id="notes-ng" placeholder="e.g. Blue has strong engage with Amumu + Jarvan, red has no reliable disengage…"></textarea>
-
-    <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <span style="font-size:13px;font-weight:600;">Did you bet on this game?</span>
-        <div style="display:flex;gap:6px;">
-          <button class="conf-btn" id="bet-yes-btn-ng" onclick="ngToggleBet(true)">Yes</button>
-          <button class="conf-btn" id="bet-no-btn-ng" onclick="ngToggleBet(false)">No</button>
-        </div>
-      </div>
-      <div id="bet-form-ng" style="display:none;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div>
-            <label>Bet on</label>
-            <select id="bet-team-on-ng" onchange="ngAutofillBetAgainst();ngNoop();">
-              <option value="">— select team —</option>
-            </select>
-          </div>
-          <div>
-            <label>Bet against</label>
-            <select id="bet-team-against-ng">
-              <option value="">— select team —</option>
-            </select>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <label>Your odds</label>
-            <input type="number" id="bet-odds-ng" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="ngNoop();ngNoop();">
-          </div>
-          <div>
-            <label>Stake</label>
-            <input type="number" id="bet-stake-ng" step="0.01" min="0.01" placeholder="e.g. 50.00">
-          </div>
-        </div>
-        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
-          <input type="checkbox" id="bet-value-flag-ng" style="width:16px;height:16px;" onchange="onValueBetToggle()">
-          <span>Value bet <span style="color:var(--muted);font-size:11px;">— I'm taking the edge, not disagreeing with the model's pick</span></span>
-        </label>
-        <div id="value-bet-sizing-ng" style="display:none;margin-top:8px;padding:8px 10px;background:rgba(59,130,246,.08);border:1px solid var(--blue);border-radius:8px;font-size:12px;line-height:1.6;"></div>
-      </div>
-    </div>
-
-    <!-- VOD mode: actual result (hidden in live mode) -->
-    <div id="vod-result-section-ng" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
-      <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
-      <div class="pred-grid" style="margin-top:6px;">
-        <button class="pred-btn blue" id="vod-result-blue-ng" onclick="ngSetVodResult('blue')">
-          <span id="vod-result-blue-label-ng">Blue side won</span>
-        </button>
-        <button class="pred-btn red" id="vod-result-red-ng" onclick="ngSetVodResult('red')">
-          <span id="vod-result-red-label-ng">Red side won</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="save-btn-ng" onclick="ngSave()">Save prediction</button>
-      <button class="btn btn-ghost" onclick="ngClear()">Clear</button>
-    </div>
-  </div>
-</div>
 
 <!-- BLINDED DRAFT REVIEW -->
 <div class="screen" id="screen-draftreview">
@@ -1051,6 +815,13 @@
     <span class="advantage-label">Predicted winner — taking everything into account</span>
 
     <!-- Model prediction -->
+    <div id="blind-mode-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:10px;">
+      <div>
+        <div style="font-size:12px;font-weight:600;">Blind mode</div>
+        <div id="blind-mode-note" style="font-size:11px;color:var(--muted);margin-top:1px;">Model visible. Hide it to log a read the model can't anchor.</div>
+      </div>
+      <button id="blind-mode-btn" class="btn btn-ghost" style="font-size: 12px; padding: 5px 12px; white-space: nowrap;" onclick="toggleBlindMode()">Hide model</button>
+    </div>
     <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
@@ -1335,7 +1106,59 @@
     <div class="card-title">⚖️ Factor weights</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">Tune how much each factor can influence predictions. Default 1.0. Reduce a factor if it's consistently driving overconfident wrong predictions. Changes apply immediately.</p>
     <div id="factor-weights-note" style="font-size:11px;line-height:1.6;margin-bottom:10px;"></div>
-    <div id="factor-weights-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:10px;"></div>
+    <div id="factor-weights-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F1: Team win rates</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f1',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F2: Draft preference</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f2',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F3: Skill advantage</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f3',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F4: Execution demand</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f4',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F5: Champion presence</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f5',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F6: Champion ROI</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f6',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F7: Lane matchups</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f7',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F8: Cross-position</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f8',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F9: Side preference</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f9',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F10: Team synergy</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f10',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F11: Comp matchup</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f11',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F12: Player-champ vs comp</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f12',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div><div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+      <span style="font-size:11px;color:var(--muted);width:130px;flex-shrink:0;">F13: Champion form (last 7d)</span>
+      <input type="range" min="0" max="2" step="0.1" oninput="saveFactorWeight('f13',parseFloat(this.value));this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)" style="flex:1;accent-color:var(--blue);">
+      <span style="font-size:12px;font-weight:700;color:var(--muted);width:28px;text-align:right;">1.0</span>
+    </div></div>
     <div style="display:flex;gap:8px;margin-top:4px;">
       <button class="btn btn-ghost" style="font-size:12px;" onclick="resetFactorWeights()">↺ Reset all to 1.0</button>
     </div>
@@ -1344,9 +1167,7 @@
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Full model breakdown</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">Pick any logged game to see every factor the model considered — including ones that didn't fire — and the exact log-odds contribution of each.</p>
-    <select id="breakdown-game-select" onchange="renderFullBreakdown()" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;margin-bottom:12px;">
-      <option value="">— Select a game —</option>
-    </select>
+    <select id="breakdown-game-select" onchange="renderFullBreakdown()" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;margin-bottom:12px;"><option value="">— Select a game —</option><option value="1785842646759">2026-08-04 BRO vs KRX · pending</option><option value="1785773682772">2026-08-03 NAVI vs SHFT · NAVI won</option><option value="1785769910272">2026-08-03 NAVI vs SHFT · NAVI won</option><option value="1785710629919">2026-08-02 TLAW vs SEN · TLAW won</option><option value="1785708108771">2026-08-02 TLAW vs SEN · TLAW won</option><option value="1785701618828">2026-08-02 SR vs LYON · LYON won</option><option value="1785698850491">2026-08-02 MKOI vs FNC · MKOI won</option><option value="1785694350498">2026-08-02 MKOI vs FNC · FNC won</option><option value="1785693028929">2026-08-02 LOS vs RED · LOS won</option><option value="1785691684763">2026-08-02 MKOI vs FNC · MKOI won</option><option value="1785690112835">2026-08-02 LOUD vs FX · LOUD won</option><option value="1785687827256">2026-08-02 G2 vs SK · G2 won</option><option value="1785687719416">2026-08-02 FX vs LOUD · LOUD won</option><option value="1785676813128">2026-08-02 KT vs HLE · KT won</option><option value="1785674389797">2026-08-02 KT vs HLE · HLE won</option><option value="1785673264301">2026-08-02 TES vs JDG · TES won</option><option value="1785619495141">2026-08-01 DIG vs C9 · C9 won</option><option value="1785617379229">2026-08-01 DIG vs C9 · DIG won</option><option value="1785607156682">2026-08-01 GX vs SK · SK won</option><option value="1785603532154">2026-08-01 VKS vs FUR · VKS won</option><option value="1785600827447">2026-08-01 VKS vs FUR · VKS won</option><option value="1785600701558">2026-08-01 GX vs SK · GX won</option><option value="1785597158958">2026-08-01 GX vs SK · SK won</option><option value="1785498126690">2026-07-31 CFO vs GAM · GAM won</option><option value="1785501924151">2026-07-31 KRX vs BRO · KRX won</option><option value="1785434843439">2026-07-30 SC vs JL · SC won</option><option value="1785446211022">2026-07-30 WU vs NRG · NRG won</option><option value="1785413416171">2026-07-30 HLE vs DK · DK won</option><option value="1785396865017">2026-07-30 NIP vs WBG · NIP won</option><option value="1785466962778">2026-07-30 DOG vs CNV · DOG won</option><option value="1785418903997">2026-07-30 GZ vs DCG · GZ won</option><option value="1785419757349">2026-07-30 TT vs JDG · JDG won</option><option value="1785362694281">2026-07-29 PAIN vs 7REX · PAIN won</option><option value="1785359831735">2026-07-29 RMD vs KBM · RMD won</option><option value="1785355940895">2026-07-29 GL vs SC · GL won</option><option value="1785355750328">2026-07-29 INTZ vs NERD · NERD won</option><option value="1785352420704">2026-07-29 JL vs KCB · KCB won</option><option value="1785351820087">2026-07-29 USE vs TOG · USE won</option><option value="1785347784664">2026-07-29 USE vs TOG · TOG won</option><option value="1785323665071">2026-07-29 KT vs T1 · KT won</option><option value="1785320759312">2026-07-29 AL vs TES · AL won</option><option value="1785320306556">2026-07-29 T1 vs KT · KT won</option><option value="1785341831164">2026-07-29 TLNP vs ZYB · ZYB won</option><option value="1785264999547">2026-07-28 VITB vs JL · JL won</option><option value="1785263968902">2026-07-28 GX vs BAR · BAR won</option><option value="1785262383547">2026-07-28 KCB vs GL · KCB won</option><option value="1785260355396">2026-07-28 GX vs BAR · GX won</option><option value="1785259041320">2026-07-28 ZYB vs ES · ZYB won</option><option value="1785257276471">2026-07-28 GX vs BAR · BAR won</option><option value="1785255111016">2026-07-28 SC vs TLNP · SC won</option><option value="1785237299317">2026-07-28 DK vs KT · KT won</option><option value="1785268670908">2026-07-28 IJC vs SLY · SLY won</option><option value="1785270183731">2026-07-28 PAIN vs TSS · TSS won</option><option value="1785085338493">2026-07-26 MKOI vs VIT · VIT won</option><option value="1785004322648">2026-07-25 LOS vs FUR · LOS won</option><option value="1785008047537">2026-07-25 LOUD vs PAIN · LOUD won</option><option value="1785008470378">2026-07-25 PAIN vs LOUD · PAIN won</option><option value="1785010596997">2026-07-25 FLY vs LYON · LYON won</option><option value="1785010890796">2026-07-25 PAIN vs LOUD · LOUD won</option><option value="1785013539367">2026-07-25 LYON vs FLY · LYON won</option><option value="1785015306961">2026-07-25 LYON vs FLY · LYON won</option><option value="1785019256439">2026-07-25 SEN vs DIG · DIG won</option><option value="1785019350606">2026-07-25 SEN vs DIG · DIG won</option><option value="1785001843392">2026-07-25 KC vs MKOI · KC won</option><option value="1785001265638">2026-07-25 FUR vs LOS · LOS won</option><option value="1784997737525">2026-07-25 MKOI vs KC · KC won</option><option value="1784993597581">2026-07-25 G2 vs VIT · G2 won</option><option value="1784976312104">2026-07-25 WBG vs IG · IG won</option><option value="1784994577801">2026-07-25 G2 vs VIT · G2 won</option><option value="1784912004296">2026-07-24 G2 vs MKOI · G2 won</option><option value="1784920050579">2026-07-24 KC vs VIT · KC won</option><option value="1784904564330">2026-07-24 MKOI vs G2 · G2 won</option><option value="1784896698406">2026-07-24 BLG vs EDG · EDG won</option><option value="1784899735185">2026-07-24 EDG vs BLG · BLG won</option><option value="1784903394987">2026-07-24 BLG vs EDG · BLG won</option><option value="1784854276350">2026-07-23 WU vs CNV · WU won</option><option value="1784829609190">2026-07-23 GL vs VITB · VITB won</option><option value="1784826208550">2026-07-23 IJC vs JL · JL won</option><option value="1784826042474">2026-07-23 GX vs HRTS · HRTS won</option><option value="1784825637748">2026-07-23 BIG vs SGE · BIG won</option><option value="1784819618339">2026-07-23 SGE vs BIG · BIG won</option><option value="1784820778378">2026-07-23 LUA vs MKF · MKF won</option><option value="1784822560446">2026-07-23 BIG vs SGE · BIG won</option><option value="1784823044873">2026-07-23 ES vs SC · SC won</option><option value="sb_1784825188637">2026-07-23 BIG vs SGE · BIG won</option><option value="1784835565129">2026-07-23 EWI vs ROSS · ROSS won</option><option value="1784836450446">2026-07-23 KCB vs TLNP · TLNP won</option><option value="1784841271829">2026-07-23 CPD vs BLUE · CPD won</option><option value="1784769280576">2026-07-22 CONT vs OME · CONT won</option><option value="1784758380514">2026-07-22 NRG vs CCG · NRG won</option><option value="1784750676686">2026-07-22 KCB vs ES · KCB won</option><option value="1784740269489">2026-07-22 BAR vs UCAM · UCAM won</option><option value="1784740760326">2026-07-22 KHK vs USE · USE won</option><option value="1784739875513">2026-07-22 ZYB vs SC · SC won</option><option value="1784735007538">2026-07-22 TOG vs G2N · G2N won</option><option value="1784733589612">2026-07-22 UB vs FLK · UB won</option><option value="1784726136558">2026-07-22 TES vs WE · TES won</option><option value="1784726624283">2026-07-22 TES vs WE · TES won</option><option value="1784737050256">2026-07-22 FLK vs UB · UB won</option><option value="1784736898358">2026-07-22 VITB vs TLNP · TLNP won</option><option value="1784736425292">2026-07-22 TOG vs G2N · G2N won</option><option value="1784743929248">2026-07-22 GL vs IJC · GL won</option><option value="1784744716416">2026-07-22 USE vs KHK · USE won</option><option value="1784746688801">2026-07-22 SLY vs JL · JL won</option><option value="1784751574488">2026-07-22 KBM vs INTZ · INTZ won</option><option value="1784754824495">2026-07-22 CCG vs NRG · NRG won</option><option value="1784753771510">2026-07-22 TSS vs EST · EST won</option><option value="1784660436047">2026-07-21 GL vs JL · GL won</option><option value="1784664269207">2026-07-21 SC vs SLY · SLY won</option><option value="1784666807478">2026-07-21 RMD vs PAIN · PAIN won</option><option value="1784653538966">2026-07-21 BIG vs EWI · BIG won</option><option value="1784634366770">2026-07-21 KRX vs T1 · T1 won</option><option value="1784646952814">2026-07-21 SGE vs EINS · EINS won</option><option value="1784647080874">2026-07-21 LUA vs UB · LUA won</option><option value="1784649807081">2026-07-21 EINS vs SGE · EINS won</option><option value="1784649872730">2026-07-21 LUA vs UB · LUA won</option><option value="1784650246083">2026-07-21 TLNP vs IJC · IJC won</option><option value="1784656853604">2026-07-21 KCB vs ZYB · KCB won</option><option value="1784657080064">2026-07-21 MCON vs OUAT · MCON won</option><option value="1784657994406">2026-07-21 MKF vs GX · MKF won</option><option value="1784671797656">2026-07-21 NERD vs TSS · NERD won</option><option value="1784674615695">2026-07-21 VKS vs 7REX · VKS won</option><option value="1784567257686">2026-07-20 VER vs ABV · VER won</option><option value="1784554482800">2026-07-20 KRX vs KT · KRX won</option><option value="1784474263242">2026-07-19 DK vs KC · DK won</option><option value="1784470969242">2026-07-19 DK vs KC · DK won</option><option value="1784468107536">2026-07-19 KC vs DK · DK won</option><option value="1784388888054">2026-07-18 DK vs GEN · GEN won</option><option value="1784392585014">2026-07-18 GEN vs DK · DK won</option><option value="1784309641804">2026-07-17 G2N vs EINS · G2N won</option><option value="1784312916416">2026-07-17 EWI vs VFB · EWI won</option><option value="1784305752819">2026-07-17 BIG vs EINS · EINS won</option><option value="1784316355372">2026-07-17 USE vs ROSS · USE won</option><option value="1784322787218">2026-07-17 CCG vs BLUE · CCG won</option><option value="1784326148825">2026-07-17 BLUE vs CCG · CCG won</option><option value="1784301014073">2026-07-17 BLG vs DK · DK won</option><option value="1784298166294">2026-07-17 KC vs AGAL · KC won</option><option value="1784297894773">2026-07-17 DK vs BLG · BLG won</option><option value="1784294907000">2026-07-17 DK vs BLG · DK won</option><option value="1784301419673">2026-07-17 BIG vs G2N · G2N won</option><option value="1784228522221">2026-07-16 USE vs TOG · USE won</option><option value="1784212797988">2026-07-16 DK vs G2 · DK won</option><option value="1784209862972">2026-07-16 DK vs G2 · DK won</option><option value="1784221015115">2026-07-16 BAR vs HRTS · HRTS won</option><option value="1784225044311">2026-07-16 SGE vs EINS · EINS won</option><option value="1784222709556">2026-07-16 VFB vs KHK · KHK won</option><option value="1784227735732">2026-07-16 HRTS vs BAR · HRTS won</option><option value="1784135784071">2026-07-15 MKF vs BAR · MKF won</option><option value="1784124989448">2026-07-15 KC vs TS · KC won</option><option value="1784128526663">2026-07-15 KC vs TS · TS won</option><option value="1784132179107">2026-07-15 TS vs KC · KC won</option><option value="1784139684374">2026-07-15 ML vs Lyon · ML won</option><option value="1784139768611">2026-07-15 BAR vs MKF · MKF won</option><option value="1784055327379">2026-07-14 HRTS vs UCAM · UCAM won</option><option value="1784047974555">2026-07-14 LUA vs FLK · LUA won</option><option value="1784045247172">2026-07-14 LUA vs FLK · FLK won</option><option value="1784042379223">2026-07-14 FLK vs LUA · LUA won</option><option value="1784052043340">2026-07-14 UCAM vs HRTS · UCAM won</option><option value="1783969529081">2026-07-13 VFB vs BIG · BIG won</option><option value="1783958966715">2026-07-13 SGE vs KHK · KHK won</option><option value="1783962546293">2026-07-13 ROSS vs TOG · TOG won</option><option value="1783962631753">2026-07-13 EWI vs USE · USE won</option><option value="1783965991091">2026-07-13 EWI vs SGE · EWI won</option><option value="1783984199304">2026-07-13 3V vs Z5 · Z5 won</option><option value="1783757672036">2026-07-11 LYON vs HLE · HLE won</option><option value="1783624150967">2026-07-09 VFB vs SGE · VFB won</option><option value="1783528586643">2026-07-08 USE vs G2N · USE won</option><option value="1783437228914">2026-07-07 EWI vs TOG · TOG won</option><option value="1783224296816">2026-07-05 TSW vs TES · TSW won</option><option value="1783135718190">2026-07-04 FUR vs LYON · LYON won</option><option value="1783139167012">2026-07-04 LYON vs FUR · LYON won</option><option value="1783048535818">2026-07-03 HLE vs TSW · HLE won</option><option value="1783051281294">2026-07-03 HLE vs TSW · HLE won</option><option value="1783054132240">2026-07-03 HLE vs TSW · HLE won</option><option value="1783057679414">2026-07-03 TES vs G2 · G2 won</option><option value="1783005189054">2026-07-02 SGE vs ROSS · ROSS won</option><option value="1783009174781">2026-07-02 KHK vs EWI · EWI won</option><option value="1783013286288">2026-07-02 EINS vs TOG · EINS won</option><option value="1783020873965">2026-07-02 BIG vs USE · BIG won</option><option value="1783736632198">2026-06-28 T1 vs TLAW · T1 won</option><option value="1783737522675">2026-06-28 T1 vs TLAW · T1 won</option><option value="1783739862195">2026-06-28 T1 vs TLAW · T1 won</option></select>
     <div id="full-breakdown-output"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -1356,7 +1177,11 @@
       ranks the same game as most confident — it just stops inflating the number.
       <b>This refits automatically every time you log a game</b>, so the button is only needed to force it.</p>
     <div id="platt-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
-    <div id="platt-progress" style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;"></div>
+    <div id="platt-progress" style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6;"><span style="color:var(--green);">✓ Calibrated</span> on 21
+      predictions · 35% strength
+      · refits automatically as you log games.
+      <br><span style="opacity:.8;">Applied at partial strength while the sample is small —
+           it firms up automatically as you log more.</span></div>
     <button class="btn btn-primary" style="width:100%;" onclick="(function(){
       const r = fitPlattScaling();
       const el = document.getElementById('platt-status');
@@ -1376,7 +1201,114 @@
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Calibration — how accurate is the model?</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">When the model says 65%, does the predicted side actually win 65% of the time? Vertical line = expected, bar = actual.</p>
-    <div id="model-calibration"></div>
+    <div id="model-calibration"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+           <div style="font-size:12px;color:var(--muted);">Overall: <b style="color:var(--text);">33%</b>
+             actual vs <b style="color:var(--text);">75%</b> avg expected · 21 predictions</div>
+           <div style="display:flex;gap:6px;">
+             <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;" onclick="toggleCalibView()">
+               As shown at the time</button>
+             <button class="btn btn-ghost" style="font-size:11px;padding:4px 9px;" onclick="toggleCalibScope()">
+               Current model</button>
+           </div>
+         </div>
+         <div style="background:var(--surface2);border-radius:8px;padding:9px 11px;margin-bottom:10px;font-size:11px;color:var(--muted);line-height:1.6;">
+                21 predictions across 10 buckets — most rows here are one or two
+                games, where a single result swings a bar from 0% to 100%. Read the overall figure,
+                not the individual rows, until there are a few hundred.</div>
+         <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+                66 predictions from earlier model versions hidden —
+                a given number meant something different then.</div>
+         <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">Low (50–54%) · 3g</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 33% <span style="color:var(--muted);font-weight:400;">(-19% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:33%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:52%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;opacity:0.65;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">55–59% · 1g · small sample</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 0% <span style="color:var(--muted);font-weight:400;">(-57% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:0%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:57%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;opacity:0.65;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">Medium (60–64%) · 1g · small sample</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 0% <span style="color:var(--muted);font-weight:400;">(-62% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:0%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:62%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">65–69% · 3g</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 33% <span style="color:var(--muted);font-weight:400;">(-34% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:33%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:67%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">High (70–74%) · 3g</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 33% <span style="color:var(--muted);font-weight:400;">(-39% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:33%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:72%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;opacity:0.65;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">75–79% · 1g · small sample</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 0% <span style="color:var(--muted);font-weight:400;">(-77% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:0%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:77%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">80–84% · 3g</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 33% <span style="color:var(--muted);font-weight:400;">(-49% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:33%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:82%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;opacity:0.65;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">85–89% · 1g · small sample</span>
+            <span style="font-weight:700;color:var(--green);">Actual 100% <span style="color:var(--muted);font-weight:400;">(+13% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:var(--green);border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:87%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">90–94% · 4g</span>
+            <span style="font-weight:700;color:#ff4d5e;">Actual 25% <span style="color:var(--muted);font-weight:400;">(-67% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:25%;background:#ff4d5e;border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:92%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div><div style="margin-bottom:10px;opacity:0.65;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+            <span style="color:var(--muted);">95–99% · 1g · small sample</span>
+            <span style="font-weight:700;color:var(--blue);">Actual 100% <span style="color:var(--muted);font-weight:400;">(+3% vs expected)</span></span>
+          </div>
+          <div style="background:var(--bg);border-radius:4px;height:16px;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:var(--blue);border-radius:4px;opacity:0.7;"></div>
+            <div style="position:absolute;left:97%;top:-3px;height:22px;width:2px;background:var(--muted);"></div>
+          </div>
+        </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🧠 Is your judgement reaching the model?</div>
@@ -1500,18 +1432,26 @@
     <div id="failbd-results"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">🔬 Backtest <span style="font-size:11px;font-weight:400;color:var(--muted);">· 5-factor subset only</span></div>
+    <div class="card-title">🔬 Backtest</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
       <b>Walk-forward</b> predicts each game using only games played <i>before</i> it — the same
-      information you actually have live. <b>Leave-one-out</b> uses every other game, including
-      later ones, so it sees the future and will look better than reality. The gap between them
-      is how much your confidence is borrowed from hindsight.</p>
-    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="runBacktest('walkforward')">Run walk-forward backtest</button>
-    <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runBacktest('compare')">Compare both → show the gap</button>
-    <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runImprovedTest()">Test fixes: all data + shrinkage</button>
-    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="runFullModelBacktest()">Backtest the REAL model (all 14 factors)</button>
+      information you actually have live. The first button runs the model that actually makes
+      your predictions, on every stored game. Use that number.</p>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="runFullModelBacktest()">Backtest the live model</button>
     <button class="btn btn-primary" style="width:100%;margin-bottom:10px;background:var(--green);border-color:var(--green);" onclick="runWeightTuner()">⚙ Tune weights so confidence is honest</button>
     <button class="btn btn-ghost" style="width:100%;margin-bottom:10px;" onclick="runFactorAblation()">Which factors are helping? (slow)</button>
+    <div style="border-top:1px solid var(--border);margin:12px 0 10px;padding-top:10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:4px;">REFERENCE MODEL · 5 FACTORS, HAND-LOGGED GAMES ONLY</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.6;">
+        These run a cut-down model — factors 1, 5, 7, 9 and 12 only, no shrinkage, no
+        calibration — over your hand-logged games rather than the full pool. It is not what
+        predicts your games, so treat its accuracy as a reference point, not a score.
+        <b>Leave-one-out</b> lets each prediction see later games, so it will look better than
+        reality; the gap to walk-forward is how much is borrowed from hindsight.</p>
+      <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runBacktest('walkforward')">Run walk-forward (reference model)</button>
+      <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runBacktest('compare')">Compare both → show the gap</button>
+      <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runImprovedTest()">Test fixes: all data + shrinkage</button>
+    </div>
     <div id="backtest-status" style="font-size:12px;color:var(--muted);margin-bottom:8px;"></div>
     <div id="backtest-results"></div>
   </div>
@@ -1529,21 +1469,620 @@
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">Factor accuracy</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">How often each factor you provide actually correlates with the winner across all logged games.</p>
-    <div id="model-factor-accuracy"></div>
+    <div id="model-factor-accuracy"><div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span style="font-weight:600;">Draft preference</span>
+          <span style="color:var(--muted);font-weight:700;">55% correct (143g)</span>
+        </div>
+        <div style="background:var(--bg);border-radius:4px;height:10px;">
+          <div style="width:55%;height:100%;background:var(--muted);border-radius:4px;opacity:0.8;"></div>
+        </div>
+      </div><div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span style="font-weight:600;">Skill advantage</span>
+          <span style="color:var(--muted);font-weight:700;">42% correct (155g)</span>
+        </div>
+        <div style="background:var(--bg);border-radius:4px;height:10px;">
+          <div style="width:42%;height:100%;background:var(--muted);border-radius:4px;opacity:0.8;"></div>
+        </div>
+      </div><div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <span style="font-weight:600;">Execution demand — blue</span>
+          <span style="color:#ff4d5e;font-weight:700;">30% correct (145g)</span>
+        </div>
+        <div style="background:var(--bg);border-radius:4px;height:10px;">
+          <div style="width:30%;height:100%;background:#ff4d5e;border-radius:4px;opacity:0.8;"></div>
+        </div>
+      </div><div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span style="font-weight:600;">Market odds favourite</span>
+        <span style="color:var(--green);font-weight:700;">64% correct (148g)</span>
+      </div>
+      <div style="background:var(--bg);border-radius:4px;height:10px;">
+        <div style="width:64%;height:100%;background:var(--blue);border-radius:4px;opacity:0.8;"></div>
+      </div>
+    </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">High-confidence failures</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">Games where you marked High confidence but the other team won — useful for spotting blind spots.</p>
-    <div id="model-failures"></div>
+    <div id="model-failures"><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">JL vs KCB</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">95% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-29 · La Ligue Française</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">JL</span> · <span style="color:var(--green);">Actually won: KCB</span></div>
+          
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">CONT vs OME</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">95% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-22 · NACL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">OME</span> · <span style="color:var(--green);">Actually won: CONT</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: red · Blue exec: high · Red exec: medium</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Closeness: ⚔️ Competitive</div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">PAIN vs TSS</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">92% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-28 · Circuito Desafiante</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">PAIN</span> · <span style="color:var(--green);">Actually won: TSS</span></div>
+          
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">MKOI vs VIT</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">92% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-26 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">MKOI</span> · <span style="color:var(--green);">Actually won: VIT</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: low</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">WBG vs IG</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">92% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LPL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">WBG</span> · <span style="color:var(--green);">Actually won: IG</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -1 (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">CFO vs GAM</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">90% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-31 · LCP</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">CFO</span> · <span style="color:var(--green);">Actually won: GAM</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Skill adv: unsure · Blue exec: high · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">T1 vs KT</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">89% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-29 · LCK</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">T1</span> · <span style="color:var(--green);">Actually won: KT</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Skill adv: blue</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">AL vs TES</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">87% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-29 · LPL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">TES</span> · <span style="color:var(--green);">Actually won: AL</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">HLE vs DK</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">85% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-30 · LCK</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">HLE</span> · <span style="color:var(--green);">Actually won: DK</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: high</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">VKS vs FUR</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">83% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-01 · CBLOL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">FUR</span> · <span style="color:var(--green);">Actually won: VKS</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: high</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">TLAW vs SEN</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">82% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-02 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">SEN</span> · <span style="color:var(--green);">Actually won: TLAW</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: blue · Blue exec: medium · Red exec: high</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">KT vs HLE</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">80% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-02 · LCK</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">HLE</span> · <span style="color:var(--green);">Actually won: KT</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: medium · Red exec: high</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">PAIN vs LOUD</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">77% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">LOUD</span> · <span style="color:var(--green);">Actually won: PAIN</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">VITB vs JL</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">75% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-28 · La Ligue Française</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">VITB</span> · <span style="color:var(--green);">Actually won: JL</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred)</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">GX vs BAR</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">70% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-28 · LES</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">GX</span> · <span style="color:var(--green);">Actually won: BAR</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">LOUD vs PAIN</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">70% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--red);">PAIN</span> · <span style="color:var(--green);">Actually won: LOUD</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft + (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
+          
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:700;">PAIN vs LOUD</span>
+            <span style="font-size:11px;background:#ff4d5e22;color:#ff4d5e;padding:2px 8px;border-radius:12px;">66% confident → WRONG</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · CBLOL</div>
+          <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:var(--blue);">PAIN</span> · <span style="color:var(--green);">Actually won: LOUD</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Draft -2 (red preferred) · Skill adv: unsure · Blue exec: low · Red exec: medium</div>
+          
+        </div></div>
   </div>
   <div class="card">
     <div class="card-title">Recent predictions</div>
-    <div id="model-recent"></div>
+    <div id="model-recent"><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">BRO vs KRX</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-04 · KeSPA Cup</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--muted);">⏳</span> <span style="color:var(--muted);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">KRX</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">NAVI vs SHFT</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-03 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">46%</span></div>
+            <div style="color:var(--muted);font-size:11px;">SHFT</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">NAVI vs SHFT</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-03 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">NAVI</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">TLAW vs SEN</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LCS</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">TLAW</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">TLAW vs SEN</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LCS</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">82%</span></div>
+            <div style="color:var(--muted);font-size:11px;">SEN</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">SR vs LYON</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LCS</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span></div>
+            <div style="color:var(--muted);font-size:11px;">LYON</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">MKOI vs FNC</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">43%</span></div>
+            <div style="color:var(--muted);font-size:11px;">FNC</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">MKOI vs FNC</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span></div>
+            <div style="color:var(--muted);font-size:11px;">FNC</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">LOS vs RED</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · CBLOL</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">90%</span></div>
+            <div style="color:var(--muted);font-size:11px;">LOS</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">MKOI vs FNC</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">66%</span></div>
+            <div style="color:var(--muted);font-size:11px;">MKOI</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">LOUD vs FX</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · CBLOL</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">51%</span></div>
+            <div style="color:var(--muted);font-size:11px;">FX</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">G2 vs SK</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">G2</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">FX vs LOUD</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · CBLOL</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">LOUD</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">KT vs HLE</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LCK</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">80%</span></div>
+            <div style="color:var(--muted);font-size:11px;">HLE</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">KT vs HLE</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LCK</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">77%</span></div>
+            <div style="color:var(--muted);font-size:11px;">HLE</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">TES vs JDG</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-02 · LPL</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">54%</span></div>
+            <div style="color:var(--muted);font-size:11px;">TES</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">DIG vs C9</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-01 · LCS</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:#ff4d5e;">✗</span> <span style="color:#ff4d5e;font-weight:700;">56%</span></div>
+            <div style="color:var(--muted);font-size:11px;">DIG</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">DIG vs C9</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-01 · LCS</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">37%</span> <span style="font-size:10px;color:var(--yellow);">↩ override</span></div>
+            <div style="color:var(--muted);font-size:11px;">DIG</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">GX vs SK</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-01 · LEC</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">58%</span></div>
+            <div style="color:var(--muted);font-size:11px;">SK</div>
+          </div>
+        </div><div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;">
+          <div style="min-width:0;">
+            <div style="font-weight:600;">VKS vs FUR</div>
+            <div style="color:var(--muted);font-size:11px;">2026-08-01 · CBLOL</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:8px;">
+            <div><span style="color:var(--green);">✓</span> <span style="color:var(--green);font-weight:700;">87%</span></div>
+            <div style="color:var(--muted);font-size:11px;">VKS</div>
+          </div>
+        </div></div>
   </div>
   <div class="card" style="margin-top:14px;">
     <div class="card-title">Model disagreements</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">Games where you went against the model's pick. Track record shows whether your instincts or the model are right.</p>
-    <div id="model-disagreements"></div>
+    <div id="model-disagreements"><div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg);border-radius:8px;margin-bottom:12px;font-size:13px;">
+        <span>You: <b style="color:var(--green);">15W 7L</b> (68%)</span>
+        <span style="color:var(--muted);font-size:11px;">22 settled</span>
+        <span>Model: <b style="color:#ff4d5e;">7W 15L</b></span>
+      </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">BRO vs KRX</span>
+            <span style="color:var(--muted);">⏳ Pending</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-04 · KeSPA Cup</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">KRX</span>
+            · Model said <b>72%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">NAVI vs SHFT</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-03 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">NAVI</span>
+            · Model said <b>65%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">TLAW vs SEN</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-02 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">TLAW</span>
+            · Model said <b>84%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">G2 vs SK</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-02 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">G2</span>
+            · Model said <b>70%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">FX vs LOUD</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-02 · CBLOL</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">LOUD</span>
+            · Model said <b>52%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">DIG vs C9</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-01 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">DIG</span>
+            · Model said <b>80%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">GX vs SK</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-08-01 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">SK</span>
+            · Model said <b>53%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">GZ vs DCG</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-30 · LCP</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">DCG</span>
+            · Model said <b>32%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">RMD vs KBM</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-29 · Circuito Desafiante</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">KBM</span>
+            · Model said <b>78%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">KT vs T1</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-29 · LCK</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">KT</span>
+            · Model said <b>71%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">IJC vs SLY</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-28 · La Ligue Française</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">IJC</span>
+            · Model said <b>79%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">FLY vs LYON</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">FLY</span>
+            · Model said <b>84%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">LYON vs FLY</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">LYON</span>
+            · Model said <b>63%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">LYON vs FLY</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">LYON</span>
+            · Model said <b>57%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">SEN vs DIG</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">DIG</span>
+            · Model said <b>74%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">SEN vs DIG</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LCS</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">DIG</span>
+            · Model said <b>54%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">MKOI vs KC</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">KC</span>
+            · Model said <b>66%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">G2 vs VIT</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-25 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">G2</span>
+            · Model said <b>54%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">MKOI vs G2</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-24 · LEC</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">G2</span>
+            · Model said <b>93%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">WU vs CNV</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-23 · NACL</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">WU</span>
+            · Model said <b>56%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">IJC vs JL</span>
+            <span style="color:var(--green);">✓ You were right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-23 · La Ligue Française</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--red);">JL</span>
+            · Model said <b>52%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">LUA vs MKF</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-23 · LES</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">LUA</span>
+            · Model said <b>78%</b> the other way
+          </div>
+        </div><div style="padding:10px 0;border-bottom:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+            <span style="font-size:13px;font-weight:700;">KCB vs TLNP</span>
+            <span style="color:#ff4d5e;">✗ Model was right</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">2026-07-23 · La Ligue Française</div>
+          <div style="font-size:12px;margin-top:4px;">
+            You picked <span style="color:var(--blue);">KCB</span>
+            · Model said <b>62%</b> the other way
+          </div>
+        </div></div>
   </div>
 </div>
 
@@ -1717,6 +2256,7 @@
     <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runDataHealth()">Check data</button>
     <div id="datahealth-results" style="font-size:12px;"></div>
   </div>
+
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🧹 Duplicate games</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
@@ -2062,7 +2602,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/5/2026, 10:19:06 AM · 17 games added</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/5/2026, 3:54:38 PM</div>
     </div>
   </div>
 
@@ -2276,7 +2816,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.04-b35";
+const BUILD_VERSION = "2026.08.05-b38";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -3862,8 +4402,13 @@ function setChampBadgeFilter(badge, btn) {
   renderChampions();
 }
 
-function buildChampionData() {
-  const entries = loadAllGameData().filter(e => !e.isStandaloneBet);
+// entriesOverride lets a caller scope this to a training set. Without it the
+// function reads the whole store, which is right for the Champions page but was
+// wrong inside scoreGame: Factors 7 and 8 ignored the training window entirely,
+// so every walk-forward pass read games that had not happened yet, plus the
+// game being scored. Same leak that was already fixed for synergy in F10.
+function buildChampionData(entriesOverride) {
+  const entries = (entriesOverride || loadAllGameData()).filter(e => !e.isStandaloneBet);
   const champMap  = {}; // champId -> role data
   const matchupMap  = {}; // same-position lane matchups: champA -> { champB -> { wins, total } }
   const crossMap    = {}; // cross-position interactions: champA -> { champB -> { wins, total } }
@@ -4632,7 +5177,12 @@ function playerImpactRating(playerName, leagueFilter, entries, reviews) {
 
 // ── Game Review ───────────────────────────────────────────────────────────────
 function renderReviewForm(entryId, entry) {
+  // review-content was removed from the markup; this renderer and assignRank()
+  // were left behind, and assignRank is only reachable from HTML this function
+  // emits, so the whole game-review form is unreachable. Guarded rather than
+  // deleted in case the screen comes back.
   const container = document.getElementById("review-content");
+  if (!container) return;
   const savedRanks = getGameRanks(entryId);
 
   const allPlayers = [
@@ -5233,6 +5783,11 @@ function saveEntry() {
     draftPref,
     skillAdv,
     execDemand: JSON.parse(JSON.stringify(execDemand)),
+    // The price at the time of logging, kept whether or not a bet was placed.
+    // Previously the only surviving copy of the market read was inside bet.odds,
+    // so an unbet game stored no price at all and a bet game stored one side.
+    mktBlueOdds: parseFloat((document.getElementById("mkt-blue-odds") || {}).value) || null,
+    mktRedOdds:  parseFloat((document.getElementById("mkt-red-odds")  || {}).value) || null,
     notes: document.getElementById("notes").value.trim(),
     bet: getBetData(),
     actualWinner: retroactiveWinner || null  // auto-resolve if retroactive
@@ -5787,10 +6342,12 @@ function saveResult(id, winner, mode = 'watched') {
     if (noteEl) entry.gameNote = noteEl.value.trim();
   }
 
+  // Settle before saving, so the betSettled marker written by
+  // applyBetResultToBankroll is persisted with the entry rather than lost.
+  if (entry.bet && entry.actualWinner) applyBetResultToBankroll(entry);
+
   saveEntries(entries);
   autoSync();
-  // Update bankroll if this entry has a bet
-  if (entry.bet && entry.actualWinner) applyBetResultToBankroll(entry);
   renderPending();
   renderStats();
 }
@@ -5878,6 +6435,11 @@ async function autoCheckResults() {
           toUpdate.autoResolved = true;
           toUpdate.watched = null; // unknown — will prompt in results tab
           entry.actualWinner = side; // update local reference too
+          // A game resolved here never reached the bankroll: only saveResult()
+          // settled, so an auto-resolved bet sat unaccounted until a manual
+          // rebuild. Idempotent, so settling here is safe even if the user later
+          // presses a result button on the same game.
+          if (toUpdate.bet) applyBetResultToBankroll(toUpdate);
           saveEntries(allEntries);
           resolved++;
         }
@@ -5947,7 +6509,14 @@ function verifyEntryWinner(id) {
 }
 
 function renderHistory() {
-  const filter  = document.getElementById("history-filter").value;
+  // There is no history screen in this build — the markup was removed but the
+  // renderer and its callers were left behind. Reading .value off the missing
+  // filter threw, which aborted deleteEntry() before renderStats() and made a
+  // delete look like it had failed even though it had already been saved.
+  const filterEl = document.getElementById("history-filter");
+  const el       = document.getElementById("history-list");
+  if (!filterEl || !el) return;
+  const filter  = filterEl.value;
   let entries   = loadEntries().filter(e => filter === "all" || e.league === filter);
 
   // Apply view filter
@@ -5955,7 +6524,6 @@ function renderHistory() {
   else if (_historyView === "bulk") entries = entries.filter(e => e.isBulkImport);
   else if (_historyView === "manual") entries = entries.filter(e => !e.isBulkImport);
 
-  const el = document.getElementById("history-list");
   if (!entries.length) {
     el.innerHTML = '<div class="empty">' +
       (_historyView === "inferred" ? "No unverified entries — all imported winners are confirmed or manually verified." :
@@ -7719,6 +8287,39 @@ const ANNOTATIONS_KEY = "draftlogger_annotations_v1";
 
 // Bulk ids embed Date.now(), so they change on every re-import. Key on
 // something natural instead or annotations orphan themselves.
+// ── Shared "have I already got this game?" index ─────────────────────────────
+// All three import paths (auto-log, bulk import, Leaguepedia) deduped against
+// loadEntries(). That returns localStorage only and filters isBulkImport out —
+// and every imported game is written with isBulkImport:true, so it lands in
+// IndexedDB. The check could therefore never see anything a previous import had
+// added: "skip existing" never skipped, every run re-fetched the whole window,
+// and the counts reported games as new that were already stored. Index the full
+// store instead, and let each caller keep its own game-number rule.
+function loggedGameKey(date, a, b) {
+  return String(date || "").slice(0, 10) + "|" +
+         [(a || "").toUpperCase().trim(), (b || "").toUpperCase().trim()].sort().join("|");
+}
+
+function buildLoggedGameIndex() {
+  const idx = new Map();
+  for (const e of loadAllGameData()) {
+    const b = resolveTeam(e.blueTeam) || "";
+    const r = resolveTeam(e.redTeam)  || "";
+    const d = String(e.date || "").slice(0, 10);
+    if (!b.trim() || !r.trim() || !d) continue;
+    markLoggedGame(idx, d, b, r, e.gameNumber);
+  }
+  return idx;
+}
+
+// Keeps the index current inside a run, which the old code got for free by
+// searching the same array it was pushing into.
+function markLoggedGame(idx, date, a, b, num) {
+  const k = loggedGameKey(date, a, b);
+  if (!idx.has(k)) idx.set(k, new Set());
+  idx.get(k).add(num == null ? null : num);
+}
+
 function gameKey(e) {
   const b = (resolveTeam(e.blueTeam || "") || "").toUpperCase().trim();
   const r = (resolveTeam(e.redTeam  || "") || "").toUpperCase().trim();
@@ -11081,7 +11682,11 @@ function scoreGame(inputs, training, weights) {
       const wr = wRate(wWins, wTotal);
       _f1RedWR = wr;
       const contribution = -(wr-0.5)*1.5;
-      logOdds += contribution; minGames = Math.min(minGames,total);
+      // Was missing *fw1, so the red half of Factor 1 always ran at weight 1
+      // however the slider was set — and the weight tuner, which measures a
+      // factor by re-scoring it with its weight at 0, only ever removed half
+      // of it and fitted f1 against the wrong quantity.
+      logOdds += contribution*fw1; minGames = Math.min(minGames,total);
       factors.push(`${contribution<-0.05?"↑ for red":contribution>0.05?"↓ for red":"→"} ${redTeam} win rate: ${Math.round(wr*100)}% (${total}g)`);
     }
   }
@@ -11207,7 +11812,8 @@ function scoreGame(inputs, training, weights) {
   }
 
   // ── Factor 7: Same-position matchup patterns ────────────────────────────────
-  const { matchupMap, crossMap } = buildChampionData();
+  // `completed` is the training pool with the game being scored already removed.
+  const { matchupMap, crossMap } = buildChampionData(completed);
   let matchupContrib = 0, matchupCount = 0, matchupWeight = 0;
 
   for (let i = 0; i < 5; i++) {
@@ -11487,9 +12093,26 @@ function inputsFromEntry(e) {
     draftPref:  e.draftPref  ?? null,
     skillAdv:   e.skillAdv   ?? null,
     execDemand: e.execDemand ?? null,
-    blueOdds: e.bet?.on === "blue" ? (parseFloat(e.bet.odds) || null) : null,
-    redOdds:  e.bet?.on === "red"  ? (parseFloat(e.bet.odds) || null) : null
+    ...entryOdds(e)
   };
+}
+
+// Both sides of the market price for a stored game, in preference order:
+// the odds saved on the entry, then whatever can be recovered from the bet.
+// The old version read only e.bet.odds and only for the side that was backed,
+// so one side was null on every stored game — which meant skillGap was always
+// 0 and Factor 2's skill-gap discount had never once run in a backtest.
+function entryOdds(e) {
+  let blueOdds = parseFloat(e.mktBlueOdds) || null;
+  let redOdds  = parseFloat(e.mktRedOdds)  || null;
+  const b = e.bet;
+  if ((!blueOdds || !redOdds) && b && b.odds) {
+    const backed = parseFloat(b.odds)    || null;
+    const other  = parseFloat(b.oppOdds) || null;
+    if (b.on === "blue")     { blueOdds = blueOdds || backed; redOdds  = redOdds  || other; }
+    else if (b.on === "red") { redOdds  = redOdds  || backed; blueOdds = blueOdds || other; }
+  }
+  return { blueOdds, redOdds };
 }
 
 // Inputs as the form currently has them.
@@ -11513,6 +12136,50 @@ function inputsFromForm() {
     blueOdds: parseFloat((document.getElementById("mkt-blue-odds") || {}).value) || null,
     redOdds:  parseFloat((document.getElementById("mkt-red-odds")  || {}).value) || null
   };
+}
+
+// ── Blind mode ───────────────────────────────────────────────────────────────
+// Replaces the separate "Log Game (no model)" page, which was a copy of this
+// form with "-ng" appended to its ids. The copy's JavaScript was never fully
+// converted: it rendered picks into this page's containers, toggled this page's
+// buttons, and cleared this page's fields on save. One form with the model
+// hidden does the same job without a second copy to keep in step.
+//
+// The model still runs and is still stored on the entry — this only controls
+// whether the number is on screen while you decide, so a blind log stays
+// comparable with the rest of your history.
+const BLIND_MODE_KEY = "draftlogger_blind_mode";
+function blindMode() { return localStorage.getItem(BLIND_MODE_KEY) === "1"; }
+
+function toggleBlindMode() {
+  localStorage.setItem(BLIND_MODE_KEY, blindMode() ? "0" : "1");
+  applyBlindMode();
+}
+
+function applyBlindMode() {
+  const on   = blindMode();
+  const btn  = document.getElementById("blind-mode-btn");
+  const note = document.getElementById("blind-mode-note");
+  if (btn) {
+    btn.textContent = on ? "Show model" : "Hide model";
+    btn.className   = on ? "btn btn-primary" : "btn btn-ghost";
+    btn.style.cssText = "font-size:12px;padding:5px 12px;white-space:nowrap;";
+  }
+  if (note) note.textContent = on
+    ? "Model hidden — log your own read first."
+    : "Model visible. Hide it to log a read the model can't anchor.";
+  // Hide the market-vs-model comparison and the bet sizing it drives too,
+  // otherwise the model's number is still readable off the edge figure.
+  ["model-prediction", "model-market-compare", "value-bet-sizing", "model-disagree-wrap"]
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.visibility = on ? "hidden" : "";
+    });
+  const wrap = document.getElementById("model-prediction");
+  if (wrap) wrap.style.height = on ? "0" : "";
+  if (wrap) wrap.style.overflow = on ? "hidden" : "";
+  const mk = document.getElementById("model-market-compare");
+  if (mk) { mk.style.height = on ? "0" : ""; mk.style.overflow = on ? "hidden" : ""; }
 }
 
 function runPredictionModel() {
@@ -11669,6 +12336,9 @@ function runPredictionModel() {
   // Show disagree section now that model has a pick
   const disagreeWrap = document.getElementById("model-disagree-wrap");
   if (disagreeWrap) disagreeWrap.style.display = "block";
+  // runPredictionModel fires on every keystroke in the odds fields, so the
+  // hidden state has to be re-asserted here or the model reappears mid-entry.
+  applyBlindMode();
   // Refresh disagree sizing if user is already in disagreement mode
   if (_modelDisagreement) _renderDisagreeSizing();
 
@@ -11807,797 +12477,31 @@ function refreshBetSelects() {
 // ── Log game, no model ───────────────────────────────────────────────────────
 // The handlers below are the Log Game ones with element ids rewritten to the
 // -ng copies. Generated rather than hand-written so the two pages cannot drift.
-let ngPickedChamps  = { blue: ["","","","",""], red: ["","","","",""] };
-let ngPickedPlayers = { blue: ["","","","",""], red: ["","","","",""] };
-let ngDraftPref = null, ngSkillAdv = null, ngExecDemand = { blue: null, red: null };
-let ngPredWinner = null, ngPredConf = "medium", ngHasBet = false;
-let ngCurrentGameNumber = null, ngRetroactiveWinner = null, ngLogMode = "live";
-let ngRecentMatchGames = [], ngRecentMatchMeta = {};
-function ngNoop() {}
 
 
-function ngSetDraftPref(val) {
-  ngDraftPref = val;
-  [-2,-1,0,1,2].forEach(n => {
-    const btn = document.getElementById("dpref-" + n);
-    if (btn) btn.classList.toggle("sel", n === val);
-  });
-  ngNoop();
-}
 
-function ngSetAdv(type, side) {
-  if (type === 'skill') ngSkillAdv = side;
-  const rowId = "skill-adv-row";
-  document.getElementById(rowId).querySelectorAll('.three-btn').forEach(b => b.classList.remove('sel'));
-  event.target.closest('.three-btn').classList.add('sel');
-  ngNoop();
-}
 
-function ngSetExecDiff(val) {
-  ngExecDemand = execFromDiff(val);
-  [-2,-1,0,1,2].forEach(n => {
-    const btn = document.getElementById("exdiff-" + n);
-    if (btn) btn.classList.toggle("sel", n === val);
-  });
-  ngNoop();
-}
 
-function ngSetPred(side) {
-  ngPredWinner = side;
-  document.getElementById("pred-blue-ng").classList.toggle("sel", side === "blue");
-  document.getElementById("pred-red-ng").classList.toggle("sel", side === "red");
-}
 
-function ngToggleBet(yes) {
-  ngHasBet = yes;
-  document.getElementById("bet-form-ng").style.display = yes ? "block" : "none";
-  document.getElementById("bet-yes-btn-ng").classList.toggle("sel", yes);
-  document.getElementById("bet-no-btn-ng").classList.toggle("sel", !yes);
-  if (yes) populateBetTeamSelects();
-}
 
-function ngAutofillBetAgainst() {
-  const on = document.getElementById("bet-team-on-ng").value;
-  const against = document.getElementById("bet-team-against-ng");
-  if (on === "blue") against.value = "red";
-  else if (on === "red") against.value = "blue";
-}
 
-function ngSwapSides() {
-  const blueEl = document.getElementById("blue-team-ng");
-  const redEl  = document.getElementById("red-team-ng");
-  const tmp    = blueEl.value;
-  blueEl.value = redEl.value;
-  redEl.value  = tmp;
-  // Also swap in liveGameData if a live game is active
-  if (typeof currentLiveGameIdx === "number" && liveGameData[currentLiveGameIdx]) {
-    const g = liveGameData[currentLiveGameIdx];
-    [g.blueTeam, g.redTeam] = [g.redTeam, g.blueTeam];
-  }
-  const bc = document.getElementById("side-confirm-blue-ng");
-  const rc = document.getElementById("side-confirm-red-ng");
-  if (bc) bc.textContent = blueEl.value;
-  if (rc) rc.textContent = redEl.value;
-  ngUpdateColTitles();
-  ngNoop();
-}
 
-function ngConfirmSides() {
-  document.getElementById("side-confirm-banner-ng").style.display = "none";
-}
 
-function ngSwapPicks() {
-  const tmpChamps    = ngPickedChamps.blue.slice();
-  ngPickedChamps.blue  = ngPickedChamps.red.slice();
-  ngPickedChamps.red   = tmpChamps;
 
-  const tmpPlayers   = ngPickedPlayers.blue.slice();
-  ngPickedPlayers.blue = ngPickedPlayers.red.slice();
-  ngPickedPlayers.red  = tmpPlayers;
 
-  // Re-render both sides using renderPickRow (handles champion images correctly)
-  ["blue", "red"].forEach(side => {
-    const container = document.getElementById(side + "-picks");
-    if (!container) return;
-    container.innerHTML = ROLES.map((role, i) =>
-      renderPickRow(side, i, role, ngPickedChamps[side][i] || "", ngPickedPlayers[side][i] || "")
-    ).join("");
-  });
 
-  ngNoop();
-}
 
-function ngSetLogMode(mode) {
-  ngLogMode = mode;
-  document.getElementById("mode-live-btn-ng").className = mode === "live" ? "btn btn-primary" : "btn btn-ghost";
-  document.getElementById("mode-vod-btn-ng").className  = mode === "vod"  ? "btn btn-primary" : "btn btn-ghost";
-  document.getElementById("live-games-section-ng").style.display = mode === "live" ? "block" : "none";
-  document.getElementById("vod-section-ng").style.display         = mode === "vod"  ? "block" : "none";
 
-  // In VOD mode: show prediction card but hide winner/confidence/model/bet
-  document.getElementById("prediction-card-ng").style.display    = "block";
-  document.getElementById("pred-winner-section-ng").style.display = mode === "vod" ? "none" : "block";
-  document.getElementById("model-prediction-ng").style.display    = mode === "vod" ? "none" : (document.getElementById("model-prediction-ng").dataset.hasData ? "block" : "none");
-  // Hide bet section in VOD mode
-  const betSection = document.querySelector("#prediction-card [style*='border-top']-ng");
-  if (betSection) betSection.style.display = mode === "vod" ? "none" : "block";
 
-  document.getElementById("vod-result-section-ng").style.display = mode === "vod" ? "block" : "none";
-  const saveBtn = document.getElementById("save-btn-ng");
-  if (saveBtn) saveBtn.textContent = mode === "vod" ? "Save VOD review" : "Save prediction";
-  if (mode === "vod" && !vodScheduleCache.length) ngLoadVodSchedule();
-}
 
-async function ngLoadLiveGames() {
-  const el = document.getElementById("live-pills-ng");
-  el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Checking for live games…</div>';
-  try {
-    const data   = await apiGet("/getLive");
-    const events = (data.data && data.data.schedule && data.data.schedule.events) || [];
-    let live = events.filter(e => e.state === "inProgress" && e.type === "match");
 
-    // Fallback: getLive can miss some leagues (e.g. LPL) — also check getSchedule
-    if (!live.length) {
-      try {
-        const schedData = await apiGet("/getSchedule");
-        const schedLive = (schedData.data?.schedule?.events || []).filter(e =>
-          e.type === "match" && e.state === "inProgress"
-        );
-        if (schedLive.length) live = schedLive;
-      } catch(ex) {}
-    }
 
-    const liveIds = new Set(live.map(e => e.id || e.match?.id));
 
-    liveGameData = [];
 
-    for (const ev of live) {
-      try {
-        const det = await apiGet("/getEventDetails", { id: ev.id });
-        const event = det.data && det.data.event;
-        if (!event) continue;
 
-        const games = (event.match && event.match.games) || [];
 
-        // Skip if all games done
-        if (games.length && games.every(g => g.state === "completed" || g.state === "unneeded")) continue;
 
-        const matchTeams = (event.match && event.match.teams) || [];
-        const teamById = {};
-        matchTeams.forEach(t => { teamById[t.id] = t.code || t.name || ""; });
 
-        // Find the actually-live game by probing the feed highest-number first
-        // (getEventDetails game states lag; the feed is authoritative)
-        const sortedGames = [...games]
-          .filter(g => g.state !== "unneeded")
-          .sort((a,b) => (b.number||0) - (a.number||0));
-
-        let foundGame = null;
-        let picks = { blue: [], red: [] };
-
-        for (const g of sortedGames) {
-          try {
-            const res = await fetch(`${FEED_BASE}/window/${g.id}`);
-            if (res.ok) {
-              const fd = await res.json();
-              if (fd && fd.gameMetadata) {
-                const meta = fd.gameMetadata;
-                picks.blue = (meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata) || [];
-                picks.red  = (meta.redTeamMetadata  && meta.redTeamMetadata.participantMetadata)  || [];
-                foundGame = g;
-                break; // this is the live game
-              }
-            }
-          } catch(e) {}
-        }
-
-        // If no feed data yet (between games), use first non-completed game
-        if (!foundGame) {
-          foundGame = sortedGames[sortedGames.length - 1] || null;
-        }
-        if (!foundGame) continue;
-
-        const g = foundGame;
-        const sides = g.teams || [];
-        const blueEntry = sides.find(t => t.side === "blue");
-        const redEntry  = sides.find(t => t.side === "red");
-        const blueCode  = blueEntry ? (teamById[blueEntry.id] || "Blue") : "Blue";
-        const redCode   = redEntry  ? (teamById[redEntry.id]  || "Red")  : "Red";
-
-        liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: ev.leagueName || (event.league ? event.league.name : ""), gameId: g.id, gameNumber: g.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks });
-      } catch(e) { console.warn("Error loading event", ev.id, e); }
-    }
-
-    const livePills = liveGameData
-      .map((g, i) => ({ g, i }))
-      .filter(({ g }) => isLeagueVisible(g.league || ""))
-      .map(({ g, i }) =>
-      '<div class="live-pill" onclick="ngLoadLiveGame(' + i + ')">' +
-      '<span class="live-dot"></span>' +
-      '<span><b>' + g.blueTeam + '</b> vs <b>' + g.redTeam + '</b> ' +
-      '<span style="color:var(--muted);">' + g.league + (g.gameNumber ? ' \xb7 Game ' + g.gameNumber : '') + '</span></span></div>'
-    ).join("");
-
-    // Also check today's schedule for ERLs not in Riot's live feed (e.g. LES)
-    // Deduplicate by both event ID and team codes in case the APIs use different IDs
-    let scheduledPills = "";
-    try {
-      // Deduplicate: skip if already showing as a live Riot-feed pill
-      // Check by team codes (case-insensitive) since API and schedule may differ slightly
-      const liveTeamPairs  = new Set(liveGameData.map(g => [g.blueTeam, g.redTeam].map(s => s.toUpperCase()).sort().join("|")));
-      const liveEventIds   = new Set(live.map(e => e.id));
-      const today    = localDateStr();
-      const sData    = await apiGet("/getSchedule");
-      const todayEvs = ((sData.data && sData.data.schedule && sData.data.schedule.events) || [])
-        .filter(function(e) {
-          if (e.type !== "match") return false;
-          if (e.state !== "inProgress" && e.state !== "unstarted") return false;
-          if ((e.startTime || "").slice(0, 10) !== today) return false;
-          const teams = ((e.match && e.match.teams) || []).map(function(t) { return (t.code || t.name || "").toUpperCase(); });
-          if (teams.length >= 2 && liveTeamPairs.has(teams.slice().sort().join("|"))) return false;
-          return true;
-        });
-
-      // Games whose startTime has passed 5+ mins but API still shows "unstarted" = API lag, treat as live
-      todayEvs.forEach(function(e) {
-        if (e.state === "unstarted" && e.startTime) {
-          const minsElapsed = (Date.now() - new Date(e.startTime).getTime()) / 60000;
-          if (minsElapsed >= 5) e.state = "inProgress";
-        }
-      });
-
-      scheduledPills = todayEvs.filter(function(ev) {
-        return isLeagueVisible((ev.league && ev.league.name) || "");
-      }).map(function(ev) {
-        const teams  = ((ev.match && ev.match.teams) || []).map(function(t) { return t.code || t.name || "TBD"; });
-        const league = (ev.league && ev.league.name) || "";
-        const matchId = (ev.match && ev.match.id) || ev.id || "";
-        const isLive  = ev.state === "inProgress";
-        const label   = isLive ? "LIVE" : "Today";
-        const bgColor = isLive ? "#ff4d5e" : "var(--blue)";
-
-        // For live schedule events, try to load them via getEventDetails + feed
-        // (ERLs like Prime League appear in schedule but not getLive)
-        // Run once in background — just update liveGameData so clicking the pill works
-        if (isLive && matchId) {
-          apiGet("/getEventDetails", { id: matchId }).then(function(det) {
-            const event    = det && det.data && det.data.event;
-            const games    = (event && event.match && event.match.games) || [];
-            const liveGame = games.find(g => g.state === "inProgress" || g.state === "in_game") || games.find(g => g.state === "unstarted");
-            if (liveGame) {
-              const matchTeams = (event.match && event.match.teams) || [];
-              const teamById   = {};
-              matchTeams.forEach(function(t) { teamById[t.id] = t.code || t.name || ""; });
-              const sides     = liveGame.teams || [];
-              const blueEntry = sides.find(function(t) { return t.side === "blue"; });
-              const redEntry  = sides.find(function(t) { return t.side === "red"; });
-              const blueCode  = blueEntry ? (teamById[blueEntry.id] || teams[0] || "Blue") : (teams[0] || "Blue");
-              const redCode   = redEntry  ? (teamById[redEntry.id]  || teams[1] || "Red")  : (teams[1] || "Red");
-              const key = [blueCode, redCode].map(function(s) { return s.toUpperCase(); }).sort().join("|");
-              const alreadyIn = liveGameData.some(function(g) {
-                return [g.blueTeam, g.redTeam].map(function(s) { return s.toUpperCase(); }).sort().join("|") === key;
-              });
-              if (!alreadyIn) {
-                // Add to liveGameData so clicking the pill loads picks correctly
-                // No reload — just populate the data silently
-                liveGameData.push({ blueTeam: blueCode, redTeam: redCode, league: league, gameId: liveGame.id, gameNumber: liveGame.number || null, blockName: ev.blockName || "", startTime: ev.startTime || "", picks: { blue: [], red: [] } });
-              }
-            }
-          }).catch(function() {});
-        }
-
-        const note = isLive ? "LIVE — loading feed…" : "Scheduled today — enter picks manually";
-        return '<div class="live-pill" onclick="loadScheduledGame(this)" ' +
-          'data-eid="' + matchId + '" data-t0="' + (teams[0]||"") + '" data-t1="' + (teams[1]||"") + '" ' +
-          'data-lg="' + league + '" data-bn="' + (ev.blockName||"") + '" data-dt="' + (ev.startTime||"").slice(0,10) + '" ' +
-          'data-live="' + (isLive ? "1" : "0") + '" ' +
-          'style="opacity:0.85;">' +
-          '<span style="background:' + bgColor + ';color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">' + label + '</span>' +
-          '<span style="flex:1;min-width:0;"><b>' + teams.join(" vs ") + '</b> <span style="color:var(--muted);">\xb7 ' + league + '</span>' +
-          '<span style="color:var(--muted);font-size:11px;display:block;">' + note + '</span></span></div>';
-      }).join("");
-    } catch(e) {}
-
-    // Manual schedule games for today
-    const manualToday = loadManualSchedule().filter(function(g) { return g.date === localDateStr(); });
-    const manualPills = manualToday.map(function(g) {
-      return '<div class="live-pill" onclick="loadScheduledGame(this)" ' +
-        'data-t0="' + g.blueTeam + '" data-t1="' + g.redTeam + '" ' +
-        'data-lg="' + g.league + '" data-bn="' + (g.blockName||"") + '" data-dt="' + g.date + '" ' +
-        'style="opacity:0.85;">' +
-        '<span style="background:var(--yellow);color:#000;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Manual</span>' +
-        '<span style="flex:1;min-width:0;"><b>' + g.blueTeam + ' vs ' + g.redTeam + '</b> <span style="color:var(--muted);">\xb7 ' + g.league + '</span>' +
-        '<span style="color:var(--muted);font-size:11px;display:block;">Enter picks manually</span></span></div>';
-    }).join("");
-
-    el.innerHTML = (livePills + scheduledPills + manualPills) ||
-      '<div style="color:var(--muted);font-size:13px;">No live or scheduled games today \u2014 fill in manually below.</div>';
-
-  } catch(e) {
-    console.error("loadLiveGames failed:", e);
-    el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Couldn\'t load live games.</div>';
-  }
-}
-
-async function ngLoadRecentGames() {
-  const el = document.getElementById("recent-pills-ng");
-  if (!el) return;
-  try {
-    const today = localDateStr();
-    const dismissed = new Set(JSON.parse(sessionStorage.getItem("dismissed_recent") || "[]"));
-    const data  = await apiGet("/getSchedule");
-    const events = (data.data?.schedule?.events || [])
-      .filter(e => {
-        try {
-        if (e.type !== "match" || e.state !== "completed") return false;
-        if ((e.startTime || "").slice(0, 10) !== today) return false;
-        const teams = (e.match?.teams || []).map(t => t.code || t.name || "");
-        // A BO3 was disappearing after game 1: isGameLogged() was called
-        // without a game number, so any single logged game marked the whole
-        // series done. Count games instead, and keep the series listed until
-        // every one of them is in.
-        if (teams.length >= 2) {
-          const played = e.match?.strategy?.count || 0;   // best-of N
-          const logged = loggedGameCount(teams[0], teams[1], today);
-          if (logged > 0 && played && logged >= played) return false;
-          if (logged > 0 && !played && logged >= 5) return false;
-          e._loggedCount = logged;
-        }
-        const eid = e.match?.id || e.id || "";
-        if (dismissed.has(eid)) return false;
-        return true;
-        } catch(err) {
-          // One malformed event should not blank the whole list.
-          if (typeof logAppError === "function") logAppError("recent", err.message, "event filter");
-          return false;
-        }
-      })
-      .sort((a,b) => (b.startTime||"") > (a.startTime||"") ? 1 : -1)
-      .slice(0, 10);
-
-    if (!events.length) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No unlogged games today yet.</div>';
-      return;
-    }
-    window._recentEvents = events;
-    el.innerHTML = events.map((ev, idx) => {
-      const teams     = (ev.match?.teams || []);
-      const teamNames = teams.map(t => t.code || t.name || "TBD").join(" vs ");
-      const league    = ev.league?.name || "";
-      const eid       = ev.match?.id || ev.id || "";
-      return `<div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(${idx})">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(${idx})">
-          <b>${teamNames}</b>
-          <span style="color:var(--muted);"> · ${league}</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">${
-            ev._loggedCount ? `${ev._loggedCount} game${ev._loggedCount===1?"":"s"} logged \u2014 tap for the next one`
-                            : "Completed today \u2014 log your missed prediction"
-          }</span>
-        </span>
-        <button onclick="ngDismissRecentGame('${eid}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div>`;
-    }).join("");
-  } catch(e) {
-    if (typeof logAppError === "function") logAppError("recent", e.message, "loadRecentGames");
-    const msg = String(e.message || e);
-    // "Failed to fetch" means the request never completed. That is a connection
-    // problem, not a data one, and needs different advice.
-    const networkLevel = /failed to fetch|networkerror|load failed/i.test(msg);
-    if (el) el.innerHTML = networkLevel
-      ? `<div style="color:var(--muted);font-size:12px;line-height:1.7;">
-           <b style="color:#ff4d5e;">Can't reach Riot's API.</b> The request never completed, so this is a
-           connection problem rather than a data one \u2014 the Live and Schedule pages use the same endpoint
-           and will be failing too.
-           <div style="margin-top:5px;">Most likely a VPN or network filter blocking
-           <code>esports-api.lolesports.com</code>. That has bitten this app before.</div>
-           <button class="btn btn-ghost" style="margin-top:6px;padding:3px 10px;font-size:11px;"
-             onclick="ngLoadRecentGames()">Retry</button>
-           <button class="btn btn-ghost" style="margin-top:6px;padding:3px 10px;font-size:11px;"
-             onclick="testRiotApi()">Test connection</button>
-         </div>`
-      : `<div style="color:var(--muted);font-size:12px;line-height:1.6;">
-           Couldn't load recent games \u2014 <span style="color:#ff4d5e;">${msg.slice(0, 120)}</span>
-           <button class="btn btn-ghost" style="margin-left:6px;padding:2px 8px;font-size:11px;"
-             onclick="ngLoadRecentGames()">Retry</button>
-         </div>`;
-  }
-}
-
-async function ngLoadLiveGame(i) {
-  currentLiveGameIdx = i;
-  const g = liveGameData[i];
-  if (!g) return;
-  document.getElementById("blue-team-ng").value     = g.blueTeam;
-  document.getElementById("red-team-ng").value      = g.redTeam;
-  document.getElementById("league-ng").value        = g.league;
-  document.getElementById("game-date-ng").value     = localDateStr();
-  document.getElementById("event-context-ng").value = buildContextLabel(g.league, g.blockName, g.startTime);
-  ngCurrentGameNumber = g.gameNumber || null;
-  ngUpdateColTitles();
-
-  // Show a loading state in the pick columns while we fetch
-  ["blue","red"].forEach(side => {
-    const el = document.getElementById(side + "-picks");
-    if (el) el.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:8px 0;">Fetching picks…</div>`;
-  });
-
-  let picks = g.picks;
-  try {
-    const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${g.gameId}`);
-    if (res.ok) {
-      // Use text-first parse (same as dashboard) to handle any response oddities
-      const text = await res.text();
-      const fd   = text ? JSON.parse(text) : null;
-      const meta = fd && fd.gameMetadata;
-      console.log("loadLiveGame feed response for", g.gameId, "meta:", meta ? "found" : "null", "blue participants:", meta && meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata ? meta.blueTeamMetadata.participantMetadata.length : 0);
-      if (meta) {
-        const blue = (meta.blueTeamMetadata && meta.blueTeamMetadata.participantMetadata) || [];
-        const red  = (meta.redTeamMetadata  && meta.redTeamMetadata.participantMetadata)  || [];
-        if (blue.length || red.length) {
-          picks = { blue, red };
-          liveGameData[i].picks = picks;
-        } else {
-          console.warn("participantMetadata arrays were empty — draft may not have started yet");
-        }
-      }
-    } else {
-      console.warn("Feed fetch returned status", res.status, "for game", g.gameId);
-    }
-  } catch(e) {
-    console.error("Failed to refresh picks for game", g.gameId, e);
-  }
-
-  ngRenderPickInputs(picks.blue, picks.red);
-  ngFillOddsFromPlan(g.blueTeam, g.redTeam, g.gameNumber);
-  ngNoop();
-}
-
-async function ngLoadRecentGame(idx) {
-  const events = window._recentEvents || [];
-  const ev     = events[idx];
-  if (!ev) { console.warn("loadRecentGame: no event at idx", idx); return; }
-
-  const banner = document.getElementById("retroactive-banner-ng");
-  if (banner) { banner.style.display = "block"; banner.innerHTML = `<span style="color:var(--yellow);">⏱ Loading game details…</span>`; }
-
-  try {
-    const matchId = ev.match?.id || ev.id;
-    if (!matchId) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Couldn't find match ID.</span>`; return; }
-
-    const det   = await apiGet("/getEventDetails", { id: matchId });
-    const event = det.data?.event;
-    if (!event) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">API returned no event data.</span>`; return; }
-
-    const games = (event.match?.games || [])
-      .filter(g => g.state !== "unstarted")
-      .sort((a,b) => (a.number||0) - (b.number||0));
-    const allGames = games.length ? games : (event.match?.games || []);
-
-    const matchTeams = event.match?.teams || [];
-    const tById = {};
-    matchTeams.forEach(t => { tById[t.id] = t.code || t.name || ""; });
-    const winner = matchTeams.find(t => t.result?.outcome === "win");
-
-    ngRecentMatchGames = allGames;
-    ngRecentMatchMeta  = { event, tById, winner, ev };
-
-    // Jump to the first game of the series that is not already logged, so a
-    // BO3 can be worked through one tap at a time.
-    const codes = (event.match?.teams || []).map(t => t.code || t.name || "");
-    const date  = (ev.startTime || "").slice(0, 10) || localDateStr();
-    const missing = codes.length >= 2 ? missingGameNumbers(codes[0], codes[1], date, allGames.length) : [];
-    let startIdx = 0;
-    if (missing.length) {
-      const i = allGames.findIndex(g => (g.number || 0) === missing[0]);
-      if (i >= 0) startIdx = i;
-    }
-    await _ngLoadRecentGameN(startIdx, banner);
-  } catch(e) {
-    console.error("loadRecentGame error:", e);
-    if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">Error: ${e.message}</span>`;
-  }
-}
-
-async function _ngLoadRecentGameN(gameIdx, banner) {
-  const { event, tById, winner, ev } = ngRecentMatchMeta;
-  const allGames = ngRecentMatchGames;
-  const targetGame = allGames[gameIdx];
-  if (!targetGame) { if (banner) banner.innerHTML = `<span style="color:#ff4d5e;">No games found in this match.</span>`; return; }
-
-  const sides     = targetGame.teams || [];
-  const blueEntry = sides.find(t => t.side === "blue");
-  const redEntry  = sides.find(t => t.side === "red");
-  const blueCode  = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
-  const redCode   = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
-
-  const winnerCode  = winner ? (winner.code || winner.name || "") : "";
-  ngRetroactiveWinner = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
-                    : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
-
-  document.getElementById("blue-team-ng").value     = blueCode;
-  document.getElementById("red-team-ng").value      = redCode;
-  document.getElementById("league-ng").value        = event.league?.name || "";
-  document.getElementById("game-date-ng").value     = (ev.startTime || "").slice(0, 10) || localDateStr();
-  document.getElementById("event-context-ng").value = buildContextLabel(event.league?.name || "", ev.blockName || "", ev.startTime || "");
-  ngCurrentGameNumber = targetGame.number || (gameIdx + 1);
-  ngUpdateColTitles();
-
-  // Game switcher shown when series has multiple games
-  if (banner) {
-    const switcherHtml = allGames.length > 1
-      ? `<div style="display:flex;gap:6px;margin-top:8px;align-items:center;">
-          <span style="font-size:11px;color:var(--muted);">Game:</span>
-          ${allGames.map((g, i) =>
-            `<button onclick="_ngLoadRecentGameN(${i})" style="padding:3px 10px;border-radius:5px;border:1px solid ${i===gameIdx?"var(--blue)":"var(--border)"};background:${i===gameIdx?"rgba(59,130,246,.15)":"none"};color:${i===gameIdx?"var(--blue)":"var(--muted)"};font-size:12px;cursor:pointer;">${g.number||i+1}</button>`
-          ).join("")}
-        </div>` : "";
-    banner.style.display = "block";
-    banner.innerHTML = `<span style="color:var(--yellow);">⏱ Retroactive log — fill in your prediction as you remembered it. The result is hidden until you save.</span>${switcherHtml}`;
-  }
-
-  try {
-    const res = await fetch(`https://feed.lolesports.com/livestats/v1/window/${targetGame.id}`);
-    if (res.ok) {
-      const fd = await res.json();
-      const meta = fd?.gameMetadata;
-      if (meta) ngRenderPickInputs(meta.blueTeamMetadata?.participantMetadata || [], meta.redTeamMetadata?.participantMetadata || []);
-    }
-  } catch(e) {}
-
-  ngNoop();
-  ngFillOddsFromPlan(blueCode, redCode, ngCurrentGameNumber);
-  document.getElementById("blue-team-ng").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function ngRenderPickInputs(bluePicks, redPicks) {
-  const sort = arr => [...arr].sort((a,b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
-  const blue = sort(bluePicks);
-  const red  = sort(redPicks);
-
-  ngPickedChamps  = { blue: ["","","","",""], red: ["","","","",""] };
-  ngPickedPlayers = { blue: ["","","","",""], red: ["","","","",""] };
-
-  ["blue","red"].forEach(side => {
-    const picks    = side === "blue" ? blue : red;
-    const container = document.getElementById(side + "-picks");
-    if (!container) return;
-    container.innerHTML = ROLES.map((role, i) => {
-      const pick       = picks[i] || {};
-      const champId    = pick.championId  || "";
-      const playerName = pick.summonerName || "";
-      ngPickedChamps[side][i]  = champId;
-      ngPickedPlayers[side][i] = playerName;
-      return renderPickRow(side, i, role, champId, playerName);
-    }).join("");
-  });
-
-  // Pre-fetch champion list in background so autocomplete is ready
-  getChampList();
-}
-
-function ngUpdateColTitles() {
-  const blue = document.getElementById("blue-team-ng").value.trim() || "BLUE SIDE";
-  const red  = document.getElementById("red-team-ng").value.trim()  || "RED SIDE";
-  document.getElementById("blue-col-title-ng").textContent = blue.toUpperCase();
-  document.getElementById("red-col-title-ng").textContent  = red.toUpperCase();
-  document.getElementById("pred-blue-label-ng").textContent = blue + " wins";
-  document.getElementById("pred-red-label-ng").textContent  = red + " wins";
-  // Update advantage button labels
-  const eb = document.getElementById("exec-blue-lbl-ng");
-  const er = document.getElementById("exec-red-lbl-ng");
-  if (eb) eb.textContent = blue;
-  if (er) er.textContent = red;
-  // Draft pref labels
-  const dp = document.getElementById("dpref--2-lbl-ng"); if (dp) dp.textContent = blue + " +2";
-  const dp1 = document.getElementById("dpref--1-lbl-ng"); if (dp1) dp1.textContent = blue + " +1";
-  const dp2 = document.getElementById("dpref-1-lbl-ng");  if (dp2) dp2.textContent = red  + " +1";
-  const dp3 = document.getElementById("dpref-2-lbl-ng");  if (dp3) dp3.textContent = red  + " +2";
-  // Skill adv labels
-  const sbl = document.getElementById("skill-adv-blue-lbl-ng"); if (sbl) sbl.textContent = blue;
-  const srl = document.getElementById("skill-adv-red-lbl-ng");  if (srl) srl.textContent = red;
-  // VOD result labels
-  const vbl = document.getElementById("vod-result-blue-label-ng");
-  const vrl = document.getElementById("vod-result-red-label-ng");
-  if (vbl) vbl.textContent = blue + " won";
-  if (vrl) vrl.textContent = red  + " won";
-  // Market odds labels
-  const mbl = document.getElementById("mkt-blue-label-ng");
-  const mrl = document.getElementById("mkt-red-label-ng");
-  if (mbl) mbl.innerHTML = (blue||"Blue") + " side odds <span style='font-weight:400;color:var(--muted);'>(optional)</span>";
-  if (mrl) mrl.innerHTML = (red ||"Red")  + " side odds <span style='font-weight:400;color:var(--muted);'>(optional)</span>";
-  refreshBetSelects();
-  updateDraftRatingIndicator();
-  updateStandingsIndicator();
-  ngNoop();
-}
-
-function ngClear() {
-  ["blue-team","red-team","league","event-context","notes","mkt-blue-odds","mkt-red-odds"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-  document.getElementById("game-date-ng").value = localDateStr();
-  ngCurrentGameNumber = null;
-  ngExecDemand = { blue: null, red: null };
-  ngDraftPref = null; vodResult = null; ngRetroactiveWinner = null;
-  ngPredWinner = null; ngPredConf = null; ngSkillAdv = null;
-  _modelDisagreement = false;
-  const dw = document.getElementById("model-disagree-wrap-ng");
-  if (dw) { dw.style.display = "none"; }
-  const da = document.getElementById("model-disagree-state-agree-ng");
-  const dd = document.getElementById("model-disagree-state-disagree-ng");
-  if (da) da.style.display = "flex";
-  if (dd) dd.style.display = "none";
-  document.querySelectorAll(".pred-btn, .conf-btn, .three-btn, #draft-pref-row button, #vod-result-section button").forEach(b => b.classList.remove("sel"));
-  const banner = document.getElementById("retroactive-banner-ng");
-  if (banner) banner.style.display = "none";
-  resetBetForm();
-  ngUpdateColTitles();
-  initPickInputs();
-}
-
-function ngSave() {
-  const blueTeam = document.getElementById("blue-team-ng").value.trim();
-  const redTeam  = document.getElementById("red-team-ng").value.trim();
-  if (!blueTeam || !redTeam) { alert("Enter both team names first."); return; }
-
-  if (ngLogMode === "vod") {
-    if (!vodResult) { alert("Select the actual result first."); return; }
-    const entry = {
-      id: Date.now().toString(),
-      date: document.getElementById("game-date-ng").value || localDateStr(),
-      league: document.getElementById("league-ng").value.trim(),
-      eventContext: document.getElementById("event-context-ng").value.trim(),
-      gameNumber: ngCurrentGameNumber,
-      gameId: (typeof currentGameId !== "undefined" && currentGameId) || null,
-      blueTeam, redTeam,
-      champions: JSON.parse(JSON.stringify(ngPickedChamps)),
-      players:   JSON.parse(JSON.stringify(ngPickedPlayers)),
-      ngDraftPref,
-      ngSkillAdv,
-      ngExecDemand: JSON.parse(JSON.stringify(ngExecDemand)),
-      notes: document.getElementById("notes-ng").value.trim(),
-      isVod: true,
-      actualWinner: vodResult,
-      watched: true,
-      ngPredWinner: null,
-      ngPredConf: null,
-      bet: null
-    };
-    const entries = loadEntries();
-    entries.unshift(entry);
-    saveEntries(entries);
-    autoSync();
-    const savedId = entry.id;
-    ngClear();
-    // Ratings now live on the Rate VODs page, which writes to the same store.
-    show("vodrate");
-    setTimeout(() => {
-      try {
-        const g = loadEntries().find(e => e.id === savedId);
-        if (g) { _vodCurrent = g; findVodId(g).then(v => renderVodCard(g, v)); }
-      } catch(e) {}
-    }, 100);
-    return;
-  }
-
-  if (!ngPredWinner) { alert("Pick a predicted winner first."); return; }
-
-  const entry = {
-    id: Date.now().toString(),
-    date: document.getElementById("game-date-ng").value || localDateStr(),
-    league: document.getElementById("league-ng").value.trim(),
-    eventContext: document.getElementById("event-context-ng").value.trim(),
-    gameNumber: ngCurrentGameNumber,
-    blueTeam, redTeam,
-    champions: JSON.parse(JSON.stringify(ngPickedChamps)),
-    players:   JSON.parse(JSON.stringify(ngPickedPlayers)),
-    ngPredWinner,
-    ngPredConf,
-    modelPct: null,            // no model was shown on this page
-    modelSnapshot: null,
-    loggedWithoutModel: true,
-    modelDisagreement: (_modelDisagreement && !(ngGetBetData()?.valueBet)) || false,
-    ngDraftPref,
-    ngSkillAdv,
-    ngExecDemand: JSON.parse(JSON.stringify(ngExecDemand)),
-    notes: document.getElementById("notes-ng").value.trim(),
-    bet: ngGetBetData(),
-    actualWinner: ngRetroactiveWinner || null  // auto-resolve if retroactive
-  };
-
-  const entries = loadEntries();
-  entries.unshift(entry);
-  saveEntries(entries);
-  autoSync();
-
-  // Attach the result to any recorded timeline for this game, turning it from
-  // an unlabelled sequence into training data.
-  try {
-    const gid = entry.gameId || (typeof currentGameId !== "undefined" ? currentGameId : null);
-    if (entry.actualWinner) labelGameState(gid, entry.actualWinner, entry);
-  } catch(err) {}
-
-  // Recalibrate on every save, excluding the game just logged so the fit can
-  // never be informed by the prediction it is about to score.
-  try { fitPlattScaling({ excludeId: entry.id }); } catch(err) { logAppError("platt", err.message, "saveEntry"); }
-
-  const wasRetroactive = !!ngRetroactiveWinner;
-  ngClear();
-
-  if (wasRetroactive) {
-    const correct = entry.predWinner === entry.actualWinner;
-    const winner  = entry.actualWinner === "blue" ? blueTeam : redTeam;
-    alert(`Prediction saved!\n\n${winner} won — you were ${correct ? "✓ correct" : "✗ wrong"}.`);
-  } else {
-    alert("Prediction saved! Log the result when the game ends.");
-  }
-}
-
-async function ngLoadVodSchedule() {
-  const el = document.getElementById("vod-pills-ng");
-  el.innerHTML = '<div style="color:var(--muted);font-size:13px;">Loading past games…</div>';
-  vodScheduleCache = [];
-  vodVisibleCount  = 30;
-  try {
-    // Paginate back far enough to cover a full split (~15 pages)
-    let pageToken = null;
-    for (let i = 0; i < 15; i++) {
-      const params = pageToken ? { pageToken } : {};
-      const data = await apiGet("/getSchedule", params);
-      const schedule = data.data && data.data.schedule;
-      if (!schedule) break;
-      const completed = (schedule.events || []).filter(e => e.type === "match" && e.state === "completed");
-      vodScheduleCache = vodScheduleCache.concat(completed);
-      pageToken = schedule.pages && schedule.pages.older;
-      if (!pageToken) break;
-    }
-    vodScheduleCache = vodScheduleCache;
-    const leagues = [...new Set(vodScheduleCache.map(e => e.league && e.league.name).filter(Boolean))].sort();
-    const sel = document.getElementById("vod-league-filter-ng");
-    const cur = sel.value;
-    sel.innerHTML = '<option value="all">All leagues</option>' +
-      leagues.map(l => `<option value="${l}" ${l===cur?"selected":""}>${l}</option>`).join("");
-    renderVodList();
-  } catch(e) {
-    el.innerHTML = `<div style="color:var(--muted);font-size:13px;">Couldn't load schedule: ${e.message}</div>`;
-  }
-}
-
-function ngSetVodResult(side) {
-  vodResult = side;
-  document.getElementById("vod-result-blue-ng").classList.toggle("sel", side === "blue");
-  document.getElementById("vod-result-red-ng").classList.toggle("sel",  side === "red");
-}
-
-function ngGetBetData() {
-  if (!ngHasBet) return null;
-  const on      = document.getElementById("bet-team-on-ng").value;
-  const against = document.getElementById("bet-team-against-ng").value;
-  const odds    = parseFloat(document.getElementById("bet-odds-ng").value);
-  const stake   = parseFloat(document.getElementById("bet-stake-ng").value);
-  if (!on || !odds || !stake) return null;
-  const blueOdds = parseFloat((document.getElementById("mkt-blue-odds-ng") || {}).value) || null;
-  const redOdds  = parseFloat((document.getElementById("mkt-red-odds-ng")  || {}).value) || null;
-  const oppOdds  = on === "blue" ? redOdds : blueOdds;
-  const valueBet = !!(document.getElementById("bet-value-flag-ng")?.checked);
-  return { on, against, odds, oppOdds, stake, valueBet };
-}
-
-function ngDismissRecentGame(eid) {
-  const dismissed = new Set(JSON.parse(sessionStorage.getItem("dismissed_recent") || "[]"));
-  dismissed.add(eid);
-  sessionStorage.setItem("dismissed_recent", JSON.stringify([...dismissed]));
-  ngLoadRecentGames();
-}
-
-function ngFillOddsFromPlan(blueTeam, redTeam, gameNumber) {
-  const odds = getTodayOdds(blueTeam, redTeam, gameNumber);
-  if (!odds) return;
-  if (odds.blueOdds) { const el = document.getElementById("mkt-blue-odds-ng"); if (el) el.value = odds.blueOdds; }
-  if (odds.redOdds)  { const el = document.getElementById("mkt-red-odds-ng");  if (el) el.value = odds.redOdds; }
-  if (odds.notes)    { const el = document.getElementById("notes-ng");          if (el && !el.value) el.value = odds.notes; }
-}
 
 function getBetData() {
   if (!hasBet) return null;
@@ -12679,13 +12583,15 @@ function renderBets() {
 function rebuildBankrollFromBets() {
   const s = loadBankrollSettings();
   if (!s.starting) return null;
-  const settled = loadEntries()
+  const all = loadEntries();
+  const settled = all
     .filter(e => e.actualWinner && !e.isBulkImport)
     .sort((a, b) => (a.date || "") < (b.date || "") ? -1 : 1);
 
   let bal = s.starting;
   let staked = 0, returned = 0, n = 0;
   for (const e of settled) {
+    let counted = false;
     for (const bet of [e.bet, ...(e.additionalBets || [])].filter(Boolean)) {
       const stake = parseFloat(bet.stake) || 0;
       const odds  = parseFloat(bet.odds)  || 0;
@@ -12695,12 +12601,17 @@ function rebuildBankrollFromBets() {
       staked += stake;
       returned += won ? stake * odds : 0;
       n++;
+      counted = true;
     }
+    // This rebuild has now accounted for these bets. Without recording that,
+    // resolving the same game again afterwards would add them a second time.
+    if (counted && !e.betSettled) e.betSettled = true;
   }
   bal += (s.totalDeposited || 0) - (s.totalCashedOut || 0);
   const before = s.current ?? s.starting;
   s.current = Math.max(0, Math.round(bal * 100) / 100);
   localStorage.setItem(BANKROLL_KEY, JSON.stringify(s));
+  saveEntries(all);
   return { before, after: s.current, bets: n, staked, returned };
 }
 
@@ -13902,6 +13813,7 @@ async function runBulkImport() {
   let imported = 0, skipped = 0, failed = 0, noFeed = 0;
   const skipLog = []; // { reason, match, date }
   const existingEntries = loadEntries();
+  const loggedIdx = buildLoggedGameIndex();
 
   try {
     // Paginate through schedule until we hit the cutoff date
@@ -14075,15 +13987,12 @@ async function runBulkImport() {
           }
 
           // Skip if already imported
+          const bc = blueCode.toUpperCase(), rc = redCode.toUpperCase();
           if (skipExisting) {
-            const bc = blueCode.toUpperCase(), rc = redCode.toUpperCase();
-            const dupe = existingEntries.find(e =>
-              e.date === date &&
-              ((e.blueTeam?.toUpperCase()===bc && e.redTeam?.toUpperCase()===rc) ||
-               (e.blueTeam?.toUpperCase()===rc  && e.redTeam?.toUpperCase()===bc)) &&
-              (e.gameNumber == null || e.gameNumber === g.number)
-            );
-            if (dupe) { skipped++; skipLog.push({ reason: 'Already logged', match: matchId, date, teams: blueCode+' vs '+redCode }); continue; }
+            const seen = loggedIdx.get(loggedGameKey(date, bc, rc));
+            if (seen && (seen.has(null) || seen.has(g.number))) {
+              skipped++; skipLog.push({ reason: 'Already logged', match: matchId, date, teams: blueCode+' vs '+redCode }); continue;
+            }
           }
 
           if (!actualWinner) { skipped++; skipLog.push({ reason: 'Winner undetermined (mid-series, no feed data)', match: matchId, date, teams: blueCode+' vs '+redCode, game: g.number }); continue; }
@@ -14119,6 +14028,7 @@ async function runBulkImport() {
           };
 
           existingEntries.unshift(entry);
+          markLoggedGame(loggedIdx, date, bc, rc, g.number);
           imported++;
 
           // Save incrementally every 25 games so progress isn't lost if anything goes wrong
@@ -14204,6 +14114,10 @@ async function runAutoLog(silent = true) {
   let added = 0;
   const existingEntries = loadEntries();
 
+  // See buildLoggedGameIndex(): the old check read loadEntries(), which can
+  // never contain a game this function had already added.
+  const loggedIdx = buildLoggedGameIndex();
+
   try {
     // Fetch schedule pages until we hit the cutoff
     let pageToken = null;
@@ -14255,13 +14169,8 @@ async function runAutoLog(silent = true) {
 
           // Skip if already logged
           const bc = blueCode.toUpperCase(), rc = redCode.toUpperCase();
-          const dupe = existingEntries.find(e =>
-            e.date === date &&
-            ((e.blueTeam?.toUpperCase()===bc && e.redTeam?.toUpperCase()===rc) ||
-             (e.blueTeam?.toUpperCase()===rc  && e.redTeam?.toUpperCase()===bc)) &&
-            (e.gameNumber == null || e.gameNumber === g.number)
-          );
-          if (dupe) continue;
+          const seen = loggedIdx.get(loggedGameKey(date, bc, rc));
+          if (seen && (seen.has(null) || seen.has(g.number))) continue;
 
           const isLastGame   = g === sortedGames[sortedGames.length - 1];
           const seriesCode   = seriesWinner ? (seriesWinner.code || seriesWinner.name || "") : "";
@@ -14316,6 +14225,7 @@ async function runAutoLog(silent = true) {
             notes: "", bet: null
           });
           added++;
+          markLoggedGame(loggedIdx, date, bc, rc, g.number);
         }
         await new Promise(r => setTimeout(r, 200));
       } catch(ex) {}
@@ -14385,6 +14295,7 @@ async function runLPLImport() {
 
   const LPEDIA_API = "https://lol.fandom.com/api.php";
   let entries = loadEntries();
+  const loggedIdx = buildLoggedGameIndex();
   let imported = 0, skipped = 0, failed = 0;
 
   try {
@@ -14458,10 +14369,11 @@ async function runLPLImport() {
           if (!blue || !red || !dateStr) { failed++; continue; }
 
           if (skipExisting) {
-            const alreadyIn = entries.some(e => {
-              const eB = resolveTeam(e.blueTeam), eR = resolveTeam(e.redTeam);
-              return ((eB===blue&&eR===red)||(eB===red&&eR===blue)) && e.date===dateStr && (e.gameNumber||1)===gameNum;
-            });
+            // Same blindness as the other two importers — see
+            // buildLoggedGameIndex(). This one treated a stored entry with no
+            // game number as game 1, so that rule is kept rather than unified.
+            const seen = loggedIdx.get(loggedGameKey(dateStr, blue, red));
+            const alreadyIn = !!(seen && (seen.has(gameNum) || (gameNum === 1 && seen.has(null))));
             if (alreadyIn) { skipped++; continue; }
           }
 
@@ -14485,6 +14397,7 @@ async function runLPLImport() {
             winnerConfidence: "verified", isBulkImport: true, source: "leaguepedia",
             notes: "", bet: null, watched: false
           });
+          markLoggedGame(loggedIdx, dateStr, blue, red, gameNum);
           imported++;
           if (imported % 20 === 0) {
             saveEntries(entries);
@@ -15060,20 +14973,32 @@ function updateBetSizing(modelPct, edgePct) {
     `</div>`;
 }
 
+// Settlement has to be idempotent. There was no marker recording that an
+// entry's bets had already been applied, so resolving the same game twice —
+// pressing a result button on a game autoCheckResults had already filled in, or
+// simply pressing it again — put the same profit or loss on the bankroll a
+// second time. resultAck was being set but never consulted for this.
+//
+// Returns true if it applied anything, so callers can persist the marker.
 function applyBetResultToBankroll(entry) {
-  if (!entry.actualWinner) return;
+  if (!entry.actualWinner) return false;
+  if (entry.betSettled) return false;          // already counted
   const s = loadBankrollSettings();
-  if (!s.starting) return;
+  if (!s.starting) return false;
   const allBets = [entry.bet, ...(entry.additionalBets||[])].filter(Boolean);
-  if (!allBets.length) return;
+  if (!allBets.length) return false;
   let current = s.current ?? s.starting;
   for (const bet of allBets) {
     const won   = entry.actualWinner === bet.on;
     const stake = bet.stake || 0;
-    current     = Math.max(0, current + (won ? stake * (bet.odds - 1) : -stake));
+    // Clamping inside the loop meant a second bet on the same game started from
+    // zero once the first had taken the balance negative. Net first, floor once.
+    current    += won ? stake * (bet.odds - 1) : -stake;
   }
-  s.current = current;
+  s.current = Math.max(0, Math.round(current * 100) / 100);
   localStorage.setItem(BANKROLL_KEY, JSON.stringify(s));
+  entry.betSettled = true;
+  return true;
 }
 
 function loadBankrollSettingsUI() {
@@ -17522,7 +17447,6 @@ const NAV_ITEMS = [
   { id: "today",      label: "\u{1F4C5} Schedule",    short: "\u{1F4C5} Schedule" },
   { id: "watch",      label: "\u{1F4FA} Watch",       short: "\u{1F4FA} Watch" },
   { id: "log",        label: "Log Game" },
-  { id: "lognomodel", label: "\u23F1 Log Game (no model)", short: "\u23F1 No model" },
   { id: "results",    label: "Log Results" },
   { group: "Review" },
   { id: "draftreview",label: "\u{1F576} Review drafts", short: "\u{1F576} Review" },
@@ -17587,9 +17511,6 @@ function show(screen) {
   if (screen === "dashboard" || screen === "watch") { dbStartPolling(); }
   else { dbStopPolling(); }
   try {
-    if (screen === "lognomodel") {
-      try { ngLoadLiveGames(); ngLoadRecentGames(); } catch(e) {}
-    }
     if (screen === "results")   {
       renderPending(); autoCheckResults();
       document.getElementById("sb-date").value = localDateStr();
@@ -17640,6 +17561,7 @@ window.onerror = function(msg, src, line, col, err) {
 };
 document.getElementById("game-date").value = localDateStr();
 initPickInputs();
+try { applyBlindMode(); } catch(e) {}
 Promise.all([loadBulkFromDB()]); // preload IndexedDB bulk cache (async, non-blocking)
 loadLiveGames();
 loadRecentGames();
@@ -17861,4 +17783,4 @@ self.addEventListener("notificationclick", e => {
 
 
 
-<div style="position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 13px; z-index: 999; box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;">✓ Auto-logged 17 new games since last visit</div></body></html>
+</body></html>
