@@ -4,7 +4,7 @@
 // which is what makes the browser treat this file as new and run the update
 // cycle. A fixed version string means the browser byte-compares, sees no
 // change, and never updates anything.
-const VERSION = "1785864443757";
+const VERSION = "1785932321989";
 const CACHE   = "draft-logger-" + VERSION;
 
 const ASSETS = [
