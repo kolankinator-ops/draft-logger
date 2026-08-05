@@ -322,12 +322,12 @@
             background:var(--blue);color:#fff;border:none;border-radius:999px;
             padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;
             box-shadow:0 2px 10px rgba(0,0,0,.45);"></div>
-<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
+<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--muted);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel');closeDrawer()" class="">⏱ Log Game (no model)</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()" class="">📺 Watch</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel');closeDrawer()">⏱ Log Game (no model)</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel')" class="">⏱ No model</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')" class="">📺 Watch</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="lognomodel" onclick="show('lognomodel')">⏱ No model</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -336,10 +336,10 @@
       <span class="db-status-dot" id="db-status-dot"></span> Live
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button onclick="openWatchPicker()" id="db-watch-btn" style="display:none;font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--blue);border-radius:6px;cursor:pointer;">📺 Watch</button>
+      <button onclick="openWatchPicker()" id="db-watch-btn" style="display: block; font-size: 11px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--blue); border-radius: 6px; cursor: pointer;">📺 Watch</button>
       <button onclick="openLeagueFilter()" id="db-league-filter-btn" style="font-size:11px;padding:4px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;">🏷 Leagues</button>
       <span id="db-refresh-countdown" style="font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;"></span>
-      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">Loading…</div>
+      <div id="db-last-updated" style="font-size:12px;color:var(--muted);">2 live — 10:19:05 AM</div>
     </div>
   </div>
   <div id="db-live-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:24px;"></div>
@@ -403,50 +403,14 @@
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="ngLoadLiveGames();ngLoadRecentGames()">↺ Refresh</button>
       </div>
     </div>
-    <div id="live-pills-ng"><div class="live-pill" onclick="ngLoadLiveGame(0)"><span class="live-dot"></span><span><b>GEN</b> vs <b>HLE</b> <span style="color:var(--muted);">LCK · Game 1</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116889604984157253" data-t0="DK" data-t1="NS" data-lg="LCK Challengers" data-bn="Week 11" data-dt="2026-08-05" data-live="1" style="opacity:0.85;"><span style="background:#ff4d5e;color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">LIVE</span><span style="flex:1;min-width:0;"><b>DK vs NS</b> <span style="color:var(--muted);">· LCK Challengers</span><span style="color:var(--muted);font-size:11px;display:block;">LIVE — loading feed…</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116889604984222853" data-t0="KRX" data-t1="BFX" data-lg="LCK Challengers" data-bn="Week 11" data-dt="2026-08-05" data-live="1" style="opacity:0.85;"><span style="background:#ff4d5e;color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">LIVE</span><span style="flex:1;min-width:0;"><b>KRX vs BFX</b> <span style="color:var(--muted);">· LCK Challengers</span><span style="color:var(--muted);font-size:11px;display:block;">LIVE — loading feed…</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116838220144638631" data-t0="SA" data-t1="DIA" data-lg="TCL" data-bn="Play-Ins" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>SA vs DIA</b> <span style="color:var(--muted);">· TCL</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116713163972559108" data-t0="SGE" data-t1="EWI" data-lg="Prime League" data-bn="Week 7" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>SGE vs EWI</b> <span style="color:var(--muted);">· Prime League</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116833506932193691" data-t0="GX" data-t1="LUA" data-lg="LES" data-bn="Week 4" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>GX vs LUA</b> <span style="color:var(--muted);">· LES</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116878159559860015" data-t0="SE" data-t1="ABV" data-lg="NLC" data-bn="Swiss" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>SE vs ABV</b> <span style="color:var(--muted);">· NLC</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116878159559860007" data-t0="DMG" data-t1="AP" data-lg="NLC" data-bn="Swiss" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>DMG vs AP</b> <span style="color:var(--muted);">· NLC</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116912368900055716" data-t0="TLNP" data-t1="GL" data-lg="La Ligue Française" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>TLNP vs GL</b> <span style="color:var(--muted);">· La Ligue Française</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116713163972559152" data-t0="TOG" data-t1="KHK" data-lg="Prime League" data-bn="Week 7" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>TOG vs KHK</b> <span style="color:var(--muted);">· Prime League</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116912368900055676" data-t0="ES" data-t1="JL" data-lg="La Ligue Française" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>ES vs JL</b> <span style="color:var(--muted);">· La Ligue Française</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116838220144638635" data-t0="PCF" data-t1="BW" data-lg="TCL" data-bn="Play-Ins" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>PCF vs BW</b> <span style="color:var(--muted);">· TCL</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116833506932193703" data-t0="UCAM" data-t1="MKF" data-lg="LES" data-bn="Week 4" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>UCAM vs MKF</b> <span style="color:var(--muted);">· LES</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116878159559860011" data-t0="BROD" data-t1="EA" data-lg="NLC" data-bn="Swiss" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>BROD vs EA</b> <span style="color:var(--muted);">· NLC</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116878159559860019" data-t0="2M" data-t1="RG" data-lg="NLC" data-bn="Swiss" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>2M vs RG</b> <span style="color:var(--muted);">· NLC</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116912368900055728" data-t0="KCB" data-t1="SLY" data-lg="La Ligue Française" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>KCB vs SLY</b> <span style="color:var(--muted);">· La Ligue Française</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116912368900055704" data-t0="ZYB" data-t1="IJC" data-lg="La Ligue Française" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>ZYB vs IJC</b> <span style="color:var(--muted);">· La Ligue Française</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116809240490152407" data-t0="TSS" data-t1="7REX" data-lg="Circuito Desafiante" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>TSS vs 7REX</b> <span style="color:var(--muted);">· Circuito Desafiante</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116912368899924570" data-t0="VITB" data-t1="SC" data-lg="La Ligue Française" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>VITB vs SC</b> <span style="color:var(--muted);">· La Ligue Française</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116809240490217975" data-t0="EST" data-t1="RMD" data-lg="Circuito Desafiante" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>EST vs RMD</b> <span style="color:var(--muted);">· Circuito Desafiante</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116884625259372842" data-t0="BLUE" data-t1="WU" data-lg="NACL" data-bn="Week 4" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>BLUE vs WU</b> <span style="color:var(--muted);">· NACL</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116809240490152379" data-t0="NERD" data-t1="KBM" data-lg="Circuito Desafiante" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>NERD vs KBM</b> <span style="color:var(--muted);">· Circuito Desafiante</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div><div class="live-pill" onclick="loadScheduledGame(this)" data-eid="116809240490152361" data-t0="RED" data-t1="VKS" data-lg="Circuito Desafiante" data-bn="Week 3" data-dt="2026-08-05" data-live="0" style="opacity:0.85;"><span style="background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:6px;">Today</span><span style="flex:1;min-width:0;"><b>RED vs VKS</b> <span style="color:var(--muted);">· Circuito Desafiante</span><span style="color:var(--muted);font-size:11px;display:block;">Scheduled today — enter picks manually</span></span></div></div>
+    <div id="live-pills-ng">
+      <div style="color:var(--muted);font-size:13px;">Checking for live games…</div>
+    </div>
     <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;">Recent games — log a missed prediction</div>
-      <div id="recent-pills-ng"><div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(0)">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(0)">
-          <b>TES vs EDG</b>
-          <span style="color:var(--muted);"> · LPL</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-        <button onclick="ngDismissRecentGame('116566854547769588')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div><div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(1)">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(1)">
-          <b>LGD vs JDG</b>
-          <span style="color:var(--muted);"> · LPL</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-        <button onclick="ngDismissRecentGame('116566854547769632')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div><div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(2)">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(2)">
-          <b>NS vs BRO</b>
-          <span style="color:var(--muted);"> · LCK</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-        <button onclick="ngDismissRecentGame('115548147900684641')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div><div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(3)">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(3)">
-          <b>NM vs FL</b>
-          <span style="color:var(--muted);"> · LJL</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-        <button onclick="ngDismissRecentGame('116917034792783735')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div><div class="live-pill" style="opacity:0.85;">
-        <span style="font-size:14px;margin-right:4px;cursor:pointer;" onclick="ngLoadRecentGame(4)">⏱</span>
-        <span style="flex:1;min-width:0;cursor:pointer;" onclick="ngLoadRecentGame(4)">
-          <b>EST vs NERD</b>
-          <span style="color:var(--muted);"> · Circuito Desafiante</span>
-          <span style="color:var(--muted);font-size:11px;display:block;">Completed today — log your missed prediction</span>
-        </span>
-        <button onclick="ngDismissRecentGame('116809240490217965')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;" title="Not logging this game">✕</button>
-      </div></div>
+      <div id="recent-pills-ng">
+        <div style="color:var(--muted);font-size:12px;">Loading today's games…</div>
+      </div>
     </div>
   </div>
 
@@ -471,10 +435,7 @@
     </div>
   </div>
 
-  <div id="retroactive-banner-ng" style="display: block; background: rgba(224, 178, 63, 0.1); border: 1px solid rgba(224, 178, 63, 0.3); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.5;"><span style="color:var(--yellow);">⏱ Retroactive log — fill in your prediction as you remembered it. The result is hidden until you save.</span><div style="display:flex;gap:6px;margin-top:8px;align-items:center;">
-          <span style="font-size:11px;color:var(--muted);">Game:</span>
-          <button onclick="_ngLoadRecentGameN(0)" style="padding:3px 10px;border-radius:5px;border:1px solid var(--blue);background:rgba(59,130,246,.15);color:var(--blue);font-size:12px;cursor:pointer;">1</button><button onclick="_ngLoadRecentGameN(1)" style="padding:3px 10px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;cursor:pointer;">2</button><button onclick="_ngLoadRecentGameN(2)" style="padding:3px 10px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--muted);font-size:12px;cursor:pointer;">3</button>
-        </div></div>
+  <div id="retroactive-banner-ng" style="display:none;background:rgba(224,178,63,.1);border:1px solid rgba(224,178,63,.3);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;line-height:1.5;"></div>
 
   <div class="card">
     <div class="card-title">Match info</div>
@@ -529,11 +490,11 @@
     </div>
     <div class="draft-grid">
       <div class="draft-col blue-col">
-        <div class="draft-col-title" id="blue-col-title-ng">TES</div>
+        <div class="draft-col-title" id="blue-col-title-ng">BLUE SIDE</div>
         <div id="blue-picks-ng"></div>
       </div>
       <div class="draft-col red-col">
-        <div class="draft-col-title" id="red-col-title-ng">EDG</div>
+        <div class="draft-col-title" id="red-col-title-ng">RED SIDE</div>
         <div id="red-picks-ng"></div>
       </div>
     </div>
@@ -544,11 +505,11 @@
 
     <span class="advantage-label" style="margin-top:0;">Draft preference — which side drew up the better draft?</span>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;" id="draft-pref-row-ng">
-      <button class="three-btn blue" onclick="ngSetDraftPref(-2)" id="dpref--2-ng"><span id="dpref--2-lbl-ng">TES +2</span></button>
-      <button class="three-btn blue" onclick="ngSetDraftPref(-1)" id="dpref--1-ng"><span id="dpref--1-lbl-ng">TES +1</span></button>
+      <button class="three-btn blue" onclick="ngSetDraftPref(-2)" id="dpref--2-ng"><span id="dpref--2-lbl-ng">Blue +2</span></button>
+      <button class="three-btn blue" onclick="ngSetDraftPref(-1)" id="dpref--1-ng"><span id="dpref--1-lbl-ng">Blue +1</span></button>
       <button class="three-btn even" onclick="ngSetDraftPref(0)" id="dpref-0-ng">Even</button>
-      <button class="three-btn red" onclick="ngSetDraftPref(1)" id="dpref-1-ng"><span id="dpref-1-lbl-ng">EDG +1</span></button>
-      <button class="three-btn red" onclick="ngSetDraftPref(2)" id="dpref-2-ng"><span id="dpref-2-lbl-ng">EDG +2</span></button>
+      <button class="three-btn red" onclick="ngSetDraftPref(1)" id="dpref-1-ng"><span id="dpref-1-lbl-ng">Red +1</span></button>
+      <button class="three-btn red" onclick="ngSetDraftPref(2)" id="dpref-2-ng"><span id="dpref-2-lbl-ng">Red +2</span></button>
     </div>
 
     <span class="advantage-label">Execution demand — whose comp is harder to play well?</span>
@@ -562,9 +523,9 @@
 
     <span class="advantage-label">Skill advantage — ignoring the draft, who is the stronger team?</span>
     <div class="three-way" id="skill-adv-row-ng">
-      <button class="three-btn blue" onclick="ngSetAdv('skill','blue')"><span id="skill-adv-blue-lbl-ng">TES</span></button>
+      <button class="three-btn blue" onclick="ngSetAdv('skill','blue')"><span id="skill-adv-blue-lbl-ng">Blue side</span></button>
       <button class="three-btn even" onclick="ngSetAdv('skill','unsure')">Not sure</button>
-      <button class="three-btn red" onclick="ngSetAdv('skill','red')"><span id="skill-adv-red-lbl-ng">EDG</span></button>
+      <button class="three-btn red" onclick="ngSetAdv('skill','red')"><span id="skill-adv-red-lbl-ng">Red side</span></button>
     </div>
 
     <span class="advantage-label">Predicted winner — taking everything into account</span>
@@ -575,20 +536,20 @@
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
       <button class="pred-btn blue" id="pred-blue-ng" onclick="ngSetPred('blue')">
-        <span id="pred-blue-label-ng">TES wins</span>
+        <span id="pred-blue-label-ng">Blue side wins</span>
       </button>
       <button class="pred-btn red" id="pred-red-ng" onclick="ngSetPred('red')">
-        <span id="pred-red-label-ng">EDG wins</span>
+        <span id="pred-red-label-ng">Red side wins</span>
       </button>
     </div>
     </div>
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="mkt-blue-label-ng">TES side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-blue-label-ng">Blue side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-blue-odds-ng" step="0.01" min="1.01" placeholder="e.g. 1.85" oninput="ngNoop()">
       </div>
       <div>
-        <label id="mkt-red-label-ng">EDG side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
+        <label id="mkt-red-label-ng">Red side odds <span style="font-weight:400;color:var(--muted);">(optional)</span></label>
         <input type="number" id="mkt-red-odds-ng" step="0.01" min="1.01" placeholder="e.g. 2.10" oninput="ngNoop()">
       </div>
     </div>
@@ -641,10 +602,10 @@
       <span class="advantage-label" style="margin-top:0;">Actual result — who won?</span>
       <div class="pred-grid" style="margin-top:6px;">
         <button class="pred-btn blue" id="vod-result-blue-ng" onclick="ngSetVodResult('blue')">
-          <span id="vod-result-blue-label-ng">TES won</span>
+          <span id="vod-result-blue-label-ng">Blue side won</span>
         </button>
         <button class="pred-btn red" id="vod-result-red-ng" onclick="ngSetVodResult('red')">
-          <span id="vod-result-red-label-ng">EDG won</span>
+          <span id="vod-result-red-label-ng">Red side won</span>
         </button>
       </div>
     </div>
@@ -708,7 +669,7 @@
       </label>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchWide()" id="watch-wide-btn" title="Use the full window width">↔ Wide</button>
       <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
-      <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
+      <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues (16)</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openWatchPicker()">+ Add live</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="popoutAll()" title="Open each stream in its own Twitch window — works when embeds don't">↗ Pop out all</button>
@@ -727,7 +688,7 @@
        border-radius:8px;padding:10px 12px;margin-bottom:12px;line-height:1.6;"></div>
 
   <div id="watch-layout" style="display:flex;gap:12px;align-items:flex-start;">
-    <div id="watch-grid" style="flex:1;display:grid;gap:12px;"></div>
+    <div id="watch-grid" style="flex: 1 1 0%; display: grid; gap: 12px; grid-template-columns: 1fr;"></div>
     <div id="watch-chat-panel" style="display:none;width:340px;flex-shrink:0;"></div>
   </div>
 
@@ -1672,7 +1633,7 @@
 <!-- SETTINGS / SYNC -->
 <div class="screen active" id="screen-settings">
 
-  <div id="error-badge" style="display: block; font-size: 12px; line-height: 1.6; background: var(--surface2); border: 1px solid var(--yellow); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px;"><b style="color:var(--yellow);">⚠ 40 errors in the last 7 days.</b>
+  <div id="error-badge" style="display: block; font-size: 12px; line-height: 1.6; background: var(--surface2); border: 1px solid var(--yellow); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px;"><b style="color:var(--yellow);">⚠ 1 error in the last 7 days.</b>
     <span style="color:var(--muted);">Most recent: Failed to fetch</span>
     <button class="btn btn-ghost" style="margin-top:8px;font-size:11px;padding:4px 10px;" onclick="showErrorLog()">View</button>
     <button class="btn btn-ghost" style="margin-top:8px;font-size:11px;padding:4px 10px;" onclick="clearErrorLog()">Clear</button></div>
@@ -2101,7 +2062,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/5/2026, 8:18:15 AM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/5/2026, 10:19:06 AM · 17 games added</div>
     </div>
   </div>
 
@@ -2170,9 +2131,9 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCS">LCS</span>
-      <input type="text" id="stream-input-LCS" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LCS', this.value, this)" onblur="saveStreamEdit('LCS', this.value, this)">
+      <input type="text" id="stream-input-LCS" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LCS', this.value, this)" onblur="saveStreamEdit('LCS', this.value, this)">
       <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('LCS', document.getElementById('stream-input-LCS').value, document.getElementById('stream-input-LCS'))">Save</button>
-      <button onclick="resetStreamToDefault('LCS',document.getElementById('stream-input-LCS'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LDL">LDL</span>
@@ -2182,9 +2143,9 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LEC">LEC</span>
-      <input type="text" id="stream-input-LEC" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LEC', this.value, this)" onblur="saveStreamEdit('LEC', this.value, this)">
+      <input type="text" id="stream-input-LEC" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LEC', this.value, this)" onblur="saveStreamEdit('LEC', this.value, this)">
       <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('LEC', document.getElementById('stream-input-LEC').value, document.getElementById('stream-input-LEC'))">Save</button>
-      <button onclick="resetStreamToDefault('LEC',document.getElementById('stream-input-LEC'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
+      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LES">LES</span>
@@ -2242,9 +2203,9 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Prime League">Prime League</span>
-      <input type="text" id="stream-input-Prime_League" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('Prime League', this.value, this)" onblur="saveStreamEdit('Prime League', this.value, this)">
+      <input type="text" id="stream-input-Prime_League" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('Prime League', this.value, this)" onblur="saveStreamEdit('Prime League', this.value, this)">
       <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('Prime League', document.getElementById('stream-input-Prime_League').value, document.getElementById('stream-input-Prime_League'))">Save</button>
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <button onclick="resetStreamToDefault('Prime League',document.getElementById('stream-input-Prime_League'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Superliga">Superliga</span>
@@ -2254,9 +2215,9 @@
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="TCL">TCL</span>
-      <input type="text" id="stream-input-TCL" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('TCL', this.value, this)" onblur="saveStreamEdit('TCL', this.value, this)">
+      <input type="text" id="stream-input-TCL" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--blue);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('TCL', this.value, this)" onblur="saveStreamEdit('TCL', this.value, this)">
       <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('TCL', document.getElementById('stream-input-TCL').value, document.getElementById('stream-input-TCL'))">Save</button>
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
+      <button onclick="resetStreamToDefault('TCL',document.getElementById('stream-input-TCL'))" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;white-space:nowrap;" title="Reset to built-in">↺</button>
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Ultraliga">Ultraliga</span>
@@ -17900,4 +17861,4 @@ self.addEventListener("notificationclick", e => {
 
 
 
-</body></html>
+<div style="position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 13px; z-index: 999; box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 12px;">✓ Auto-logged 17 new games since last visit</div></body></html>
