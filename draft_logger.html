@@ -328,9 +328,9 @@
 <div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="log" onclick="show('log');closeDrawer()" class="">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results<span class="nav-count" style="display: inline-block; min-width: 16px; padding: 0px 4px; margin-left: 6px; border-radius: 8px; background: var(--blue); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; vertical-align: middle;">1</span></button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="log" onclick="show('log')" class="">Log Game</button><button data-nav="results" onclick="show('results')">Log Results<span class="nav-count" style="display: inline-block; min-width: 16px; padding: 0px 4px; margin-left: 6px; border-radius: 8px; background: var(--blue); color: rgb(255, 255, 255); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; vertical-align: middle;">1</span></button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -488,6 +488,7 @@
         <span id="watch-size-val" style="font-variant-numeric:tabular-nums;min-width:34px;"></span>
       </label>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchWide()" id="watch-wide-btn" title="Use the full window width">↔ Wide</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="resetAllTileSizes()" title="Put every tile back to one column at normal height">⊞ Even</button>
       <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
       <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
@@ -646,12 +647,12 @@
     <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:flex-end;">
       <div>
         <label>Blue side team</label>
-        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm()">
+        <input type="text" id="blue-team" placeholder="e.g. T1" oninput="hideSideConfirm();queueTeamNotes()">
       </div>
       <button onclick="swapSides()" title="Swap sides" style="background:var(--surface2);border:2px solid var(--blue);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--blue);white-space:nowrap;flex-shrink:0;">⇄ Swap</button>
       <div>
         <label>Red side team</label>
-        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm()">
+        <input type="text" id="red-team" placeholder="e.g. GEN" oninput="hideSideConfirm();queueTeamNotes()">
       </div>
     </div>
     <div id="side-confirm-banner" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(224,178,63,.1);border:2px solid var(--yellow);border-radius:10px;">
@@ -944,6 +945,7 @@
       </div>
     </div>
     <label style="margin-top:12px;">Notes (what stands out about this draft?)</label>
+    <div id="log-team-notes" style="margin-bottom:10px;"></div>
     <textarea id="notes" placeholder="e.g. Blue has strong engage with Amumu + Jarvan, red has no reliable disengage…"></textarea>
 
     <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
@@ -1962,7 +1964,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/4/2026, 11:13:02 AM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/11/2026, 3:58:43 PM · Nothing new</div>
     </div>
   </div>
 
@@ -2021,12 +2023,6 @@
       <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK CL">LCK CL</span>
       <input type="text" id="stream-input-LCK_CL" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LCK CL', this.value, this)" onblur="saveStreamEdit('LCK CL', this.value, this)">
       <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('LCK CL', document.getElementById('stream-input-LCK_CL').value, document.getElementById('stream-input-LCK_CL'))">Save</button>
-      <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
-      <span></span>
-    </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
-      <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="LCK Challengers">LCK Challengers</span>
-      <input type="text" id="stream-input-LCK_Challengers" placeholder="twitch channel, or full twitch/youtube url" style="padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:12px;" onkeydown="if(event.key==='Enter')saveStreamEdit('LCK Challengers', this.value, this)" onblur="saveStreamEdit('LCK Challengers', this.value, this)">
-      <button class="btn btn-ghost" style="padding:3px 9px;font-size:11px;white-space:nowrap;" onclick="saveStreamEdit('LCK Challengers', document.getElementById('stream-input-LCK_Challengers').value, document.getElementById('stream-input-LCK_Challengers'))">Save</button>
       <span style="font-size:10px;color:var(--muted);padding:0 4px;">built-in</span>
       <span></span>
     </div><div style="display:grid;grid-template-columns:130px 1fr auto auto auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);">
@@ -2183,7 +2179,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.09-b55";
+const BUILD_VERSION = "2026.08.09-b57";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -5925,6 +5921,157 @@ function faveStarHtml(key, onToggle) {
     style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:${on ? "var(--yellow)" : "var(--border)"};">${on ? "★" : "☆"}</button>`;
 }
 
+// ── Team notes ───────────────────────────────────────────────────────────────
+// entry.notes was only ever rendered by renderHistory(), and that screen was
+// removed — so every note written on the log form went into a field nothing
+// displayed. These are keyed by team instead of by game, so a note written
+// about GEN comes back the next time GEN is on the form.
+//
+// Each note keeps the game it was written about: date, opponent, side and the
+// draft, so "they can't play from behind" still means something in six weeks.
+const TEAM_NOTES_KEY = "draftlogger_team_notes_v1";
+
+function loadTeamNotes() {
+  try { return JSON.parse(localStorage.getItem(TEAM_NOTES_KEY) || "{}") || {}; }
+  catch(e) { return {}; }
+}
+function saveTeamNotes(o) { localStorage.setItem(TEAM_NOTES_KEY, JSON.stringify(o || {})); }
+
+function addTeamNote(team, ctx, text) {
+  const k = teamKey(team);
+  const body = String(text || "").trim();
+  if (!k || !body) return false;
+  const all = loadTeamNotes();
+  if (!all[k]) all[k] = [];
+  all[k].unshift({
+    id: "tn_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+    at: Date.now(),
+    date: (ctx && ctx.date) || localDateStr(),
+    opponent: (ctx && ctx.opponent) || "",
+    side: (ctx && ctx.side) || "",
+    champs: (ctx && ctx.champs) || [],
+    league: (ctx && ctx.league) || "",
+    text: body
+  });
+  all[k] = all[k].slice(0, 200);
+  saveTeamNotes(all);
+  return true;
+}
+
+function deleteTeamNote(team, id) {
+  const k = teamKey(team);
+  const all = loadTeamNotes();
+  if (!all[k]) return;
+  all[k] = all[k].filter(n => n.id !== id);
+  saveTeamNotes(all);
+}
+
+// Stored notes plus anything already written into a game's notes field, so the
+// ones that vanished into renderHistory show up rather than staying lost.
+function teamNotesFor(team, limit) {
+  const k = teamKey(team);
+  if (!k) return [];
+  const out = (loadTeamNotes()[k] || []).map(n => ({ ...n, kind: "team" }));
+  for (const e of loadAllGameData()) {
+    const note = String(e.notes || "").trim();
+    if (!note || e.isStandaloneBet) continue;
+    const bk = teamKey(e.blueTeam), rk = teamKey(e.redTeam);
+    if (bk !== k && rk !== k) continue;
+    const side = bk === k ? "blue" : "red";
+    out.push({
+      id: "game_" + (e.id || gameKey(e)),
+      at: new Date(e.date || 0).getTime() || 0,
+      date: e.date || "",
+      opponent: side === "blue" ? e.redTeam : e.blueTeam,
+      side, league: e.league || "",
+      champs: (e.champions && e.champions[side]) || [],
+      text: note, kind: "game"
+    });
+  }
+  out.sort((a, b) => (b.at || 0) - (a.at || 0));
+  return limit ? out.slice(0, limit) : out;
+}
+
+function noteRowHtml(team, n, showDelete) {
+  const champs = (n.champs || []).filter(Boolean).slice(0, 5).map(c => {
+    const u = champIconUrl(c);
+    return u ? `<img src="${u}" alt="${c}" title="${c}" style="width:15px;height:15px;border-radius:3px;" loading="lazy" />` : "";
+  }).join("");
+  const when = n.date || (n.at ? new Date(n.at).toISOString().slice(0, 10) : "");
+  return `<div style="padding:7px 0;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted);margin-bottom:3px;">
+      <span>${when}</span>
+      ${n.opponent ? `<span>vs ${n.opponent}</span>` : ""}
+      ${n.side ? `<span>${n.side === "blue" ? "🟦" : "🟥"}</span>` : ""}
+      <span style="display:flex;gap:2px;margin-left:auto;">${champs}</span>
+      ${showDelete && n.kind === "team" ? `<button onclick="deleteTeamNote('${teamKey(team).replace(/'/g, "\\'")}','${n.id}');renderTeamPage()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 2px;">✕</button>` : ""}
+    </div>
+    <div style="font-size:12px;line-height:1.5;${n.kind === "game" ? "color:var(--muted);font-style:italic;" : ""}">${n.text}</div>
+  </div>`;
+}
+
+// Context for a note written from the log form: whatever is on screen now.
+function logFormNoteContext(side) {
+  const blue = (document.getElementById("blue-team") || {}).value || "";
+  const red  = (document.getElementById("red-team")  || {}).value || "";
+  return {
+    date: (document.getElementById("game-date") || {}).value || localDateStr(),
+    opponent: side === "blue" ? red : blue,
+    side,
+    league: (document.getElementById("league") || {}).value || "",
+    champs: (pickedChamps && pickedChamps[side]) || []
+  };
+}
+
+function addNoteFromLog(side) {
+  const input = document.getElementById("teamnote-input-" + side);
+  const team  = (document.getElementById(side === "blue" ? "blue-team" : "red-team") || {}).value || "";
+  if (!input || !team.trim()) return;
+  if (!addTeamNote(team, logFormNoteContext(side), input.value)) return;
+  input.value = "";
+  renderLogTeamNotes();
+}
+
+let _tnTimer = null;
+function queueTeamNotes() {
+  clearTimeout(_tnTimer);
+  _tnTimer = setTimeout(() => { try { renderLogTeamNotes(); } catch(e) {} }, 250);
+}
+
+function addNoteFromTeamPage(key) {
+  const input = document.getElementById("teamnote-page-input");
+  if (!input) return;
+  // No game in front of you here, so the note carries only today's date.
+  if (!addTeamNote(key, { date: localDateStr() }, input.value)) return;
+  input.value = "";
+  renderTeamPage();
+}
+
+function renderLogTeamNotes() {
+  const el = document.getElementById("log-team-notes");
+  if (!el) return;
+  const blue = (document.getElementById("blue-team") || {}).value.trim();
+  const red  = (document.getElementById("red-team")  || {}).value.trim();
+  if (!blue && !red) { el.innerHTML = ""; return; }
+
+  const col = (team, side) => {
+    if (!team) return "";
+    const notes = teamNotesFor(team, 4);
+    return `<div style="margin-bottom:10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--${side});margin-bottom:4px;">${team}
+        <span style="color:var(--muted);font-weight:400;">${notes.length ? notes.length + " recent" : "no notes yet"}</span></div>
+      ${notes.map(n => noteRowHtml(team, n, false)).join("")}
+      <div style="display:flex;gap:5px;margin-top:6px;">
+        <input type="text" id="teamnote-input-${side}" placeholder="Note on ${team}…"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addNoteFromLog('${side}');}"
+          style="flex:1;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;" onclick="addNoteFromLog('${side}')">Add</button>
+      </div>
+    </div>`;
+  };
+  el.innerHTML = col(blue, "blue") + col(red, "red");
+}
+
 // ── Team pages ───────────────────────────────────────────────────────────────
 // Reads the whole store — hand-logged and imported — through teamKey(), so a
 // team's history isn't split by casing or by which importer wrote the row.
@@ -6167,6 +6314,25 @@ function renderTeamPage() {
         </div>`;
       }).join("")}
     </div>` : ""}
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">Notes</div>
+      <div style="display:flex;gap:5px;margin-bottom:8px;">
+        <input type="text" id="teamnote-page-input" placeholder="Note on ${t.label}…"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addNoteFromTeamPage('${t.key.replace(/'/g, "\'")}');}"
+          style="flex:1;font-size:12px;padding:6px 9px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
+        <button class="btn btn-ghost" style="font-size:11px;padding:5px 11px;" onclick="addNoteFromTeamPage('${t.key.replace(/'/g, "\'")}')">Add</button>
+      </div>
+      ${(() => {
+        const notes = teamNotesFor(t.key, 25);
+        if (!notes.length) return `<div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          Nothing yet. Notes you add here, or on the log form while a game is in front of you,
+          come back the next time this team is on the form.</div>`;
+        return notes.map(n => noteRowHtml(t.key, n, true)).join("") +
+          `<div style="font-size:10px;color:var(--muted);margin-top:7px;">Italic entries are the free-text note
+           from a logged game — those were previously only visible on a screen that no longer exists.</div>`;
+      })()}
+    </div>
 
     ${ros.length ? `<div class="card" style="margin-bottom:12px;">
       <div class="card-title">Roster seen</div>
@@ -6835,6 +7001,7 @@ function saveEntry() {
 
 function clearForm() {
   _pendingPatch = null;
+  try { const n = document.getElementById("log-team-notes"); if (n) n.innerHTML = ""; } catch(e) {}
   draftTags = {};
   try { renderDraftTags(); } catch(e) {}
   ["blue-team","red-team","league","event-context","notes","mkt-blue-odds","mkt-red-odds"].forEach(id => {
@@ -16341,7 +16508,12 @@ function renderStreamsList() {
   const custom = loadCustomStreams();
 
   // Merge built-in + custom into one list (custom overrides built-in)
-  const allKeys = new Set([...Object.keys(LEAGUE_STREAMS), ...Object.keys(custom)]);
+  // Aliases resolve to another key's channel, so listing them would show the
+  // same stream twice with only one of the rows actually doing anything.
+  const allKeys = new Set([
+    ...Object.keys(LEAGUE_STREAMS).filter(k => !LEAGUE_STREAMS[k].aliasOf),
+    ...Object.keys(custom)
+  ]);
   const rows = [...allKeys].sort().map(league => {
     const builtIn = LEAGUE_STREAMS[league];
     const override = custom[league];
@@ -17300,8 +17472,10 @@ const LEAGUE_STREAMS = {
   "LCK":              { twitch: "lckkr",              name: "LCK" },
   "LCK CL":          { twitch: "lckcl",              name: "LCK CL" },
   // lolesports reports this league spelled out, which shares no substring with
-  // "LCK CL" and so fell through to the main LCK channel.
-  "LCK Challengers": { twitch: "lckcl",              name: "LCK CL" },
+  // "LCK CL" and so fell through to the main LCK channel. Declared as an alias
+  // rather than a second entry, so it resolves the same but doesn't appear as a
+  // separate editable row that could drift out of step with its twin.
+  "LCK Challengers": { aliasOf: "LCK CL" },
   "LCS":             { twitch: "lolesports",          name: "LCS" },
   "LEC":             { twitch: "lolesports",          name: "LEC" },
   "CBLOL":           { twitch: "cblol",               name: "CBLOL" },
@@ -17375,7 +17549,15 @@ function getLeagueStream(leagueName) {
   }
 
   const key = bestStreamKey(leagueName, Object.keys(LEAGUE_STREAMS));
-  return key ? LEAGUE_STREAMS[key] : null;
+  if (!key) return null;
+  const hit = LEAGUE_STREAMS[key];
+  // Follow one hop of aliasing; an override on the canonical name wins here too.
+  if (hit && hit.aliasOf) {
+    const c = custom[hit.aliasOf];
+    if (c) return c.startsWith("http") ? { url: c, name: hit.aliasOf } : { twitch: c, name: hit.aliasOf };
+    return LEAGUE_STREAMS[hit.aliasOf] || null;
+  }
+  return hit;
 }
 
 // ── In-app multi-stream viewer ────────────────────────────────────────────────
@@ -17561,6 +17743,101 @@ function updateWatchTileChrome() {
   });
 }
 
+// ── Per-tile sizing ──────────────────────────────────────────────────────────
+// The size slider only ever fed the auto-fit minmax(), so it did nothing once a
+// fixed column count was chosen — and every tile was the same size regardless.
+// Streams aren't equally important: the game you're betting wants to be big and
+// the one you're half-watching can be small.
+//
+// Sizes are stored as a column span plus a height scale, per channel, so they
+// survive a reload and don't depend on pixel widths that change with the window.
+const WATCH_TILE_KEY = "draftlogger_watch_tiles_v1";
+function loadTileSizes() {
+  try { return JSON.parse(localStorage.getItem(WATCH_TILE_KEY) || "{}") || {}; }
+  catch(e) { return {}; }
+}
+function saveTileSizes(m) { localStorage.setItem(WATCH_TILE_KEY, JSON.stringify(m || {})); }
+function tileSize(ch) {
+  const t = loadTileSizes()[ch];
+  return { span: (t && t.span) || 1, scale: (t && t.scale) || 1 };
+}
+function setTileSize(ch, span, scale) {
+  const m = loadTileSizes();
+  // A tile at the default in both dimensions doesn't need a record.
+  if (span === 1 && Math.abs(scale - 1) < 0.02) delete m[ch];
+  else m[ch] = { span, scale: Math.round(scale * 100) / 100 };
+  saveTileSizes(m);
+  applyWatchLayout();
+}
+function bumpTileSpan(ch, delta) {
+  const t = tileSize(ch);
+  const maxSpan = Math.max(1, watchColumnCount());
+  setTileSize(ch, Math.min(maxSpan, Math.max(1, t.span + delta)), t.scale);
+}
+function resetTileSize(ch) { setTileSize(ch, 1, 1); }
+function resetAllTileSizes() { saveTileSizes({}); applyWatchLayout(); }
+
+// How many columns the grid is actually running, so a span can't exceed it.
+function watchColumnCount() {
+  const cols = localStorage.getItem(WATCH_COLS_KEY) || "auto";
+  if (cols !== "auto") return parseInt(cols, 10) || 1;
+  const grid = document.getElementById("watch-grid");
+  const avail = (grid && grid.clientWidth) || 0;
+  const size = getWatchSize(), gap = 12;
+  return avail ? Math.max(1, Math.floor((avail + gap) / (size + gap))) : 1;
+}
+
+// Drag the bottom-right corner. Horizontal movement changes the column span in
+// whole steps; vertical movement scales the height continuously, so a tile can
+// be shorter than 16:9 when you only need to see the minimap and gold.
+let _tileDrag = null;
+function startTileResize(ev, ch) {
+  ev.preventDefault(); ev.stopPropagation();
+  const grid = document.getElementById("watch-grid");
+  const tile = grid && grid.querySelector(`[data-ch="${ch}"]`);
+  if (!tile) return;
+  const pt = ev.touches ? ev.touches[0] : ev;
+  const t = tileSize(ch);
+  _tileDrag = { ch, x0: pt.clientX, y0: pt.clientY, span0: t.span, scale0: t.scale,
+                w: tile.getBoundingClientRect().width || 320,
+                h: tile.getBoundingClientRect().height || 180 };
+  document.body.style.userSelect = "none";
+  window.addEventListener("mousemove", onTileResize);
+  window.addEventListener("touchmove", onTileResize, { passive: false });
+  window.addEventListener("mouseup", endTileResize);
+  window.addEventListener("touchend", endTileResize);
+}
+function onTileResize(ev) {
+  if (!_tileDrag) return;
+  if (ev.cancelable) ev.preventDefault();
+  const pt = ev.touches ? ev.touches[0] : ev;
+  const d = _tileDrag;
+  const colW = Math.max(120, d.w / Math.max(1, d.span0));
+  const span = Math.min(Math.max(1, watchColumnCount()),
+                        Math.max(1, d.span0 + Math.round((pt.clientX - d.x0) / colW)));
+  const scale = Math.min(2.5, Math.max(0.45, d.scale0 + (pt.clientY - d.y0) / Math.max(120, d.h)));
+  const grid = document.getElementById("watch-grid");
+  const tile = grid && grid.querySelector(`[data-ch="${d.ch}"]`);
+  if (tile) {
+    // Live preview without writing to storage on every frame.
+    tile.style.gridColumn = `span ${span}`;
+    const box = tile.querySelector("[data-vid]");
+    if (box) box.style.aspectRatio = `16 / ${(9 / scale).toFixed(3)}`;
+    const lbl = tile.querySelector("[data-sizelbl]");
+    if (lbl) lbl.textContent = `${span}× · ${Math.round(scale * 100)}%`;
+  }
+  d.span = span; d.scale = scale;
+}
+function endTileResize() {
+  window.removeEventListener("mousemove", onTileResize);
+  window.removeEventListener("touchmove", onTileResize);
+  window.removeEventListener("mouseup", endTileResize);
+  window.removeEventListener("touchend", endTileResize);
+  document.body.style.userSelect = "";
+  if (_tileDrag && _tileDrag.span) setTileSize(_tileDrag.ch, _tileDrag.span, _tileDrag.scale);
+  _tileDrag = null;
+}
+
 function applyWatchLayout() {
   const grid = document.getElementById("watch-grid");
   const screen = document.getElementById("screen-watch");
@@ -17587,16 +17864,31 @@ function applyWatchLayout() {
       tile.style.gridColumn = isFocus ? `span ${sideCols}` : "span 1";
       tile.style.gridRow = isFocus ? `span ${Math.max(2, Math.ceil(others / sideCols))}` : "span 1";
       tile.style.order = isFocus ? "-1" : "0";
+      // Focus mode drives its own geometry; a per-tile height would fight it.
+      const fbox = tile.querySelector("[data-vid]");
+      if (fbox) fbox.style.aspectRatio = "16 / 9";
     });
   } else {
-    [...grid.children].forEach(tile => {
-      if (!tile.dataset.ch) return;
-      tile.style.gridColumn = ""; tile.style.gridRow = ""; tile.style.order = "";
-    });
+    // A fixed column count used to ignore the size slider entirely; treat it as
+    // the tile height instead so the control does something in every mode.
     grid.style.gridTemplateColumns =
       cols === "auto"
         ? (n <= 1 ? "1fr" : `repeat(auto-fit,minmax(${size}px,1fr))`)
         : `repeat(${cols},minmax(0,1fr))`;
+    const maxSpan = Math.max(1, watchColumnCount());
+    [...grid.children].forEach(tile => {
+      const ch = tile.dataset.ch;
+      if (!ch) return;
+      const t = tileSize(ch);
+      const span = Math.min(maxSpan, t.span);
+      tile.style.gridColumn = span > 1 ? `span ${span}` : "";
+      tile.style.gridRow = ""; tile.style.order = "";
+      const box = tile.querySelector("[data-vid]");
+      if (box) box.style.aspectRatio = `16 / ${(9 / t.scale).toFixed(3)}`;
+      const lbl = tile.querySelector("[data-sizelbl]");
+      if (lbl) lbl.textContent = (span === 1 && Math.abs(t.scale - 1) < 0.02)
+        ? "" : `${span}× · ${Math.round(t.scale * 100)}%`;
+    });
   }
 
   const sl = document.getElementById("watch-size");
@@ -17606,9 +17898,10 @@ function applyWatchLayout() {
     const avail = grid.clientWidth || 0;
     const gap = 12;
     const fit = avail ? Math.max(1, Math.floor((avail + gap) / (size + gap))) : 0;
-    sv.textContent = cols === "auto"
+    const custom = Object.keys(loadTileSizes()).length;
+    sv.textContent = (cols === "auto"
       ? `${size}px · ${fit || "?"} across`
-      : `${cols} across`;
+      : `${cols} across`) + (custom ? ` · ${custom} sized` : "");
   }
 }
 function toggleWatchChat() {
@@ -17964,16 +18257,30 @@ function renderWatchPage() {
         tile.dataset.ch = ch;
         tile.style.cssText = "background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;";
         tile.innerHTML =
-          `<div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
+          `<div data-vid style="position:relative;width:100%;aspect-ratio:16/9;background:#000;">
              <iframe title="${ch}" allowfullscreen
                allow="autoplay; fullscreen; encrypted-media; picture-in-picture; clipboard-write"
                style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+             <div onmousedown="startTileResize(event,'${ch.replace(/'/g, "\\'")}')"
+                  ontouchstart="startTileResize(event,'${ch.replace(/'/g, "\\'")}')"
+                  title="Drag to resize — sideways for width, up and down for height"
+                  style="position:absolute;right:0;bottom:0;width:22px;height:22px;cursor:nwse-resize;z-index:3;
+                         background:linear-gradient(135deg,transparent 46%,var(--muted) 46%,var(--muted) 54%,transparent 54%,transparent 68%,var(--muted) 68%,var(--muted) 76%,transparent 76%);
+                         opacity:.55;"></div>
            </div>
            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;">
              <div style="flex:1;overflow:hidden;">
                <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;">${watchLabel(ch)}</div>
                <div class="watch-meta" style="font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
              </div>
+             <span data-sizelbl style="font-size:9px;color:var(--muted);white-space:nowrap;"></span>
+             <button onclick="bumpTileSpan('${ch.replace(/'/g, "\\'")}',-1)" title="Narrower"
+               style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 3px;">\u2212</button>
+             <button onclick="bumpTileSpan('${ch.replace(/'/g, "\\'")}',1)" title="Wider"
+               style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 3px;">+</button>
+             <button ondblclick="resetTileSize('${ch.replace(/'/g, "\\'")}')"
+               onclick="resetTileSize('${ch.replace(/'/g, "\\'")}')" title="Reset this tile's size"
+               style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 3px;">\u25a2</button>
              <button class="watch-audio" style="background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;"></button>
              <button class="watch-focus" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px;" title="Focus this stream">\u26f6</button>
              <button class="watch-reload" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px;" title="Reload this player">\u21bb</button>
@@ -19292,6 +19599,7 @@ function dbStopPolling() {
 let _pendingPatch = null;   // patch of the live game most recently opened for logging
 function dbLogGame(c) {
   try { _pendingPatch = (dbGameCache.get(c.gameId) || {}).patch || null; } catch(e) { _pendingPatch = null; }
+  setTimeout(() => { try { renderLogTeamNotes(); } catch(e) {} }, 0);
   // Switch to log mode first
   setLogMode("live");
   // Navigate to log tab
