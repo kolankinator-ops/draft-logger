@@ -1525,7 +1525,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:30:49 PM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:45:04 PM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -1990,7 +1990,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:30:49 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:44:41 PM · Nothing new</div>
     </div>
   </div>
 
@@ -2205,7 +2205,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.09-b62";
+const BUILD_VERSION = "2026.08.09-b63";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -18729,6 +18729,78 @@ function toggleWatchAuto() {
   renderWatchPage();
 }
 
+// ── Match completion tracking ────────────────────────────────────────────────
+// leagueOnAir used to close a block a fixed 2.5h after its last scheduled
+// start, which is not "the block finished" — a BO1 ending in 35 minutes left the
+// stream up for nearly two hours. The schedule API reports a state per event
+// (unstarted / inProgress / completed) and the plan was throwing it away.
+// Record it and use it as the actual end signal.
+const MATCH_STATE_KEY = "draftlogger_match_states_v1";
+let _matchStates = null, _matchStateAt = 0;
+
+function loadMatchStates() {
+  if (_matchStates) return _matchStates;
+  try { _matchStates = JSON.parse(localStorage.getItem(MATCH_STATE_KEY) || "{}") || {}; }
+  catch(e) { _matchStates = {}; }
+  return _matchStates;
+}
+// League plus start-minute. Both the plan and the API derive from the same
+// startTime, so this joins them without needing an event id on the plan.
+function matchStateKey(league, timeMs) {
+  return String(league || "").trim() + "|" + Math.floor(timeMs / 60000);
+}
+function saveMatchStates(m) {
+  // Yesterday's results are no use and this is localStorage.
+  const cutoff = Date.now() - 36 * 3600000;
+  for (const k of Object.keys(m)) {
+    const t = Number(String(k).split("|")[1] || 0) * 60000;
+    if (t && t < cutoff) delete m[k];
+  }
+  _matchStates = m;
+  localStorage.setItem(MATCH_STATE_KEY, JSON.stringify(m));
+}
+
+// One page of getSchedule covers roughly now, which is exactly the window that
+// matters here. Throttled so the 8s poll doesn't turn into 8s of API calls.
+async function refreshMatchStates(force) {
+  if (!force && Date.now() - _matchStateAt < 120000) return;
+  _matchStateAt = Date.now();
+  try {
+    const data = await apiGet("/getSchedule");
+    const events = data?.data?.schedule?.events || [];
+    const m = loadMatchStates();
+    for (const e of events) {
+      if (e.type !== "match" || !e.startTime) continue;
+      const t = new Date(e.startTime).getTime();
+      if (isNaN(t)) continue;
+      m[matchStateKey(e.league?.name, t)] = e.state || "";
+    }
+    saveMatchStates(m);
+  } catch(err) { /* offline or rate-limited; the time cap still applies */ }
+}
+
+// Has every match in this block finished? null when we simply don't know, so
+// the caller can fall back rather than guess.
+function blockFinished(block) {
+  const m = loadMatchStates();
+  const games = loadTodayPlan().games.filter(g => {
+    if ((g.league || "").trim() !== block.league || !g.scheduledTime) return false;
+    const t = new Date(g.scheduledTime).getTime();
+    return !isNaN(t) && t >= block.first && t <= block.last;
+  });
+  if (!games.length) return null;
+  let known = 0, done = 0;
+  for (const g of games) {
+    const st = m[matchStateKey(g.league, new Date(g.scheduledTime).getTime())];
+    if (!st) continue;
+    known++;
+    if (st === "completed") done++;
+  }
+  // Needs the whole block accounted for; a partial read could close it early.
+  if (known < games.length) return null;
+  return done === games.length;
+}
+
 // ── Schedule-driven stream presence ──────────────────────────────────────────
 // Driving this off live-match detection meant the stream list moved every time
 // getLive flickered between games, and every move re-rendered the page. The
@@ -18781,6 +18853,10 @@ function leagueOnAir(league, liveLeagues, seenMap) {
     const openAt  = b.first - SCHED_LEAD_MS;
     const closeAt = b.last + BLOCK_MIN_RUN;
     if (now >= openAt && now <= closeAt) {
+      // The real end signal: every match in the block reported completed.
+      // Only trusted once the whole block is accounted for, and never while the
+      // league is live — which the caller has already checked above.
+      if (now >= b.first && blockFinished(b) === true) continue;
       return { on: true,
                reason: now < b.first ? `starts in ${Math.max(1, Math.round((b.first - now) / 60000))}m`
                                      : `block of ${b.n} scheduled` };
@@ -20481,10 +20557,11 @@ async function dbRefresh() {
 function dbStartPolling() {
   if (dbPollTimer) clearInterval(dbPollTimer);   // never stack intervals
   dbRefresh();
+  refreshMatchStates();
   dbStartCountdown(8);
   // checkNotifications no longer rides on this timer — startNotifWatcher() runs
   // it on its own schedule so alerts don't depend on which screen is open.
-  dbPollTimer = setInterval(() => { dbRefresh(); dbStartCountdown(8); }, 8000);
+  dbPollTimer = setInterval(() => { dbRefresh(); refreshMatchStates(); dbStartCountdown(8); }, 8000);
 }
 function dbStopPolling() {
   clearInterval(dbPollTimer);
