@@ -1526,7 +1526,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:57:19 PM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 5:28:02 PM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -1584,6 +1584,8 @@
       re-import would gain anything before you spend time on one.</p>
     <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="runDataHealth()">Check data</button>
     <div id="datahealth-results" style="font-size:12px;"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderChampNameAudit()">Champion name check</button>
+    <div id="champname-results" style="font-size:12px;"></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderPatchCoverage()">Patch coverage</button>
     <div id="patch-coverage" style="font-size:12px;"></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderCompReadiness()">Comp model — what's fittable</button>
@@ -1991,7 +1993,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:57:19 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 5:28:02 PM</div>
     </div>
   </div>
 
@@ -2206,7 +2208,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.09-b64";
+const BUILD_VERSION = "2026.08.10-b65";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -3803,6 +3805,9 @@ function setChampBadgeFilter(badge, btn) {
 // lets old pools be collected.
 const _champDataCache = new WeakMap();
 function championDataFor(training, completed, exclusionKey) {
+  // Normalisation depends on Data Dragon, so a map built before it loaded is
+  // keyed differently. Fold the version into the key rather than serving stale.
+  exclusionKey = (exclusionKey || "") + "|dd:" + (_ddVersion || "");
   if (!training || typeof training !== "object") return buildChampionData(completed);
   let byExclusion = _champDataCache.get(training);
   if (byExclusion) {
@@ -3816,6 +3821,82 @@ function championDataFor(training, completed, exclusionKey) {
   if (byExclusion.size > 4) byExclusion.clear();   // one draft in play at a time
   byExclusion.set(exclusionKey, data);
   return data;
+}
+
+// ── Champion name normalisation ──────────────────────────────────────────────
+// buildChampionData keyed champMap, matchupMap and crossMap on the raw string
+// from the entry. The importers don't agree on that string: the lolesports feed
+// stores Data Dragon ids ("MonkeyKing", "Belveth", "Kaisa", "KSante") while the
+// Leaguepedia importer stores display names ("Wukong", "Bel'Veth", "Kai'Sa",
+// "K'Sante"). Same champion, two keys — which is why the champion list ran ~20
+// over the real roster.
+//
+// It was never only a wrong count: every champion split in two had its win rate
+// computed on half its games, and Factors 7, 8, 10 and 11 were reading two
+// different champions where there was one.
+function normChamp(name) {
+  const k = champKey(name);
+  return k || null;
+}
+// The pretty name for a canonical key, so normalising doesn't leave "MonkeyKing"
+// on screen.
+function champDisplay(key) {
+  if (!key) return "";
+  if (_champDisplay && _champDisplay[key]) return _champDisplay[key];
+  return String(key).replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+
+// What normalising actually merges, so the change is inspectable rather than
+// something that silently alters every number in the app.
+function champNameAudit() {
+  const byKey = {};
+  let games = 0;
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet) continue;
+    let counted = false;
+    for (const side of ["blue", "red"]) {
+      for (const raw of (e.champions && e.champions[side]) || []) {
+        if (!raw) continue;
+        if (!counted) { games++; counted = true; }
+        const k = normChamp(raw);
+        if (!k) continue;
+        if (!byKey[k]) byKey[k] = {};
+        byKey[k][String(raw).trim()] = (byKey[k][String(raw).trim()] || 0) + 1;
+      }
+    }
+  }
+  const keys = Object.keys(byKey);
+  const rawNames = new Set();
+  keys.forEach(k => Object.keys(byKey[k]).forEach(v => rawNames.add(v)));
+  const merged = keys.filter(k => Object.keys(byKey[k]).length > 1)
+    .map(k => ({ key: k, display: champDisplay(k), variants: byKey[k] }))
+    .sort((a, b) => Object.keys(b.variants).length - Object.keys(a.variants).length ||
+                    a.display.localeCompare(b.display));
+  return { canonical: keys.length, rawDistinct: rawNames.size, merged, games };
+}
+
+async function renderChampNameAudit() {
+  const el = document.getElementById("champname-results");
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--muted);">Loading champion data…</div>';
+  await ensureChampionData();
+  const a = champNameAudit();
+  el.innerHTML =
+    `<div style="line-height:1.8;">
+       <div><b>${a.rawDistinct}</b> distinct names appear in your games</div>
+       <div><b style="color:var(--green);">${a.canonical}</b> actual champions after normalising</div>
+       ${a.merged.length ? `<div><b style="color:var(--yellow);">${a.merged.length}</b> were being counted twice or more</div>` : ""}
+     </div>` +
+    (a.merged.length
+      ? `<div style="margin-top:8px;">` + a.merged.map(m =>
+          `<div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
+             <span style="flex:none;font-weight:600;width:96px;">${m.display}</span>
+             <span style="color:var(--muted);">${Object.entries(m.variants).map(([v, n]) => `${v} (${n})`).join(" + ")}</span>
+           </div>`).join("") +
+        `<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">
+          These are now merged everywhere — champion stats, lane matchups, synergy and the model factors.
+          Win rates for these champions were previously computed on part of their games.</div></div>`
+      : `<div style="font-size:11px;color:var(--muted);margin-top:8px;">No split names — every champion has one spelling in your data.</div>`);
 }
 
 function buildChampionData(entriesOverride) {
@@ -3832,8 +3913,9 @@ function buildChampionData(entriesOverride) {
   entries.forEach(e => {
     if (!e.actualWinner) return;
 
-    const blueChamps = e.champions?.blue || [];
-    const redChamps  = e.champions?.red  || [];
+    // Normalised at the point of use so every downstream map is keyed the same.
+    const blueChamps = (e.champions?.blue || []).map(normChamp);
+    const redChamps  = (e.champions?.red  || []).map(normChamp);
 
     // Same-position (lane) matchups
     for (let i = 0; i < 5; i++) {
@@ -5045,7 +5127,7 @@ function renderDraftDimensionFit() {
 const COMP_TAGS = ["Tank", "Fighter", "Mage", "Marksman", "Assassin", "Support"];
 
 function champAttrs(name) {
-  const k = champKey(name);
+  const k = normChamp(name);
   return (k && _champAttrs && _champAttrs[k]) || null;
 }
 
@@ -6504,7 +6586,7 @@ function setTeamOpp(key) {
 // so an unmemoised version re-parsed localStorage per character typed.
 let _teamIdx = null, _teamIdxKey = "";
 function buildTeamIndex() {
-  const cacheKey = _trainDirty + ":" + loadBulkEntries().length;
+  const cacheKey = _trainDirty + ":" + loadBulkEntries().length + ":" + (_ddVersion || "");
   if (_teamIdx && _teamIdxKey === cacheKey) return _teamIdx;
   const idx = {};
   for (const e of loadAllGameData()) {
@@ -6555,9 +6637,10 @@ function teamChampPool(games, limit) {
   const pool = {};
   for (const { e, side } of games) {
     const picks = (e.champions && e.champions[side]) || [];
-    for (const c of picks) {
+    for (const raw of picks) {
+      const c = normChamp(raw);
       if (!c) continue;
-      if (!pool[c]) pool[c] = { name: c, n: 0, w: 0 };
+      if (!pool[c]) pool[c] = { name: champDisplay(c), key: c, n: 0, w: 0 };
       pool[c].n++;
       if (e.actualWinner === side) pool[c].w++;
     }
@@ -9903,7 +9986,7 @@ const CHAMP_KEY_FIX = {
   "aurelion sol":"AurelionSol","tahm kench":"TahmKench","leblanc":"Leblanc",
   "le blanc":"Leblanc","fiddlesticks":"Fiddlesticks","ambessa":"Ambessa"
 };
-let _ddVersion = null, _champNameMap = null, _champAttrs = null;
+let _ddVersion = null, _champNameMap = null, _champAttrs = null, _champDisplay = null;
 
 function _ddReadCache() {
   try { return JSON.parse(localStorage.getItem(DDRAGON_CACHE_KEY) || "null"); }
@@ -9912,21 +9995,23 @@ function _ddReadCache() {
 async function ensureChampionData() {
   const cached = _ddReadCache();
   // Re-fetch if the cache predates champion attributes, even if it's still fresh.
-  if (cached && cached.attrs && Date.now() - cached.at < 7 * 86400000) {
-    _ddVersion = cached.ver; _champNameMap = cached.map; _champAttrs = cached.attrs; return;
+  if (cached && cached.attrs && cached.disp && Date.now() - cached.at < 7 * 86400000) {
+    _ddVersion = cached.ver; _champNameMap = cached.map; _champAttrs = cached.attrs;
+    _champDisplay = cached.disp; return;
   }
   try {
     const vRes = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
     const ver = (await vRes.json())[0];
     const cRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${ver}/data/en_US/champion.json`);
     const data = (await cRes.json()).data;
-    const map = {}, attrs = {};
+    const map = {}, attrs = {}, disp = {};
     Object.values(data).forEach(c => {
       map[String(c.name).toLowerCase()] = c.id;
       map[String(c.id).toLowerCase()]   = c.id;
       // This response already carried tags and the attack/magic/defense profile;
       // only the name map was being kept. Those are the raw material for
       // describing the *shape* of a composition rather than its strength.
+      disp[c.id] = c.name || c.id;
       attrs[c.id] = {
         tags: c.tags || [],
         atk:  c.info?.attack || 0,
@@ -9935,10 +10020,11 @@ async function ensureChampionData() {
         dif:  c.info?.difficulty || 0
       };
     });
-    _ddVersion = ver; _champNameMap = map; _champAttrs = attrs;
-    localStorage.setItem(DDRAGON_CACHE_KEY, JSON.stringify({ at: Date.now(), ver, map, attrs }));
+    _ddVersion = ver; _champNameMap = map; _champAttrs = attrs; _champDisplay = disp;
+    localStorage.setItem(DDRAGON_CACHE_KEY, JSON.stringify({ at: Date.now(), ver, map, attrs, disp }));
   } catch(e) {
-    if (cached) { _ddVersion = cached.ver; _champNameMap = cached.map; _champAttrs = cached.attrs || {}; }
+    if (cached) { _ddVersion = cached.ver; _champNameMap = cached.map; _champAttrs = cached.attrs || {};
+                  _champDisplay = cached.disp || {}; }
     else { _ddVersion = _ddVersion || "14.24.1"; }
   }
 }
@@ -20763,7 +20849,9 @@ function searchHits(q) {
         if (pl && String(pl).toLowerCase().includes(n)) players[String(pl).trim()] = (players[String(pl).trim()] || 0) + 1;
       }
       for (const c of (e.champions && e.champions[side]) || []) {
-        if (c && String(c).toLowerCase().includes(n)) champs[c] = (champs[c] || 0) + 1;
+        const ck = normChamp(c);
+        if (ck && (champDisplay(ck).toLowerCase().includes(n) || ck.toLowerCase().includes(n)))
+          champs[champDisplay(ck)] = (champs[champDisplay(ck)] || 0) + 1;
       }
     }
   }
@@ -20953,6 +21041,9 @@ window.onerror = function(msg, src, line, col, err) {
 document.getElementById("game-date").value = localDateStr();
 initPickInputs();
 try { applyBlindMode(); } catch(e) {}
+// Champion normalisation depends on this, and it was only loaded by three
+// screens — so anything rendered before visiting one of them keyed differently.
+try { ensureChampionData(); } catch(e) {}
 try { startNotifWatcher(); } catch(e) {}
 try { wireOfflineWatch(); } catch(e) {}
 try { startDraftWatcher(); } catch(e) {}
