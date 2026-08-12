@@ -1108,6 +1108,7 @@
   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;">
     <input type="text" id="champ-search" placeholder="Search champion…" oninput="renderChampions()">
     <span id="champ-recency"></span>
+    <span id="champ-league-wrap"></span>
     <select id="champ-sort" onchange="renderChampions()" style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;">
       <option value="appearances">Most seen</option>
       <option value="winrate">Win rate</option>
@@ -1115,9 +1116,14 @@
       <option value="roi">Flat-100 ROI</option>
       <option value="amp">Amplification</option>
       <option value="underdog">Worst as underdog</option>
+      <option value="presence">Presence %</option>
+      <option value="side">Side bias</option>
+      <option value="flex">Most flexed</option>
       <option value="alpha">A–Z</option>
     </select>
   </div>
+  <div id="champ-headline" style="margin-bottom:10px;"></div>
+  <button class="btn btn-ghost" style="width:100%;font-size:12px;padding:6px;margin-bottom:10px;" onclick="exportChampionCsv()">⬇ Export this view as CSV</button>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;" id="champ-badge-tabs">
     <button class="standings-tab active" onclick="setChampBadgeFilter('all',this)">All</button>
     <button class="standings-tab" onclick="setChampBadgeFilter('reliable',this)">✅ Reliable read</button>
@@ -1526,7 +1532,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 5:28:02 PM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 5:34:29 PM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -1993,7 +1999,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 5:28:02 PM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 5:34:29 PM · Nothing new</div>
     </div>
   </div>
 
@@ -2208,7 +2214,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.10-b65";
+const BUILD_VERSION = "2026.08.10-b67";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -4157,6 +4163,246 @@ function swingFor(champId) {
   return null;
 }
 
+// ── Champion filters and presentation stats ──────────────────────────────────
+// champMap already carried per-side and per-league counts and nothing displayed
+// them. With a league filter on top, that's most of what a slide needs.
+const CHAMP_LEAGUE_KEY = "draftlogger_champ_league_v1";
+function champLeagueFilter() { return localStorage.getItem(CHAMP_LEAGUE_KEY) || ""; }
+function setChampLeague(v) { localStorage.setItem(CHAMP_LEAGUE_KEY, v || ""); renderChampions(); }
+
+// Leagues actually present in the store, by volume, so the list is short.
+function leaguesInData() {
+  const c = {};
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet || !e.actualWinner) continue;
+    const lg = resolveLeague(e.league) || (e.league || "").trim();
+    if (lg) c[lg] = (c[lg] || 0) + 1;
+  }
+  return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([league, n]) => ({ league, n }));
+}
+
+function champLeaguePickerHtml() {
+  const cur = champLeagueFilter();
+  const list = leaguesInData();
+  if (!list.length) return "";
+  return `<select onchange="setChampLeague(this.value)"
+    style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;font-family:inherit;">
+    <option value="">All leagues</option>
+    ${list.map(l => `<option value="${l.league}" ${cur === l.league ? "selected" : ""}>${l.league} (${l.n})</option>`).join("")}
+  </select>`;
+}
+
+// The pool every champion figure is computed from, after all filters.
+function champPool() {
+  const lg = champLeagueFilter();
+  const needsFilter = recencyDays() || patchFilter() || lg;
+  if (!needsFilter) return null;
+  return loadAllGameData().filter(e =>
+    withinRecency(e.date) && matchesPatchFilter(e) &&
+    (!lg || (resolveLeague(e.league) || (e.league || "").trim()) === lg));
+}
+
+// Games in the pool, which is what turns appearances into a presence rate —
+// the single most useful number for a slide and the one that was missing.
+function champPoolGameCount(pool) {
+  const src = pool || loadAllGameData();
+  let n = 0;
+  for (const e of src) {
+    if (e.isStandaloneBet || !e.actualWinner) continue;
+    const b = (e.champions?.blue || []).filter(Boolean).length;
+    const r = (e.champions?.red || []).filter(Boolean).length;
+    if (b || r) n++;
+  }
+  return n;
+}
+
+// Where the numbers come from in time. A champion figure means nothing on a
+// slide without the window behind it, and undated rows have to be declared
+// rather than quietly folded into a range they can't support.
+function champPoolDateRange(pool) {
+  const src = pool || loadAllGameData();
+  let first = null, last = null, dated = 0, undated = 0, games = 0;
+  for (const e of src) {
+    if (e.isStandaloneBet || !e.actualWinner) continue;
+    const b = (e.champions?.blue || []).filter(Boolean).length;
+    const r = (e.champions?.red || []).filter(Boolean).length;
+    if (!b && !r) continue;
+    games++;
+    const d = (e.date || "").slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { undated++; continue; }
+    dated++;
+    if (!first || d < first) first = d;
+    if (!last  || d > last)  last  = d;
+  }
+  return { first, last, dated, undated, games };
+}
+
+function fmtRangeDate(d) {
+  if (!d) return "";
+  const dt = new Date(d + "T12:00:00");
+  return isNaN(dt.getTime()) ? d
+    : dt.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });
+}
+
+function rangeLabel(r) {
+  if (!r.first) return "no dated games";
+  if (r.first === r.last) return fmtRangeDate(r.first);
+  const days = Math.round((new Date(r.last) - new Date(r.first)) / 86400000) + 1;
+  return `${fmtRangeDate(r.first)} – ${fmtRangeDate(r.last)} (${days} days)`;
+}
+
+// First and last time each champion shows up, which is how a slide can say when
+// something entered or left the meta.
+function champFirstLastSeen(pool) {
+  const src = pool || loadAllGameData();
+  const out = {};
+  for (const e of src) {
+    if (e.isStandaloneBet || !e.actualWinner) continue;
+    const d = (e.date || "").slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
+    for (const side of ["blue", "red"]) {
+      for (const raw of (e.champions?.[side] || [])) {
+        const k = normChamp(raw);
+        if (!k) continue;
+        if (!out[k]) out[k] = { first: d, last: d };
+        if (d < out[k].first) out[k].first = d;
+        if (d > out[k].last)  out[k].last  = d;
+      }
+    }
+  }
+  return out;
+}
+
+// Flat totals for one champion across the roles currently in view.
+function champTotals(data, roleFilter) {
+  const roles = roleFilter === "all" ? Object.values(data.roles)
+                                     : [data.roles[roleFilter]].filter(Boolean);
+  const t = { n: 0, w: 0, blueN: 0, blueW: 0, redN: 0, redW: 0, roleSpread: 0, leagues: {} };
+  for (const r of roles) {
+    t.n += r.appearances; t.w += r.wins;
+    t.blueN += r.blueTotal; t.blueW += r.blueWins;
+    t.redN += r.redTotal;   t.redW += r.redWins;
+    for (const [lg, v] of Object.entries(r.leagues || {})) {
+      if (!t.leagues[lg]) t.leagues[lg] = { n: 0, w: 0 };
+      t.leagues[lg].n += (v.total || v.n || 0);
+      t.leagues[lg].w += (v.wins || v.w || 0);
+    }
+  }
+  // How many roles this champion actually shows up in — flex picks are the
+  // interesting outliers and nothing surfaced them.
+  t.roleSpread = Object.values(data.roles).filter(r => r.appearances >= 2).length;
+  return t;
+}
+
+// Headline numbers for the current filter set.
+function champHeadlines(champs, roleFilter, poolGames) {
+  const rows = champs.map(([id, data]) => {
+    const t = champTotals(data, roleFilter);
+    return { id, name: champDisplay(id), t,
+             wr: t.n ? t.w / t.n : 0,
+             presence: poolGames ? t.n / poolGames : 0,
+             sideGap: (t.blueN >= 5 && t.redN >= 5)
+               ? (t.blueW / t.blueN) - (t.redW / t.redN) : null };
+  });
+  const seen = rows.filter(r => r.t.n >= 8);
+  const byWr = [...seen].sort((a, b) => b.wr - a.wr);
+  const byPresence = [...rows].sort((a, b) => b.t.n - a.t.n);
+  const bySide = seen.filter(r => r.sideGap !== null)
+    .sort((a, b) => Math.abs(b.sideGap) - Math.abs(a.sideGap));
+  const flex = rows.filter(r => r.t.roleSpread >= 2).sort((a, b) => b.t.roleSpread - a.t.roleSpread || b.t.n - a.t.n);
+  return { rows, poolGames, mostPicked: byPresence[0], bestWr: byWr[0], worstWr: byWr[byWr.length - 1],
+           biggestSide: bySide[0], flex: flex.slice(0, 4), contested: seen.length };
+}
+
+function renderChampHeadlines(champs, roleFilter, poolGames) {
+  const el = document.getElementById("champ-headline");
+  if (!el) return;
+  if (!champs.length || !poolGames) { el.innerHTML = ""; return; }
+  const h = champHeadlines(champs, roleFilter, poolGames);
+  const scope = [champLeagueFilter() || "all leagues",
+                 patchFilter() ? "patch " + patchFilter() : null,
+                 recencyDays() ? recencyLabel() : null].filter(Boolean).join(" · ");
+  const pc = v => Math.round(v * 100) + "%";
+  const card = (label, value, sub) =>
+    `<div style="flex:1;min-width:110px;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;">
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">${label}</div>
+      <div style="font-size:14px;font-weight:700;margin-top:1px;">${value}</div>
+      <div style="font-size:10px;color:var(--muted);">${sub}</div>
+    </div>`;
+
+  const range = champPoolDateRange(champPool());
+  el.innerHTML =
+    `<div style="font-size:11px;color:var(--muted);margin-bottom:6px;line-height:1.6;">
+       ${poolGames} games · ${scope}<br>
+       <span style="color:var(--text);">${rangeLabel(range)}</span>${
+         range.undated ? ` <span style="color:var(--yellow);">· ${range.undated} undated, not in the range</span>` : ""}
+     </div>
+     <div style="display:flex;gap:6px;flex-wrap:wrap;">
+       ${h.mostPicked ? card("Most picked", h.mostPicked.name,
+          `${h.mostPicked.t.n} games · ${pc(h.mostPicked.presence)} presence`) : ""}
+       ${h.bestWr ? card("Highest win rate", h.bestWr.name,
+          `${pc(h.bestWr.wr)} in ${h.bestWr.t.n} games`) : ""}
+       ${h.worstWr && h.worstWr !== h.bestWr ? card("Lowest win rate", h.worstWr.name,
+          `${pc(h.worstWr.wr)} in ${h.worstWr.t.n} games`) : ""}
+       ${h.biggestSide ? card("Biggest side split", h.biggestSide.name,
+          `${h.biggestSide.sideGap > 0 ? "blue" : "red"} +${Math.abs(Math.round(h.biggestSide.sideGap * 100))} pts`) : ""}
+       ${h.flex.length ? card("Most flexed", h.flex[0].name,
+          `${h.flex[0].t.roleSpread} roles`) : ""}
+     </div>
+     <div style="font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5;">
+       Win-rate picks need 8+ games; side splits need 5+ on each side. Under that it's noise, so they're skipped.</div>`;
+}
+
+// CSV, because a slide deck is built somewhere else.
+function exportChampionCsv() {
+  const roleFilter = _champRoleFilter;
+  const pool = champPool();
+  const { champMap } = buildChampionData(pool);
+  const poolGames = champPoolGameCount(pool);
+  const seenAt = champFirstLastSeen(pool);
+  const rows = [["Champion", "Role filter", "Games", "Wins", "Win rate %", "Presence %",
+                 "Blue games", "Blue WR %", "Red games", "Red WR %", "Roles played",
+                 "First seen", "Last seen"]];
+  Object.entries(champMap).forEach(([id, data]) => {
+    const t = champTotals(data, roleFilter);
+    if (!t.n) return;
+    const r = (w, n) => n ? (w / n * 100).toFixed(1) : "";
+    const sa = seenAt[id] || {};
+    rows.push([champDisplay(id), roleFilter, t.n, t.w, r(t.w, t.n),
+               poolGames ? (t.n / poolGames * 100).toFixed(1) : "",
+               t.blueN, r(t.blueW, t.blueN), t.redN, r(t.redW, t.redN), t.roleSpread,
+               sa.first || "", sa.last || ""]);
+  });
+  rows.sort((a, b) => (b[2] || 0) - (a[2] || 0));
+  const head = rows.shift();
+  const range = champPoolDateRange(pool);
+  // Provenance goes after the data, so a header-row parser still reads the file
+  // correctly but the slice is never separated from the numbers.
+  const meta = [
+    [], ["Data range", range.first || "", range.last || ""],
+    ["Games in range", range.dated],
+    ["Undated games excluded from range", range.undated],
+    ["League", champLeagueFilter() || "all"],
+    ["Patch", patchFilter() || "all"],
+    ["Recency window", recencyDays() ? recencyDays() + " days" : "all time"],
+    ["Exported", new Date().toISOString().slice(0, 10)]
+  ];
+  const csv = [head, ...rows, ...meta].map(r => r.map(v => {
+    const str = String(v ?? "");
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+  }).join(",")).join("\n");
+
+  const scope = [champLeagueFilter() || "all", patchFilter() || null,
+                 range.first && range.last ? `${range.first}_to_${range.last}` : null]
+    .filter(Boolean).join("-").replace(/[^\w.-]/g, "");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `champions-${scope || "all"}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
 function renderChampions() {
   const el      = document.getElementById("champion-list");
   const countEl = document.getElementById("champ-count");
@@ -4164,18 +4410,19 @@ function renderChampions() {
 
   const recEl = document.getElementById("champ-recency");
   if (recEl) recEl.innerHTML = recencyPickerHtml("renderChampions") + " " + patchPickerHtml("renderChampions");
+  const lgEl = document.getElementById("champ-league-wrap");
+  if (lgEl) lgEl.innerHTML = champLeaguePickerHtml();
   const q          = (document.getElementById("champ-search")?.value || "").toLowerCase().trim();
   const roleFilter = _champRoleFilter;
   const sortMode   = (document.getElementById("champ-sort")?.value) || "appearances";
   // Windowed rather than the whole store, so a champion's number reflects one
   // meta instead of every patch you have ever imported.
-  const pool = (recencyDays() || patchFilter())
-    ? loadAllGameData().filter(e => withinRecency(e.date) && matchesPatchFilter(e))
-    : null;
+  const pool = champPool();
   const { champMap, matchupMap, crossMap } = buildChampionData(pool);
+  const poolGames = champPoolGameCount(pool);
 
   let champs = Object.entries(champMap)
-    .filter(([id]) => !q || id.toLowerCase().includes(q))
+    .filter(([id]) => !q || champDisplay(id).toLowerCase().includes(q) || id.toLowerCase().includes(q))
     .filter(([, data]) => roleFilter === "all" || !!data.roles[roleFilter])
     .filter(([id, data]) => {
       if (_champBadgeFilter === "all") return true;
@@ -4211,12 +4458,23 @@ function renderChampions() {
       case "roi":      return (kb.f100??-99) - (ka.f100??-99);
       case "amp":      return (swingFor(b[0])?.amp ?? -99) - (swingFor(a[0])?.amp ?? -99);
       case "underdog": return (swingFor(a[0])?.undDelta ?? 99) - (swingFor(b[0])?.undDelta ?? 99);
-      case "alpha":    return a[0].localeCompare(b[0]);
+      case "presence": return kb.total - ka.total;   // same ordering, shown as a rate
+      case "side": {
+        const sg = ([, d]) => { const t = champTotals(d, roleFilter);
+          return (t.blueN >= 5 && t.redN >= 5) ? Math.abs(t.blueW / t.blueN - t.redW / t.redN) : -1; };
+        return sg(b) - sg(a);
+      }
+      case "flex": {
+        const fl = ([, d]) => champTotals(d, roleFilter).roleSpread;
+        return fl(b) - fl(a) || kb.total - ka.total;
+      }
+      case "alpha":    return champDisplay(a[0]).localeCompare(champDisplay(b[0]));
       default:         return kb.total - ka.total;
     }
   });
 
   if (countEl) countEl.textContent = champs.length + " champions";
+  try { renderChampHeadlines(champs, roleFilter, poolGames); } catch(e) {}
 
   // Sorting by amplification silently does nothing when the store is empty,
   // which reads as "sorted but no data". Say it outright instead.
