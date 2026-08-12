@@ -490,6 +490,7 @@
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchWide()" id="watch-wide-btn" title="Use the full window width">↔ Wide</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="resetAllTileSizes()" title="Put every tile back to one column at normal height">⊞ Even</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="reloadAllEmbeds()" title="Re-initialise every player without reloading the app">▶ Restart all</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="resyncWatchNow()" title="Re-check what should be on air right now">⟳ Re-check</button>
       <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
       <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
@@ -1525,7 +1526,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:45:04 PM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:57:19 PM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -1990,7 +1991,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:44:41 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:57:19 PM · Nothing new</div>
     </div>
   </div>
 
@@ -2205,7 +2206,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.09-b63";
+const BUILD_VERSION = "2026.08.09-b64";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -18810,13 +18811,13 @@ function blockFinished(block) {
 //
 // Live data is still used, but only as confirmation that a block is still
 // running — never as the trigger.
-const SCHED_LEAD_MS   = 5 * 60 * 1000;        // appear this far before the first game
-const BLOCK_GAP_MS    = 6 * 3600 * 1000;      // games this far apart are separate blocks
-const BLOCK_MIN_RUN   = 2.5 * 3600 * 1000;    // assume the last match needs this long
-const BLOCK_END_GRACE = 20 * 60 * 1000;       // and confirm it's over by this much silence
+const SCHED_LEAD_MS  = 5 * 60 * 1000;        // appear this far before a scheduled match
+const LIVE_TAIL_MS   = 6 * 60 * 1000;        // keep it up this long after live drops it
+const LATE_START_MS  = 45 * 60 * 1000;       // a scheduled match that never appeared live
+const BLOCK_GAP_MS   = 6 * 3600 * 1000;      // games this far apart are separate blocks
 
-// Cluster a league's scheduled games into blocks, and return the one that is
-// current or next.
+// Blocks are still used for the schedule readout, but presence is decided per
+// match — see leagueOnAir.
 function leagueBlocks() {
   const byLeague = {};
   for (const g of loadTodayPlan().games) {
@@ -18842,30 +18843,50 @@ function leagueBlocks() {
   return out;
 }
 
-// Should this league have a stream up right now, and why.
+// Scheduled matches for a league, with whatever state the API last reported.
+function scheduledMatches(league) {
+  const m = loadMatchStates();
+  const out = [];
+  for (const g of loadTodayPlan().games) {
+    if ((g.league || "").trim() !== league || !g.scheduledTime) continue;
+    const t = new Date(g.scheduledTime).getTime();
+    if (isNaN(t)) continue;
+    out.push({ start: t, state: m[matchStateKey(league, t)] || "" });
+  }
+  return out.sort((a, b) => a.start - b.start);
+}
+
+// Should this league have a stream up right now?
+//
+// The earlier version held a stream for a whole block — first game to last game
+// plus a fixed run time — which is why a finished league kept showing, and why a
+// channel sat on a rerun between two matches hours apart. getLive reports
+// *matches*, and a match stays in progress across the games of a series, so its
+// absence is a reliable "this match is over". That is exactly what the Live page
+// shows, and the watch page should agree with it.
+//
+// So: live is the primary signal, the schedule only opens a window ahead of a
+// match that hasn't happened yet.
 function leagueOnAir(league, liveLeagues, seenMap) {
   const now = Date.now();
-  const blocks = leagueBlocks().filter(b => b.league === league);
-  const live = liveLeagues && liveLeagues.has(league);
-  if (live) return { on: true, reason: "live now" };
+  if (liveLeagues && liveLeagues.has(league)) return { on: true, reason: "live now" };
 
-  for (const b of blocks) {
-    const openAt  = b.first - SCHED_LEAD_MS;
-    const closeAt = b.last + BLOCK_MIN_RUN;
-    if (now >= openAt && now <= closeAt) {
-      // The real end signal: every match in the block reported completed.
-      // Only trusted once the whole block is accounted for, and never while the
-      // league is live — which the caller has already checked above.
-      if (now >= b.first && blockFinished(b) === true) continue;
-      return { on: true,
-               reason: now < b.first ? `starts in ${Math.max(1, Math.round((b.first - now) / 60000))}m`
-                                     : `block of ${b.n} scheduled` };
+  const lastSeen = (seenMap && seenMap.__leagueSeen && seenMap.__leagueSeen[league]) || 0;
+  // Short tail only — covers getLive lag at the end of a match, not a gap
+  // between two matches.
+  if (lastSeen && now - lastSeen <= LIVE_TAIL_MS) return { on: true, reason: "just finished" };
+
+  for (const mt of scheduledMatches(league)) {
+    if (mt.state === "completed") continue;
+    const openAt = mt.start - SCHED_LEAD_MS;
+    if (now < openAt) continue;                       // still too early for this one
+    if (now < mt.start) {
+      return { on: true, reason: `starts in ${Math.max(1, Math.round((mt.start - now) / 60000))}m` };
     }
-    // Past the expected run: only drop once live has also been quiet, so an
-    // overrunning series isn't cut off mid-game.
-    if (now > closeAt && now <= closeAt + BLOCK_END_GRACE) {
-      const lastSeen = seenMap && seenMap.__leagueSeen && seenMap.__leagueSeen[league];
-      if (lastSeen && now - lastSeen < BLOCK_END_GRACE) return { on: true, reason: "confirming end" };
+    // Started but never seen live: allow a late start, then give up rather than
+    // sitting on an offline channel indefinitely.
+    if (lastSeen < openAt && now <= mt.start + LATE_START_MS) {
+      return { on: true, reason: "waiting to go live" };
     }
   }
   return { on: false, reason: "" };
@@ -18960,8 +18981,9 @@ function syncWatchFromLive(cards) {
   // needs the old per-poll grace to avoid flapping.
   for (const ch of Object.keys(ownedMap)) {
     if (wanted.has(ch)) continue;
-    if (seen[ch] === undefined) { seen[ch] = now; continue; }
-    if (now - seen[ch] < BLOCK_END_GRACE) continue;
+    // No extra grace here — leagueOnAir already holds a stream for LIVE_TAIL_MS
+    // after live drops it. Adding another 20 minutes on top is what kept
+    // finished leagues on screen, and what made unticking a league feel slow.
     const i = list.indexOf(ch);
     if (i >= 0) list.splice(i, 1);
     delete ownedMap[ch];
@@ -19122,6 +19144,15 @@ function popoutAll() {
 // which is exactly why only a page refresh fixed it.
 //
 // Fix: never assign src while the page is hidden. Park it and assign on arrival.
+// Force the presence pass to run against fresh data, for when a stream is on
+// screen that plainly shouldn't be.
+async function resyncWatchNow() {
+  try { await refreshMatchStates(true); } catch(e) {}
+  try { await dbRefresh(); } catch(e) {}
+  try { syncWatchFromLive(_lastLiveCards); } catch(e) {}
+  renderWatchPage();
+}
+
 function watchVisible() {
   const el = document.getElementById("screen-watch");
   return !!(el && el.classList.contains("active")) && document.visibilityState === "visible";
