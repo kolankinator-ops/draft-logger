@@ -489,6 +489,7 @@
       </label>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchWide()" id="watch-wide-btn" title="Use the full window width">↔ Wide</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="resetAllTileSizes()" title="Put every tile back to one column at normal height">⊞ Even</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="reloadAllEmbeds()" title="Re-initialise every player without reloading the app">▶ Restart all</button>
       <button id="watch-auto-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchAuto()">○ Auto-follow</button>
       <button id="watch-league-btn" class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="toggleWatchChat()">💬 Chat</button>
@@ -855,6 +856,16 @@
       <button class="three-btn even" onclick="setDraftPref(0)" id="dpref-0">Even</button>
       <button class="three-btn red" onclick="setDraftPref(1)" id="dpref-1"><span id="dpref-1-lbl">Red +1</span></button>
       <button class="three-btn red" onclick="setDraftPref(2)" id="dpref-2"><span id="dpref-2-lbl">Red +2</span></button>
+    </div>
+    <div id="caveat-wrap" style="margin-top:8px;">
+      <button id="caveat-btn" onclick="toggleDraftCaveat()" style="width:100%;text-align:left;font-size:12px;padding:7px 10px;border-radius:7px;cursor:pointer;background:var(--surface2);border:1px solid var(--border);color:var(--muted);">
+        ⚠ My draft read might not translate here</button>
+      <div id="caveat-detail" style="display:none;margin-top:5px;">
+        <input type="text" id="caveat-reason" placeholder="Why? e.g. top laner can't play this style" oninput="setCaveatReason(this.value)" style="width:100%;font-size:12px;padding:6px 9px;background:var(--bg);border:1px solid var(--yellow);border-radius:6px;color:var(--text);">
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.5;">
+          Kept separate from the read itself, so the app can check whether your caveats are right —
+          whether flagging one actually predicts the draft read failing.</div>
+      </div>
     </div>
     <div id="draft-tag-wrap" style="margin-top:9px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -1514,6 +1525,15 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/12/2026, 3:30:49 PM.</div></div>
+    <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
+        Prepare the app for a trip: sync everything now, and make sure the review queue and
+        champion images are cached so draft rating works with no connection.</p>
+      <button class="btn btn-ghost" style="width:100%;font-size:12px;padding:7px;" onclick="prepareOffline()">Prepare for offline</button>
+      <div id="offline-prep" style="font-size:11px;margin-top:8px;"></div>
+    </div>
 
     <div id="sync-connected" style="display: block; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -1569,6 +1589,12 @@
     <div id="comp-readiness" style="font-size:12px;"></div>
     <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderDraftDimensionFit()">What I value vs what wins</button>
     <div id="dimfit-results" style="font-size:12px;"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderNoteConsistency()">Do my notes match my ratings?</button>
+    <div id="noteconsist-results" style="font-size:12px;"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderCaveatCalibration()">Are my caveats right?</button>
+    <div id="caveat-results" style="font-size:12px;"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:8px;margin-bottom:8px;" onclick="renderPlayerDelivery()">Who delivers when the draft asks?</button>
+    <div id="delivery-results" style="font-size:12px;"></div>
   </div>
 
   <div class="card" style="margin-bottom:14px;">
@@ -1964,7 +1990,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/11/2026, 3:58:43 PM · Nothing new</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/12/2026, 3:30:49 PM</div>
     </div>
   </div>
 
@@ -2179,7 +2205,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.09-b57";
+const BUILD_VERSION = "2026.08.09-b62";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -4707,6 +4733,104 @@ function playerRoleMap() {
   return out;
 }
 
+// ── Do your notes match your ratings? ────────────────────────────────────────
+// A standing read is a claim: "this team is weak at scaling". The dimension
+// ratings you give are a separate record of the same belief, made game by game.
+// Comparing them is the only way notes can check themselves — and it catches the
+// case worth catching, where you've written something down and then consistently
+// rated against it.
+//
+// Sign convention: the scales run negative for blue, positive for red. So how
+// much a dimension favours a given team is the rating flipped when they're blue.
+function ratingsForTeamDimension(teamK, dimId) {
+  const ann = loadAnnotations();
+  const out = [];
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet) continue;
+    const bk = teamKey(e.blueTeam), rk = teamKey(e.redTeam);
+    if (bk !== teamK && rk !== teamK) continue;
+    const a = ann[gameKey(e)];
+    const tags = (e.draftTags && typeof e.draftTags === "object") ? e.draftTags
+               : (a && a.draftTags && typeof a.draftTags === "object") ? a.draftTags : null;
+    if (!tags || typeof tags[dimId] !== "number") continue;
+    const side = bk === teamK ? "blue" : "red";
+    out.push({
+      favours: side === "blue" ? -tags[dimId] : tags[dimId],   // + = favours this team
+      won: e.actualWinner ? (e.actualWinner === side) : null,
+      date: e.date || ""
+    });
+  }
+  return out;
+}
+
+function noteConsistency() {
+  const all = loadTeamNotes();
+  const rows = [];
+  for (const teamK of Object.keys(all)) {
+    for (const r of standingReads(teamK)) {
+      const rs = ratingsForTeamDimension(teamK, r.dim);
+      if (!rs.length) { rows.push({ teamK, ...r, n: 0 }); continue; }
+      const avg = rs.reduce((t, x) => t + x.favours, 0) / rs.length;
+      const decided = rs.filter(x => x.won !== null);
+      rows.push({
+        teamK, ...r, n: rs.length, avg,
+        // Agreement is about direction, not magnitude — a note is a lean, not a number.
+        agrees: (r.lean === 1 && avg > 0.25) || (r.lean === -1 && avg < -0.25),
+        conflicts: (r.lean === 1 && avg < -0.25) || (r.lean === -1 && avg > 0.25),
+        wins: decided.filter(x => x.won).length, decided: decided.length
+      });
+    }
+  }
+  return rows.sort((a, b) => b.n - a.n);
+}
+
+function renderNoteConsistency() {
+  const el = document.getElementById("noteconsist-results");
+  if (!el) return;
+  const rows = noteConsistency();
+  if (!rows.length) {
+    el.innerHTML = `<div style="color:var(--muted);line-height:1.6;">
+      No standing reads yet. Write a note, tag the dimension it's about, and mark it 📌 standing —
+      then this compares it against the ratings you actually give that team.</div>`;
+    return;
+  }
+  const dimLabel = id => (DRAFT_DIMENSIONS.find(d => d.id === id) || {}).label || id;
+  const rated = rows.filter(r => r.n > 0);
+  const conflicts = rated.filter(r => r.conflicts);
+
+  el.innerHTML =
+    `<div style="font-size:11px;color:var(--muted);margin-bottom:9px;line-height:1.6;">
+       ${rows.length} standing read${rows.length === 1 ? "" : "s"} · ${rated.length} with ratings to check against.
+       A read only counts as confirmed or contradicted once you've rated that dimension for that team.</div>` +
+    rows.map(r => {
+      const tone = r.n === 0 ? "var(--muted)" : r.conflicts ? "#ff4d5e" : r.agrees ? "var(--green)" : "var(--muted)";
+      const verdict = r.n === 0 ? "not yet rated"
+        : r.conflicts ? "your ratings say the opposite"
+        : r.agrees ? "ratings agree"
+        : "ratings are neutral on this";
+      return `<div style="padding:7px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:baseline;gap:6px;font-size:12px;">
+          <b>${r.teamK}</b>
+          <span style="color:var(--muted);">${dimLabel(r.dim)}</span>
+          <span style="color:${r.lean === 1 ? "var(--green)" : "#ff4d5e"};font-size:11px;">${r.lean === 1 ? "strong" : "weak"}</span>
+          <span style="margin-left:auto;color:${tone};font-size:11px;">${verdict}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5;">${r.text}</div>
+        ${r.n ? `<div style="font-size:10px;color:var(--muted);margin-top:3px;">
+          Across ${r.n} rated game${r.n === 1 ? "" : "s"}: average ${r.avg > 0 ? "+" : ""}${r.avg.toFixed(2)} in their favour${
+            r.decided ? ` · they won ${r.wins} of ${r.decided}` : ""}</div>` : ""}
+      </div>`;
+    }).join("") +
+    (conflicts.length
+      ? `<div style="margin-top:10px;padding:9px;border-radius:6px;background:rgba(255,77,94,.10);border:1px solid #ff4d5e;font-size:12px;line-height:1.6;">
+          <b style="color:#ff4d5e;">${conflicts.length} read${conflicts.length === 1 ? " contradicts" : "s contradict"} your own ratings.</b>
+          Either the note is stale and worth deleting, or you're rating against something you believe —
+          both are worth knowing, and neither shows up anywhere else.</div>`
+      : `<div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.6;">
+          No contradictions. Once a read has a few rated games behind it, this is where a stale
+          belief would show up.</div>`);
+}
+
 // ── Draft dimension analysis ─────────────────────────────────────────────────
 // Two fits over the same feature space, which is what makes them comparable:
 //   value model:   your overall draftPref ~ your dimension ratings
@@ -5937,12 +6061,34 @@ function loadTeamNotes() {
 }
 function saveTeamNotes(o) { localStorage.setItem(TEAM_NOTES_KEY, JSON.stringify(o || {})); }
 
-function addTeamNote(team, ctx, text) {
+// A note can carry dimension tags with a direction: { scaling: -1 } means "this
+// team is weak at scaling", +1 means strong. That single field is what turns a
+// note from a diary entry into something the app can use — it's on the same
+// eight dimensions the model already fits, and about one team rather than a
+// matchup, so it can be checked against the ratings you actually give.
+//
+// `standing` marks a belief you expect to hold next time, as opposed to an
+// observation about one game. Only standing reads resurface while you log.
+function addTeamNote(team, ctx, text, dims, standing, opts) {
   const k = teamKey(team);
   const body = String(text || "").trim();
   if (!k || !body) return false;
   const all = loadTeamNotes();
   if (!all[k]) all[k] = [];
+  const clean = {};
+  if (dims && typeof dims === "object") {
+    for (const d of DRAFT_DIMENSIONS) {
+      const v = dims[d.id];
+      if (v === 1 || v === -1) clean[d.id] = v;
+    }
+  }
+  const cleanRoles = {};
+  if (opts && opts.roles && typeof opts.roles === "object") {
+    for (const r of ROLES) {
+      const v = opts.roles[r];
+      if (v === 1 || v === -1) cleanRoles[r] = v;
+    }
+  }
   all[k].unshift({
     id: "tn_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
     at: Date.now(),
@@ -5951,11 +6097,73 @@ function addTeamNote(team, ctx, text) {
     side: (ctx && ctx.side) || "",
     champs: (ctx && ctx.champs) || [],
     league: (ctx && ctx.league) || "",
-    text: body
+    text: body,
+    dims: Object.keys(clean).length ? clean : null,
+    // A note like "their draft is good but their top laner can't pull it off" is
+    // two claims pulling opposite ways, and the second is about a player rather
+    // than the draft. Dimensions can't hold that: they describe comp shape, and
+    // this is about who has to play it. Roles carry the second half.
+    roles: Object.keys(cleanRoles).length ? cleanRoles : null,
+    // The note is about how the game was played, so the player it's about is the
+    // primary key — not the draft. `setup` records whether the draft put weight
+    // on them; `delivered` whether they converted it. The pair is what makes
+    // "the draft sets this player up to carry but they weren't good enough"
+    // storable as something checkable rather than as prose.
+    player: (opts && opts.player) ? String(opts.player).trim() : "",
+    role:   (opts && opts.role)   ? String(opts.role) : "",
+    setup:     (opts && typeof opts.setup === "boolean")     ? opts.setup     : null,
+    delivered: (opts && typeof opts.delivered === "boolean") ? opts.delivered : null,
+    // And the note's real force is that it *undercuts* the draft read. That's a
+    // third thing again — not a dimension, not a role, but a reason to distrust
+    // your own conclusion on this game.
+    caveat: !!(opts && opts.caveat),
+    standing: !!standing
   });
   all[k] = all[k].slice(0, 200);
   saveTeamNotes(all);
   return true;
+}
+
+// Standing reads for a team, newest first, one per dimension+direction so a
+// belief restated three times doesn't shout three times.
+function standingReads(team) {
+  const k = teamKey(team);
+  if (!k) return [];
+  const seen = new Set(), out = [];
+  for (const n of (loadTeamNotes()[k] || [])) {
+    if (!n.standing || !n.dims) continue;
+    for (const dim of Object.keys(n.dims)) {
+      const sig = dim + ":" + n.dims[dim];
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+      out.push({ dim, lean: n.dims[dim], text: n.text, date: n.date, id: n.id });
+    }
+  }
+  return out;
+}
+
+function standingByDimension(team) {
+  const m = {};
+  for (const r of standingReads(team)) (m[r.dim] = m[r.dim] || []).push(r);
+  return m;
+}
+
+// Role-level standing reads, which is where a "their top laner isn't good
+// enough" note lives.
+function standingRoleReads(team) {
+  const k = teamKey(team);
+  if (!k) return [];
+  const seen = new Set(), out = [];
+  for (const n of (loadTeamNotes()[k] || [])) {
+    if (!n.standing || !n.roles) continue;
+    for (const role of Object.keys(n.roles)) {
+      const sig = role + ":" + n.roles[role];
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+      out.push({ role, lean: n.roles[role], text: n.text, date: n.date, caveat: !!n.caveat, id: n.id });
+    }
+  }
+  return out;
 }
 
 function deleteTeamNote(team, id) {
@@ -6006,8 +6214,180 @@ function noteRowHtml(team, n, showDelete) {
       <span style="display:flex;gap:2px;margin-left:auto;">${champs}</span>
       ${showDelete && n.kind === "team" ? `<button onclick="deleteTeamNote('${teamKey(team).replace(/'/g, "\\'")}','${n.id}');renderTeamPage()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 2px;">✕</button>` : ""}
     </div>
+    ${n.player ? `<div style="font-size:10px;margin-bottom:2px;">
+      <span style="color:var(--blue);font-weight:600;">${n.player}</span>
+      ${n.setup === true ? `<span style="color:${n.delivered === false ? "#ff4d5e" : n.delivered === true ? "var(--green)" : "var(--muted)"};">
+        · draft asked${n.delivered === true ? ", delivered" : n.delivered === false ? ", didn't" : ""}</span>` : ""}
+      ${n.setup === false && n.delivered !== null ? `<span style="color:var(--muted);">· ${n.delivered ? "delivered anyway" : "no impact"}</span>` : ""}
+    </div>` : ""}
     <div style="font-size:12px;line-height:1.5;${n.kind === "game" ? "color:var(--muted);font-style:italic;" : ""}">${n.text}</div>
   </div>`;
+}
+
+// Draft state for a note being written: which dimensions it's about and whether
+// it's a standing read. Keyed by form so the log page's two sides and the team
+// page don't share one buffer.
+const _noteDraft = {};
+function noteDraft(formId) {
+  if (!_noteDraft[formId]) _noteDraft[formId] = { dims: {}, roles: {}, standing: false, caveat: false,
+                                                   player: "", role: "", setup: null, delivered: null };
+  return _noteDraft[formId];
+}
+function cycleNoteRole(formId, role) {
+  const d = noteDraft(formId);
+  const v = d.roles[role];
+  if (v === undefined) d.roles[role] = 1;
+  else if (v === 1) d.roles[role] = -1;
+  else delete d.roles[role];
+  renderNoteTagger(formId);
+}
+function toggleNoteCaveat(formId) {
+  const d = noteDraft(formId);
+  d.caveat = !d.caveat;
+  renderNoteTagger(formId);
+}
+function cycleNoteDim(formId, dim) {
+  const d = noteDraft(formId);
+  const v = d.dims[dim];
+  // none → strength → weakness → none
+  if (v === undefined) d.dims[dim] = 1;
+  else if (v === 1) d.dims[dim] = -1;
+  else delete d.dims[dim];
+  renderNoteTagger(formId);
+}
+function toggleNoteStanding(formId) {
+  const d = noteDraft(formId);
+  d.standing = !d.standing;
+  renderNoteTagger(formId);
+}
+function clearNoteDraft(formId) { _noteDraft[formId] = { dims: {}, roles: {}, standing: false, caveat: false,
+                                                          player: "", role: "", setup: null, delivered: null }; }
+function pickNotePlayer(formId, name, role) {
+  const d = noteDraft(formId);
+  if (d.player === name) { d.player = ""; d.role = ""; }
+  else { d.player = name; d.role = role || ""; }
+  renderNoteTagger(formId);
+}
+function setNoteSetup(formId, v) {
+  const d = noteDraft(formId);
+  d.setup = (d.setup === v) ? null : v;
+  renderNoteTagger(formId);
+}
+function setNoteDelivered(formId, v) {
+  const d = noteDraft(formId);
+  d.delivered = (d.delivered === v) ? null : v;
+  // The case worth catching: the draft asked and they didn't deliver. That is
+  // exactly a reason the draft read shouldn't be trusted, so pre-arm the flag
+  // rather than making it a separate thing to remember.
+  if (d.setup === true && d.delivered === false) d.caveat = true;
+  renderNoteTagger(formId);
+}
+
+// Roster for a side, from whatever is on the form right now.
+function noteRoster(formId) {
+  const m = /^log-(blue|red)$/.exec(formId);
+  if (!m) return [];
+  const side = m[1];
+  return (pickedPlayers[side] || []).map((name, i) => ({ name: (name || "").trim(), role: ROLES[i] }))
+    .filter(x => x.name);
+}
+
+function renderNoteTagger(formId) {
+  const el = document.getElementById("notetag-" + formId);
+  if (!el) return;
+  const d = noteDraft(formId);
+  const roster = noteRoster(formId);
+  const showDims = !!d._dimsOpen;
+
+  // Who the note is about comes first — these are gameplay notes, and the draft
+  // dimensions are already covered by the rating scales. The roster is on the
+  // form, so this is tapping a name rather than typing one.
+  const rosterHtml = roster.length
+    ? roster.map(p => {
+        const on = d.player === p.name;
+        return `<button onclick="pickNotePlayer('${formId}','${p.name.replace(/'/g, "\\'")}','${p.role}')"
+          style="font-size:10px;padding:3px 8px;border-radius:11px;cursor:pointer;
+          background:${on ? "var(--blue)" : "var(--surface2)"};color:${on ? "#fff" : "var(--muted)"};
+          border:1px solid ${on ? "var(--blue)" : "var(--border)"};">
+          <span style="opacity:.7;">${ROLE_ABBR[p.role] || ""}</span> ${p.name}</button>`;
+      }).join("")
+    : ROLES.map(role => {
+        const on = d.role === role && !d.player;
+        return `<button onclick="pickNotePlayer('${formId}','','${role}')"
+          style="font-size:10px;padding:3px 8px;border-radius:11px;cursor:pointer;
+          background:${on ? "var(--blue)" : "var(--surface2)"};color:${on ? "#fff" : "var(--muted)"};
+          border:1px solid ${on ? "var(--blue)" : "var(--border)"};">${ROLE_ABBR[role] || role}</button>`;
+      }).join("");
+
+  const tri = (label, active, tone, onclick, title) =>
+    `<button onclick="${onclick}" title="${title}" style="flex:1;font-size:10px;padding:5px 0;border-radius:5px;cursor:pointer;
+      background:${active ? tone : "var(--surface2)"};color:${active ? "#fff" : "var(--muted)"};
+      border:1px solid ${active ? tone : "var(--border)"};">${label}</button>`;
+
+  // The structure behind "the draft sets this player up to carry, but they
+  // weren't good enough": did the draft ask, and did they answer.
+  const deliveryHtml = (d.player || d.role) ? `
+    <div style="margin-top:6px;padding:6px 8px;background:var(--surface2);border-radius:6px;">
+      <div style="font-size:9px;color:var(--muted);margin-bottom:4px;">Did the draft put weight on ${d.player || ROLE_ABBR[d.role] || "them"}?</div>
+      <div style="display:flex;gap:4px;">
+        ${tri("Yes, set up", d.setup === true, "var(--blue)", `setNoteSetup('${formId}',true)`, "The draft asked them to carry this")}
+        ${tri("Not really", d.setup === false, "var(--muted)", `setNoteSetup('${formId}',false)`, "The draft didn't lean on them")}
+      </div>
+      <div style="font-size:9px;color:var(--muted);margin:6px 0 4px;">Did they deliver?</div>
+      <div style="display:flex;gap:4px;">
+        ${tri("Delivered", d.delivered === true, "var(--green)", `setNoteDelivered('${formId}',true)`, "They converted it")}
+        ${tri("Didn't", d.delivered === false, "#ff4d5e", `setNoteDelivered('${formId}',false)`, "They didn't convert it")}
+      </div>
+      ${d.setup === true && d.delivered === false
+        ? `<div style="font-size:9px;color:var(--yellow);margin-top:5px;line-height:1.5;">
+             ⚠ Draft asked, player didn't answer — flagged as undercutting the draft read, and counted
+             toward this player's delivery record.</div>` : ""}
+    </div>` : "";
+
+  const nDims = Object.keys(d.dims).length;
+  el.innerHTML =
+    `<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
+      <span style="font-size:9px;color:var(--muted);">about:</span>${rosterHtml}
+    </div>
+    ${deliveryHtml}
+    <div style="display:flex;gap:5px;align-items:center;margin-top:5px;flex-wrap:wrap;">
+      <button onclick="toggleNoteStanding('${formId}')"
+        title="A belief you expect to hold next time, not just about this game"
+        style="font-size:10px;padding:3px 8px;border-radius:11px;cursor:pointer;
+        background:${d.standing ? "var(--blue)" : "var(--surface2)"};color:${d.standing ? "#fff" : "var(--muted)"};
+        border:1px solid ${d.standing ? "var(--blue)" : "var(--border)"};">📌 standing</button>
+      <button onclick="toggleNoteCaveat('${formId}')"
+        title="A reason the draft read might not translate"
+        style="font-size:10px;padding:3px 8px;border-radius:11px;cursor:pointer;
+        background:${d.caveat ? "var(--yellow)" : "var(--surface2)"};color:${d.caveat ? "#000" : "var(--muted)"};
+        border:1px solid ${d.caveat ? "var(--yellow)" : "var(--border)"};">⚠ undercuts the draft</button>
+      <button onclick="toggleNoteDims('${formId}')"
+        style="font-size:10px;padding:3px 8px;border-radius:11px;cursor:pointer;margin-left:auto;
+        background:var(--surface2);color:var(--muted);border:1px solid var(--border);">
+        ${showDims ? "▾" : "▸"} draft tags${nDims ? ` (${nDims})` : ""}</button>
+    </div>
+    ${showDims ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;">
+      ${DRAFT_DIMENSIONS.map(dim => {
+        const v = d.dims[dim.id];
+        const bg = v === 1 ? "var(--green)" : v === -1 ? "#ff4d5e" : "var(--surface2)";
+        return `<button onclick="cycleNoteDim('${formId}','${dim.id}')"
+          style="font-size:10px;padding:3px 7px;border-radius:11px;cursor:pointer;
+          background:${bg};color:${v ? "#fff" : "var(--muted)"};
+          border:1px solid ${v ? bg : "var(--border)"};">${v === 1 ? "+" : v === -1 ? "−" : ""}${dim.label}</button>`;
+      }).join("")}
+      <div style="font-size:9px;color:var(--muted);width:100%;margin-top:2px;line-height:1.5;">
+        Only if a note is about the draft itself — the rating scales already cover that.</div>
+    </div>` : ""}`;
+}
+
+function toggleNoteDims(formId) {
+  const d = noteDraft(formId);
+  d._dimsOpen = !d._dimsOpen;
+  renderNoteTagger(formId);
+}
+
+function noteTaggerHtml(formId) {
+  return `<div id="notetag-${formId}" style="margin-top:5px;"></div>`;
 }
 
 // Context for a note written from the log form: whatever is on screen now.
@@ -6027,23 +6407,39 @@ function addNoteFromLog(side) {
   const input = document.getElementById("teamnote-input-" + side);
   const team  = (document.getElementById(side === "blue" ? "blue-team" : "red-team") || {}).value || "";
   if (!input || !team.trim()) return;
-  if (!addTeamNote(team, logFormNoteContext(side), input.value)) return;
+  const d = noteDraft("log-" + side);
+  if (!addTeamNote(team, logFormNoteContext(side), input.value, d.dims, d.standing,
+                   { roles: d.roles, caveat: d.caveat, player: d.player, role: d.role,
+                     setup: d.setup, delivered: d.delivered })) return;
+  // A caveat raised while logging is a statement about this game, so record it
+  // on the entry too — that's what makes it checkable afterwards.
+  if (d.caveat) { draftCaveat = true; try { renderCaveatState(); } catch(e) {} }
   input.value = "";
+  clearNoteDraft("log-" + side);
   renderLogTeamNotes();
+  // A tagged standing read changes what shows next to the dimension scales.
+  try { renderDraftTags(); } catch(e) {}
 }
 
 let _tnTimer = null;
 function queueTeamNotes() {
   clearTimeout(_tnTimer);
-  _tnTimer = setTimeout(() => { try { renderLogTeamNotes(); } catch(e) {} }, 250);
+  _tnTimer = setTimeout(() => {
+    try { renderLogTeamNotes(); } catch(e) {}
+    try { refreshDraftTagReads(); } catch(e) {}
+  }, 250);
 }
 
 function addNoteFromTeamPage(key) {
   const input = document.getElementById("teamnote-page-input");
   if (!input) return;
+  const d = noteDraft("team-page");
   // No game in front of you here, so the note carries only today's date.
-  if (!addTeamNote(key, { date: localDateStr() }, input.value)) return;
+  if (!addTeamNote(key, { date: localDateStr() }, input.value, d.dims, d.standing,
+                   { roles: d.roles, caveat: d.caveat, player: d.player, role: d.role,
+                     setup: d.setup, delivered: d.delivered })) return;
   input.value = "";
+  clearNoteDraft("team-page");
   renderTeamPage();
 }
 
@@ -6057,9 +6453,16 @@ function renderLogTeamNotes() {
   const col = (team, side) => {
     if (!team) return "";
     const notes = teamNotesFor(team, 4);
+    const roleReads = standingRoleReads(team);
     return `<div style="margin-bottom:10px;">
       <div style="font-size:11px;font-weight:700;color:var(--${side});margin-bottom:4px;">${team}
         <span style="color:var(--muted);font-weight:400;">${notes.length ? notes.length + " recent" : "no notes yet"}</span></div>
+      ${roleReads.length ? `<div style="margin-bottom:6px;">${roleReads.map(r =>
+        `<div style="display:flex;gap:6px;align-items:baseline;padding:2px 6px;border-left:2px solid ${r.lean === 1 ? "var(--green)" : "#ff4d5e"};background:var(--surface2);border-radius:0 4px 4px 0;margin-bottom:2px;">
+          <span style="font-size:9px;font-weight:700;color:${r.lean === 1 ? "var(--green)" : "#ff4d5e"};flex:none;">${ROLE_ABBR[r.role] || r.role}</span>
+          <span style="font-size:10px;color:var(--muted);line-height:1.4;">${r.text}</span>
+          ${r.caveat ? '<span style="font-size:9px;color:var(--yellow);flex:none;margin-left:auto;">⚠</span>' : ""}
+        </div>`).join("")}</div>` : ""}
       ${notes.map(n => noteRowHtml(team, n, false)).join("")}
       <div style="display:flex;gap:5px;margin-top:6px;">
         <input type="text" id="teamnote-input-${side}" placeholder="Note on ${team}…"
@@ -6067,9 +6470,12 @@ function renderLogTeamNotes() {
           style="flex:1;font-size:12px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
         <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;" onclick="addNoteFromLog('${side}')">Add</button>
       </div>
+      ${noteTaggerHtml("log-" + side)}
     </div>`;
   };
   el.innerHTML = col(blue, "blue") + col(red, "red");
+  if (blue) renderNoteTagger("log-blue");
+  if (red)  renderNoteTagger("log-red");
 }
 
 // ── Team pages ───────────────────────────────────────────────────────────────
@@ -6323,6 +6729,7 @@ function renderTeamPage() {
           style="flex:1;font-size:12px;padding:6px 9px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);" />
         <button class="btn btn-ghost" style="font-size:11px;padding:5px 11px;" onclick="addNoteFromTeamPage('${t.key.replace(/'/g, "\'")}')">Add</button>
       </div>
+      ${noteTaggerHtml("team-page")}
       ${(() => {
         const notes = teamNotesFor(t.key, 25);
         if (!notes.length) return `<div style="font-size:12px;color:var(--muted);line-height:1.6;">
@@ -6361,6 +6768,7 @@ function renderTeamPage() {
       ${games.length > 60 ? `<div style="font-size:11px;color:var(--muted);padding-top:8px;">Showing the 60 most recent of ${games.length}.</div>` : ""}
     </div>
 
+    ${(() => { setTimeout(() => { try { renderNoteTagger("team-page"); } catch(e) {} }, 0); return ""; })()}
     ${variants.length > 1 ? `<div class="card" style="margin-bottom:12px;border-color:var(--yellow);">
       <div class="card-title" style="color:var(--yellow);">Name variants</div>
       <div style="font-size:12px;line-height:1.6;">This team appears as ${variants.map(v => `<b>${v}</b>`).join(", ")}.
@@ -6789,6 +7197,176 @@ function execFromDiff(d) {
 
 let execDemand = { blue: null, red: null };
 
+// ── Player delivery record ───────────────────────────────────────────────────
+// The pattern behind "the draft sets this player up to carry, but they weren't
+// good enough" is only worth capturing if it accumulates. Once you've written it
+// about the same player four times, that's a scouting read no site sells — and
+// it's directly actionable, because a draft that depends on someone who doesn't
+// convert is a draft advantage that won't show up on the scoreboard.
+function playerDelivery() {
+  const all = loadTeamNotes();
+  const byPlayer = {};
+  for (const teamK of Object.keys(all)) {
+    for (const n of (all[teamK] || [])) {
+      const who = (n.player || "").trim();
+      if (!who || n.setup === null || n.setup === undefined) continue;
+      const k = who.toLowerCase();
+      if (!byPlayer[k]) byPlayer[k] = { name: who, team: teamK, role: n.role || "",
+                                        askedN: 0, askedHit: 0, freeN: 0, freeHit: 0, notes: [] };
+      const p = byPlayer[k];
+      if (n.role && !p.role) p.role = n.role;
+      if (n.setup) { p.askedN++; if (n.delivered === true) p.askedHit++; }
+      else         { p.freeN++;  if (n.delivered === true) p.freeHit++;  }
+      p.notes.push({ date: n.date || "", text: n.text, setup: n.setup, delivered: n.delivered });
+    }
+  }
+  return Object.values(byPlayer)
+    .filter(p => p.askedN + p.freeN > 0)
+    .sort((a, b) => (b.askedN + b.freeN) - (a.askedN + a.freeN));
+}
+
+function renderPlayerDelivery() {
+  const el = document.getElementById("delivery-results");
+  if (!el) return;
+  const rows = playerDelivery();
+  if (!rows.length) {
+    el.innerHTML = `<div style="color:var(--muted);line-height:1.6;">
+      Nothing yet. While logging, tap a player's name on a note, say whether the draft put weight on them,
+      and whether they delivered. After a handful of games per player this becomes a record of who converts
+      when the draft asks and who doesn't.</div>`;
+    return;
+  }
+  const pct = (h, n) => n ? Math.round(h / n * 100) : null;
+  el.innerHTML =
+    `<div style="font-size:11px;color:var(--muted);margin-bottom:9px;line-height:1.6;">
+      ${rows.length} player${rows.length === 1 ? "" : "s"} with delivery notes.
+      "Asked" means you said the draft leaned on them. Under about 5 games a player's rate is a coin flip —
+      the count matters more than the percentage.</div>` +
+    rows.map(p => {
+      const a = pct(p.askedHit, p.askedN), f = pct(p.freeHit, p.freeN);
+      const tone = p.askedN < 5 ? "var(--muted)" : a >= 60 ? "var(--green)" : a <= 35 ? "#ff4d5e" : "var(--text)";
+      return `<div style="padding:8px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:baseline;gap:7px;">
+          <b style="font-size:13px;">${p.name}</b>
+          <span style="font-size:10px;color:var(--muted);">${ROLE_ABBR[p.role] || ""} ${p.team}</span>
+          <span style="margin-left:auto;font-size:13px;font-weight:700;color:${tone};">
+            ${p.askedN ? `${a}%` : "—"}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+          Delivered ${p.askedHit} of ${p.askedN} when the draft asked${
+            p.freeN ? ` · ${p.freeHit} of ${p.freeN} when it didn't` : ""}
+          ${p.askedN >= 5 && a !== null && f !== null && Math.abs(a - f) >= 25
+            ? `<br><span style="color:${a < f ? "#ff4d5e" : "var(--green)"};">${
+                a < f ? "Worse when the draft depends on them — the pressure is the problem, not the champion."
+                      : "Better when the draft leans on them — worth drafting for."}</span>` : ""}
+        </div>
+        ${p.askedN && a !== null && a <= 35 && p.askedN >= 4
+          ? `<div style="font-size:10px;color:var(--yellow);margin-top:3px;line-height:1.5;">
+              A draft built around ${p.name} is worth less than it looks.</div>` : ""}
+      </div>`;
+    }).join("");
+}
+
+// ── Draft caveats ────────────────────────────────────────────────────────────
+// A draft read and a reason to distrust it are different objects. Folding the
+// second into the first — rating the draft lower because you doubt execution —
+// destroys both: the read no longer says what the draft is worth, and the doubt
+// is never checked. Stored separately so each can be measured.
+let draftCaveat = false, draftCaveatReason = "";
+
+function toggleDraftCaveat() {
+  draftCaveat = !draftCaveat;
+  renderCaveatState();
+}
+function setCaveatReason(v) { draftCaveatReason = String(v || "").trim(); }
+
+function renderCaveatState() {
+  const btn = document.getElementById("caveat-btn");
+  const det = document.getElementById("caveat-detail");
+  if (!btn) return;
+  btn.style.background = draftCaveat ? "rgba(240,200,80,.14)" : "var(--surface2)";
+  btn.style.borderColor = draftCaveat ? "var(--yellow)" : "var(--border)";
+  btn.style.color = draftCaveat ? "var(--yellow)" : "var(--muted)";
+  btn.textContent = draftCaveat ? "⚠ Draft read flagged — may not translate" : "⚠ My draft read might not translate here";
+  if (det) det.style.display = draftCaveat ? "block" : "none";
+}
+
+// Was the read right? A draft read favours a side; the caveat says to distrust
+// it. So: how often does the favoured side actually win, with and without one.
+function caveatCalibration() {
+  const ann = loadAnnotations();
+  const out = { flagged: { n: 0, hit: 0 }, clean: { n: 0, hit: 0 }, reasons: [] };
+  for (const e of loadEntries()) {
+    if (e.isBulkImport || e.isStandaloneBet) continue;
+    if (!e.actualWinner) continue;
+    const pref = e.draftPref;
+    if (pref === null || pref === undefined || pref === 0) continue;   // no read to test
+    const favoured = pref < 0 ? "blue" : "red";
+    const hit = e.actualWinner === favoured;
+    const bucket = e.draftCaveat ? out.flagged : out.clean;
+    bucket.n++;
+    if (hit) bucket.hit++;
+    if (e.draftCaveat && e.draftCaveatReason) {
+      out.reasons.push({ reason: e.draftCaveatReason, hit, date: e.date || "",
+                         teams: `${e.blueTeam} vs ${e.redTeam}` });
+    }
+  }
+  return out;
+}
+
+function renderCaveatCalibration() {
+  const el = document.getElementById("caveat-results");
+  if (!el) return;
+  const c = caveatCalibration();
+  const pct = b => b.n ? Math.round(b.hit / b.n * 100) : null;
+  const fp = pct(c.flagged), cp = pct(c.clean);
+
+  if (!c.flagged.n) {
+    el.innerHTML = `<div style="color:var(--muted);line-height:1.6;">
+      No games flagged yet. When a draft looks good but something makes you doubt it will translate —
+      a player who can't play the style, a team that folds from behind — hit
+      <b>⚠ My draft read might not translate</b> on the log form and say why.
+      ${c.clean.n ? `<br><br>For reference, your unflagged reads are right on
+      ${cp}% of ${c.clean.n} games.` : ""}</div>`;
+    return;
+  }
+  const gap = (fp !== null && cp !== null) ? cp - fp : null;
+  const enough = c.flagged.n >= 15 && c.clean.n >= 15;
+  el.innerHTML =
+    `<div style="display:flex;gap:10px;margin-bottom:10px;">
+       <div style="flex:1;padding:9px;border-radius:7px;background:var(--surface2);border:1px solid var(--yellow);">
+         <div style="font-size:10px;color:var(--yellow);text-transform:uppercase;letter-spacing:.05em;">flagged</div>
+         <div style="font-size:19px;font-weight:700;">${fp}%</div>
+         <div style="font-size:10px;color:var(--muted);">${c.flagged.hit} of ${c.flagged.n} reads right</div>
+       </div>
+       <div style="flex:1;padding:9px;border-radius:7px;background:var(--surface2);border:1px solid var(--border);">
+         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">not flagged</div>
+         <div style="font-size:19px;font-weight:700;">${cp === null ? "—" : cp + "%"}</div>
+         <div style="font-size:10px;color:var(--muted);">${c.clean.hit} of ${c.clean.n} reads right</div>
+       </div>
+     </div>` +
+    (gap === null ? "" :
+      `<div style="padding:9px;border-radius:6px;background:var(--surface2);font-size:12px;line-height:1.7;">
+        ${!enough
+          ? `<span style="color:var(--yellow);">Too few games to conclude anything</span> — ${c.flagged.n} flagged, ${c.clean.n} clean. Fifteen of each is the point where this starts meaning something.`
+          : gap > 8
+            ? `Your caveats are <b style="color:var(--green);">worth trusting</b>. Reads you flagged land ${gap} points worse than reads you didn't — you're correctly identifying when the draft won't carry.`
+            : gap < -8
+              ? `Your caveats are <b style="color:#ff4d5e;">pointing the wrong way</b>. Flagged reads land ${-gap} points <i>better</i>. Whatever makes you doubt a draft is, if anything, a sign it's about to work.`
+              : `Your caveats aren't separating anything — ${Math.abs(gap)} points apart, which is noise at this sample size. The doubt may be real but it isn't landing on the games where the read fails.`}
+      </div>`) +
+    (c.reasons.length ? `<div style="margin-top:10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;">WHAT YOU DOUBTED</div>
+      ${c.reasons.slice(0, 12).map(r => `<div style="display:flex;gap:7px;padding:3px 0;font-size:11px;border-bottom:1px solid var(--border);">
+        <span style="color:${r.hit ? "#ff4d5e" : "var(--green)"};flex:none;">${r.hit ? "✗" : "✓"}</span>
+        <span style="flex:1;">${r.reason}</span>
+        <span style="color:var(--muted);flex:none;font-size:10px;">${r.teams}</span>
+      </div>`).join("")}
+      <div style="font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5;">
+        ✓ means the caveat was right and the favoured draft lost. ✗ means it won anyway.</div>
+    </div>` : "");
+}
+
 // ── Draft dimensions ─────────────────────────────────────────────────────────
 // Both teams usually draft something that does *something* well — the question
 // isn't who drafted better, it's who is better at what, and whether they've
@@ -6828,6 +7406,34 @@ function renderDraftTags() {
   if (!row || !wrap) return;
   const n = Object.keys(draftTags).length;
   if (cnt) cnt.textContent = n ? `${n} rated` : "optional";
+
+  // This is what makes a note worth writing: your standing read on each team
+  // appears beside the exact dimension it's about, at the moment you're rating
+  // it. Blue-side reads lean the scale negative, red-side positive, matching the
+  // sign convention of the buttons underneath.
+  const blueTeam = (document.getElementById("blue-team") || {}).value || "";
+  const redTeam  = (document.getElementById("red-team")  || {}).value || "";
+  const bStand = standingByDimension(blueTeam);
+  const rStand = standingByDimension(redTeam);
+  const readsFor = (dimId) => {
+    const bits = [];
+    for (const r of (bStand[dimId] || [])) {
+      bits.push(`<div style="font-size:10px;color:var(--muted);line-height:1.5;padding:1px 0;">
+        <span style="color:var(--blue);font-weight:600;">${blueTeam}</span>
+        <span style="color:${r.lean === 1 ? "var(--green)" : "#ff4d5e"};">${r.lean === 1 ? "strong" : "weak"}</span>
+        · ${r.text}</div>`);
+    }
+    for (const r of (rStand[dimId] || [])) {
+      bits.push(`<div style="font-size:10px;color:var(--muted);line-height:1.5;padding:1px 0;">
+        <span style="color:var(--red);font-weight:600;">${redTeam}</span>
+        <span style="color:${r.lean === 1 ? "var(--green)" : "#ff4d5e"};">${r.lean === 1 ? "strong" : "weak"}</span>
+        · ${r.text}</div>`);
+    }
+    return bits.length
+      ? `<div style="margin-top:3px;padding:4px 7px;background:var(--surface2);border-left:2px solid var(--blue);border-radius:0 4px 4px 0;">${bits.join("")}</div>`
+      : "";
+  };
+
   row.innerHTML = DRAFT_DIMENSIONS.map(d => {
     const v = draftTags[d.id];
     const cell = (val, label, tone) => {
@@ -6844,7 +7450,8 @@ function renderDraftTags() {
       </div>
       <div style="display:flex;gap:3px;">
         ${cell(-2,"B+2","b")}${cell(-1,"B+1","b")}${cell(0,"Even","e")}${cell(1,"R+1","r")}${cell(2,"R+2","r")}
-      </div></div>`;
+      </div>
+      ${readsFor(d.id)}</div>`;
   }).join("");
 }
 
@@ -6856,6 +7463,13 @@ function toggleDraftTagPanel() {
   wrap.style.display = open ? "none" : "block";
   if (btn) btn.textContent = open ? "▸ Rate dimensions" : "▾ Rate dimensions";
   if (!open) renderDraftTags();
+}
+
+// Team names change after the panel is open (a live card populating the form,
+// or typing), so refresh the reads alongside the notes panel.
+function refreshDraftTagReads() {
+  const row = document.getElementById("draft-tag-row");
+  if (row && row.style.display !== "none") { try { renderDraftTags(); } catch(e) {} }
 }
 
 function setDraftPref(val) {
@@ -6956,6 +7570,8 @@ function saveEntry() {
     modelDisagreement: (_modelDisagreement && !(getBetData()?.valueBet)) || false,
     draftPref,
     draftTags: Object.keys(draftTags).length ? { ...draftTags } : null,
+    draftCaveat: draftCaveat || false,
+    draftCaveatReason: draftCaveat ? draftCaveatReason : "",
     skillAdv,
     execDemand: JSON.parse(JSON.stringify(execDemand)),
     // The price at the time of logging, kept whether or not a bet was placed.
@@ -7003,7 +7619,9 @@ function clearForm() {
   _pendingPatch = null;
   try { const n = document.getElementById("log-team-notes"); if (n) n.innerHTML = ""; } catch(e) {}
   draftTags = {};
-  try { renderDraftTags(); } catch(e) {}
+  draftCaveat = false; draftCaveatReason = "";
+  const cr = document.getElementById("caveat-reason"); if (cr) cr.value = "";
+  try { renderDraftTags(); renderCaveatState(); } catch(e) {}
   ["blue-team","red-team","league","event-context","notes","mkt-blue-odds","mkt-red-odds"].forEach(id => {
     document.getElementById(id).value = "";
   });
@@ -14779,6 +15397,134 @@ async function syncScope(scope, opts) {
   return changed;
 }
 
+// ── Offline queue visibility ─────────────────────────────────────────────────
+// The sync layer already survives being offline: syncScope pushes everything
+// with updatedAt >= watermark, and syncNow only advances the watermark after the
+// server accepts the push. So a failed sync re-sends next time and nothing is
+// lost. What was missing is any way to *see* that — the pill said "Sync failed"
+// and left you guessing whether three hours of ratings were safe.
+// Everything the review page needs with no connection: the store synced up, the
+// champion attribute/icon data cached, and a report of what is actually
+// available so there are no surprises once the signal goes.
+async function prepareOffline() {
+  const el = document.getElementById("offline-prep");
+  if (!el) return;
+  const step = (t) => { el.innerHTML = `<div style="color:var(--muted);">${t}</div>`; };
+  const lines = [];
+
+  if (syncConfigured() && !isOffline()) {
+    step("Syncing everything…");
+    try { await syncNow({ full: true }); lines.push('<span style="color:var(--green);">✓</span> Store synced both ways'); }
+    catch(e) { lines.push('<span style="color:#ff4d5e;">✕</span> Sync failed — try again on a better connection'); }
+  } else if (!syncConfigured()) {
+    lines.push('<span style="color:var(--muted);">–</span> Sync not configured; local only');
+  } else {
+    lines.push('<span style="color:var(--yellow);">!</span> Currently offline — run this again when connected');
+  }
+
+  step("Caching champion data…");
+  try {
+    await ensureChampionData();
+    lines.push(_champAttrs && Object.keys(_champAttrs).length
+      ? '<span style="color:var(--green);">✓</span> Champion names and attributes cached'
+      : '<span style="color:#ff4d5e;">✕</span> Champion data unavailable');
+  } catch(e) { lines.push('<span style="color:#ff4d5e;">✕</span> Champion data unavailable'); }
+
+  // Warm the icon cache for everything in the review queue, so drafts render
+  // rather than showing broken images on the train.
+  step("Caching champion icons…");
+  let icons = 0;
+  try {
+    const seen = new Set();
+    for (const e of loadAllGameData()) {
+      for (const side of ["blue", "red"]) {
+        for (const c of (e.champions && e.champions[side]) || []) if (c) seen.add(c);
+      }
+    }
+    await Promise.all([...seen].slice(0, 400).map(c => new Promise(res => {
+      const u = champIconUrl(c);
+      if (!u) return res();
+      const img = new Image();
+      img.onload = () => { icons++; res(); };
+      img.onerror = () => res();
+      img.src = u;
+    })));
+    lines.push(`<span style="color:var(--green);">✓</span> ${icons} champion icons cached`);
+  } catch(e) { lines.push('<span style="color:var(--yellow);">!</span> Some icons may not load offline'); }
+
+  const q = (typeof _reviewQueue !== "undefined" && _reviewQueue) ? _reviewQueue.length : 0;
+  const local = loadAllGameData().length;
+  lines.push(`<span style="color:var(--green);">✓</span> ${local} games stored on this device${q ? ` · ${q} in the review queue` : ""}`);
+
+  el.innerHTML = lines.map(l => `<div style="padding:2px 0;line-height:1.6;">${l}</div>`).join("") +
+    `<div style="margin-top:8px;padding:8px;background:var(--surface2);border-radius:6px;line-height:1.6;color:var(--muted);">
+      Rating drafts, team notes, bets and results all work with no connection — they're written to this
+      device immediately and upload themselves when you're back. Anything needing the live API
+      (schedule refresh, auto-log, streams) won't, and will pick up afterwards.</div>`;
+  renderSyncQueue();
+}
+
+function pendingSyncCount() {
+  const wm = Number(localStorage.getItem(SYNC_WM_KEY)) || 0;
+  if (!wm) return null;                       // never synced; a full push is queued anyway
+  let n = 0;
+  for (const e of loadEntries())      if ((e.updatedAt || 0) >= wm) n++;
+  for (const e of loadBulkEntries())  if ((e.updatedAt || 0) >= wm) n++;
+  return n;
+}
+
+function isOffline() { return navigator.onLine === false; }
+
+function renderSyncQueue() {
+  const el = document.getElementById("sync-queue");
+  if (!el) return;
+  if (!syncConfigured()) {
+    el.innerHTML = `<div style="font-size:11px;color:var(--muted);line-height:1.6;">
+      Sync isn't set up, so everything stays on this device only. That's fine for a train,
+      but nothing will reach your other devices until you connect it.</div>`;
+    return;
+  }
+  const n = pendingSyncCount();
+  const off = isOffline();
+  const last = localStorage.getItem(SYNC_LAST_KEY) || "never";
+
+  if (n === 0 && !off) {
+    el.innerHTML = `<div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync ${last}.</div>`;
+    return;
+  }
+  const tone = off ? "var(--yellow)" : (n ? "var(--blue)" : "var(--muted)");
+  el.innerHTML = `<div style="border:1px solid ${tone};border-radius:8px;padding:9px 11px;background:var(--surface2);">
+    <div style="font-size:12px;color:${tone};font-weight:600;">
+      ${off ? "📴 Offline" : "Connected"}${n ? ` · ${n} change${n === 1 ? "" : "s"} waiting to upload` : " · nothing waiting"}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6;">
+      ${n ? "Your work is written to this device the moment you make it. It uploads by itself the next time there's a connection — nothing is lost if the app closes first." : ""}
+      Last successful sync: ${last}.</div>
+    ${n && !off ? `<button class="btn btn-primary" style="width:100%;margin-top:8px;font-size:12px;padding:6px;" onclick="syncNow({}).then(renderSyncQueue)">Upload now</button>` : ""}
+  </div>`;
+}
+
+// Keep the header pill honest about why a sync isn't happening, and push the
+// moment a connection comes back rather than waiting for the next poll.
+function wireOfflineWatch() {
+  const paint = () => {
+    try {
+      const n = pendingSyncCount();
+      if (isOffline()) setSyncStatus("err", n ? `Offline · ${n} waiting` : "Offline");
+      else if (n && _syncState !== "busy") setSyncStatus("pending", `${n} to upload`);
+      renderSyncQueue();
+    } catch(e) {}
+  };
+  window.addEventListener("offline", paint);
+  window.addEventListener("online", () => {
+    paint();
+    // Small delay: navigator.onLine flips before the connection is usable,
+    // especially on a train passing through a tunnel.
+    setTimeout(() => { if (!isOffline()) syncNow({}).then(() => { try { renderSyncQueue(); } catch(e) {} }); }, 1200);
+  });
+  setInterval(() => { if (document.visibilityState === "visible") paint(); }, 20000);
+  paint();
+}
+
 async function syncNow(opts = {}) {
   if (!syncConfigured()) { setSyncStatus("off", "Not connected"); return; }
   if (_syncRunning) { _syncQueued = true; return; }
@@ -14798,9 +15544,13 @@ async function syncNow(opts = {}) {
     try { checkBuildVersion(); } catch(e) {}
     updateSyncConnectedUI();
     if (changed) refreshAfterSync();
+    try { renderSyncQueue(); } catch(e) {}
   } catch(e) {
-    setSyncStatus("err", "Sync failed — " + e.message);
+    // Distinguish "no connection" from "the server rejected this" — the first
+    // is expected on a train and needs no action.
+    setSyncStatus("err", isOffline() ? "Offline — work is saved locally" : "Sync failed — " + e.message);
     console.warn("[sync]", e);
+    try { renderSyncQueue(); } catch(e2) {}
   } finally {
     _syncRunning = false;
     if (_syncQueued) { _syncQueued = false; setTimeout(() => syncNow({}), 500); }
@@ -17935,6 +18685,7 @@ const WATCH_SEEN_KEY  = "draftlogger_watch_auto_seen_v1";
 // auto-added channel this long after it was last seen live.
 const WATCH_LIVE_GRACE_MS = 30 * 60 * 1000;
 let _watchLiveMeta = {};   // channel -> [{league, blue, red}]
+let _watchAirReasons = {}; // channel -> why it is on screen right now
 
 function loadWatchSeen() {
   try { return JSON.parse(localStorage.getItem(WATCH_SEEN_KEY) || "{}") || {}; }
@@ -17978,6 +18729,80 @@ function toggleWatchAuto() {
   renderWatchPage();
 }
 
+// ── Schedule-driven stream presence ──────────────────────────────────────────
+// Driving this off live-match detection meant the stream list moved every time
+// getLive flickered between games, and every move re-rendered the page. The
+// schedule is stable: a league's block has a known first game, so a stream can
+// come up five minutes before it and stay for the block rather than appearing
+// and vanishing with each match.
+//
+// Live data is still used, but only as confirmation that a block is still
+// running — never as the trigger.
+const SCHED_LEAD_MS   = 5 * 60 * 1000;        // appear this far before the first game
+const BLOCK_GAP_MS    = 6 * 3600 * 1000;      // games this far apart are separate blocks
+const BLOCK_MIN_RUN   = 2.5 * 3600 * 1000;    // assume the last match needs this long
+const BLOCK_END_GRACE = 20 * 60 * 1000;       // and confirm it's over by this much silence
+
+// Cluster a league's scheduled games into blocks, and return the one that is
+// current or next.
+function leagueBlocks() {
+  const byLeague = {};
+  for (const g of loadTodayPlan().games) {
+    if (!g.scheduledTime) continue;
+    const t = new Date(g.scheduledTime).getTime();
+    if (isNaN(t)) continue;
+    const lg = (g.league || "").trim();
+    if (!lg) continue;
+    (byLeague[lg] = byLeague[lg] || []).push(t);
+  }
+  const out = [];
+  for (const lg of Object.keys(byLeague)) {
+    const times = byLeague[lg].sort((a, b) => a - b);
+    let block = [times[0]];
+    const blocks = [];
+    for (let i = 1; i < times.length; i++) {
+      if (times[i] - block[block.length - 1] > BLOCK_GAP_MS) { blocks.push(block); block = []; }
+      block.push(times[i]);
+    }
+    blocks.push(block);
+    for (const b of blocks) out.push({ league: lg, first: b[0], last: b[b.length - 1], n: b.length });
+  }
+  return out;
+}
+
+// Should this league have a stream up right now, and why.
+function leagueOnAir(league, liveLeagues, seenMap) {
+  const now = Date.now();
+  const blocks = leagueBlocks().filter(b => b.league === league);
+  const live = liveLeagues && liveLeagues.has(league);
+  if (live) return { on: true, reason: "live now" };
+
+  for (const b of blocks) {
+    const openAt  = b.first - SCHED_LEAD_MS;
+    const closeAt = b.last + BLOCK_MIN_RUN;
+    if (now >= openAt && now <= closeAt) {
+      return { on: true,
+               reason: now < b.first ? `starts in ${Math.max(1, Math.round((b.first - now) / 60000))}m`
+                                     : `block of ${b.n} scheduled` };
+    }
+    // Past the expected run: only drop once live has also been quiet, so an
+    // overrunning series isn't cut off mid-game.
+    if (now > closeAt && now <= closeAt + BLOCK_END_GRACE) {
+      const lastSeen = seenMap && seenMap.__leagueSeen && seenMap.__leagueSeen[league];
+      if (lastSeen && now - lastSeen < BLOCK_END_GRACE) return { on: true, reason: "confirming end" };
+    }
+  }
+  return { on: false, reason: "" };
+}
+
+// Every league the schedule or live data knows about, for the presence pass.
+function candidateLeagues(liveLeagues) {
+  const set = new Set();
+  leagueBlocks().forEach(b => set.add(b.league));
+  if (liveLeagues) liveLeagues.forEach(l => set.add(l));
+  return [...set];
+}
+
 let _lastLiveCards = [];
 
 // Takes the unfiltered live list. The league filter is applied here rather than
@@ -18017,27 +18842,50 @@ function syncWatchFromLive(cards) {
 
   if (!watchAutoOn()) return;
 
+  // Remember when each league was last seen live, so an overrunning series can
+  // be told apart from a block that has finished.
+  const seen = loadWatchSeen();
+  seen.__leagueSeen = seen.__leagueSeen || {};
+  const liveLeagues = new Set(_lastLiveCards.map(c => (c.league || "").trim()).filter(Boolean));
+  liveLeagues.forEach(l => { seen.__leagueSeen[l] = now; });
+
   const ownedMap = loadWatchOwnedMap();
-  const seen     = loadWatchSeen();
   const list     = loadWatchChannels();
   let changed = false;
 
-  for (const ch of liveChannels) {
-    const from = (meta[ch] || []).map(x => x.league).filter(Boolean).join(", ");
+  // Presence is decided per league from the schedule, then mapped to channels.
+  // A channel is wanted if any visible league pointing at it is on air.
+  const wanted = new Map();          // channel -> [league, ...]
+  const reasons = {};
+  for (const league of candidateLeagues(liveLeagues)) {
+    if (!isLeagueVisible(league)) continue;
+    const air = leagueOnAir(league, liveLeagues, seen);
+    if (!air.on) continue;
+    const info = getLeagueStream(league);
+    const target = info && (info.twitch || info.url);
+    if (!target) continue;
+    const ch = normaliseChannel(target);
+    if (!ch || !isEmbeddable(ch)) continue;
+    if (!wanted.has(ch)) wanted.set(ch, []);
+    wanted.get(ch).push(league);
+    reasons[ch] = air.reason;
+  }
+  _watchAirReasons = reasons;
+
+  for (const [ch, leagues] of wanted) {
+    const from = leagues.join(", ");
     seen[ch] = now;
     if (!list.includes(ch)) { list.push(ch); ownedMap[ch] = from; changed = true; }
     else if (ownedMap[ch] !== undefined && ownedMap[ch] !== from) { ownedMap[ch] = from; changed = true; }
   }
 
-  // Drop only what auto-follow added, and only once it has been quiet long
-  // enough — or straight away if the filter now excludes it.
+  // Drop only what auto-follow added, and only once its leagues are off air.
+  // The schedule window already spans the gaps between games, so this no longer
+  // needs the old per-poll grace to avoid flapping.
   for (const ch of Object.keys(ownedMap)) {
-    if (liveChannels.has(ch)) continue;
-    // Channels owned before this build have no timestamp. Treat them as seen
-    // now so upgrading doesn't clear whatever is currently on screen.
+    if (wanted.has(ch)) continue;
     if (seen[ch] === undefined) { seen[ch] = now; continue; }
-    const quietFor = now - seen[ch];
-    if (!hiddenChannels.has(ch) && quietFor < WATCH_LIVE_GRACE_MS) continue;
+    if (now - seen[ch] < BLOCK_END_GRACE) continue;
     const i = list.indexOf(ch);
     if (i >= 0) list.splice(i, 1);
     delete ownedMap[ch];
@@ -18189,6 +19037,48 @@ function popoutAll() {
   list.forEach((ch, i) => setTimeout(() => popoutChannel(ch), i * 350));
 }
 
+// ── Embed lifecycle ──────────────────────────────────────────────────────────
+// dbStartPolling runs on the dashboard as well as the watch page, and
+// syncWatchFromLive calls renderWatchPage from inside it. So iframes were being
+// created and given a src while screen-watch was still display:none. A Twitch
+// player that initialises in a hidden container never gets a video pipeline:
+// it renders, but autoplay is blocked and its own play button does nothing,
+// which is exactly why only a page refresh fixed it.
+//
+// Fix: never assign src while the page is hidden. Park it and assign on arrival.
+function watchVisible() {
+  const el = document.getElementById("screen-watch");
+  return !!(el && el.classList.contains("active")) && document.visibilityState === "visible";
+}
+
+function flushPendingEmbeds() {
+  if (!watchVisible()) return;
+  const grid = document.getElementById("watch-grid");
+  if (!grid) return;
+  grid.querySelectorAll("[data-ch]").forEach(tile => {
+    const wanted = tile.dataset.pendingSrc;
+    if (!wanted) return;
+    const f = tile.querySelector("iframe");
+    if (f && f.getAttribute("src") !== wanted) f.setAttribute("src", wanted);
+    delete tile.dataset.pendingSrc;
+  });
+}
+
+// Manual recovery that isn't a full page reload — reassigns every src, which
+// re-initialises any player the browser refused to start.
+function reloadAllEmbeds() {
+  const grid = document.getElementById("watch-grid");
+  if (!grid) return;
+  grid.querySelectorAll("[data-ch]").forEach(tile => {
+    const ch = tile.dataset.ch;
+    const f = tile.querySelector("iframe");
+    if (!f || !isEmbeddable(ch)) return;
+    const src = watchEmbedUrl(ch);
+    f.removeAttribute("src");
+    setTimeout(() => f.setAttribute("src", src), 80);
+  });
+}
+
 function renderWatchPage() {
   const grid = document.getElementById("watch-grid");
   const warn = document.getElementById("watch-warning");
@@ -18321,17 +19211,20 @@ function renderWatchPage() {
       } else if (f.getAttribute("src") !== wanted) {
         const stale = tile.querySelector(".watch-unplayable");
         if (stale) stale.remove();
-        f.setAttribute("src", wanted);
+        // Assign only when the page is actually on screen; otherwise park it.
+        if (watchVisible()) { f.setAttribute("src", wanted); delete tile.dataset.pendingSrc; }
+        else tile.dataset.pendingSrc = wanted;
       }
       const metaEl = tile.querySelector(".watch-meta");
       if (metaEl) {
         const games = _watchLiveMeta[ch] || [];
         const ownedMap = loadWatchOwnedMap();
         const from = ownedMap[ch];
+        const why = _watchAirReasons[ch];
         metaEl.textContent = games.length
           ? games.map(g => `${g.league}: ${g.blue} vs ${g.red}`).join("  ·  ")
           : (from !== undefined
-              ? `from ${from || "a league link"} — waiting…`
+              ? `${from || "a league link"}${why ? " — " + why : " — waiting…"}`
               : "pinned manually — not from a league link");
       }
       const btn = tile.querySelector(".watch-audio");
@@ -18344,6 +19237,9 @@ function renderWatchPage() {
     applyWatchLayout();
     updateWatchTileChrome();
   }
+
+  // Anything parked while the page was hidden starts now.
+  flushPendingEmbeds();
 
   // Chat follows whichever stream currently has audio.
   const panel = document.getElementById("watch-chat-panel");
@@ -19925,7 +20821,7 @@ function show(screen) {
     if (screen === "bets")      renderBets();
     if (screen === "betstats")  renderBetStats();
     if (screen === "today")     { loadTodayGames(); }
-    if (screen === "watch")     { renderWatchPage(); }
+    if (screen === "watch")     { renderWatchPage(); flushPendingEmbeds(); }
     if (screen === "draftreview") { buildReviewQueue(); }
     if (screen === "vodrate") { ensureChampionData().then(() => {}); pickVodGame(); }
     if (screen === "champions") {
@@ -19933,7 +20829,7 @@ function show(screen) {
       setTimeout(() => { try { maybeRefreshSwingStats(); } catch(e) {} }, 200);
     }
     if (screen === "model")     { try { renderChampWatch(); renderStreakCard(); } catch(e) {} }
-    if (screen === "settings")  { try { updateErrorBadge(); renderStatesPanel(); } catch(e) {} updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
+    if (screen === "settings")  { try { updateErrorBadge(); renderStatesPanel(); } catch(e) {} updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); try { renderSyncQueue(); } catch(e) {} loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
@@ -19950,6 +20846,7 @@ document.getElementById("game-date").value = localDateStr();
 initPickInputs();
 try { applyBlindMode(); } catch(e) {}
 try { startNotifWatcher(); } catch(e) {}
+try { wireOfflineWatch(); } catch(e) {}
 try { startDraftWatcher(); } catch(e) {}
 try { updatePendingBadge(); } catch(e) {}
 // Stamped on the way out, not on render — stamping while the card is on screen
@@ -19983,7 +20880,7 @@ if (syncConfigured()) {
     if (document.visibilityState === "visible") syncNow({});
   });
   window.addEventListener("focus", () => syncNow({}));
-  window.addEventListener("online", () => syncNow({}));
+  // The richer handler in wireOfflineWatch() supersedes a bare re-sync here.
   setInterval(() => { if (document.visibilityState === "visible") syncNow({}); }, 45000);
 
   // Best-effort flush when the phone backgrounds or closes the tab.
