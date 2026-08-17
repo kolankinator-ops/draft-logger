@@ -328,9 +328,9 @@
 <div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--blue);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -1555,7 +1555,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/16/2026, 3:06:22 AM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 8/17/2026, 1:50:51 PM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -1627,14 +1627,16 @@
         screen describes the same games as a figure from another. Live, Schedule and Watch keep
         following the 🏷 Leagues filter, which is about what you want on screen right now.</p>
       <div id="scope-summary" style="font-size:11px;"><div style="line-height:1.7;margin-bottom:6px;">
-       <b style="color:var(--green);">66</b> of 181 games in scope · <span style="color:var(--muted);">115 excluded</span></div><div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LEC <span style="color:var(--muted);">17</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            MSI <span style="color:var(--muted);">11</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCS <span style="color:var(--muted);">10</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LPL <span style="color:var(--muted);">10</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            CBLOL <span style="color:var(--muted);">10</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCK <span style="color:var(--muted);">6</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCP <span style="color:var(--muted);">2</span></span></div><div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6;">
+       <b style="color:var(--green);">4773</b> of 8908 games in scope · <span style="color:var(--muted);">4135 excluded</span></div><div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LPL <span style="color:var(--muted);">1429</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCK <span style="color:var(--muted);">1051</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LEC <span style="color:var(--muted);">710</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCP <span style="color:var(--muted);">643</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            CBLOL <span style="color:var(--muted);">404</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCS <span style="color:var(--muted);">357</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            MSI <span style="color:var(--muted);">71</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            Worlds <span style="color:var(--muted);">68</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            First Stand <span style="color:var(--muted);">40</span></span></div><div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.6;">
           Top means tier S or A on your Tiers screen, plus anything matching an international event.
           Move a league's tier there and this follows.</div></div>
     </div>
@@ -2052,7 +2054,7 @@
         <input type="checkbox" id="auto-log-enabled" onchange="saveAutoLogSettings()" style="width:16px;height:16px;">
         <span><b>Auto-log completed games on startup</b><br><span style="font-size:11px;color:var(--muted);">Silently imports any completed games in your selected leagues since last time you opened the app — keeps team and champion data current without bulk imports.</span></span>
       </label>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/16/2026, 1:19:45 AM</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 8/17/2026, 1:50:18 PM</div>
     </div>
   </div>
 
@@ -2267,7 +2269,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.08.12-b80";
+const BUILD_VERSION = "2026.08.12-b81";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -11778,6 +11780,113 @@ let _revDraftPref = null, _revSkillAdv = null, _revExec = { blue: null, red: nul
 let _revPred = null, _revConf = null, _revKnew = false;
 let _revTags = {};
 
+// Why the review queue is empty. "Nothing unrated in this window" is true for
+// half a dozen different reasons and the page couldn't tell them apart, which
+// makes an empty queue indistinguishable from a broken importer.
+function reviewQueueDiagnosis() {
+  const days = parseInt((document.getElementById("review-range") || {}).value) || 7;
+  const cutoff = new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+  const ann = loadAnnotations();
+  const all = loadAllGameData().filter(e => !e.isStandaloneBet);
+  const hasChamps = e => (e.champions?.blue || []).filter(Boolean).length >= 3
+                      && (e.champions?.red  || []).filter(Boolean).length >= 3;
+  const alreadyRated = e => e.draftPref != null || e.skillAdv != null ||
+                            (e.execDemand && (e.execDemand.blue || e.execDemand.red));
+
+  const inStore = all.length;
+  const inRange = all.filter(e => e.date && e.date >= cutoff);
+  const withResult = inRange.filter(e => e.actualWinner);
+  const withChamps = withResult.filter(hasChamps);
+  const unrated = withChamps.filter(e => !alreadyRated(e));
+  const unannotated = unrated.filter(e => !ann[gameKey(e)]);
+  const visible = unannotated.filter(e => typeof isLeagueVisible !== "function" || isLeagueVisible(e.league || ""));
+
+  // Newest game anywhere in the store — the single best signal for whether
+  // anything is arriving at all.
+  let newest = "";
+  for (const e of all) if ((e.date || "") > newest) newest = e.date || newest;
+
+  const auto = loadAutoLogSettings();
+  return { days, cutoff, inStore, inRange: inRange.length, withResult: withResult.length,
+           withChamps: withChamps.length, unrated: unrated.length,
+           unannotated: unannotated.length, visible: visible.length, newest,
+           autoEnabled: !!auto.enabled, autoLastRun: auto.lastRun || null,
+           autoLastAdded: auto.lastAdded || 0 };
+}
+
+function reviewEmptyHtml() {
+  const d = reviewQueueDiagnosis();
+  const daysSinceNewest = d.newest
+    ? Math.floor((Date.now() - new Date(d.newest + "T12:00:00").getTime()) / 86400000) : null;
+  const rows = [];
+  const row = (label, n, tone) =>
+    `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span>${label}</span><span style="color:${tone || "var(--text)"};font-weight:600;">${n}</span></div>`;
+
+  // The most likely cause first, stated plainly.
+  let headline;
+  if (!d.autoEnabled) {
+    headline = `<div style="color:var(--yellow);line-height:1.6;margin-bottom:8px;">
+      <b>Auto-log is switched off.</b> Nothing has been importing games, so there's nothing new to review.
+      It exits silently when disabled, which is why this page just looked empty.
+      Turn it on under Settings \u2192 Auto-log, then use the button below to fetch straight away.</div>`;
+  } else if (daysSinceNewest !== null && daysSinceNewest > 2) {
+    headline = `<div style="color:var(--yellow);line-height:1.6;margin-bottom:8px;">
+      <b>The newest game in the store is ${d.newest}, ${daysSinceNewest} days ago.</b>
+      Auto-log is on but hasn't brought anything in since${d.autoLastRun ? ` — last run ${new Date(d.autoLastRun).toLocaleString()}` : ""}.
+      It only runs when the app opens, so a week away means a week of nothing fetched.</div>`;
+  } else if (d.inRange && !d.withResult) {
+    headline = `<div style="color:var(--muted);line-height:1.6;margin-bottom:8px;">
+      ${d.inRange} games in range but none has a result yet, so there's nothing to review blind against.</div>`;
+  } else if (d.unrated && !d.visible) {
+    headline = `<div style="color:var(--yellow);line-height:1.6;margin-bottom:8px;">
+      ${d.unrated} games would qualify but your \u{1F3F7} Leagues filter excludes all of them.</div>`;
+  } else if (d.withChamps && !d.unrated) {
+    headline = `<div style="color:var(--green);line-height:1.6;margin-bottom:8px;">
+      Everything in the last ${d.days} days is already rated. Widen the range to go further back.</div>`;
+  } else {
+    headline = `<div style="color:var(--muted);line-height:1.6;margin-bottom:8px;">
+      Nothing unrated in the last ${d.days} days.</div>`;
+  }
+
+  rows.push(row(`Games in the store`, d.inStore, "var(--muted)"));
+  rows.push(row(`\u2192 dated in the last ${d.days} days`, d.inRange, d.inRange ? "var(--text)" : "var(--yellow)"));
+  rows.push(row(`\u2192 with a result`, d.withResult));
+  rows.push(row(`\u2192 with a full draft`, d.withChamps));
+  rows.push(row(`\u2192 not already rated`, d.unrated));
+  rows.push(row(`\u2192 not already reviewed`, d.unannotated));
+  rows.push(row(`\u2192 in your visible leagues`, d.visible, d.visible ? "var(--green)" : "var(--yellow)"));
+
+  return `<div class="empty" style="text-align:left;">
+    ${headline}
+    <div style="font-size:11px;line-height:1.7;background:var(--surface2);border-radius:7px;padding:9px 11px;">${rows.join("")}</div>
+    <button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:12px;padding:8px;" onclick="fetchGamesForReview()">\u21bb Fetch recent games now</button>
+    <div id="review-fetch-note" style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;"></div>
+  </div>`;
+}
+
+// Auto-log only fires at startup, so there was no way to ask for games without
+// reloading the app.
+async function fetchGamesForReview() {
+  const note = document.getElementById("review-fetch-note");
+  const set = t => { if (note) note.textContent = t; };
+  const s = loadAutoLogSettings();
+  if (!s.enabled) { set("Auto-log is off — enable it in Settings first, then try again."); return; }
+  set("Fetching…");
+  try {
+    const before = loadAllGameData().length;
+    await runAutoLog(false);
+    const added = loadAllGameData().length - before;
+    set(added ? `Added ${added} game${added === 1 ? "" : "s"}. Rebuilding the queue…`
+              : "Nothing new found — the schedule has no completed games you don't already have.");
+    invalidateDerivedCaches();
+    buildReviewQueue();
+    renderReviewCard();
+  } catch (e) {
+    set("Fetch failed: " + (e && e.message ? e.message : "unknown error"));
+  }
+}
+
 function buildReviewQueue() {
   // Refresh the icon map in the background; the board renders either way.
   ensureChampionData().then(() => { try { renderReviewCard(); } catch(e) {} });
@@ -11821,7 +11930,9 @@ function renderReviewCard() {
     ? `${_reviewIdx + 1} of ${_reviewQueue.length}` : "";
 
   if (_reviewIdx >= _reviewQueue.length) {
-    el.innerHTML = `<div class="empty">${_reviewQueue.length ? "All done \u2014 queue cleared." : "Nothing unrated in this window."}</div>`;
+    el.innerHTML = _reviewQueue.length
+      ? `<div class="empty">All done \u2014 queue cleared.</div>`
+      : reviewEmptyHtml();
     return;
   }
 
