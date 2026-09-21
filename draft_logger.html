@@ -422,12 +422,12 @@
             background:var(--blue);color:#fff;border:none;border-radius:999px;
             padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;
             box-shadow:0 2px 10px rgba(0,0,0,.45);"></div>
-<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
+<div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--muted);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="team" onclick="show('team');closeDrawer()" class="">🛡 Teams</button><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="standings" onclick="show('standings');closeDrawer()">Standings</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="team" onclick="show('team')" class="">🛡 Teams</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="standings" onclick="show('standings')">Standings</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -556,9 +556,498 @@
     <div style="font-size:15px;font-weight:600;">🛡 Teams</div>
     <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="openLeagueFilter()">🏷 Leagues</button>
   </div>
-  <div id="team-scope" style="margin-bottom:8px;"></div>
+  <div id="team-scope" style="margin-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;margin-bottom:10px;
+    background:var(--surface2);border:1px solid var(--border);border-radius:7px;font-size:11px;">
+    <span style="color:var(--muted);font-weight:600;">🌐 Scope</span>
+    <select onchange="setDataScope(this.value)" style="font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
+    <option value="all" selected="">All leagues</option>
+    <option value="top">Top leagues + intl</option>
+    <option value="custom">My 🏷 selection</option>
+  </select>
+    
+  </div></div>
   <input type="text" id="team-search" placeholder="Search a team — T1, GEN, G2…" oninput="renderTeamPage()" style="width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);margin-bottom:10px;">
-  <div id="team-content"></div>
+  <div id="team-content"><div style="font-size:11px;color:var(--muted);margin-bottom:8px;">406 teams in your data · strongest first · rating includes each league's strength</div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('BLG', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#1</div>
+          <div onclick="selectTeam('BLG')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">BLG
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">136</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">58</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1888
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-39</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('GEN', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#2</div>
+          <div onclick="selectTeam('GEN')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">GEN
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">109</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">45</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1797
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+52</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('ANYONE\'S LEGEND', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#3</div>
+          <div onclick="selectTeam('ANYONE\'S LEGEND')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">ANYONE'S LEGEND
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">91</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">62</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1789
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-8</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('TOP ESPORTS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#4</div>
+          <div onclick="selectTeam('TOP ESPORTS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Top Esports
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">94</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">72</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1778
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-56</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('NIP', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#5</div>
+          <div onclick="selectTeam('NIP')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">NIP
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">63</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">36</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1769
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-8</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('T1', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#6</div>
+          <div onclick="selectTeam('T1')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">T1
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">100</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">57</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1757
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-60</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('JD GAMING', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#7</div>
+          <div onclick="selectTeam('JD GAMING')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">JD Gaming
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">82</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">84</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1752
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-12</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('LYON', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#8</div>
+          <div onclick="selectTeam('LYON')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">LYON
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">68</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">30</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1739
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+30</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('HLE', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#9</div>
+          <div onclick="selectTeam('HLE')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">HLE
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">86</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">56</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1731
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+16</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('IG', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#10</div>
+          <div onclick="selectTeam('IG')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">IG
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">65</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">65</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1717
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+42</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('WEIBO GAMING', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#11</div>
+          <div onclick="selectTeam('WEIBO GAMING')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Weibo Gaming
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">58</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">68</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1701
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-31</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('DK', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#12</div>
+          <div onclick="selectTeam('DK')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">DK
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">92</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">63</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1699
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-10</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('TLAW', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#13</div>
+          <div onclick="selectTeam('TLAW')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">TLAW
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">51</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">29</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1677
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+18</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('G2', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#14</div>
+          <div onclick="selectTeam('G2')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">G2
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LEC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">96</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">44</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1656
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-2</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('KT', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#15</div>
+          <div onclick="selectTeam('KT')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">KT
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">72</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">73</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1653
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-45</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('TEAM WE', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#16</div>
+          <div onclick="selectTeam('TEAM WE')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Team WE
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">50</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">85</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1652
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-16</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('TSW', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#17</div>
+          <div onclick="selectTeam('TSW')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">TSW
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCP</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">94</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">43</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1647
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+36</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('KC', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#18</div>
+          <div onclick="selectTeam('KC')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">KC
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LEC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">85</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">42</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1647
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+25</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('C9', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#19</div>
+          <div onclick="selectTeam('C9')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">C9
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">47</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">32</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1645
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+50</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('LGD GAMING', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#20</div>
+          <div onclick="selectTeam('LGD GAMING')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">LGD Gaming
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">40</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">47</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1627
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-7</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('VER', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#21</div>
+          <div onclick="selectTeam('VER')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">VER
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NLC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">68</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">20</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1624
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+5</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('LNG ESPORTS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#22</div>
+          <div onclick="selectTeam('LNG ESPORTS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">LNG Esports
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">30</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">37</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1613
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-45</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('FPX', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#23</div>
+          <div onclick="selectTeam('FPX')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">FPX
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">4</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">25</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1606
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+35</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('EDWARD GAMING', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#24</div>
+          <div onclick="selectTeam('EDWARD GAMING')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">EDward Gaming
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">40</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">52</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1605
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+37</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('BNK FEARX', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#25</div>
+          <div onclick="selectTeam('BNK FEARX')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">BNK FEARX
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">69</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">70</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1599
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+16</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('T1 ESPORTS ACADEMY ROOKIES', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#26</div>
+          <div onclick="selectTeam('T1 ESPORTS ACADEMY ROOKIES')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">T1 Esports Academy Rookies
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCKC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">40</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">16</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1598
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-36</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('FLY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#27</div>
+          <div onclick="selectTeam('FLY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">FLY
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">36</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">36</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1592
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+28</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('GOLDEN LIONS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#28</div>
+          <div onclick="selectTeam('GOLDEN LIONS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">GOLDEN LIONS
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LFL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">45</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">15</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1592
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+66</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('UP', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#29</div>
+          <div onclick="selectTeam('UP')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">UP
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">14</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">31</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1584
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+64</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('TT', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#30</div>
+          <div onclick="selectTeam('TT')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">TT
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">25</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">51</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1578
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-15</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('MVK ESPORTS ACADEMY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#31</div>
+          <div onclick="selectTeam('MVK ESPORTS ACADEMY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">MVK Esports Academy
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> VCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">19</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">2</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1570
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-24</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('FRENCH FLAIR', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#32</div>
+          <div onclick="selectTeam('FRENCH FLAIR')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">French Flair
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LFL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">27</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">10</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1567
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+6</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('PARTIZAN SANGAL', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#33</div>
+          <div onclick="selectTeam('PARTIZAN SANGAL')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Partizan Sangal
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> EBL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">21</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">3</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1565
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-12</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('FENNEL', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#34</div>
+          <div onclick="selectTeam('FENNEL')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">FENNEL
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LJL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">16</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">0</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1565
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+138</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('CPD', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#35</div>
+          <div onclick="selectTeam('CPD')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">CPD
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NACL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">15</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">2</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1562
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+84</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('NONGSHIM ESPORTS ACADEMY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#36</div>
+          <div onclick="selectTeam('NONGSHIM ESPORTS ACADEMY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Nongshim Esports Academy
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCKC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">22</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">10</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1560
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+9</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('UNICORNS OF LOVE SEXY EDITION', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#37</div>
+          <div onclick="selectTeam('UNICORNS OF LOVE SEXY EDITION')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Unicorns of Love Sexy Edition
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"></span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">24</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">16</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1560
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+61</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('EST', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#38</div>
+          <div onclick="selectTeam('EST')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">EST
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> Circuito Desafiante</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">36</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">12</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1555
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+64</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('SOLARY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#39</div>
+          <div onclick="selectTeam('SOLARY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Solary
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LFL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">24</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">9</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1555
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-103</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('DEEP CROSS GAMING', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#40</div>
+          <div onclick="selectTeam('DEEP CROSS GAMING')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Deep Cross Gaming
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCP</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">21</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">15</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1554
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-33</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('HANWHA LIFE ESPORTS ACADEMY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#41</div>
+          <div onclick="selectTeam('HANWHA LIFE ESPORTS ACADEMY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Hanwha Life Esports Academy
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"></span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">11</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">4</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1553
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+96</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('MKF', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#42</div>
+          <div onclick="selectTeam('MKF')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">MKF
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LES</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">46</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">18</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1552
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+14</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('HANJIN BRION', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#43</div>
+          <div onclick="selectTeam('HANJIN BRION')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">HANJIN BRION
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCK</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">52</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">62</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1552
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-8</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('SEN', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#44</div>
+          <div onclick="selectTeam('SEN')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">SEN
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">24</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">26</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1552
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+10</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('DIGNITAS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#45</div>
+          <div onclick="selectTeam('DIGNITAS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Dignitas
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">2</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">5</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1549<span style="display:block;font-size:9px;font-weight:400;color:var(--yellow);">7g only</span>
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-36</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('OH MY GOD', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#46</div>
+          <div onclick="selectTeam('OH MY GOD')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Oh My God
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LPL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">8</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">24</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1546
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+7</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('SENTINELS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#47</div>
+          <div onclick="selectTeam('SENTINELS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Sentinels
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCS</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">12</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">17</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1545
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-41</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('MKOI', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#48</div>
+          <div onclick="selectTeam('MKOI')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">MKOI
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LEC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">49</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">43</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1542
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+3</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('MOVISTAR KOI', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#49</div>
+          <div onclick="selectTeam('MOVISTAR KOI')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Movistar KOI
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LEC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">25</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">20</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1542
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-22</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('HRTS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#50</div>
+          <div onclick="selectTeam('HRTS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">HRTS
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LES</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">46</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">22</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1541
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+1</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('AP', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#51</div>
+          <div onclick="selectTeam('AP')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">AP
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NLC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">26</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">18</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1541
+            </div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('RUD', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#52</div>
+          <div onclick="selectTeam('RUD')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">RUD
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NLC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">24</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">25</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1540
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+102</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('WLGAMING ESPORTS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#53</div>
+          <div onclick="selectTeam('WLGAMING ESPORTS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">WLGaming Esports
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> HLL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">23</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">10</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1540
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-50</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('BIG', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#54</div>
+          <div onclick="selectTeam('BIG')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">BIG
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> Prime League</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">83</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">30</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1538
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+27</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('KCB', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#55</div>
+          <div onclick="selectTeam('KCB')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">KCB
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LEC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">22</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">21</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1538
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+19</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('GAM', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#56</div>
+          <div onclick="selectTeam('GAM')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">GAM
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> LCP</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">42</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">36</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1536
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-25</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('DPLUS KIA ACADEMY', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#57</div>
+          <div onclick="selectTeam('DPLUS KIA ACADEMY')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Dplus Kia Academy
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"></span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">10</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">6</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1536
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-38</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('ARCTIC PANDAS', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#58</div>
+          <div onclick="selectTeam('ARCTIC PANDAS')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">Arctic Pandas
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NLC</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">15</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">8</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1533
+            <span style="display:block;font-size:9px;font-weight:600;color:#ff4d5e;">-59</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('NRG', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#59</div>
+          <div onclick="selectTeam('NRG')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">NRG
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> NACL</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">40</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">19</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1532
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+30</span></div>
+        </div><div style="display:flex;width:100%;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;">
+          <button onclick="event.stopPropagation();toggleFave('G2N', renderTeamPage)" title="Add to favourites" style="background:none;border:none;cursor:pointer;font-size:17px;line-height:1;padding:0 2px;color:var(--border);">☆</button>
+          <div style="width:26px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#60</div>
+          <div onclick="selectTeam('G2N')" style="flex:1;min-width:0;font-size:13px;font-weight:600;cursor:pointer;">G2N
+            <span style="font-weight:400;font-size:10px;color:var(--muted);"> Prime League</span></div>
+          <div style="font-size:11px;flex:none;"><span style="color:var(--green);">75</span><span style="color:var(--muted);">–</span><span style="color:#ff4d5e;">34</span></div>
+          <div style="width:62px;flex:none;text-align:right;font-size:13px;font-weight:700;">1532
+            <span style="display:block;font-size:9px;font-weight:600;color:var(--green);">+54</span></div>
+        </div></div>
 </div>
 
 <!-- BLINDED DRAFT REVIEW -->
@@ -1842,36 +2331,35 @@
       roughly the same number of games, so anyone well below their league's median is either
       missing games or stored under a second name.</p>
     <div id="coverage-results">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Last 180 days · 2608 games</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Last 180 days · 2549 games</div>
     <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LPL</span><span style="color:var(--muted);">14 teams · 656 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LEC</span><span style="color:var(--muted);">14 teams · 471 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LCK</span><span style="color:var(--muted);">10 teams · 594 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LCKC</span><span style="color:var(--muted);">2 teams · 4 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LRN</span><span style="color:var(--muted);">10 teams · 20 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LFL</span><span style="color:var(--muted);">9 teams · 92 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>Prime League</span><span style="color:var(--muted);">10 teams · 390 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>LRS</span><span style="color:var(--muted);">7 teams · 16 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>VCS</span><span style="color:var(--muted);">4 teams · 40 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LFL</span><span style="color:var(--muted);">9 teams · 90 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>NLC</span><span style="color:var(--muted);">15 teams · 255 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>VCS</span><span style="color:var(--muted);">4 teams · 46 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>Prime League</span><span style="color:var(--muted);">10 teams · 390 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LEC</span><span style="color:var(--muted);">14 teams · 471 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>NACL</span><span style="color:var(--muted);">18 teams · 447 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>CBLOL</span><span style="color:var(--muted);">10 teams · 349 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LCK</span><span style="color:var(--muted);">10 teams · 594 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LCKC</span><span style="color:var(--muted);">2 teams · 4 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>LJL</span><span style="color:var(--muted);">3 teams · 9 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-      <span>AL</span><span style="color:var(--muted);">3 teams · 9 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>Circuito Desafiante</span><span style="color:var(--muted);">8 teams · 297 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>AL</span><span style="color:var(--muted);">3 teams · 9 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>LCS</span><span style="color:var(--muted);">8 teams · 302 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>LCP</span><span style="color:var(--muted);">15 teams · 312 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LPL</span><span style="color:var(--muted);">14 teams · 656 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>LES</span><span style="color:var(--muted);">7 teams · 261 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>TCL</span><span style="color:var(--muted);">10 teams · 244 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+      <span>LRN</span><span style="color:var(--muted);">2 teams · 2 games</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
       <span>Road of Legends</span><span style="color:var(--muted);">2 teams · 2 games</span></div>
     
       <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:12px 0 4px;">WELL BELOW THEIR LEAGUE'S MEDIAN</div>
       <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
         <span><b>RSM</b> <span style="color:var(--muted);font-size:11px;">LCP</span></span>
         <span style="color:var(--yellow);">1 games vs 24 typical</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
-        <span><b>FLUXO W7M</b> <span style="color:var(--muted);font-size:11px;">CBLOL</span></span>
-        <span style="color:var(--yellow);">2 games vs 42 typical</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
         <span><b>PAIN GAMING</b> <span style="color:var(--muted);font-size:11px;">CBLOL</span></span>
+        <span style="color:var(--yellow);">2 games vs 42 typical</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
+        <span><b>FLUXO W7M</b> <span style="color:var(--muted);font-size:11px;">CBLOL</span></span>
         <span style="color:var(--yellow);">2 games vs 42 typical</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
         <span><b>LØS</b> <span style="color:var(--muted);font-size:11px;">CBLOL</span></span>
         <span style="color:var(--yellow);">3 games vs 42 typical</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;">
@@ -2072,7 +2560,7 @@
 <!-- SETTINGS / SYNC -->
 <div class="screen active" id="screen-settings">
 
-  <div id="error-badge" style="display: block; font-size: 12px; line-height: 1.6; background: var(--surface2); border: 1px solid var(--yellow); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px;"><b style="color:var(--yellow);">⚠ 11 errors in the last 7 days.</b>
+  <div id="error-badge" style="display: block; font-size: 12px; line-height: 1.6; background: var(--surface2); border: 1px solid var(--yellow); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px;"><b style="color:var(--yellow);">⚠ 12 errors in the last 7 days.</b>
     <span style="color:var(--muted);">Most recent: You've exceeded your rate limit. Please wait some time and try again.</span>
     <button class="btn btn-ghost" style="margin-top:8px;font-size:11px;padding:4px 10px;" onclick="showErrorLog()">View</button>
     <button class="btn btn-ghost" style="margin-top:8px;font-size:11px;padding:4px 10px;" onclick="clearErrorLog()">Clear</button></div>
@@ -2106,7 +2594,7 @@
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
-    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 9/18/2026, 7:23:52 PM.</div></div>
+    <div id="sync-queue" style="margin-top:8px;"><div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync 9/21/2026, 10:50:42 AM.</div></div>
     <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:10px;">
       <div style="font-size:12px;font-weight:600;margin-bottom:4px;">✈ Going offline</div>
       <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
@@ -2150,7 +2638,7 @@
        open, on any screen, across all leagues — the league filter is not applied here because game
        state predicts outcomes regardless of league. Needs a few thousand labelled games to fit a
        model, and cannot be backfilled: the feed only serves live and recent matches.</span>
-       
+       <br><span style="opacity:.7;">last sweep 4s ago</span>
      </div></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -2174,27 +2662,33 @@
         screen describes the same games as a figure from another. Live, Schedule and Watch keep
         following the 🏷 Leagues filter, which is about what you want on screen right now.</p>
       <div id="scope-summary" style="font-size:11px;"><div style="line-height:1.7;margin-bottom:6px;">
-       <b style="color:var(--green);">179</b> of 179 games in scope</div><div style="font-size:11px;color:var(--yellow);margin-bottom:6px;line-height:1.6;">
-       2 duplicates were being counted twice — the same game present as both a
+       <b style="color:var(--green);">6474</b> of 6474 games in scope</div><div style="font-size:11px;color:var(--yellow);margin-bottom:6px;line-height:1.6;">
+       3377 duplicates were being counted twice — the same game present as both a
        hand-logged entry and an import. Now collapsed, so every figure in the app is off its previous value by that much.</div><div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            Prime League <span style="color:var(--muted);">33</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LFL <span style="color:var(--muted);">22</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LES <span style="color:var(--muted);">20</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LEC <span style="color:var(--muted);">17</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            Esports World Cup <span style="color:var(--muted);">15</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            MSI <span style="color:var(--muted);">11</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LPL <span style="color:var(--muted);">10</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCS <span style="color:var(--muted);">9</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            CBLOL <span style="color:var(--muted);">9</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            NACL <span style="color:var(--muted);">9</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            Circuito Desafiante <span style="color:var(--muted);">9</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCK <span style="color:var(--muted);">6</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            KeSPA Cup <span style="color:var(--muted);">3</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCP <span style="color:var(--muted);">2</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LCK CL <span style="color:var(--muted);">1</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            Road of Legends <span style="color:var(--muted);">1</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            NLC <span style="color:var(--muted);">1</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
-            LRN <span style="color:var(--muted);">1</span></span></div></div>
+            LPL <span style="color:var(--muted);">763</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCK <span style="color:var(--muted);">565</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LEC <span style="color:var(--muted);">461</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCP <span style="color:var(--muted);">449</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            NACL <span style="color:var(--muted);">313</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            TCL <span style="color:var(--muted);">312</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            NLC <span style="color:var(--muted);">291</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            Prime League <span style="color:var(--muted);">287</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            CBLOL <span style="color:var(--muted);">261</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LES <span style="color:var(--muted);">256</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            Circuito Desafiante <span style="color:var(--muted);">252</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCS <span style="color:var(--muted);">238</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LFL <span style="color:var(--muted);">217</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCK CL <span style="color:var(--muted);">187</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LJL <span style="color:var(--muted);">168</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            EM <span style="color:var(--muted);">150</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            AL <span style="color:var(--muted);">120</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LCKC <span style="color:var(--muted);">119</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            HW <span style="color:var(--muted);">103</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            MSI <span style="color:var(--muted);">100</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            LIT <span style="color:var(--muted);">96</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            HLL <span style="color:var(--muted);">71</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            ROL <span style="color:var(--muted);">69</span></span><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10px;">
+            Worlds <span style="color:var(--muted);">68</span></span></div></div>
     </div>
     <div id="champname-results" style="font-size:12px;"><div style="line-height:1.8;">
        <div><b>193</b> distinct names appear in your games</div>
@@ -2202,70 +2696,70 @@
        <div><b style="color:var(--yellow);">22</b> were being counted twice or more</div>
      </div><div style="margin-top:8px;"><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Aurelion Sol</span>
-             <span style="color:var(--muted);">AurelionSol (12) + Aurelion Sol (27)</span>
+             <span style="color:var(--muted);">AurelionSol (15) + Aurelion Sol (27)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Bel'Veth</span>
              <span style="color:var(--muted);">Belveth (5) + Bel'Veth (1)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Cho'Gath</span>
-             <span style="color:var(--muted);">Chogath (58) + Cho'Gath (24)</span>
+             <span style="color:var(--muted);">Chogath (60) + Cho'Gath (24)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Dr. Mundo</span>
-             <span style="color:var(--muted);">DrMundo (169) + Dr. Mundo (309)</span>
+             <span style="color:var(--muted);">DrMundo (177) + Dr. Mundo (309)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Fiddlesticks</span>
-             <span style="color:var(--muted);">FiddleSticks (3) + Fiddlesticks (2)</span>
+             <span style="color:var(--muted);">FiddleSticks (4) + Fiddlesticks (2)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Jarvan IV</span>
-             <span style="color:var(--muted);">JarvanIV (914) + Jarvan IV (555)</span>
+             <span style="color:var(--muted);">JarvanIV (990) + Jarvan IV (555)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">K'Sante</span>
-             <span style="color:var(--muted);">KSante (742) + K'Sante (599)</span>
+             <span style="color:var(--muted);">KSante (808) + K'Sante (599)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Kai'Sa</span>
-             <span style="color:var(--muted);">Kaisa (441) + Kai'Sa (327)</span>
+             <span style="color:var(--muted);">Kaisa (475) + Kai'Sa (327)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Kha'Zix</span>
              <span style="color:var(--muted);">Khazix (14) + Kha'Zix (21)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Kog'Maw</span>
-             <span style="color:var(--muted);">KogMaw (39) + Kog'Maw (20)</span>
+             <span style="color:var(--muted);">KogMaw (41) + Kog'Maw (20)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">LeBlanc</span>
-             <span style="color:var(--muted);">Leblanc (130) + LeBlanc (80)</span>
+             <span style="color:var(--muted);">Leblanc (147) + LeBlanc (80)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Lee Sin</span>
-             <span style="color:var(--muted);">LeeSin (442) + Lee Sin (95)</span>
+             <span style="color:var(--muted);">LeeSin (472) + Lee Sin (95)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Master Yi</span>
              <span style="color:var(--muted);">MasterYi (2) + Master Yi (1)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Miss Fortune</span>
-             <span style="color:var(--muted);">MissFortune (166) + Miss Fortune (131)</span>
+             <span style="color:var(--muted);">MissFortune (188) + Miss Fortune (131)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Nunu &amp; Willump</span>
              <span style="color:var(--muted);">Nunu (3) + Nunu &amp; Willump (5)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Rek'Sai</span>
-             <span style="color:var(--muted);">RekSai (67) + Rek'Sai (88)</span>
+             <span style="color:var(--muted);">RekSai (68) + Rek'Sai (88)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Renata Glasc</span>
-             <span style="color:var(--muted);">Renata (140) + Renata Glasc (66)</span>
+             <span style="color:var(--muted);">Renata (156) + Renata Glasc (66)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Tahm Kench</span>
-             <span style="color:var(--muted);">TahmKench (23) + Tahm Kench (7)</span>
+             <span style="color:var(--muted);">TahmKench (26) + Tahm Kench (7)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Twisted Fate</span>
-             <span style="color:var(--muted);">TwistedFate (168) + Twisted Fate (44)</span>
+             <span style="color:var(--muted);">TwistedFate (190) + Twisted Fate (44)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Vel'Koz</span>
              <span style="color:var(--muted);">Velkoz (8) + Vel'Koz (2)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Wukong</span>
-             <span style="color:var(--muted);">MonkeyKing (772) + Wukong (535)</span>
+             <span style="color:var(--muted);">MonkeyKing (822) + Wukong (535)</span>
            </div><div style="display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;">
              <span style="flex:none;font-weight:600;width:96px;">Xin Zhao</span>
-             <span style="color:var(--muted);">XinZhao (921) + Xin Zhao (583)</span>
+             <span style="color:var(--muted);">XinZhao (1025) + Xin Zhao (583)</span>
            </div><div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">
           These are now merged everywhere — champion stats, lane matchups, synergy and the model factors.
           Win rates for these champions were previously computed on part of their games.</div></div></div>
@@ -2273,9 +2767,32 @@
       <input type="text" id="champacct-input" placeholder="Where are a champion's games?" oninput="queueChampAccounting()" style="flex:1;font-size:12px;padding:6px 9px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
     </div>
     <div id="champacct-results" style="font-size:12px;margin-top:8px;"></div>
-    <div id="patch-coverage" style="font-size:12px;"><div style="color:var(--muted);line-height:1.6;">No patch data yet. The field comes from the
-      live feed, so it fills in as games are auto-logged or imported from here on. Re-running a bulk import
-      backfills it for anything the feed still serves.</div></div>
+    <div id="patch-coverage" style="font-size:12px;"><div style="line-height:1.7;">
+       <b>888</b> games carry a patch from the feed · <b>5586</b> dated into one ·
+       <b style="color:var(--muted);">0</b> unplaceable
+       <span style="color:var(--muted);">of 6474</span></div>
+     <div style="font-size:11px;color:var(--muted);margin:6px 0 8px;line-height:1.6;">
+       Patches marked * on a game were inferred from its date against the calendar below, not read from the feed.</div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.17</b> <span style="color:var(--muted);font-size:11px;">from 2026-08-28</span></span>
+        <span style="color:var(--muted);">127 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.16</b> <span style="color:var(--muted);font-size:11px;">from 2026-08-14</span></span>
+        <span style="color:var(--muted);">246 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.15</b> <span style="color:var(--muted);font-size:11px;">from 2026-08-05</span></span>
+        <span style="color:var(--muted);">253 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.10</b> <span style="color:var(--muted);font-size:11px;">from 2026-05-18</span></span>
+        <span style="color:var(--muted);">961 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.9</b> <span style="color:var(--muted);font-size:11px;">from 2026-05-04</span></span>
+        <span style="color:var(--muted);">312 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.8</b> <span style="color:var(--muted);font-size:11px;">from 2026-04-20</span></span>
+        <span style="color:var(--muted);">328 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.7</b> <span style="color:var(--muted);font-size:11px;">from 2026-04-06</span></span>
+        <span style="color:var(--muted);">334 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>16.6</b> <span style="color:var(--muted);font-size:11px;">from 2026-03-30</span></span>
+        <span style="color:var(--muted);">131 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>15.13</b> <span style="color:var(--muted);font-size:11px;">from 2025-06-27</span></span>
+        <span style="color:var(--muted);">3760 games</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span><b>15.5</b> <span style="color:var(--muted);font-size:11px;">from 2025-03-10</span></span>
+        <span style="color:var(--muted);">22 games</span></div></div>
     <div id="comp-readiness" style="font-size:12px;"><div style="line-height:1.8;">
       <div><b>181</b> hand-logged games</div>
       <div><b>181</b> with a complete 5v5 draft</div>
@@ -2292,9 +2809,9 @@
       <br>Dimension ratings are new — they fill in from your next logged game. Around 60 gives a first read on which dimensions you weight; 100+ before the outcome side means much.</div>
     </div>
     <div id="dimfit-results" style="font-size:12px;"><div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7;">
-    5 games rated (0 live, 5 reviewed) · 2 usable for the outcome fit<br>
-    Lane matchups 5 · Scaling 5 · Teamfight 5 · Frontline 5 · Pick / catch 5 · Sidelanes 5 · Damage mix 5</div><div style="color:var(--yellow);line-height:1.6;">Need about 25 rated games before
-      the value model means anything. 20 to go.</div></div>
+    15 games rated (0 live, 15 reviewed) · 12 usable for the outcome fit<br>
+    Lane matchups 15 · Scaling 15 · Teamfight 15 · Frontline 15 · Pick / catch 15 · Sidelanes 15 · Damage mix 15</div><div style="color:var(--yellow);line-height:1.6;">Need about 25 rated games before
+      the value model means anything. 10 to go.</div></div>
     <div id="noteconsist-results" style="font-size:12px;"><div style="color:var(--muted);line-height:1.6;">
       No standing reads yet. Write a note, tag the dimension it's about, and mark it 📌 standing —
       then this compares it against the ratings you actually give that team.</div></div>
@@ -2995,7 +3512,7 @@
     <div id="bulk-status" style="font-size:12px;margin-top:10px;min-height:40px;line-height:1.8;"></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
       <div style="font-size:13px;margin-bottom:4px;"><b>Auto-log</b> <span style="font-size:11px;color:var(--muted);">— imports completed games on open and every 20 minutes.</span></div>
-      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 9/18/2026, 7:23:44 PM · 3 games added</div>
+      <div id="auto-log-status" style="font-size:11px;color:var(--muted);min-height:14px;">Last run: 9/21/2026, 10:50:42 AM · 7 games added</div>
     </div>
   </div>
 
@@ -20155,7 +20672,13 @@ function syncSettingsKeys() {
     weightsEpoch:    WEIGHTS_EPOCH_KEY,
     annotations:     ANNOTATIONS_KEY,
     buildVersion:    BUILD_KEY,
-    champWatch:      CHAMP_WATCH_KEY
+    champWatch:      CHAMP_WATCH_KEY,
+    // Combined team names travel as a per-name log (merged, not overwritten —
+    // see TEAM_ALIAS_LOG_KEY). Display names and hidden leagues are simple
+    // preferences, so the usual newest-copy-wins is right for them.
+    teamAliasLog:    TEAM_ALIAS_LOG_KEY,
+    teamLabels:      TEAM_LABELS_KEY,
+    hiddenLeagues:   HIDDEN_LEAGUES_KEY
   };
 }
 
@@ -20200,6 +20723,30 @@ function applyIncomingSettings(settings, settingsMeta) {
     const lsKey = keys[name];
     if (!lsKey || val == null) continue;
     if (val === "") continue;          // cleared remotely; nothing to write
+    // The alias log merges entry by entry rather than replacing the local copy,
+    // so a device that has never combined anything cannot wipe one that has.
+    if (name === "teamAliasLog") {
+      if (mergeTeamAliasLog(val)) changed = true;
+      // If our merged log holds anything the server's copy lacks, leave the hash
+      // stale so the next sync pushes the union back up. Otherwise the server
+      // keeps whichever device pushed last, and merges made elsewhere never
+      // come back around.
+      const mine = loadTeamAliasLog();
+      const theirs = val || {};
+      const ahead = Object.entries(mine).some(([k, v]) =>
+        !theirs[k] || (Number(v.at) || 0) > (Number(theirs[k].at) || 0));
+      if (ahead) {
+        delete hashes[name];
+        // Send the union straight back rather than waiting for the next change.
+        clearTimeout(window._aliasResync);
+        window._aliasResync = setTimeout(() => { try { syncNow({}); } catch(e) {} }, 1500);
+      }
+      else {
+        hashes[name] = _fnv(localStorage.getItem(TEAM_ALIAS_LOG_KEY) || "{}");
+        meta[name] = Math.max(meta[name] || 0, Number((settingsMeta || {})[name]) || 0);
+      }
+      continue;
+    }
     const at = Number((settingsMeta || {})[name]) || 0;
     if ((meta[name] || 0) > at) continue;   // local copy is newer, keep it
     const raw = JSON.stringify(val);
@@ -22353,7 +22900,70 @@ function teamAliasVersion() {
   _aliasRaw = raw; _aliasVer = h;
   return h;
 }
+// The alias table was kept in this browser only — it was never part of sync. So
+// merges made on one device never reached another, and any time the app opened
+// with fresh storage (a new device, a cleared browser, a build opened from a
+// different address) they were simply gone, while games and ratings came back
+// from sync and hid the loss.
+//
+// Syncing the table as one blob would let an older, emptier copy overwrite a
+// fuller one. Instead every change is logged per team name with a time: a merge
+// is {to, at}, an undo is {to: null, at}. Devices merge those logs entry by
+// entry, newest wins, so merges from anywhere add up and an undo still sticks.
+const TEAM_ALIAS_LOG_KEY = "draftlogger_team_alias_log_v1";
+function loadTeamAliasLog() {
+  try { return JSON.parse(localStorage.getItem(TEAM_ALIAS_LOG_KEY) || "{}") || {}; }
+  catch(e) { return {}; }
+}
+function _aliasesFromLog(log) {
+  const out = {};
+  Object.entries(log).forEach(([k, v]) => { if (v && v.to) out[k] = v.to; });
+  return out;
+}
+// Bring the log in line with the table: anything added, changed or removed gets
+// a fresh entry. Runs on every save, and once at start-up for tables that
+// predate the log.
+function _logAliasChanges(next) {
+  const log = loadTeamAliasLog();
+  const now = Date.now();
+  let changed = false;
+  const cur = _aliasesFromLog(log);
+  Object.entries(next).forEach(([k, to]) => {
+    if (cur[k] !== to) { log[k] = { to, at: now }; changed = true; }
+  });
+  Object.keys(cur).forEach(k => {
+    if (!(k in next)) { log[k] = { to: null, at: now }; changed = true; }
+  });
+  if (changed) localStorage.setItem(TEAM_ALIAS_LOG_KEY, JSON.stringify(log));
+  return changed;
+}
+// Fold another device's log into ours. Returns true if anything changed.
+function mergeTeamAliasLog(incoming) {
+  if (!incoming || typeof incoming !== "object") return false;
+  const log = loadTeamAliasLog();
+  let changed = false;
+  Object.entries(incoming).forEach(([k, v]) => {
+    if (!v || typeof v !== "object") return;
+    const mine = log[k];
+    if (!mine || (Number(v.at) || 0) > (Number(mine.at) || 0)) { log[k] = { to: v.to || null, at: Number(v.at) || 0 }; changed = true; }
+  });
+  if (!changed) return false;
+  localStorage.setItem(TEAM_ALIAS_LOG_KEY, JSON.stringify(log));
+  _writeAliasTable(_aliasesFromLog(log));
+  return true;
+}
+function _writeAliasTable(obj) {
+  localStorage.setItem(TEAM_ALIASES_KEY, JSON.stringify(obj));
+  _aliasVer = null; _aliasRaw = null;
+  _aliasCache = null;
+  try { bumpTrainingPool(); } catch(e) {}
+  try { invalidateDerivedCaches(); } catch(e) {}
+  try { _ratingKey = ""; _rankKey = ""; } catch(e) {}
+  try { localStorage.removeItem(MODEL_REPORT_KEY); } catch(e) {}
+}
+
 function saveTeamAliases(obj) {
+  _logAliasChanges(obj);
   localStorage.setItem(TEAM_ALIASES_KEY, JSON.stringify(obj));
   // Every derived number — ratings, training pool, team index, model reports —
   // is now stale. Clearing here means no caller has to remember to do it.
@@ -26748,6 +27358,13 @@ if (!lastSeenAt()) stampLastSeen();   // first run: start the clock, report noth
 // computed from hand-logged games alone and never corrected itself. That is why
 // a first-pick jungler showed a fraction of its real games.
 _bulkLoading = true;
+// Aliases saved before they were synced have no log yet — create one from the
+// table so this device's merges go up on the next sync instead of staying here.
+try {
+  const had = loadTeamAliases();
+  if (Object.keys(had).length && !localStorage.getItem(TEAM_ALIAS_LOG_KEY)) _logAliasChanges(had);
+} catch(e) {}
+
 loadBulkFromDB().then(() => {
   _bulkLoading = false;
   invalidateDerivedCaches();
