@@ -1699,7 +1699,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b105</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b106</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2213,7 +2213,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b105";
+const BUILD_VERSION = "2026.09.22-b106";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -5955,117 +5955,408 @@ function teamKey(name) {
 // missing teams, series records where games were wanted — so it is not used here
 // at all. Combined teams count as one: names come from the same reader the model
 // uses, so a merge on the Teams page lands here too.
-function standingsForLeague(league, days) {
-  const cutoff = days > 0 ? new Date(Date.now() - days * 86400000).toISOString().slice(0, 10) : "";
-  const rows = new Map();
-  for (const e of loadAllGameData()) {
-    if (!e.actualWinner || e.isStandaloneBet || !e.date || e.date < cutoff) continue;
-    if (resolveLeague(e.league || "") !== league) continue;
+// ── Standings: every team in your data, arranged by you ─────────────────────
+// Every team that appears in any stored game is listed. Each is placed in the
+// league it plays most of its games in; you can move it, remove it from the
+// ratings, or combine another name into it. Nothing is combined on its own:
+// likely duplicates are suggested, and stay suggestions until you tap one.
+//
+// All of this lives in the team registry, which syncs to the server entry by
+// entry, so a change on one device reaches the others without overwriting
+// what they changed.
+const TEAM_REG_KEY = "draftlogger_team_registry_v1";
+function loadTeamRegistry() {
+  try { return JSON.parse(localStorage.getItem(TEAM_REG_KEY) || "{}") || {}; } catch(e) { return {}; }
+}
+let _regVer = null, _regRaw = null;
+function teamRegistryVersion() {
+  const raw = localStorage.getItem(TEAM_REG_KEY) || "";
+  if (_regVer !== null && raw === _regRaw) return _regVer;
+  let h = 0;
+  for (let i = 0; i < raw.length; i++) h = (h * 31 + raw.charCodeAt(i)) | 0;
+  _regRaw = raw; _regVer = h;
+  return h;
+}
+function _teamsChanged() {
+  _aliasVer = null; _aliasRaw = null; _aliasCache = null;
+  _teamIdx = null; _stTable = null;
+  try { bumpTrainingPool(); } catch(e) {}
+  try { invalidateDerivedCaches(); } catch(e) {}
+  _ratingKey = ""; _rankKey = "";
+  try { localStorage.removeItem(MODEL_REPORT_KEY); } catch(e) {}
+}
+function setTeamReg(key, patch) {
+  const r = loadTeamRegistry();
+  const k = String(key || "").toUpperCase();
+  if (!k) return;
+  const next = { ...(r[k] || {}), ...patch, at: Date.now() };
+  if (!next.league) next.league = null;
+  r[k] = next;
+  localStorage.setItem(TEAM_REG_KEY, JSON.stringify(r));
+  _teamsChanged();
+  autoSync();
+}
+function mergeTeamRegistry(incoming) {
+  if (!incoming || typeof incoming !== "object") return false;
+  const r = loadTeamRegistry();
+  let changed = false;
+  for (const [k, v] of Object.entries(incoming)) {
+    if (!v || typeof v !== "object") continue;
+    if (!r[k] || (Number(v.at) || 0) > (Number(r[k].at) || 0)) { r[k] = v; changed = true; }
+  }
+  if (changed) { localStorage.setItem(TEAM_REG_KEY, JSON.stringify(r)); _teamsChanged(); }
+  return changed;
+}
+function teamInactive(k) { const e = loadTeamRegistry()[String(k || "").toUpperCase()]; return !!(e && e.inactive); }
+
+// Combine: every name the dropped team has been stored under points at the
+// kept one from now on, including names future imports use for it.
+function combineTeams(dropKey, keepKey) {
+  const drop = String(dropKey || "").toUpperCase(), keep = String(keepKey || "").toUpperCase();
+  if (!drop || !keep || drop === keep) return false;
+  const T = standingsTeamTable();
+  const d = T.teams.get(drop);
+  const aliases = loadTeamAliases();
+  const names = new Set([drop, ...(d ? [...d.variants.keys()] : [])]);
+  names.forEach(n => { if (n.toLowerCase() !== keep.toLowerCase()) aliases[n.toLowerCase()] = keep; });
+  saveTeamAliases(aliases);
+  // The kept team keeps its own settings; the dropped name's are retired.
+  const reg = loadTeamRegistry();
+  if (reg[drop]) { reg[drop] = { league: null, inactive: false, at: Date.now() }; localStorage.setItem(TEAM_REG_KEY, JSON.stringify(reg)); }
+  _teamsChanged();
+  autoSync();
+  return true;
+}
+// Names combined into a team, directly or through another combine.
+function namesCombinedInto(key) {
+  const K = String(key || "").toUpperCase();
+  return Object.keys(loadTeamAliases()).filter(n => String(resolveTeam(n) || "").toUpperCase() === K && n.toUpperCase() !== K);
+}
+
+// One pass over every stored game: each team's names, games, last game,
+// players and opponents. Memoised on the store and the alias table.
+let _stTable = null, _stTableKey = "";
+function standingsTeamTable() {
+  const all = loadAllGameData();
+  const key = _trainDirty + ":" + loadBulkEntries().length + ":" + all.length + ":" + teamAliasVersion() + ":" + teamRegistryVersion();
+  if (_stTable && _stTableKey === key) return _stTable;
+  const lmap = buildLeagueMap(orderedGamePool());
+  const teams = new Map();
+  for (const e of all) {
+    if (e.isStandaloneBet) continue;
+    const gl = resolveLeague(e.league || "");
+    const isEvent = !gl || lmap.events.has(gl) || INTL_EVENT(gl);
     for (const side of ["blue", "red"]) {
-      const raw = side === "blue" ? e.blueTeam : e.redTeam;
-      const code = teamKey(raw);
-      if (!code) continue;
-      if (!rows.has(code)) rows.set(code, { code, wins: 0, losses: 0, last: "" });
-      const r = rows.get(code);
-      if (e.actualWinner === side) r.wins++; else r.losses++;
-      if (e.date > r.last) r.last = e.date;
+      const raw = String((side === "blue" ? e.blueTeam : e.redTeam) || "").trim();
+      const k = teamKey(raw);
+      if (!k) continue;
+      if (!teams.has(k)) teams.set(k, { key: k, variants: new Map(), games: [], players: new Map(), opps: new Set(), last: "" });
+      const t = teams.get(k);
+      t.variants.set(raw, (t.variants.get(raw) || 0) + 1);
+      t.games.push({ e, side, isEvent });
+      if ((e.date || "") > t.last) t.last = e.date || "";
+      const opp = teamKey(side === "blue" ? e.redTeam : e.blueTeam);
+      if (opp) t.opps.add(opp);
+      for (const pl of (e.players && e.players[side]) || []) {
+        const n = String(pl || "").trim().toLowerCase();
+        if (n) t.players.set(n, (t.players.get(n) || 0) + 1);
+      }
     }
   }
-  return [...rows.values()].sort((a, b) => {
-    const pa = a.wins / Math.max(1, a.wins + a.losses), pb = b.wins / Math.max(1, b.wins + b.losses);
-    return pb - pa || (b.wins - b.losses) - (a.wins - a.losses) || b.wins - a.wins;
+  const reg = loadTeamRegistry();
+  teams.forEach(t => {
+    t.label = [...t.variants.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    t.autoLeague = lmap.autoHome.get(t.key) || null;
+    t.manualLeague = (reg[t.key] && reg[t.key].league) || null;
+    t.league = t.manualLeague || t.autoLeague;
+    t.inactive = !!(reg[t.key] && reg[t.key].inactive);
+    t.top5 = [...t.players.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
   });
+  const leagues = new Set();
+  teams.forEach(t => { if (t.autoLeague) leagues.add(t.autoLeague); if (t.manualLeague) leagues.add(t.manualLeague); });
+  for (const e of all) { const l = resolveLeague(e.league || ""); if (l && !lmap.events.has(l) && !INTL_EVENT(l)) leagues.add(l); }
+  _stTable = { teams, leagues: [...leagues].sort((a, b) => a.localeCompare(b)), events: lmap.events };
+  _stTableKey = key;
+  return _stTable;
 }
 
-// Which leagues to show: whatever is actually in the data for the chosen window,
-// events excluded, busiest first.
-function standingsLeagues(days) {
-  const cutoff = days > 0 ? new Date(Date.now() - days * 86400000).toISOString().slice(0, 10) : "";
-  const counts = new Map();
-  const lmap = buildLeagueMap(orderedGamePool());
-  for (const e of loadAllGameData()) {
-    if (!e.actualWinner || e.isStandaloneBet || !e.date || e.date < cutoff) continue;
-    const l = resolveLeague(e.league || "");
-    if (!l || lmap.events.has(l) || INTL_EVENT(l)) continue;
-    counts.set(l, (counts.get(l) || 0) + 1);
+// Two names that look like one team: the same name written two ways, or four
+// of the same five players — and never once played each other. Suggestions only.
+// sameTeamName() rescans the importers' name tables on every call, which is
+// fine for one pair and far too slow for every pair in a league. Same rules,
+// with the tables and each name's pieces worked out once.
+let _snTbl = null;
+const _snMemo = new Map();
+function _snParts(n) {
+  let v = _snMemo.get(n);
+  if (!v) { v = { core: teamNameCore(n), i1: teamInitials(n), i2: teamInitials(n, true), farm: /academy|challenger|juniors?|prospects?|\bb team\b|\bii\b/i.test(n) }; _snMemo.set(n, v); }
+  return v;
+}
+function sameTeamNameFast(x, y) {
+  if (!_snTbl) {
+    _snTbl = new Set();
+    [typeof LPL_TEAM_MAP === "object" ? LPL_TEAM_MAP : {}, typeof TEAM_CODE_MAP === "object" ? TEAM_CODE_MAP : {}]
+      .forEach(t => Object.entries(t).forEach(([full, code]) => {
+        const f = teamNameCore(full), c = String(code).toUpperCase();
+        _snTbl.add(f + "|" + c); _snTbl.add(c + "|" + f);
+      }));
   }
-  return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([l]) => l);
+  const X = _snParts(x), Y = _snParts(y);
+  const a = X.core, b = Y.core;
+  if (!a || !b || a === b) return false;
+  if (X.farm !== Y.farm) return false;
+  if (X.i1 === b || X.i2 === b || Y.i1 === a || Y.i2 === a) return true;
+  const sh = a.length <= b.length ? a : b, lo = sh === a ? b : a;
+  if (sh.length >= 3 && lo.startsWith(sh)) return true;
+  return _snTbl.has(a + "|" + b);
+}
+function teamDuplicateSuggestions(forLeague) {
+  const T = standingsTeamTable();
+  if (!T._sugg) T._sugg = _teamDuplicateSuggestionsAll(T);
+  return T._sugg.filter(x => !forLeague || x.a.league === forLeague || x.b.league === forLeague);
+}
+function _teamDuplicateSuggestionsAll(T) {
+  const reg = loadTeamRegistry();
+  const dismissed = k => !!(reg["PAIR:" + k] && reg["PAIR:" + k].dismissed);
+  const list = [...T.teams.values()].filter(t => !t.inactive);
+  const out = [], seen = new Set();
+  const add = (a, b, why) => {
+    const pk = [a.key, b.key].sort().join("|");
+    if (seen.has(pk) || dismissed(pk) || a.opps.has(b.key)) return;
+    seen.add(pk);
+    out.push({ a, b, why, pk });
+  };
+  // Shared rosters, found through the players rather than every pair.
+  const byPlayer = new Map();
+  list.forEach(t => { if (t.top5.length >= 4) t.top5.forEach(p => { if (!byPlayer.has(p)) byPlayer.set(p, []); byPlayer.get(p).push(t); }); });
+  const pairCount = new Map();
+  byPlayer.forEach(ts => {
+    for (let i = 0; i < ts.length; i++) for (let j = i + 1; j < ts.length; j++) {
+      const pk = [ts[i].key, ts[j].key].sort().join("|");
+      pairCount.set(pk, (pairCount.get(pk) || 0) + 1);
+    }
+  });
+  pairCount.forEach((n, pk) => {
+    if (n < 4) return;
+    const [x, y] = pk.split("|");
+    add(T.teams.get(x), T.teams.get(y), `${n} of their 5 main players are the same`);
+  });
+  // Names, compared within a league (and among teams with no league yet).
+  const groups = new Map();
+  list.forEach(t => { const g = t.league || "\u0000"; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(t); });
+  groups.forEach(ts => {
+    for (let i = 0; i < ts.length; i++) for (let j = i + 1; j < ts.length; j++) {
+      const a = ts[i], b = ts[j];
+      const names = (t) => [t.key, ...t.variants.keys()];
+      if (names(a).some(x => names(b).some(y => sameTeamNameFast(x, y)))) add(a, b, "the same name written two ways");
+    }
+  });
+  return out.sort((x, y) => (y.a.games.length + y.b.games.length) - (x.a.games.length + x.b.games.length));
 }
 
-let _currentStandingsLeague = null;
+let _currentStandingsLeague = null, _stEdit = null, _stSearch = "";
 
 function renderStandings() {
-  const days = rangeDays("standings-range", 90);
-  const leagues = standingsLeagues(days);
+  const T = standingsTeamTable();
   const tabsEl = document.getElementById("standings-league-tabs");
-  if (!leagues.length) {
+  const el = document.getElementById("standings-content");
+  if (!T.teams.size) {
     if (tabsEl) tabsEl.innerHTML = "";
-    const el = document.getElementById("standings-content");
-    if (el) el.innerHTML = `<div class="empty">No games stored in this window.</div>`;
+    if (el) el.innerHTML = `<div class="empty">No games stored yet.</div>`;
     return;
   }
-  if (!_currentStandingsLeague || !leagues.includes(_currentStandingsLeague)) _currentStandingsLeague = leagues[0];
+  const count = new Map();
+  let unassigned = 0, removed = 0;
+  T.teams.forEach(t => {
+    if (t.inactive) { removed++; return; }
+    if (!t.league) { unassigned++; return; }
+    count.set(t.league, (count.get(t.league) || 0) + t.games.length);
+  });
+  const leagues = [...count.entries()].sort((a, b) => b[1] - a[1]).map(([l]) => l);
+  const tabs = [...leagues, ...(unassigned ? ["__unassigned"] : []), ...(removed ? ["__removed"] : [])];
+  if (!_currentStandingsLeague || !tabs.includes(_currentStandingsLeague)) _currentStandingsLeague = tabs[0];
+  const label = l => l === "__unassigned" ? `No league (${unassigned})` : l === "__removed" ? `Removed (${removed})` : l;
   if (tabsEl) {
-    tabsEl.innerHTML = leagues.map(l => `
+    tabsEl.innerHTML = tabs.map(l => `
       <button class="standings-tab ${l === _currentStandingsLeague ? "active" : ""}"
-        onclick="switchStandingsLeague('${l.replace(/'/g, "\\'")}')">${l}</button>`).join("");
+        onclick="switchStandingsLeague('${l.replace(/'/g, "\\'")}')">${label(l)}</button>`).join("");
   }
   showStandingsLeague(_currentStandingsLeague);
 }
 
 function switchStandingsLeague(league) {
   _currentStandingsLeague = league;
+  _stEdit = null;
   renderStandings();
 }
+
+function _stEsc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+function _stJs(s) { return String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'"); }
 
 function showStandingsLeague(league) {
   const el = document.getElementById("standings-content");
   if (!el) return;
+  const T = standingsTeamTable();
   const days = rangeDays("standings-range", 90);
-  const teams = standingsForLeague(league, days);
-  if (!teams.length) { el.innerHTML = `<div class="empty">No ${league} games in this window.</div>`; return; }
-
-  const idx = buildTeamIndex();
+  const cutoff = days > 0 ? new Date(Date.now() - days * 86400000).toISOString().slice(0, 10) : "";
   const rt = (() => { try { return teamRatings(); } catch(e) { return { map: new Map() }; } })();
-  // Ordered by rating, not by win rate: a 12-4 record against the bottom of the
-  // table is not the same as 12-4 against the top, and the rating already knows
-  // the difference. Teams without one fall to the bottom on win rate.
-  teams.sort((a, b) => {
-    const ra = rt.map.get(a.code), rb = rt.map.get(b.code);
-    if (ra && rb) return rb.rating - ra.rating;
-    if (ra) return -1;
-    if (rb) return 1;
-    return (b.wins / Math.max(1, b.wins + b.losses)) - (a.wins / Math.max(1, a.wins + a.losses));
+
+  let teams;
+  if (league === "__removed") teams = [...T.teams.values()].filter(t => t.inactive);
+  else if (league === "__unassigned") teams = [...T.teams.values()].filter(t => !t.inactive && !t.league);
+  else teams = [...T.teams.values()].filter(t => !t.inactive && t.league === league);
+
+  const rows = teams.map(t => {
+    let w = 0, l = 0;
+    for (const g of t.games) {
+      if (!g.e.actualWinner || g.isEvent || (cutoff && (g.e.date || "") < cutoff)) continue;
+      if (g.e.actualWinner === g.side) w++; else l++;
+    }
+    return { t, w, l, r: rt.map.get(t.key) || null };
+  }).sort((a, b) => {
+    if (a.r && b.r) return b.r.rating - a.r.rating;
+    if (a.r) return -1;
+    if (b.r) return 1;
+    return b.t.games.length - a.t.games.length;
   });
-  const rows = teams.map((t, i) => {
-    const games = t.wins + t.losses;
-    const name = teamDisplay(t.code, idx[t.code]?.label || t.code);
-    const r = rt.map.get(t.code);
-    return `<tr onclick="selectTeam('${t.code.replace(/'/g, "\\'")}')" style="cursor:pointer;">
-      <td style="color:var(--muted);width:26px;">${i + 1}</td>
-      <td><b>${name}</b>${name.toUpperCase() !== t.code ? ` <span style="color:var(--muted);font-size:11px;">${t.code}</span>` : ""}</td>
-      <td class="num" style="color:var(--green);">${t.wins}</td>
-      <td class="num" style="color:#ff4d5e;">${t.losses}</td>
-      <td class="num" style="color:var(--muted);">${Math.round(t.wins / games * 100)}%</td>
-      <td class="num" style="color:var(--muted);">${r ? r.rating : "—"}</td>
-    </tr>`;
+
+  const leagueOptions = (t) => {
+    const auto = t.autoLeague ? `Auto \u2014 ${t.autoLeague}` : "Auto \u2014 no league found";
+    return `<option value="" ${!t.manualLeague ? "selected" : ""}>${_stEsc(auto)}</option>` +
+      T.leagues.map(l => `<option value="${_stEsc(l)}" ${t.manualLeague === l ? "selected" : ""}>${_stEsc(l)}</option>`).join("");
+  };
+  const editor = (t) => {
+    const others = [...T.teams.values()].filter(o => o.key !== t.key)
+      .sort((a, b) => ((b.league === t.league) - (a.league === t.league)) || b.games.length - a.games.length);
+    const combined = namesCombinedInto(t.key);
+    return `<tr><td colspan="7" style="background:var(--surface2);padding:10px 12px;">
+      <div style="display:grid;gap:10px;font-size:12px;">
+        <label style="display:grid;gap:4px;">League
+          <select onchange="stAssignLeague('${_stJs(t.key)}', this.value)" style="font-size:12px;padding:6px 8px;">${leagueOptions(t)}</select>
+        </label>
+        <div style="display:grid;gap:4px;">Combine another team into ${_stEsc(teamDisplay(t.key, t.label))}
+          <input type="text" id="st-comb-q" placeholder="Search by name or code" value="${_stEsc(_stSearch)}"
+            oninput="_stSearch=this.value;stFilterCombine('${_stJs(t.key)}')" autocomplete="off" style="font-size:12px;padding:6px 8px;">
+          <select id="st-comb-sel" onchange="stCombine(this.value, '${_stJs(t.key)}', this)" style="font-size:12px;padding:6px 8px;">
+            ${stCombineOptions(t.key, _stSearch)}</select>
+        </div>
+        ${combined.length ? `<div style="color:var(--muted);line-height:1.8;">Combined into this team:
+          ${combined.map(n => `<span style="display:inline-block;margin-right:8px;">${_stEsc(n)}
+            <button onclick="stUncombine('${_stJs(n)}')" style="background:none;border:none;color:var(--blue);cursor:pointer;font-size:11px;padding:0;">undo</button></span>`).join("")}</div>` : ""}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${t.inactive
+            ? `<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;" onclick="stSetInactive('${_stJs(t.key)}', false)">Restore to ratings</button>`
+            : `<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;" onclick="stSetInactive('${_stJs(t.key)}', true)">Remove from ratings</button>`}
+          <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;" onclick="selectTeam('${_stJs(t.key)}')">Open team page</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.6;">${t.games.length} stored games \u00B7 last played ${_stEsc(t.last || "\u2014")}
+          ${t.variants.size > 1 ? ` \u00B7 stored as ${[...t.variants.keys()].map(_stEsc).join(", ")}` : ""}</div>
+      </div></td></tr>`;
+  };
+
+  const body = rows.map(({ t, w, l, r }, i) => {
+    const name = teamDisplay(t.key, t.label);
+    const open = _stEdit === t.key;
+    const stale = !w && !l;
+    return `<tr style="${stale ? "opacity:.6;" : ""}">
+        <td style="color:var(--muted);width:26px;">${r && !t.inactive && league !== "__unassigned" ? i + 1 : ""}</td>
+        <td onclick="selectTeam('${_stJs(t.key)}')" style="cursor:pointer;"><b>${_stEsc(name)}</b>${name.toUpperCase() !== t.key ? ` <span style="color:var(--muted);font-size:11px;">${_stEsc(t.key)}</span>` : ""}
+          ${t.manualLeague ? `<span style="font-size:10px;color:var(--blue);"> set by you</span>` : ""}
+          ${league === "__unassigned" || league === "__removed" ? `<span style="display:block;font-size:10px;color:var(--muted);">${t.games.length} games \u00B7 last ${_stEsc(t.last || "\u2014")}${t.league ? " \u00B7 " + _stEsc(t.league) : ""}</span>` : ""}</td>
+        <td class="num" style="color:var(--green);">${w}</td>
+        <td class="num" style="color:#ff4d5e;">${l}</td>
+        <td class="num" style="color:var(--muted);">${w + l ? Math.round(w / (w + l) * 100) + "%" : "\u2014"}</td>
+        <td class="num" style="color:var(--muted);">${r && !t.inactive ? r.rating : "\u2014"}</td>
+        <td style="width:30px;text-align:right;"><button onclick="stToggleEdit('${_stJs(t.key)}')" title="League, combine, remove"
+          style="background:none;border:1px solid var(--border);border-radius:6px;color:${open ? "var(--blue)" : "var(--muted)"};cursor:pointer;font-size:12px;padding:2px 7px;">\u22EF</button></td>
+      </tr>${open ? editor(t) : ""}`;
   }).join("");
 
-  const total = teams.reduce((a, t) => a + t.wins, 0);
+  const sugg = league === "__removed" ? [] : teamDuplicateSuggestions(league.startsWith("__") ? null : league).slice(0, 8);
+  const suggHtml = sugg.length ? `
+    <div style="background:var(--surface);border:1px solid var(--yellow);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
+      <div style="font-size:10px;font-weight:700;color:var(--yellow);letter-spacing:.05em;margin-bottom:6px;">POSSIBLY THE SAME TEAM \u2014 NOTHING CHANGES UNLESS YOU TAP</div>
+      ${sugg.map(x => {
+        const an = teamDisplay(x.a.key, x.a.label), bn = teamDisplay(x.b.key, x.b.label);
+        return `<div style="padding:7px 0;border-top:1px solid var(--border);font-size:12px;line-height:1.6;">
+          <b>${_stEsc(an)}</b> <span style="color:var(--muted);">(${x.a.games.length}g${x.a.league ? ", " + _stEsc(x.a.league) : ""})</span> and
+          <b>${_stEsc(bn)}</b> <span style="color:var(--muted);">(${x.b.games.length}g${x.b.league ? ", " + _stEsc(x.b.league) : ""})</span>
+          <span style="display:block;font-size:11px;color:var(--muted);">${_stEsc(x.why)}, and they never played each other</span>
+          <span style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 8px;" onclick="stCombine('${_stJs(x.b.key)}','${_stJs(x.a.key)}')">Keep ${_stEsc(an)}</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 8px;" onclick="stCombine('${_stJs(x.a.key)}','${_stJs(x.b.key)}')">Keep ${_stEsc(bn)}</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:4px 8px;color:var(--muted);" onclick="stDismissPair('${_stJs(x.pk)}')">Different teams</button>
+          </span></div>`;
+      }).join("")}
+    </div>` : "";
+
+  const intro = league === "__unassigned"
+    ? `Teams whose games don't settle a league \u2014 usually a name that only turns up at international events, or one used by a single source. Give each a league, combine it into the team it belongs to, or remove it from the ratings.`
+    : league === "__removed"
+    ? `Left out of the ratings, standings and team rankings. Their games are still stored and still count for champion data \u2014 and toward the ratings of teams that played them.`
+    : "";
   el.innerHTML = `
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
+    ${intro ? `<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;">${intro}</div>` : ""}
+    ${suggHtml}
+    ${rows.length ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
       <table class="standings-table">
-        <thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th></tr></thead>
-        <tbody>${rows}</tbody>
+        <thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th><th></th></tr></thead>
+        <tbody>${body}</tbody>
       </table>
-    </div>
+    </div>` : `<div class="empty">No teams here.</div>`}
     <div style="font-size:11px;color:var(--muted);line-height:1.7;">
-      ${(() => { try { const f = freshnessSummary();
-        return f.ok ? `<span style="color:var(--green);">\u2713 Up to date.</span> ` : `<span style="color:var(--yellow);">Still catching up \u2014 details under Model \u2192 Data coverage.</span> `; } catch(e) { return ""; } })()}
-      ${teams.length} teams \u00B7 ${total} games counted, one row per game rather than per series \u00B7 ranked by rating.
-      Tap a team to open its page, where duplicates can be combined and the name changed.
-      ${teams.length > 14 ? `<span style="color:var(--yellow);">More teams than a league usually has \u2014 some of these are probably the same team stored twice.</span>` : ""}
+      ${league.startsWith("__") ? "" : `${rows.length} teams \u00B7 record is league games in the chosen window, one row per game \u00B7 ranked by rating \u00B7 faded rows have no games in the window. `}
+      Tap \u22EF on a team to change its league, combine another team into it, or remove it from the ratings. Teams are only ever combined by you.
     </div>`;
+}
+
+function stToggleEdit(key) { _stEdit = _stEdit === key ? null : key; _stSearch = ""; showStandingsLeague(_currentStandingsLeague); }
+function stCombineOptions(keepKey, q) {
+  const T = standingsTeamTable();
+  const keep = T.teams.get(keepKey);
+  const needle = teamNameCore(q || "");
+  const others = [...T.teams.values()].filter(o => o.key !== keepKey)
+    .filter(o => !needle || [o.key, ...o.variants.keys()].some(v => teamNameCore(v).includes(needle)))
+    .sort((a, b) => ((b.league === (keep && keep.league)) - (a.league === (keep && keep.league))) || b.games.length - a.games.length);
+  const head = `<option value="">${q ? (others.length ? `${others.length} match${others.length === 1 ? "" : "es"} \u2014 pick one` : `Nothing matches \u201C${_stEsc(q)}\u201D`) : "Pick a team to combine into this one\u2026"}</option>`;
+  return head + others.slice(0, 200).map(o =>
+    `<option value="${_stEsc(o.key)}">${_stEsc(teamDisplay(o.key, o.label))} \u00B7 ${o.games.length}g${o.league ? " \u00B7 " + _stEsc(o.league) : ""}${o.inactive ? " \u00B7 removed" : ""}</option>`).join("");
+}
+function stFilterCombine(keepKey) {
+  const sel = document.getElementById("st-comb-sel");
+  if (sel) sel.innerHTML = stCombineOptions(keepKey, _stSearch);
+}
+function stAssignLeague(key, league) {
+  setTeamReg(key, { league: league || null });
+  renderStandings();
+}
+function stSetInactive(key, on) {
+  setTeamReg(key, { inactive: !!on });
+  _stEdit = null;
+  renderStandings();
+}
+function stCombine(dropKey, keepKey, sel) {
+  if (sel) sel.value = "";
+  if (!dropKey || !keepKey || dropKey === keepKey) return;
+  const T = standingsTeamTable();
+  const d = T.teams.get(dropKey), k = T.teams.get(keepKey);
+  const dn = d ? teamDisplay(d.key, d.label) : dropKey, kn = k ? teamDisplay(k.key, k.label) : keepKey;
+  if (!confirm(`Combine ${dn} (${d ? d.games.length : 0} games) into ${kn}? Undo any time from ${kn}'s \u22EF menu.`)) return;
+  combineTeams(dropKey, keepKey);
+  _stEdit = keepKey; _stSearch = "";
+  renderStandings();
+}
+function stUncombine(name) {
+  const aliases = loadTeamAliases();
+  delete aliases[name];
+  saveTeamAliases(aliases);
+  _teamsChanged();
+  autoSync();
+  renderStandings();
+}
+function stDismissPair(pk) {
+  setTeamReg("PAIR:" + pk, { dismissed: true });
+  renderStandings();
 }
 
 
@@ -8353,14 +8644,7 @@ function mergeIntoCurrentTeam(dropKey, sel) {
   const drop = idx[dropKey], keep = idx[_teamSel];
   if (!drop || !keep) return;
   if (!confirm(`Combine ${drop.label} (${drop.games.length} games) into ${keep.label}? You can undo this here or under Settings.`)) return;
-  const aliases = loadTeamAliases();
-  // Alias every spelling the duplicate has ever been stored under, so nothing is
-  // left behind when the next import writes it a third way.
-  Object.keys(drop.variants).forEach(v => { aliases[v.toLowerCase()] = keep.label; });
-  aliases[dropKey.toLowerCase()] = keep.label;
-  saveTeamAliases(aliases);
-  invalidateDerivedCaches();
-  _ratingKey = ""; _rankKey = "";
+  combineTeams(dropKey, _teamSel);
   renderTeamPage();
 }
 
@@ -8461,7 +8745,7 @@ function renderTeamPage() {
     const rateOf = k => rt.map.get(k) || null;
     // Ranked by rating: that is the ordering worth looking at, and a team with
     // too few games to rate sits underneath rather than being hidden.
-    const ordered = q ? all : [...all].sort((a, b) => {
+    const ordered = q ? all : [...all].filter(t => !teamInactive(t.key)).sort((a, b) => {
       const ra = rateOf(a.key), rb = rateOf(b.key);
       return (faves.has(b.key) ? 1 : 0) - (faves.has(a.key) ? 1 : 0)
           || (ra ? ra.rank : 1e9) - (rb ? rb.rank : 1e9)      // same order as the ranks shown
@@ -12462,7 +12746,13 @@ function buildLeagueMap(ordered) {
   // A team whose own most-played competition turns out to be an event has no
   // home league rather than a wrong one.
   home.forEach((l, t) => { if (events.has(l)) home.delete(t); });
-  return { home, events };
+  // Leagues you assigned on the Standings page win over the inferred one.
+  const autoHome = new Map(home);
+  try {
+    const reg = loadTeamRegistry();
+    perTeam.forEach((m, t) => { const l = reg[t] && reg[t].league; if (l) home.set(t, l); });
+  } catch(e) {}
+  return { home, events, autoHome };
 }
 
 function buildRatingTimeline(ordered) {
@@ -12845,7 +13135,7 @@ const RATING_KEY = "draftlogger_rating_models_v1";
 let _ratingCache = null, _ratingKey = "";
 function currentRatings() {
   const ordered = orderedGamePool();
-  const key = ordered.length + ":" + (ordered[ordered.length - 1]?.date || "") + ":" + teamAliasVersion();
+  const key = ordered.length + ":" + (ordered[ordered.length - 1]?.date || "") + ":" + teamAliasVersion() + ":" + teamRegistryVersion();
   if (_ratingCache && _ratingKey === key) return _ratingCache;
   const tl = buildRatingTimeline(ordered);
   let tuned = null;
@@ -12896,6 +13186,7 @@ function teamRatings() {
   if (_rankCache && _rankKey === key) return _rankCache;
   const now = Date.now();
   const out = new Map();
+  const reg = loadTeamRegistry();
   tl.elo.forEach((raw, t) => {
     const h = tl.hist.get(t) || [];
     const last = h[h.length - 1];
@@ -12909,10 +13200,11 @@ function teamRatings() {
       elo: Math.round(raw),
       eras: fit && fit.eras ? (fit.eras.get(t) || 1) : 1,
       offset: Math.round(tl.offOf(league)), games: h.length, lastDate: last.date,
-      move10: Math.round(raw - prior), intlGames: h.filter(x => x.intl).length, hist: h
+      move10: Math.round(raw - prior), intlGames: h.filter(x => x.intl).length, hist: h,
+      inactive: !!(reg[t] && reg[t].inactive)
     });
   });
-  const ranked = [...out.values()].sort((a, b) => b.rating - a.rating);
+  const ranked = [...out.values()].filter(r => !r.inactive).sort((a, b) => b.rating - a.rating);
   ranked.forEach((r, i) => { r.rank = i + 1; out.get(r.team).rank = i + 1; });
   _rankCache = { map: out, ranked, count: ranked.length };
   _rankKey = key;
@@ -13306,7 +13598,8 @@ async function runCoverageReport() {
       ${merged.map(m => `<div style="padding:5px 0;font-size:12px;">
         <b>${m.drop}</b> \u2192 <b>${m.keep}</b> <span style="color:var(--muted);">\u2014 ${m.why}, and they never played each other</span></div>`).join("")}
       <div style="font-size:11px;color:var(--muted);margin-top:4px;">Reversible under Settings \u2192 team name aliases.</div>` : ""}
-    ${!short.length && !merged.length ? `<div style="font-size:12px;color:var(--green);margin-top:10px;">Every team is within range of its league's median, and no two names look like the same team.</div>` : ""}`;
+    ${!short.length && !merged.length ? `<div style="font-size:12px;color:var(--green);margin-top:10px;">Every team is within range of its league's median.</div>` : ""}
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;">Teams that look like one team under two names are listed on the Standings page for you to combine.</div>`;
 }
 
 // Fold one team's name into the other. The rating pass reads resolveTeam, so a
@@ -13376,7 +13669,11 @@ function sameTeamName(x, y) {
   }));
 }
 
-function autoMergeTeamNames(byTeam, metGames) {
+// Teams are never combined automatically any more — only by you, on the
+// Standings page or a team's page. The same checks now feed suggestions there
+// (teamDuplicateSuggestions), which do nothing until you tap one.
+function autoMergeTeamNames(byTeam, metGames) { return []; }
+function _autoMergeTeamNamesRetired(byTeam, metGames) {
   const merged = [];
   const top5 = r => [...r.players.entries()].sort((x, y) => y[1] - x[1]).slice(0, 5).map(x => x[0]);
   const list = [...byTeam.entries()];
@@ -19908,6 +20205,7 @@ function syncSettingsKeys() {
     // see TEAM_ALIAS_LOG_KEY). Display names and hidden leagues are simple
     // preferences, so the usual newest-copy-wins is right for them.
     teamAliasLog:    TEAM_ALIAS_LOG_KEY,
+    teamRegistry:    TEAM_REG_KEY,
     lplProxy:        LPL_PROXY_KEY,
     teamLabels:      TEAM_LABELS_KEY,
     hiddenLeagues:   HIDDEN_LEAGUES_KEY,
@@ -19989,6 +20287,20 @@ function applyIncomingSettings(settings, settingsMeta) {
     if (val === "") continue;          // cleared remotely; nothing to write
     // The alias log merges entry by entry rather than replacing the local copy,
     // so a device that has never combined anything cannot wipe one that has.
+    if (name === "teamRegistry") {
+      if (mergeTeamRegistry(val)) changed = true;
+      const mine = loadTeamRegistry(), theirs = val || {};
+      const ahead = Object.entries(mine).some(([k, v]) => !theirs[k] || (Number(v.at) || 0) > (Number(theirs[k].at) || 0));
+      if (ahead) {
+        delete hashes[name];
+        clearTimeout(window._regResync);
+        window._regResync = setTimeout(() => { try { syncNow({}); } catch(e) {} }, 1500);
+      } else {
+        hashes[name] = _fnv(localStorage.getItem(TEAM_REG_KEY) || "{}");
+        meta[name] = Math.max(meta[name] || 0, Number((settingsMeta || {})[name]) || 0);
+      }
+      continue;
+    }
     if (name === "teamAliasLog") {
       if (mergeTeamAliasLog(val)) changed = true;
       // If our merged log holds anything the server's copy lacks, leave the hash
@@ -22441,7 +22753,15 @@ function resolveTeam(name) {
   if (!name) return name;
   const v = teamAliasVersion();
   if (!_aliasCache || _aliasCacheVer !== v) { _aliasCache = loadTeamAliases(); _aliasCacheVer = v; }
-  return _aliasCache[name.toLowerCase()] || name;
+  // Follow the chain: combining A into B and later B into C means A is C. Only
+  // the first step was followed before, so A stayed a separate team.
+  let cur = name;
+  for (let i = 0; i < 8; i++) {
+    const nx = _aliasCache[String(cur).toLowerCase()];
+    if (!nx || String(nx).toLowerCase() === String(cur).toLowerCase()) break;
+    cur = nx;
+  }
+  return cur;
 }
 
 function addTeamAlias() {
