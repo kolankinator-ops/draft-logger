@@ -1699,7 +1699,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b108</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b109</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2213,7 +2213,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b108";
+const BUILD_VERSION = "2026.09.22-b109";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6167,7 +6167,7 @@ function _teamDuplicateSuggestionsAll(T) {
   return out.sort((x, y) => (y.a.games.length + y.b.games.length) - (x.a.games.length + x.b.games.length));
 }
 
-let _currentStandingsLeague = null, _stEdit = null, _stSearch = "";
+let _currentStandingsLeague = null, _stEdit = null, _stSearch = "", _stShowIdle = false;
 
 function renderStandings() {
   const T = standingsTeamTable();
@@ -6273,16 +6273,22 @@ function showStandingsLeague(league) {
       </div></td></tr>`;
   };
 
-  const body = rows.map(({ t, w, l, r }, i) => {
+  // The rating is built from every stored game; the record only from the chosen
+  // window. A name that last played before the window has a rating and a 0–0
+  // record — usually an old spelling, a rebrand's old name or a team that no
+  // longer exists. Those sit in their own section instead of among the teams
+  // actually playing, where they looked like broken rows.
+  const listed = inTab ? rows.filter(x => x.w + x.l > 0) : rows;
+  const idle = inTab ? rows.filter(x => x.w + x.l === 0) : [];
+  const rowHtml = ({ t, w, l, r }, i, isIdle) => {
     const name = teamDisplay(t.key, t.label);
     const open = _stEdit === t.key;
-    const stale = !w && !l;
-    return `<tr style="${stale ? "opacity:.6;" : ""}">
-        <td style="color:var(--muted);width:26px;">${r && !t.inactive && league !== "__unassigned" ? i + 1 : ""}</td>
+    return `<tr style="${isIdle ? "opacity:.65;" : ""}">
+        <td style="color:var(--muted);width:26px;">${r && !t.inactive && !isIdle && league !== "__unassigned" ? i + 1 : ""}</td>
         <td onclick="selectTeam('${_stJs(t.key)}')" style="cursor:pointer;"><b>${_stEsc(name)}</b>${name.toUpperCase() !== t.key ? ` <span style="color:var(--muted);font-size:11px;">${_stEsc(t.key)}</span>` : ""}
           ${t.manualLeague ? `<span style="font-size:10px;color:var(--blue);"> set by you</span>` : ""}
           ${inTab && t.league !== inTab ? `<span style="font-size:10px;color:var(--muted);"> · rated as ${_stEsc(t.league)}</span>` : ""}
-          ${league === "__unassigned" || league === "__removed" ? `<span style="display:block;font-size:10px;color:var(--muted);">${t.games.length} games \u00B7 last ${_stEsc(t.last || "\u2014")}${t.league ? " \u00B7 " + _stEsc(t.league) : ""}</span>` : ""}</td>
+          ${isIdle || league === "__unassigned" || league === "__removed" ? `<span style="display:block;font-size:10px;color:var(--muted);">${t.games.length} games \u00B7 last played ${_stEsc(t.last || "\u2014")}${t.league && !inTab ? " \u00B7 " + _stEsc(t.league) : ""}</span>` : ""}</td>
         <td class="num" style="color:var(--green);">${w}</td>
         <td class="num" style="color:#ff4d5e;">${l}</td>
         <td class="num" style="color:var(--muted);">${w + l ? Math.round(w / (w + l) * 100) + "%" : "\u2014"}</td>
@@ -6290,7 +6296,9 @@ function showStandingsLeague(league) {
         <td style="width:30px;text-align:right;"><button onclick="stToggleEdit('${_stJs(t.key)}')" title="League, combine, remove"
           style="background:none;border:1px solid var(--border);border-radius:6px;color:${open ? "var(--blue)" : "var(--muted)"};cursor:pointer;font-size:12px;padding:2px 7px;">\u22EF</button></td>
       </tr>${open ? editor(t) : ""}`;
-  }).join("");
+  };
+  const body = listed.map((x, i) => rowHtml(x, i, false)).join("");
+  const idleBody = idle.map((x, i) => rowHtml(x, i, true)).join("");
 
   const sugg = league === "__removed" ? [] : teamDuplicateSuggestions(league.startsWith("__") ? null : league).slice(0, 8);
   const suggHtml = sugg.length ? `
@@ -6327,14 +6335,23 @@ function showStandingsLeague(league) {
     ${intro ? `<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;">${intro}</div>` : ""}
     ${sharedHtml}
     ${suggHtml}
-    ${rows.length ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
+    ${listed.length ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
       <table class="standings-table">
         <thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th><th></th></tr></thead>
         <tbody>${body}</tbody>
       </table>
-    </div>` : `<div class="empty">No teams here.</div>`}
+    </div>` : `<div class="empty">${inTab ? `No ${_stEsc(inTab)} games in this window.` : "No teams here."}</div>`}
+    ${idle.length ? `
+      <div onclick="_stShowIdle=!_stShowIdle;showStandingsLeague(_currentStandingsLeague)" style="cursor:pointer;font-size:12px;color:var(--muted);margin:4px 0 8px;">
+        ${_stShowIdle ? "\u25BE" : "\u25B8"} <b>${idle.length}</b> team${idle.length === 1 ? "" : "s"} with no ${_stEsc(inTab)} games ${days > 0 ? `in the last ${days} days` : "stored"}
+        \u2014 old names, rebrands or teams that stopped playing. Combine each into its current name, or remove it from the ratings.</div>
+      ${_stShowIdle ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
+        <table class="standings-table">
+          <thead><tr><th></th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th><th></th></tr></thead>
+          <tbody>${idleBody}</tbody>
+        </table></div>` : ""}` : ""}
     <div style="font-size:11px;color:var(--muted);line-height:1.7;">
-      ${league.startsWith("__") ? "" : `${rows.length} teams \u00B7 record is league games in the chosen window, one row per game \u00B7 ranked by rating \u00B7 faded rows have no games in the window. `}
+      ${league.startsWith("__") ? "" : `${listed.length} teams \u00B7 record is ${_stEsc(inTab)} games in the chosen window, one row per game \u00B7 rating uses every stored game \u00B7 ranked by rating. `}
       Tap \u22EF on a team to change its league, combine another team into it, or remove it from the ratings. Teams are only ever combined by you.
     </div>`;
 }
