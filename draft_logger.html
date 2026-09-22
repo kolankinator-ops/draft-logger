@@ -1311,13 +1311,6 @@
 <div class="screen" id="screen-standings">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
     <div style="font-size:15px;font-weight:600;">Standings</div>
-    <select id="standings-range" onchange="renderStandings()" style="width:auto;font-size:12px;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
-      <option value="60">Last 60 days</option>
-      <option value="90" selected="">Last 90 days</option>
-      <option value="180">Last 180 days</option>
-      <option value="365">Last year</option>
-      <option value="0">All time</option>
-    </select>
   </div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="standings-league-tabs"></div>
   <div id="standings-content"></div>
@@ -1699,7 +1692,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b109</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b110</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2213,7 +2206,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b109";
+const BUILD_VERSION = "2026.09.22-b110";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6213,7 +6206,7 @@ function showStandingsLeague(league) {
   const el = document.getElementById("standings-content");
   if (!el) return;
   const T = standingsTeamTable();
-  const days = rangeDays("standings-range", 90);
+  const days = 0;          // every stored game; no window
   const cutoff = days > 0 ? new Date(Date.now() - days * 86400000).toISOString().slice(0, 10) : "";
   const rt = (() => { try { return teamRatings(); } catch(e) { return { map: new Map() }; } })();
 
@@ -6340,18 +6333,17 @@ function showStandingsLeague(league) {
         <thead><tr><th>#</th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th><th></th></tr></thead>
         <tbody>${body}</tbody>
       </table>
-    </div>` : `<div class="empty">${inTab ? `No ${_stEsc(inTab)} games in this window.` : "No teams here."}</div>`}
+    </div>` : `<div class="empty">${inTab ? `No ${_stEsc(inTab)} games stored.` : "No teams here."}</div>`}
     ${idle.length ? `
       <div onclick="_stShowIdle=!_stShowIdle;showStandingsLeague(_currentStandingsLeague)" style="cursor:pointer;font-size:12px;color:var(--muted);margin:4px 0 8px;">
-        ${_stShowIdle ? "\u25BE" : "\u25B8"} <b>${idle.length}</b> team${idle.length === 1 ? "" : "s"} with no ${_stEsc(inTab)} games ${days > 0 ? `in the last ${days} days` : "stored"}
-        \u2014 old names, rebrands or teams that stopped playing. Combine each into its current name, or remove it from the ratings.</div>
+        ${_stShowIdle ? "\u25BE" : "\u25B8"} <b>${idle.length}</b> team${idle.length === 1 ? "" : "s"} you placed in ${_stEsc(inTab)} with no ${_stEsc(inTab)} games stored.</div>
       ${_stShowIdle ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
         <table class="standings-table">
           <thead><tr><th></th><th>Team</th><th class="num">W</th><th class="num">L</th><th class="num">Win%</th><th class="num">Rating</th><th></th></tr></thead>
           <tbody>${idleBody}</tbody>
         </table></div>` : ""}` : ""}
     <div style="font-size:11px;color:var(--muted);line-height:1.7;">
-      ${league.startsWith("__") ? "" : `${listed.length} teams \u00B7 record is ${_stEsc(inTab)} games in the chosen window, one row per game \u00B7 rating uses every stored game \u00B7 ranked by rating. `}
+      ${league.startsWith("__") ? "" : `${listed.length} teams \u00B7 record is every stored ${_stEsc(inTab)} game, one row per game \u00B7 ranked by rating. `}
       Tap \u22EF on a team to change its league, combine another team into it, or remove it from the ratings. Teams are only ever combined by you.
     </div>`;
 }
