@@ -1699,7 +1699,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b104</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b105</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2196,6 +2196,14 @@ window.__pristineDoc = document.documentElement.cloneNode(true);
 window.__pristineMark = document.currentScript;
 </script>
 <script>
+// ── The website vs a test copy ───────────────────────────────────────────────
+// The website is where everything happens. Any other copy — a downloaded file,
+// a local server — is a test copy: it loads your real data from the server
+// fresh every time it opens, but never sends anything back, and runs none of
+// the background work (imports, draft fills, repairs, clean-ups, live game
+// recording). Whatever you do in it stays in that copy and is thrown away the
+// next time it opens.
+function isTestCopy() { return !/\.github\.io$/i.test(location.hostname || ""); }
 function localDateStr(d) {
   d = d || new Date();
   return d.getFullYear() + "-" +
@@ -2205,7 +2213,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b104";
+const BUILD_VERSION = "2026.09.22-b105";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -11707,6 +11715,7 @@ function dupCleanKey(e) {
 }
 let _dedupeBusy = false;
 function autoDedupeBulk() {
+  if (isTestCopy()) return 0;
   if (_dedupeBusy) return 0;
   const bulk = loadBulkEntries();
   if (!bulk.length) return 0;
@@ -12294,6 +12303,7 @@ const AUTOLOG_EVERY_MS = 20 * 60 * 1000;
 let _autoLogTimer = null, _autoLogBusy = false;
 
 async function autoLogTick(reason) {
+  if (isTestCopy()) return;
   if (_autoLogBusy) return;
   if (document.visibilityState !== "visible") return;
   const s = loadAutoLogSettings();
@@ -13134,6 +13144,7 @@ function repairPicture() {
   return { broken, gaveUp, waiting, dueNow };
 }
 async function runRepairQueue() {
+  if (isTestCopy()) return;
   if (_repair.running) return;
   const pic = repairPicture();
   if (!pic.dueNow.length) return;
@@ -17758,7 +17769,7 @@ let _lastSnapshotAt = {};
 // worth risking for data collection.
 // Collecting live states is part of building the dataset, so it is always on
 // rather than an opt-in checkbox that most devices never ticked.
-function statesEnabled() { return true; }
+function statesEnabled() { return !isTestCopy(); }
 function setStatesEnabled(on) {
   localStorage.setItem("draftlogger_states_on", on ? "1" : "0");
   if (on) startStateCollector(); else stopStateCollector();
@@ -17779,14 +17790,86 @@ async function loadGameStates(gameId) {
     });
   } catch(e) { return null; }
 }
-async function saveGameStates(gameId, rec) {
+async function saveGameStates(gameId, rec, remote) {
   const db = await _openBulkDB();
-  return new Promise((res, rej) => {
+  const clean = { ...rec }; delete clean.key;
+  await new Promise((res, rej) => {
     const tx = db.transaction("states", "readwrite");
-    tx.objectStore("states").put(rec, gameId);
+    tx.objectStore("states").put(clean, gameId);
     tx.oncomplete = () => res(true);
     tx.onerror = () => rej(tx.error);
   });
+  if (!remote && !isTestCopy()) {
+    const d = loadStatesDirty(); d[gameId] = Date.now();
+    try { localStorage.setItem(STATES_DIRTY_KEY, JSON.stringify(d)); } catch(e) {}
+  }
+  return true;
+}
+
+// Timelines used to exist only in the browser that recorded them. They now go
+// to the sync server once a game is over (labelled with a result, or nothing
+// recorded for 15 minutes) and come back down to every device, merged snapshot
+// by snapshot when two devices recorded the same game.
+const STATES_DIRTY_KEY = "draftlogger_states_dirty_v1";
+const STATES_HAVE_KEY  = "draftlogger_states_have_v1";
+const STATES_SYNC_AT   = "draftlogger_states_sync_at_v1";
+function loadStatesDirty() {
+  try { return JSON.parse(localStorage.getItem(STATES_DIRTY_KEY) || "{}") || {}; } catch(e) { return {}; }
+}
+function mergeStateRec(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  const byT = new Map();
+  for (const s of a.snaps || []) byT.set(s[0], s);
+  for (const s of b.snaps || []) if (!byT.has(s[0])) byT.set(s[0], s);
+  const out = { ...b, ...a };
+  for (const k of Object.keys(b)) if (out[k] == null || out[k] === "") out[k] = b[k];
+  out.winner = a.winner || b.winner || null;
+  out.snaps = [...byT.values()].sort((x, y) => x[0] - y[0]);
+  delete out.key;
+  return out;
+}
+let _statesSyncBusy = false;
+async function syncGameStates(force) {
+  if (_statesSyncBusy || !syncConfigured()) return;
+  if ((Number(localStorage.getItem(SERVER_VER_KEY)) || 0) < 3) return;
+  const dirty = isTestCopy() ? {} : loadStatesDirty();
+  const now = Date.now();
+  const games = {};
+  for (const [id, at] of Object.entries(dirty)) {
+    const rec = await loadGameStates(id);
+    if (!rec) continue;
+    if (rec.winner || now - at > 15 * 60 * 1000) games[id] = rec;
+  }
+  const lastAt = Number(localStorage.getItem(STATES_SYNC_AT)) || 0;
+  if (!force && !Object.keys(games).length && now - lastAt < 10 * 60 * 1000) return;
+  _statesSyncBusy = true;
+  try {
+    let have = {};
+    try { have = JSON.parse(localStorage.getItem(STATES_HAVE_KEY) || "{}") || {}; } catch(e) {}
+    const res = await fetch(getSyncUrl() + "/states", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Sync-Code": getSyncCode() },
+      body: JSON.stringify({ games, have })
+    });
+    if (!res.ok) return;
+    const j = await res.json();
+    // Only clear what hasn't been recorded to again since it was read.
+    const d2 = loadStatesDirty();
+    for (const id of Object.keys(games)) if (d2[id] === dirty[id]) delete d2[id];
+    try { localStorage.setItem(STATES_DIRTY_KEY, JSON.stringify(d2)); } catch(e) {}
+    for (const [b, doc] of Object.entries(j.buckets || {})) {
+      for (const [id, rec] of Object.entries(doc.games || {})) {
+        const local = await loadGameStates(id);
+        const merged = mergeStateRec(local, rec);
+        if (JSON.stringify(merged) !== JSON.stringify(local)) await saveGameStates(id, merged, true);
+      }
+      have[b] = doc.v;
+    }
+    localStorage.setItem(STATES_HAVE_KEY, JSON.stringify(have));
+    localStorage.setItem(STATES_SYNC_AT, String(Date.now()));
+  } catch(e) { console.warn("[states sync]", e); }
+  finally { _statesSyncBusy = false; }
 }
 async function allStateRecords() {
   try {
@@ -19840,7 +19923,23 @@ function syncSettingsKeys() {
     manualSchedule:  MANUAL_SCHEDULE_KEY,
     customStreams:   CUSTOM_STREAMS_KEY,
     dataScope:       SCOPE_KEY,
-    kellyFrac:       KELLY_FRAC_KEY
+    kellyFrac:       KELLY_FRAC_KEY,
+    // Recorded as the app runs: when each draft was first seen, and how far
+    // behind live each league's broadcast runs.
+    draftSeen:       DRAFT_SEEN_KEY,
+    broadcastDelay:  DRAFT_DELAY_KEY,
+    lastSeen:        LAST_SEEN_KEY,
+    // Preferences.
+    spoilers:        SPOILER_KEY,
+    blindMode:       BLIND_MODE_KEY,
+    patchFilter:     PATCH_FILTER_KEY,
+    recencyDays:     RECENCY_KEY,
+    champLeague:     CHAMP_LEAGUE_KEY,
+    matchupMin:      MATCHUP_MIN_KEY,
+    changeWindow:    CHANGE_WINDOW_KEY,
+    scheduleLeagues: SCHEDULE_LEAGUES_KEY,
+    scheduleView:    SCHED_VIEW_KEY,
+    notifications:   NOTIF_KEY
   };
 }
 
@@ -19867,8 +19966,11 @@ function collectChangedSettings(full) {
     const h = _fnv(raw);
     if (hashes[name] !== h) { hashes[name] = h; meta[name] = now; }
     if (full || (meta[name] || 0) >= wm) {
-      try { settings[name] = JSON.parse(raw); settingsMeta[name] = meta[name] || now; }
-      catch(e) {}
+      // A few preferences are stored as bare words ("week", "list"), which
+      // JSON.parse rejects, so they silently never synced. Those travel wrapped.
+      try { settings[name] = JSON.parse(raw); }
+      catch(e) { settings[name] = { __raw: raw }; }
+      settingsMeta[name] = meta[name] || now;
     }
   }
   localStorage.setItem(SYNC_SHASH_KEY, JSON.stringify(hashes));
@@ -19911,7 +20013,7 @@ function applyIncomingSettings(settings, settingsMeta) {
     }
     const at = Number((settingsMeta || {})[name]) || 0;
     if ((meta[name] || 0) > at) continue;   // local copy is newer, keep it
-    const raw = JSON.stringify(val);
+    const raw = (val && typeof val === "object" && typeof val.__raw === "string") ? val.__raw : JSON.stringify(val);
     if (raw === localStorage.getItem(lsKey)) { meta[name] = at; hashes[name] = _fnv(raw); continue; }
     try { localStorage.setItem(lsKey, raw); } catch(e) { continue; }
     meta[name] = at; hashes[name] = _fnv(raw); changed = true;
@@ -20218,21 +20320,22 @@ async function syncScope(scope, opts) {
   const all = scope === "bulk" ? loadBulkEntries() : loadEntries();
   // Delta push normally, everything on a full reconcile. Anything the server
   // does not acknowledge simply gets re-sent next time, so this self-heals.
-  const records = full ? all : all.filter(e => (e.updatedAt || 0) >= wm);
+  const records = isTestCopy() ? [] : full ? all : all.filter(e => (e.updatedAt || 0) >= wm);
 
   // Deletions travel the same way as edits: everything on a full reconcile,
   // otherwise only what is newer than the last successful sync.
   const allTombs = scope === "bulk" ? loadBulkTombstones() : loadTombstones();
   const tombstones = {};
-  for (const [id, ts] of Object.entries(allTombs)) if (full || ts >= wm) tombstones[id] = ts;
+  if (!isTestCopy()) for (const [id, ts] of Object.entries(allTombs)) if (full || ts >= wm) tombstones[id] = ts;
   const payload = { since, records, tombstones, full };
-  if (scope === "state") {
+  if (scope === "state" && !isTestCopy()) {
     const s = collectChangedSettings(full);
     payload.settings = s.settings;
     payload.settingsMeta = s.settingsMeta;
   }
 
   const resp = await syncPost(scope, payload);
+  if (resp && resp.version) localStorage.setItem(SERVER_VER_KEY, String(resp.version));
 
   let changed = mergeRemoteRecords(scope, resp.records, resp.tombstones);
   if (scope === "state" && applyIncomingSettings(resp.settings, resp.settingsMeta)) changed = true;
@@ -20309,6 +20412,7 @@ async function prepareOffline() {
 }
 
 function pendingSyncCount() {
+  if (isTestCopy()) return 0;           // nothing here is ever uploaded
   const wm = Number(localStorage.getItem(SYNC_WM_KEY)) || 0;
   if (!wm) return null;                       // never synced; a full push is queued anyway
   let n = 0;
@@ -20332,8 +20436,17 @@ function renderSyncQueue() {
   const off = isOffline();
   const last = localStorage.getItem(SYNC_LAST_KEY) || "never";
 
+  if (isTestCopy()) {
+    el.innerHTML = `<div style="font-size:11px;color:var(--yellow);line-height:1.6;">🧪 Test copy — your data was loaded
+      from the server (${last}). Nothing here is sent back; the website is the real app.</div>`;
+    return;
+  }
+  const sv = Number(localStorage.getItem(SERVER_VER_KEY)) || 0;
+  const workerNote = sv && sv < 3 ? `<div style="font-size:11px;color:var(--yellow);margin-top:4px;line-height:1.6;">
+    Your sync Worker is version ${sv}. Paste the latest <code>sync-worker.js</code> over it and Deploy so recorded
+    live games are kept on the server too.</div>` : "";
   if (n === 0 && !off) {
-    el.innerHTML = `<div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync ${last}.</div>`;
+    el.innerHTML = `<div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync ${last}.</div>` + workerNote;
     return;
   }
   const tone = off ? "var(--yellow)" : (n ? "var(--blue)" : "var(--muted)");
@@ -20374,6 +20487,7 @@ function wireOfflineWatch() {
 // they change and come down whenever another device reports it imported
 // something — and at least every ten minutes regardless.
 const BULK_PULL_KEY = "draftlogger_sync_bulk_at_v1";
+const SERVER_VER_KEY = "draftlogger_sync_server_ver_v1";
 const FULL_SYNC_KEY = "draftlogger_sync_full_at_v1";
 let _bulkPullWanted = false, _dedupedThisSession = false;
 function bulkSyncDue(opts) {
@@ -20407,10 +20521,11 @@ async function syncNow(opts = {}) {
       _dedupedThisSession = true;
       setTimeout(() => { try { autoDedupeBulk(); } catch(e) { console.warn("[dedupe]", e); } }, 300);
     }
+    setTimeout(() => { try { syncGameStates(!!opts.full); } catch(e) {} }, 800);
     // Only advance the watermark once the server has taken the push.
     localStorage.setItem(SYNC_WM_KEY, String(started - 5000));
     localStorage.setItem(SYNC_LAST_KEY, new Date().toLocaleString());
-    setSyncStatus("ok", "Synced");
+    setSyncStatus("ok", isTestCopy() ? "Test copy · read-only" : "Synced");
     try { checkBuildVersion(); } catch(e) {}
     updateSyncConnectedUI();
     if (changed) refreshAfterSync();
@@ -21651,6 +21766,7 @@ let _lplSyncBusy = false, _lplLastError = null;
 
 let _lplSyncPromise = null;
 async function lplAutoSync(force, sinceDate, untilDate, opt) {
+  if (isTestCopy()) return 0;
   // A repair asked for while a routine sync is running waits for it, then runs —
   // it used to return 0 at once, which the repair took as "nothing to fetch" and
   // never tried again.
@@ -26755,9 +26871,38 @@ show(_lastScreen);
 // before the first reconcile — otherwise the first push looks like a device
 // with zero bulk entries.
 updateSyncConnectedUI();
+async function resetTestCopy() {
+  const keep = new Set([SYNC_URL_KEY, SYNC_CODE_KEY, GH_TOKEN_KEY, GH_REPO_KEY, GH_PATH_KEY]);
+  const wipe = [STORE_KEY, TOMBSTONE_KEY, BULK_TOMB_KEY, SYNC_SEQ_KEY, SYNC_SEQ_BULK, SYNC_WM_KEY,
+    SYNC_SHASH_KEY, SYNC_SMETA_KEY, SYNC_LAST_KEY, BULK_PULL_KEY, FULL_SYNC_KEY,
+    STATES_DIRTY_KEY, STATES_HAVE_KEY, STATES_SYNC_AT, TEAM_ALIASES_KEY, ...Object.values(syncSettingsKeys())];
+  wipe.forEach(k => { if (!keep.has(k)) { try { localStorage.removeItem(k); } catch(e) {} } });
+  await saveBulkToDB([], { remote: true });
+  try {
+    const db = await _openBulkDB();
+    await new Promise(res => { const tx = db.transaction("states", "readwrite"); tx.objectStore("states").clear(); tx.oncomplete = res; tx.onerror = res; });
+  } catch(e) {}
+}
+function showTestBanner() {
+  if (!isTestCopy() || document.getElementById("test-copy-banner")) return;
+  const b = document.createElement("div");
+  b.id = "test-copy-banner";
+  b.style.cssText = "position:sticky;top:0;z-index:10000;background:#3a2f0b;color:#ffd666;font-size:12px;" +
+    "text-align:center;padding:6px 10px;border-bottom:1px solid #6b5412;line-height:1.5;";
+  b.innerHTML = syncConfigured()
+    ? "\u{1F9EA} <b>Test copy</b> \u2014 showing your real data, read-only. Nothing you do here is saved, and no imports run. The website is the real app."
+    : "\u{1F9EA} <b>Test copy</b> \u2014 connect sync under Settings to load your real data (read-only).";
+  document.body.prepend(b);
+}
+showTestBanner();
 if (syncConfigured()) {
   setSyncStatus("pending", "Connecting…");
-  loadBulkFromDB().then(() => syncOnStartup());
+  if (isTestCopy()) {
+    loadBulkFromDB().then(resetTestCopy).then(() => syncNow({ full: true, bulk: true }))
+      .then(() => { try { invalidateDerivedCaches(); rerenderActiveScreen(); } catch(e) {} });
+  } else {
+    loadBulkFromDB().then(() => syncOnStartup());
+  }
 
   // Pick up changes made on another device while this tab sat in the background.
   document.addEventListener("visibilitychange", () => {
@@ -26769,7 +26914,7 @@ if (syncConfigured()) {
 
   // Best-effort flush when the phone backgrounds or closes the tab.
   window.addEventListener("pagehide", () => {
-    if (!syncConfigured()) return;
+    if (!syncConfigured() || isTestCopy()) return;
     try {
       const all = loadEntries();
       const wm  = Number(localStorage.getItem(SYNC_WM_KEY)) || 0;
