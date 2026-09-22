@@ -1699,7 +1699,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b107</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b108</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2213,7 +2213,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b107";
+const BUILD_VERSION = "2026.09.22-b108";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6140,7 +6140,8 @@ function _teamDuplicateSuggestionsAll(T) {
   };
   // Shared rosters, found through the players rather than every pair.
   const byPlayer = new Map();
-  list.forEach(t => { if (t.top5.length >= 4) t.top5.forEach(p => { if (!byPlayer.has(p)) byPlayer.set(p, []); byPlayer.get(p).push(t); }); });
+  // A majority of the main five (three or more) is enough to suggest it.
+  list.forEach(t => { if (t.top5.length >= 3) t.top5.forEach(p => { if (!byPlayer.has(p)) byPlayer.set(p, []); byPlayer.get(p).push(t); }); });
   const pairCount = new Map();
   byPlayer.forEach(ts => {
     for (let i = 0; i < ts.length; i++) for (let j = i + 1; j < ts.length; j++) {
@@ -6149,7 +6150,7 @@ function _teamDuplicateSuggestionsAll(T) {
     }
   });
   pairCount.forEach((n, pk) => {
-    if (n < 4) return;
+    if (n < 3) return;
     const [x, y] = pk.split("|");
     add(T.teams.get(x), T.teams.get(y), `${n} of their 5 main players are the same`);
   });
