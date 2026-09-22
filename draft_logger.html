@@ -1699,7 +1699,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.09.22-b106</b>
+    Build <b style="color:var(--text);" id="build-label">2026.09.22-b107</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2213,7 +2213,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.09.22-b106";
+const BUILD_VERSION = "2026.09.22-b107";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -3490,6 +3490,12 @@ const LEAGUE_ALIASES = {
   "LTA North": "LCS", "LTA South": "CBLOL",
 };
 
+// Every league the app knows as a season-long domestic league.
+const KNOWN_DOMESTIC_LEAGUES = new Set([
+  ...Object.keys(DEFAULT_TIER_ASSIGNMENTS),
+  "VCS", "LJL", "LCO", "LTA North", "LTA South", "LIT", "EBL", "Rift Legends", "Ultraliga",
+  "Hitpoint Masters", "Arabian League", "LPLOL", "Hellenic Legends", "Road of Legends", "LRN", "LRS", "LLA"
+]);
 const INTL_KEYWORDS = ["msi", "worlds", "first stand", "international", "all-star", "allstar", "cwl", "ewc"];
 // Riot abbreviates some of these in the schedule — First Stand arrives as "FS",
 // which matches none of the words above, so it was being treated as a domestic
@@ -6050,10 +6056,11 @@ function standingsTeamTable() {
       const raw = String((side === "blue" ? e.blueTeam : e.redTeam) || "").trim();
       const k = teamKey(raw);
       if (!k) continue;
-      if (!teams.has(k)) teams.set(k, { key: k, variants: new Map(), games: [], players: new Map(), opps: new Set(), last: "" });
+      if (!teams.has(k)) teams.set(k, { key: k, variants: new Map(), games: [], players: new Map(), opps: new Set(), last: "", inLeague: new Map() });
       const t = teams.get(k);
       t.variants.set(raw, (t.variants.get(raw) || 0) + 1);
-      t.games.push({ e, side, isEvent });
+      t.games.push({ e, side, isEvent, league: gl });
+      if (!isEvent) t.inLeague.set(gl, (t.inLeague.get(gl) || 0) + 1);
       if ((e.date || "") > t.last) t.last = e.date || "";
       const opp = teamKey(side === "blue" ? e.redTeam : e.blueTeam);
       if (opp) t.opps.add(opp);
@@ -6071,6 +6078,11 @@ function standingsTeamTable() {
     t.league = t.manualLeague || t.autoLeague;
     t.inactive = !!(reg[t.key] && reg[t.key].inactive);
     t.top5 = [...t.players.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
+    // Leagues this name plays a real share of its games in. Normally one; two
+    // means a second league's games are stored under the same name.
+    const dom = [...t.inLeague.values()].reduce((a, n) => a + n, 0);
+    t.plays = [...t.inLeague.entries()].filter(([l, n]) => l === t.league || (n >= 10 && n >= dom * 0.2)).map(([l]) => l);
+    t.split = [...t.inLeague.entries()].filter(([l, n]) => n >= 10 && KNOWN_DOMESTIC_LEAGUES.has(l)).sort((a, b) => b[1] - a[1]);
   });
   const leagues = new Set();
   teams.forEach(t => { if (t.autoLeague) leagues.add(t.autoLeague); if (t.manualLeague) leagues.add(t.manualLeague); });
@@ -6170,9 +6182,12 @@ function renderStandings() {
   T.teams.forEach(t => {
     if (t.inactive) { removed++; return; }
     if (!t.league) { unassigned++; return; }
-    count.set(t.league, (count.get(t.league) || 0) + t.games.length);
+    const ls = t.manualLeague ? [t.manualLeague] : t.plays;
+    ls.forEach(l => count.set(l, (count.get(l) || 0) + (t.inLeague.get(l) || 1)));
   });
-  const leagues = [...count.entries()].sort((a, b) => b[1] - a[1]).map(([l]) => l);
+  // Major leagues first, in tier order, then everything else by games stored.
+  const tierRank = l => ({ S: 0, A: 1, B: 2, C: 3, D: 4 })[DEFAULT_TIER_ASSIGNMENTS[l]] ?? 5;
+  const leagues = [...count.entries()].sort((a, b) => tierRank(a[0]) - tierRank(b[0]) || b[1] - a[1]).map(([l]) => l);
   const tabs = [...leagues, ...(unassigned ? ["__unassigned"] : []), ...(removed ? ["__removed"] : [])];
   if (!_currentStandingsLeague || !tabs.includes(_currentStandingsLeague)) _currentStandingsLeague = tabs[0];
   const label = l => l === "__unassigned" ? `No league (${unassigned})` : l === "__removed" ? `Removed (${removed})` : l;
@@ -6204,12 +6219,15 @@ function showStandingsLeague(league) {
   let teams;
   if (league === "__removed") teams = [...T.teams.values()].filter(t => t.inactive);
   else if (league === "__unassigned") teams = [...T.teams.values()].filter(t => !t.inactive && !t.league);
-  else teams = [...T.teams.values()].filter(t => !t.inactive && t.league === league);
+  else teams = [...T.teams.values()].filter(t => !t.inactive && t.league &&
+    (t.manualLeague ? t.manualLeague === league : t.plays.includes(league)));
+  const inTab = league.startsWith("__") ? null : league;
 
   const rows = teams.map(t => {
     let w = 0, l = 0;
     for (const g of t.games) {
       if (!g.e.actualWinner || g.isEvent || (cutoff && (g.e.date || "") < cutoff)) continue;
+      if (inTab && !t.manualLeague && g.league !== inTab) continue;
       if (g.e.actualWinner === g.side) w++; else l++;
     }
     return { t, w, l, r: rt.map.get(t.key) || null };
@@ -6262,6 +6280,7 @@ function showStandingsLeague(league) {
         <td style="color:var(--muted);width:26px;">${r && !t.inactive && league !== "__unassigned" ? i + 1 : ""}</td>
         <td onclick="selectTeam('${_stJs(t.key)}')" style="cursor:pointer;"><b>${_stEsc(name)}</b>${name.toUpperCase() !== t.key ? ` <span style="color:var(--muted);font-size:11px;">${_stEsc(t.key)}</span>` : ""}
           ${t.manualLeague ? `<span style="font-size:10px;color:var(--blue);"> set by you</span>` : ""}
+          ${inTab && t.league !== inTab ? `<span style="font-size:10px;color:var(--muted);"> · rated as ${_stEsc(t.league)}</span>` : ""}
           ${league === "__unassigned" || league === "__removed" ? `<span style="display:block;font-size:10px;color:var(--muted);">${t.games.length} games \u00B7 last ${_stEsc(t.last || "\u2014")}${t.league ? " \u00B7 " + _stEsc(t.league) : ""}</span>` : ""}</td>
         <td class="num" style="color:var(--green);">${w}</td>
         <td class="num" style="color:#ff4d5e;">${l}</td>
@@ -6290,6 +6309,14 @@ function showStandingsLeague(league) {
       }).join("")}
     </div>` : "";
 
+  const shared = inTab ? teams.filter(t => !t.manualLeague && t.split.length >= 2 && t.split.some(([l]) => l === inTab)) : [];
+  const sharedHtml = shared.length ? `
+    <div style="background:var(--surface);border:1px solid var(--yellow);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.6;">
+      <div style="font-size:10px;font-weight:700;color:var(--yellow);letter-spacing:.05em;margin-bottom:4px;">ONE NAME, TWO LEAGUES' SEASONS</div>
+      ${shared.slice(0, 10).map(t => `<div><b>${_stEsc(teamDisplay(t.key, t.label))}</b> — ${t.split.map(([l, n]) => `${n} ${_stEsc(l)}`).join(", ")} games</div>`).join("")}
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">A team plays one domestic league, so these are most likely a team and its academy
+        stored under the same name. They're listed in both tables, but share one rating.</div>
+    </div>` : "";
   const intro = league === "__unassigned"
     ? `Teams whose games don't settle a league \u2014 usually a name that only turns up at international events, or one used by a single source. Give each a league, combine it into the team it belongs to, or remove it from the ratings.`
     : league === "__removed"
@@ -6297,6 +6324,7 @@ function showStandingsLeague(league) {
     : "";
   el.innerHTML = `
     ${intro ? `<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px;">${intro}</div>` : ""}
+    ${sharedHtml}
     ${suggHtml}
     ${rows.length ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;">
       <table class="standings-table">
@@ -12741,6 +12769,11 @@ function buildLeagueMap(ordered) {
     teams.forEach(t => { if (home.get(t) === l) athome++; });
     // A league is where a team plays its season. If a quarter of the field has
     // more games somewhere else, this is a tournament they travelled to.
+    // Known domestic leagues are exempt: when a code is shared between a main
+    // team and its academy (T1 in the LCK and in the LCK CL), both leagues fail
+    // that test, and both used to be treated as events — which hid them from
+    // Standings and took their teams' league strength out of the ratings.
+    if (KNOWN_DOMESTIC_LEAGUES.has(l)) return;
     if (teams.size >= 2 && athome / teams.size < 0.75) events.add(l);
   });
   // A team whose own most-played competition turns out to be an event has no
