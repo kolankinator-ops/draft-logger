@@ -1799,7 +1799,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.21-b140</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.22-b142</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2321,7 +2321,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.21-b140";
+const BUILD_VERSION = "2026.10.22-b142";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -12920,7 +12920,8 @@ let _autoLogTimer = null, _autoLogBusy = false;
 async function autoLogTick(reason) {
   if (isTestCopy()) return;
   if (_autoLogBusy) return;
-  if (document.visibilityState !== "visible") return;
+  // Runs in a background tab too: the repair of past series needs hours of the
+  // site being open, not hours of it being looked at.
   const s = loadAutoLogSettings();
   if (!s.enabled) return;
   if (s.lastRun && Date.now() - new Date(s.lastRun).getTime() < 5 * 60 * 1000
@@ -13957,7 +13958,11 @@ function seriesCheckLine() {
   const c = frameCheck();
   const acc = c.n ? ` \u00B7 end-of-game read matches ${c.agree || 0} of ${c.n} known results (${Math.round((c.agree || 0) / c.n * 100)}%)` : "";
   const lpl = _sc.running ? ` \u00B7 LPL: checking ${_sc.current} (${_sc.done} of ${_sc.total})` : "";
-  return { ok: !bad, text: `Series results: ${bad} series incomplete, ${guessed} results read from the end of the game${acc}${lpl}` };
+  let rp = {};
+  try { rp = JSON.parse(localStorage.getItem(REPAIR_PROGRESS_KEY) || "{}") || {}; } catch (e) {}
+  const prog = rp.series ? ` \u00B7 repair: ${rp.series} series re-read, ${rp.corrected || 0} results corrected, ${rp.confirmed || 0} confirmed, ${rp.added || 0} missing games added`
+    + (rp.left ? `, ${rp.left} series still to go` : ", none left to re-read this week") : "";
+  return { ok: !bad, text: `Series results: ${bad} series incomplete, ${guessed} results read from the end of the game${acc}${prog}${lpl}` };
 }
 
 // ── Repair queue ─────────────────────────────────────────────────────────────
@@ -14882,7 +14887,33 @@ const _frameMs = f => Date.parse(f && f.rfc460Timestamp);
 async function feedFinalFrame(gameId) {
   const w = await feedWindow(gameId, Date.now() - 60000);
   const fr = w.frames || [];
-  return { meta: w.gameMetadata || null, frame: fr[fr.length - 1] || null };
+  if (fr.length) return { meta: w.gameMetadata || null, frame: fr[fr.length - 1] };
+  // If the feed has nothing past the end for this game, walk forward from its
+  // first frame to the last minute that still has frames.
+  const first = await feedWindow(gameId, null);
+  const f0 = (first.frames || [])[0];
+  if (!f0) return { meta: first.gameMetadata || null, frame: null };
+  const t0 = _frameMs(f0);
+  let lo = 0, hi = 0, last = null;
+  for (let m = 15; m <= 90; m += 10) {
+    const d = await feedWindow(gameId, t0 + m * 60000);
+    const x = d.frames || [];
+    if (!x.length) { hi = m; break; }
+    lo = m; last = x[x.length - 1];
+    if (last.gameState === "finished") return { meta: first.gameMetadata || null, frame: last };
+  }
+  while (hi && hi - lo > 1) {
+    const mid = Math.floor((lo + hi) / 2);
+    const x = (await feedWindow(gameId, t0 + mid * 60000)).frames || [];
+    if (x.length) { lo = mid; last = x[x.length - 1]; } else hi = mid;
+  }
+  if (hi) {           // the last minute with frames, read to its final ten seconds
+    for (let sec = 50; sec >= 0; sec -= 10) {
+      const x = (await feedWindow(gameId, t0 + lo * 60000 + sec * 1000)).frames || [];
+      if (x.length) { last = x[x.length - 1]; break; }
+    }
+  }
+  return { meta: first.gameMetadata || null, frame: last };
 }
 // Who won, from the last frame, and how sure: the side that took inhibitors
 // while losing none (3), else a clear structure lead (2), else a big gold lead
@@ -14905,6 +14936,7 @@ function frameWinner(f) { const r = frameRead(f); return r ? r.side : null; }
 // How often the last-frame read agrees with results that are known for sure
 // (sweeps, the deciding game of every series, results checked by hand).
 const FRAME_CHECK_KEY = "draftlogger_frame_check_v1";
+const REPAIR_PROGRESS_KEY = "draftlogger_repair_progress_v1";
 function frameCheck() { try { return JSON.parse(localStorage.getItem(FRAME_CHECK_KEY) || "{}") || {}; } catch(e) { return {}; } }
 function noteFrameCheck(read, truth) {
   if (!truth) return;
@@ -15708,6 +15740,244 @@ function fdTimelineCards(pool) {
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────
+// ── Discovery: every claim the data can test ──────────────────────────────
+// The cards above are questions picked by hand. This tests every claim of a
+// set of kinds the data can answer — every champion, champion on each side,
+// in each league, every pair on one team, every lane matchup, every player on
+// every champion, every team on each side and in game 1s vs later games — and
+// keeps only what holds up.
+//
+// Testing thousands of claims guarantees some look real by luck; that is how
+// most misleading stats get made. So the games are split by date. The earlier
+// two-thirds are searched for anything strong (about 1 in 20 odds by chance).
+// Each of those is then checked on the later third, which the search never saw:
+//   held up   — repeated strongly enough to stand on its own, with the odds
+//               adjusted for how many were checked;
+//   probably  — pointed the same way again but not strongly enough alone; its
+//               size is scaled down by how much early edges keep on average;
+//   faded     — went the other way.
+// How often early edges point the same way later, and how much of their size
+// they keep, is measured across all of them and reported — that is the
+// honest exchange rate for any stat that looks big.
+//
+// Every claim is measured against what the two teams' records predict (with
+// blue side's edge included), so "teams win with X" means "win more with X
+// than they would anyway", not "good teams pick X".
+const DISC_MIN_N = 15, DISC_MIN_CONFIRM = 8, DISC_Z = 2.0, DISC_Q = 0.10;
+let _disc = { key: "", out: null, open: {} };
+const _sig = x => 1 / (1 + Math.exp(-x)), _logit = p => Math.log(p / (1 - p));
+function _normCdf(z) {           // Abramowitz–Stegun
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989423 * Math.exp(-z * z / 2);
+  const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  return z > 0 ? 1 - p : p;
+}
+
+// One row per team per game, with the chance its record gave it.
+function discRows(games) {
+  const nc = c => (typeof normChamp === "function" ? normChamp(c) : c) || c;
+  const tw = new Map();
+  let blueW = 0;
+  for (const e of games) {
+    if (e.actualWinner === "blue") blueW++;
+    for (const side of ["blue", "red"]) {
+      const t = teamKey(side === "blue" ? e.blueTeam : e.redTeam), r = tw.get(t) || [0, 0];
+      r[0] += e.actualWinner === side ? 1 : 0; r[1]++; tw.set(t, r);
+    }
+  }
+  const pr = t => { const r = tw.get(t) || [0, 0]; return (r[0] + 10) / (r[1] + 20); };
+  const h = _logit((blueW + 20) / (games.length + 40));
+  const rows = [];
+  for (const e of games) {
+    const lg = resolveLeague(e.league || ""), gn = +e.gameNumber || 0, roleOk = isRiotImport(e);
+    for (const side of ["blue", "red"]) {
+      const os = side === "blue" ? "red" : "blue";
+      const t = teamKey(side === "blue" ? e.blueTeam : e.redTeam), o = teamKey(side === "blue" ? e.redTeam : e.blueTeam);
+      const a = pr(t), b = pr(o);
+      const p = _sig(_logit(a * (1 - b) / (a * (1 - b) + b * (1 - a))) + (side === "blue" ? h : -h));
+      rows.push({ won: e.actualWinner === side ? 1 : 0, p, side, team: t, lg, gn, roleOk,
+        ch: (e.champions[side] || []).map(nc), oc: (e.champions[os] || []).map(nc),
+        pl: ((e.players && e.players[side]) || []).map(x => String(x || "").trim()) });
+    }
+  }
+  return rows;
+}
+
+// Every claim a row belongs to: key, and how to say it.
+const DISC_ROLES = ["top", "jungle", "mid", "bot", "support"];
+function discKeys(r, emit) {
+  const ch = r.ch;
+  for (const c of ch) {
+    emit("c|" + c);
+    emit("cs|" + c + "|" + r.side);
+    if (FIND_DOMESTIC.includes(r.lg)) emit("cl|" + c + "|" + r.lg);
+    if (r.gn) emit("cg|" + c + "|" + (r.gn === 1 ? "g1" : "late"));
+  }
+  for (let i = 0; i < ch.length; i++) for (let j = i + 1; j < ch.length; j++) {
+    const [x, y] = [ch[i], ch[j]].sort(); emit("cp|" + x + "|" + y);
+  }
+  // Each matchup once, from the side of the alphabetically first champion, so
+  // "A into B" and "B into A" aren't listed as two findings.
+  if (r.roleOk && ch.length === 5 && r.oc.length === 5) for (let i = 0; i < 5; i++) if (ch[i] < r.oc[i]) emit("m|" + i + "|" + ch[i] + "|" + r.oc[i]);
+  if (r.pl.length === 5 && ch.length === 5) for (let i = 0; i < 5; i++) if (r.pl[i]) emit("pc|" + r.pl[i] + "|" + ch[i]);
+  emit("ts|" + r.team + "|" + r.side);
+  if (r.gn) emit("tg|" + r.team + "|" + (r.gn === 1 ? "g1" : "late"));
+}
+const DISC_FAMILIES = {
+  c: "Champions", cs: "Champion by side", cl: "Champion by league", cg: "Champion by game in series",
+  cp: "Champion pairs", m: "Lane matchups", pc: "Player on champion", ts: "Team by side", tg: "Team by game in series"
+};
+function discLabel(key) {
+  const [f, a, b, c] = key.split("|");
+  const cd = x => (typeof champDisplay === "function" ? champDisplay(x) : x);
+  switch (f) {
+    case "c":  return `Teams with ${cd(a)}`;
+    case "cs": return `${cd(a)} on ${b} side`;
+    case "cl": return `${cd(a)} in the ${b}`;
+    case "cg": return `${cd(a)} ${b === "g1" ? "picked in game 1s" : "picked in games 2–5"}`;
+    case "cp": return `${cd(a)} and ${cd(b)} on the same team`;
+    case "m":  return `${cd(b)} into ${cd(c)} (${DISC_ROLES[+a]})`;
+    case "pc": return `${a} on ${cd(b)}`;
+    case "ts": return `${teamDisplay(a, a)} on ${b} side`;
+    case "tg": return `${teamDisplay(a, a)} in ${b === "g1" ? "game 1s" : "games 2–5"}`;
+  }
+  return key;
+}
+
+function discAccumulate(rows, only) {
+  const m = new Map();
+  for (const r of rows) discKeys(r, k => {
+    if (only && !only.has(k)) return;
+    let s = m.get(k);
+    if (!s) { s = { W: 0, E: 0, V: 0, n: 0 }; m.set(k, s); }
+    s.W += r.won; s.E += r.p; s.V += r.p * (1 - r.p); s.n++;
+  });
+  return m;
+}
+
+function runDiscovery(pool) {
+  const games = pool.filter(e => (e.champions?.blue || []).length === 5);
+  if (games.length < 600) return null;
+  const cut = Math.floor(games.length * 2 / 3);
+  const early = discRows(games.slice(0, cut)), late = discRows(games.slice(cut));
+  const A = discAccumulate(early);
+  const cands = [];
+  for (const [k, s] of A) {
+    if (s.n < DISC_MIN_N || s.V <= 0) continue;
+    const z = (s.W - s.E) / Math.sqrt(s.V);
+    if (Math.abs(z) >= DISC_Z) cands.push({ k, a: s, z });
+  }
+  const B = discAccumulate(late, new Set(cands.map(c => c.k)));
+  const tested = [...cands];
+  for (const c of tested) {
+    const s = B.get(c.k);
+    c.b = s || { W: 0, E: 0, V: 0, n: 0 };
+    if (!s || s.n < DISC_MIN_CONFIRM || s.V <= 0) { c.p = 1; c.thin = true; continue; }
+    c.z2 = (s.W - s.E) / Math.sqrt(s.V);
+    c.p = 1 - _normCdf(Math.sign(c.z) * c.z2);           // same direction only
+  }
+  // Benjamini–Hochberg over everything that went to the later games.
+  const checked = tested.filter(c => !c.thin).sort((x, y) => x.p - y.p);
+  let pass = 0;
+  checked.forEach((c, i) => { if (c.p <= (i + 1) / checked.length * DISC_Q) pass = i + 1; });
+  const held = checked.slice(0, pass);
+  const heldSet = new Set(held.map(c => c.k));
+  // Across everything checked: how often the later games point the same way,
+  // and how much of the early edge is left (weighted by later games).
+  let num = 0, den = 0, same = 0;
+  for (const c of checked) {
+    c.d1 = (c.a.W - c.a.E) / c.a.n; c.d2 = (c.b.W - c.b.E) / c.b.n;
+    num += c.b.n * c.d1 * c.d2; den += c.b.n * c.d1 * c.d1;
+    if (Math.sign(c.d1) === Math.sign(c.d2) && c.d2 !== 0) same++;
+  }
+  const keep = den > 0 ? Math.max(0, Math.min(1, num / den)) : 0;
+  checked.forEach(c => { c.est = c.d1 * keep; });
+  const rest = checked.filter(c => !heldSet.has(c.k));
+  // "Probably" needs real support in the later games, not just the same sign.
+  const isLikely = c => c.p < 0.25;
+  const likely = rest.filter(isLikely).sort((x, y) => Math.abs(y.est) - Math.abs(x.est));
+  const faded = rest.filter(c => !isLikely(c)).sort((x, y) => Math.abs(y.z) - Math.abs(x.z));
+  const testedAll = [...A.values()].filter(s => s.n >= DISC_MIN_N).length;
+  return { n: games.length, cutDate: games[cut].date.slice(0, 10), first: games[0].date.slice(0, 10), last: games[games.length - 1].date.slice(0, 10),
+           testedAll, chance: Math.round(testedAll * 2 * (1 - _normCdf(DISC_Z))), cands: cands.length, checked: checked.length,
+           thin: tested.length - checked.length, same, keep, held, likely, faded };
+}
+
+const _pc = (w, n) => n ? (w / n * 100).toFixed(0) + "%" : "\u2014";
+const _pts = d => (d >= 0 ? "+" : "\u2212") + Math.abs(d * 100).toFixed(1) + " pts";
+function discFinding(c, i, out, tier) {
+  const a = c.a, b = c.b, up = c.z > 0, label = discLabel(c.k), plain = label.replace(/<[^>]+>/g, "");
+  const tot = { W: a.W + b.W, E: a.E + b.E, n: a.n + b.n };
+  const verb = up ? "won more" : "won less";
+  const split = `Before ${out.cutDate}: ${_pc(a.W, a.n)} vs ${_pc(a.E, a.n)} expected (${a.n} games); after: ${_pc(b.W, b.n)} vs ${_pc(b.E, b.n)} (${b.n}).`;
+  const headline = tier === "held"
+    ? `<b>${label}</b> ${verb} than their records predicted: ${_pc(tot.W, tot.n)} against ${_pc(tot.E, tot.n)} over ${tot.n} games. ${split}`
+    : tier === "likely"
+    ? `<b>${label}</b> ${verb} than expected, and did again in later games. Best estimate of the real edge: <b>${_pts(c.est)}</b> (it looked like ${_pts(c.d1)}). ${split}`
+    : `<b>${label}</b> looked like ${_pts(c.d1)} and then went ${_pts(c.d2)}. ${split}`;
+  const post = tier === "held"
+    ? `${plain} ${verb} than their records predicted: ${_pc(tot.W, tot.n)} vs ${_pc(tot.E, tot.n)} expected (${tot.n} games). It showed up in games before ${out.cutDate} and repeated after.`
+    : tier === "likely"
+    ? `${plain}: looked like ${_pts(c.d1)} over expectation (${a.n} games before ${out.cutDate}), then ${_pts(c.d2)} after (${b.n}). Real, but smaller than it looks: best guess ${_pts(c.est)}.`
+    : `${plain} looked like a real edge: ${_pc(a.W, a.n)} vs ${_pc(a.E, a.n)} expected (${a.n} games before ${out.cutDate}). After: ${_pc(b.W, b.n)} vs ${_pc(b.E, b.n)} (${b.n} games). It didn't hold.`;
+  const after = tier === "held" ? "var(--green)" : tier === "likely" ? "var(--yellow)" : "var(--red)";
+  const chart = fdBars([
+      { label: "Before " + out.cutDate, sub: a.n + " games", vals: [{ v: a.W / a.n * 100, color: "var(--blue)", label: _pc(a.W, a.n) }, { v: a.E / a.n * 100, color: "var(--muted)", dim: true, label: _pc(a.E, a.n) }] },
+      { label: "After", sub: b.n + " games", vals: [{ v: b.n ? b.W / b.n * 100 : 0, color: after, label: _pc(b.W, b.n) }, { v: b.n ? b.E / b.n * 100 : 0, color: "var(--muted)", dim: true, label: _pc(b.E, b.n) }] }],
+    { yMin: 0, yMax: 100, ref: 50, refLabel: "even", legend: [["var(--blue)", "Won"], ["var(--muted)", "Expected from the teams' records"]] });
+  return { id: "d" + tier[0] + i, title: plain, headline, post, chart, fam: c.k.split("|")[0] };
+}
+
+function renderDiscovery(pool, scopeName) {
+  const el = document.getElementById("fd-discover");
+  if (!el) return;
+  const key = scopeName + "|" + pool.length + "|" + (pool.length ? pool[pool.length - 1].date : "");
+  if (_disc.key !== key) {
+    let out = null;
+    try { out = runDiscovery(pool); } catch (err) { try { logAppError("findings", err.message, "discovery"); } catch (e) {} }
+    _disc = { key, out };
+  }
+  const out = _disc.out;
+  if (!out) { el.innerHTML = `<div class="empty">Needs at least 600 games with full drafts in this selection.</div>`; return; }
+  const range = `${out.first} to ${out.last}`, sample = `${out.n.toLocaleString()} games \u00B7 ${scopeName} \u00B7 ${range}`;
+  const held = out.held.map((c, i) => discFinding(c, i, out, "held"));
+  const likely = out.likely.map((c, i) => discFinding(c, i, out, "likely"));
+  const faded = out.faded.map((c, i) => discFinding(c, i, out, "faded"));
+  const samePct = out.checked ? out.same / out.checked * 100 : 0;
+  const sameHalf = out.checked ? 196 * Math.sqrt(0.25 / out.checked) : 0;
+  const summary = { id: "dsum", title: "How much of a stat that looks big is real?",
+    headline: `Tested <b>${out.testedAll.toLocaleString()}</b> claims on games before ${out.cutDate}. <b>${out.cands}</b> looked strong \u2014 luck alone would give about ${out.chance}. `
+      + `${out.checked} came up often enough afterwards to check: <b>${out.same}</b> (${samePct.toFixed(0)}%) pointed the same way again, where chance would give half. `
+      + `But on average they kept only <b>${Math.round(out.keep * 100)}%</b> of their size: an edge that looks like +10 points is really about +${(out.keep * 10).toFixed(1)}.`,
+    post: `I tested ${out.testedAll.toLocaleString()} pro LoL stats (champions, sides, pairs, matchups, players, teams). The ones that looked strong pointed the same way in later games ${samePct.toFixed(0)}% of the time, but kept only ${Math.round(out.keep * 100)}% of their size. A "+10%" stat is really about +${(out.keep * 10).toFixed(0)}%.`,
+    chart: fdBars([{ label: "Same direction later", sub: out.checked + " checked", vals: [{ v: samePct, ci: sameHalf, color: "var(--green)", label: samePct.toFixed(0) + "%" }] },
+                   { label: "Size kept", sub: "weighted by later games", vals: [{ v: out.keep * 100, color: "var(--yellow)", label: Math.round(out.keep * 100) + "%" }] }],
+      { yMin: 0, yMax: 100, ref: 50, refLabel: "chance" }) };
+  [summary, ...held, ...likely, ...faded].forEach(f => { f.sample = sample; _findings[f.id] = f; });
+  const btns = id => `<div style="display:flex;gap:6px;margin-top:5px;">
+        <button class="btn btn-ghost" style="font-size:11px;padding:3px 8px;" onclick="fdCopyPost('${id}', this)">Copy post</button>
+        <button class="btn btn-ghost" style="font-size:11px;padding:3px 8px;" onclick="fdSaveImage('${id}', this)">Save image</button></div>`;
+  const row = f => `<div style="padding:8px 0;border-top:1px solid var(--border);"><div style="font-size:12.5px;line-height:1.6;">${f.headline}</div>${btns(f.id)}</div>`;
+  const group = (title, note, list) => {
+    if (!list.length) return "";
+    const byFam = {};
+    list.forEach(f => (byFam[f.fam] = byFam[f.fam] || []).push(f));
+    return `<div class="card" style="margin-bottom:14px;"><div class="card-title">${title} <span style="color:var(--muted);font-weight:400;">${list.length}</span></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:4px;">${note}</div>
+      ${Object.keys(DISC_FAMILIES).filter(k => byFam[k]).map(k => `<div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin:10px 0 2px;">${DISC_FAMILIES[k]}</div>${byFam[k].map(row).join("")}`).join("")}
+    </div>`;
+  };
+  el.innerHTML = `<div class="card" style="margin-bottom:14px;">
+      <div class="card-title">${summary.title}</div>
+      <div style="font-size:13px;line-height:1.65;margin-bottom:10px;">${summary.headline}</div>${summary.chart}
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-top:8px;">Every claim is measured against what the two teams' records, and blue side, predict \u2014 so "teams with X won more" means more than those teams would have anyway.
+        "Strong" is about 1-in-20 odds by luck in the earlier games. ${out.thin ? `${out.thin} strong claims haven't come up often enough since to check.` : ""}</div>
+      ${btns("dsum")}</div>`
+    + group("Held up", "Repeated strongly enough in the later games to stand on its own, with the odds adjusted for how many claims were checked.", held)
+    + group("Probably real, smaller than it looks", `Pointed the same way in the later games, but not strongly enough alone. Each is scaled down to ${Math.round(out.keep * 100)}% of how it first looked \u2014 what early edges keep on average.`, likely)
+    + group("Looked real, didn't hold", "As strong as the others in the earlier games, then flat or the other way. This is what a quoted stat looks like when it was luck.", faded);
+}
+
 function renderFindings() {
   const el = document.getElementById("fd-content");
   if (!el) return;
@@ -15743,7 +16013,10 @@ function renderFindings() {
           <button class="btn" style="font-size:12px;padding:6px 10px;" onclick="fdCopyPost('${f.id}', this)">Copy post</button>
           <button class="btn" style="font-size:12px;padding:6px 10px;" onclick="fdSaveImage('${f.id}', this)">Save image</button></div>`}
       </div>`).join("")
-      : `<div class="empty">Not enough games in this selection yet.</div>`);
+      : `<div class="empty">Not enough games in this selection yet.</div>`)
+    + `<div id="fd-discover"><div class="card" style="margin-bottom:14px;"><div class="card-title">Everything the data says</div>
+        <div class="empty">Testing every claim\u2026</div></div></div>`;
+  setTimeout(() => { try { renderDiscovery(pool, scopeName); } catch (e) {} }, 30);
 }
 
 async function fdCopyPost(id, btn) {
@@ -23452,9 +23725,9 @@ async function runAutoLog(silent = true) {
   const loggedIdx = buildLoggedGameIndex();
   // Stored games by Riot game id, and the series whose results were guessed or
   // don't add up — those are fetched again even though every game is stored.
-  const storedByRiot = new Map();
-  for (const e of loadBulkEntries()) { const id = riotGameId(e.id); if (id) storedByRiot.set(id, e); }
-  const recheck = new Set();
+  const storedByRiot = new Map(), storedByRiotId = new Map();
+  for (const e of loadBulkEntries()) { const id = riotGameId(e.id); if (id) { storedByRiot.set(id, e); storedByRiotId.set(e.id, e); } }
+  const recheck = new Set(), recheckGroups = [];
   let recheckFrom = "";
   try {
     for (const sr of storedSeries([...loadEntries(), ...loadBulkEntries()])) {
@@ -23462,12 +23735,13 @@ async function runAutoLog(silent = true) {
       if (!sr.bad && !guessed) continue;
       if (resolveLeague(sr.games[0].league || "") === "LPL") continue;
       const e0 = sr.games[0];
-      recheck.add(loggedGameKey(e0.date, e0.blueTeam, e0.redTeam));
-      recheck.add(loggedGameKey(e0.date, resolveTeam(e0.blueTeam), resolveTeam(e0.redTeam)));
+      const ks = [loggedGameKey(e0.date, e0.blueTeam, e0.redTeam), loggedGameKey(e0.date, resolveTeam(e0.blueTeam), resolveTeam(e0.redTeam))];
+      ks.forEach(k => recheck.add(k));
+      recheckGroups.push(ks);
       if (!recheckFrom || e0.date < recheckFrom) recheckFrom = String(e0.date).slice(0, 10);
     }
   } catch(e) {}
-  const RECHECK_PER_RUN = 40, RECHECK_KEY = "draftlogger_recheck_done_v1";
+  const RECHECK_PER_RUN = 60, RECHECK_KEY = "draftlogger_recheck_done_v1";
   // A series fetched again and still not settled isn't fetched again for a week,
   // so it can't hold up the ones behind it.
   let recheckDone = {};
@@ -23478,7 +23752,7 @@ async function runAutoLog(silent = true) {
     recheckFrom = [...recheck].map(k => k.slice(0, 10)).sort()[0];
     if (recheckFrom < cutoffDate) { cutoffDate = recheckFrom; maxPages = Math.max(maxPages, 700); }
   }
-  let rechecked = 0, recheckQueued = 0;
+  let rechecked = 0, recheckQueued = 0, repairAdded = 0;
   const corrections = new Map();
 
   const progress = msg => {
@@ -23490,7 +23764,13 @@ async function runAutoLog(silent = true) {
   // tombstone — anything logged by hand while it was working.
   const flush = () => {
     if (corrections && corrections.size) {
-      const fixed = loadBulkEntries().map(e => corrections.has(e.id) ? { ...e, ...corrections.get(e.id) } : e);
+      try {
+      const rp = JSON.parse(localStorage.getItem(REPAIR_PROGRESS_KEY) || "{}") || {};
+      rp.corrected = (rp.corrected || 0) + [...corrections].filter(([id, c]) => { const o = storedByRiotId.get(id); return o && o.actualWinner !== c.actualWinner; }).length;
+      rp.confirmed = (rp.confirmed || 0) + [...corrections].filter(([id, c]) => { const o = storedByRiotId.get(id); return o && o.actualWinner === c.actualWinner; }).length;
+      localStorage.setItem(REPAIR_PROGRESS_KEY, JSON.stringify(rp));
+    } catch(e) {}
+    const fixed = loadBulkEntries().map(e => corrections.has(e.id) ? { ...e, ...corrections.get(e.id) } : e);
       corrections.clear();
       saveBulkToDB(fixed);
       invalidateDerivedCaches();
@@ -23534,8 +23814,8 @@ async function runAutoLog(silent = true) {
           if (seen && [...seen].filter(v => v != null).length >= played) {
             if (!recheck.has(lk) || recheckQueued >= RECHECK_PER_RUN) continue;
             recheckQueued++;
-            recheckDone[lk] = Date.now();
           }
+          if (recheck.has(lk)) recheckDone[lk] = Date.now();
         }
         matchQueue.push({ matchId: ev.match.id, leagueName: leagueOut(ev.league.name), blockName: ev.blockName || "", startTime: ev.startTime || "", date });
       }
@@ -23629,6 +23909,7 @@ async function runAutoLog(silent = true) {
 
         for (const r of rows) {
           if (r.stored || !r.winner) continue;
+          if (recheck.has(loggedGameKey(date, r.bc, r.rc)) || date < normalCutoff) repairAdded++;
           unsaved.push({
             id: "riot_" + r.g.id,
             date, league: leagueName,
@@ -23654,6 +23935,13 @@ async function runAutoLog(silent = true) {
 
     flush();
     try { localStorage.setItem(RECHECK_KEY, JSON.stringify(recheckDone)); } catch(e) {}
+    try {
+      const rp = JSON.parse(localStorage.getItem(REPAIR_PROGRESS_KEY) || "{}") || {};
+      rp.added = (rp.added || 0) + repairAdded; rp.series = (rp.series || 0) + rechecked; rp.at = Date.now();
+      const fresh = k => recheckDone[k] && Date.now() - recheckDone[k] < 7 * 86400000;
+      rp.left = recheckGroups.filter(ks => !ks.some(fresh)).length;
+      localStorage.setItem(REPAIR_PROGRESS_KEY, JSON.stringify(rp));
+    } catch(e) {}
     if (added > 0 || rechecked) autoSync();
     const settings = loadAutoLogSettings();
     settings.lastRun  = now.toISOString();
