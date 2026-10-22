@@ -1799,7 +1799,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.22-b142</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.22-b144</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2321,7 +2321,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.22-b142";
+const BUILD_VERSION = "2026.10.22-b144";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -15245,6 +15245,73 @@ function scatterSvg(points, o) {
 const LEAGUE_COLORS = { LCK: "#4f8cff", LPL: "#ff5a5a", LEC: "#35c28b", LCS: "#f5b942", LCP: "#b07cff", CBLOL: "#2ec4d6" };
 const MAJOR_SCOUT = ["LCK", "LPL", "LEC", "LCS", "LCP", "CBLOL"];
 
+// This year's Worlds field: every team with a Worlds game stored this year, plus
+// any on the schedule. Worked out from the data, nothing to pick.
+const isWorldsName = l => /worlds|world championship/i.test(String(l || "")) || ["WLDS", "WCS", "WC"].includes(String(l || "").trim().toUpperCase());
+// The field as Riot lists it: every team on this year's Worlds schedule and in
+// its standings, so teams that haven't played yet are included. Fetched in the
+// background, kept for six hours.
+const WORLDS_FIELD_KEY = "draftlogger_worlds_field_v1";
+let _worldsFetching = false;
+function worldsField() { try { return JSON.parse(localStorage.getItem(WORLDS_FIELD_KEY) || "{}") || {}; } catch (e) { return {}; } }
+async function fetchWorldsField() {
+  if (_worldsFetching) return false;
+  const cur = worldsField(), year = new Date().getFullYear();
+  if (cur.year === year && cur.at && Date.now() - cur.at < 6 * 3600000) return false;
+  _worldsFetching = true;
+  try {
+    const lg = ((await apiGet("/getLeagues")).data?.leagues || []).find(l => l.slug === "worlds" || /^worlds$/i.test(l.name || ""));
+    if (!lg) return false;
+    const teams = new Map();
+    const take = t => {
+      if (!t) return;
+      const code = String(t.code || "").trim(), name = String(t.name || "").trim();
+      if (!code || /^tbd$/i.test(code) || /^tbd$/i.test(name)) return;
+      teams.set(code.toUpperCase(), { code, name, image: t.image || "" });
+    };
+    // This year's tournament: its standings list every team in every stage.
+    try {
+      const tours = ((await apiGet("/getTournamentsForLeague", { leagueId: lg.id })).data?.leagues?.[0]?.tournaments || [])
+        .filter(t => String(t.startDate || "").startsWith(String(year)) || String(t.endDate || "").startsWith(String(year)));
+      for (const t of tours) {
+        const st = (await apiGet("/getStandings", { tournamentId: t.id })).data?.standings || [];
+        for (const s of st) for (const stage of s.stages || []) for (const sec of stage.sections || []) {
+          for (const r of sec.rankings || []) (r.teams || []).forEach(take);
+          for (const m of sec.matches || []) (m.teams || []).forEach(take);
+        }
+      }
+    } catch (e) {}
+    // And the schedule, both directions from now.
+    const walk = async dir => {
+      let token = null;
+      for (let i = 0; i < 6; i++) {
+        const d = (await apiGet("/getSchedule", token ? { leagueId: lg.id, pageToken: token } : { leagueId: lg.id })).data?.schedule;
+        if (!d) break;
+        for (const ev of d.events || []) if (String(ev.startTime || "").startsWith(String(year))) (ev.match?.teams || []).forEach(take);
+        token = d.pages?.[dir];
+        if (!token) break;
+      }
+    };
+    try { await walk("newer"); await walk("older"); } catch (e) {}
+    if (!teams.size) return false;
+    try { noteTeamLogos([...teams.values()]); } catch (e) {}
+    localStorage.setItem(WORLDS_FIELD_KEY, JSON.stringify({ year, at: Date.now(), teams: [...teams.values()] }));
+    return true;
+  } catch (e) { return false; }
+  finally { _worldsFetching = false; }
+}
+function worldsTeams() {
+  const year = String(new Date().getFullYear()), out = new Set();
+  const add = n => { const k = teamKey(resolveTeam(n)); if (k) out.add(k); };
+  const f = worldsField();
+  if (String(f.year) === year) for (const t of f.teams || []) { add(t.code); }
+  for (const e of getTrainingPool()) {
+    if (String(e.date || "").slice(0, 4) !== year || !isWorldsName(e.league)) continue;
+    add(e.blueTeam); add(e.redTeam);
+  }
+  try { for (const g of loadTodayPlan().games || []) if (isWorldsName(g.league)) { add(g.blueTeam); add(g.redTeam); } } catch (e) {}
+  return out;
+}
 function scoutPool() {
   const lg = (document.getElementById("scout-league") || {}).value || "LCK";
   const since = (document.getElementById("scout-since") || {}).value || "year";
@@ -15254,17 +15321,29 @@ function scoutPool() {
     if (!e.actualWinner || !e.date || e.isStandaloneBet) return false;
     if (cutoff && e.date < cutoff) return false;
     const l = resolveLeague(e.league || "");
+    // Worlds teams: every game they played, at home and abroad, against anyone.
+    if (lg === "worlds") return _scoutWorlds.has(teamKey(e.blueTeam)) || _scoutWorlds.has(teamKey(e.redTeam));
     if (INTL_EVENT(l)) return false;
     return lg === "majors" ? MAJOR_SCOUT.includes(l) : l === lg;
   });
 }
+let _scoutWorlds = new Set();
 
 function renderScouting() {
   const el = document.getElementById("scout-content");
   if (!el) return;
   const sel = document.getElementById("scout-league");
+  _scoutWorlds = worldsTeams();
+  fetchWorldsField().then(changed => {
+    if (!changed) return;
+    const s2 = document.getElementById("scout-league");
+    if (s2 && !s2.querySelector('option[value="worlds"]')) s2.insertAdjacentHTML("afterbegin", `<option value="worlds">Worlds ${new Date().getFullYear()} teams</option>`);
+    const a = document.querySelector(".screen.active");
+    if (a && a.id === "screen-scouting") renderScouting();
+  }).catch(() => {});
   if (sel && !sel.options.length) {
-    sel.innerHTML = MAJOR_SCOUT.map(l => `<option value="${l}">${l}</option>`).join("") + `<option value="majors">All major leagues</option>`
+    sel.innerHTML = (_scoutWorlds.size ? `<option value="worlds">Worlds ${new Date().getFullYear()} teams</option>` : "")
+      + MAJOR_SCOUT.map(l => `<option value="${l}">${l}</option>`).join("") + `<option value="majors">All major leagues</option>`
       + [...new Set(getTrainingPool().map(e => resolveLeague(e.league || "")))]
           .filter(l => l && !MAJOR_SCOUT.includes(l) && !INTL_EVENT(l)).sort().map(l => `<option value="${l}">${l}</option>`).join("");
   }
@@ -15275,14 +15354,16 @@ function renderScouting() {
 
   // Per team: record in game 1s and in later games, and the 14-minute lead.
   const T = new Map();
-  const team = k => { if (!T.has(k)) T.set(k, { k, lg: "", g1: [0, 0], gN: [0, 0], all: [0, 0], lead: [0, 0], leadWin: [0, 0], behindWin: [0, 0] }); return T.get(k); };
+  const team = k => { if (!T.has(k)) T.set(k, { k, lg: "", lgs: {}, g1: [0, 0], gN: [0, 0], all: [0, 0], vsW: [0, 0], lead: [0, 0], leadWin: [0, 0], behindWin: [0, 0] }); return T.get(k); };
   for (const e of pool) {
     const l = resolveLeague(e.league || "");
     for (const side of ["blue", "red"]) {
       const t = team(teamKey(side === "blue" ? e.blueTeam : e.redTeam));
-      t.lg = t.lg || l;
+      // Home league = where most of its games are, not an international event.
+      if (l && !INTL_EVENT(l)) { t.lgs[l] = (t.lgs[l] || 0) + 1; if (!t.lg || t.lgs[l] > (t.lgs[t.lg] || 0)) t.lg = l; }
       const won = e.actualWinner === side ? 1 : 0;
       t.all[0] += won; t.all[1]++;
+      if (_scoutWorlds.has(teamKey(side === "blue" ? e.redTeam : e.blueTeam))) { t.vsW[0] += won; t.vsW[1]++; }
       const gn = e.gameNumber || 1;
       (gn === 1 ? t.g1 : t.gN)[0] += won; (gn === 1 ? t.g1 : t.gN)[1]++;
       if (e.lane14 && typeof e.lane14.teamGold === "number") {
@@ -15296,16 +15377,32 @@ function renderScouting() {
   // An academy side in a major league's table is a mislabelled game, not a team
   // that plays there. Same name rule the league guess uses.
   const lgSel = (document.getElementById("scout-league") || {}).value || "LCK";
-  const majorView = lgSel === "majors" || MAJOR_SCOUT.includes(lgSel);
-  const teams = [...T.values()].filter(t => !(majorView && isAcademyTeamName(t.k)) && !teamInactive(t.k));
+  const worldsView = lgSel === "worlds";
+  const majorView = lgSel === "majors" || MAJOR_SCOUT.includes(lgSel) || worldsView;
+  const teams = [...T.values()].filter(t => !(majorView && isAcademyTeamName(t.k)) && !teamInactive(t.k) && (!worldsView || _scoutWorlds.has(t.k)));
   const col = t => LEAGUE_COLORS[t.lg] || "var(--muted)";
   const lab = t => teamDisplay(t.k, t.k);
 
+  // 0. Worlds view: who has actually beaten Worlds-level opposition this year.
+  let html0 = "";
+  if (worldsView) {
+    const s0 = teams.filter(t => t.vsW[1] >= 5).map(t => ({
+      x: t.all[0] / t.all[1] * 100, y: t.vsW[0] / t.vsW[1] * 100, label: lab(t), color: col(t),
+      title: `${lab(t)}: ${t.all[0]}-${t.all[1] - t.all[0]} overall, ${t.vsW[0]}-${t.vsW[1] - t.vsW[0]} against other Worlds teams` }));
+    const pad = teams.filter(t => t.vsW[1] >= 5).map(t => ({ t, d: t.vsW[0] / t.vsW[1] - t.all[0] / t.all[1] })).sort((a, b) => a.d - b.d);
+    html0 = card("Against other Worlds teams",
+      `A record says as much about the opponents as the team. Across = win % against everyone in this date range; up = win % against the other teams at Worlds. A team much lower than it is far across built its record on teams that didn't make it. Teams need 5+ games against Worlds teams. ${_scoutWorlds.size} teams found at Worlds.`,
+      s0.length >= 3 ? scatterSvg(s0, { xRange: [0, 100], yRange: [0, 100], xMid: 50, yMid: 50, xLabel: "Win % against everyone", yLabel: "Win % against Worlds teams",
+        quad: ["Better than their record", "Strong against everyone", "Weak against everyone", "Record built on weaker teams"] })
+        + `<div style="font-size:12px;margin-top:8px;line-height:1.7;"><b>Biggest drop against Worlds teams:</b> ${pad.slice(0, 4).map(x => `${lab(x.t)} (${x.t.vsW[0]}-${x.t.vsW[1] - x.t.vsW[0]}, ${Math.round(x.d * 100)} pts)`).join(", ")}<br>
+           <b>Better against Worlds teams:</b> ${pad.slice(-3).reverse().filter(x => x.d > 0).map(x => `${lab(x.t)} (${x.t.vsW[0]}-${x.t.vsW[1] - x.t.vsW[0]}, +${Math.round(x.d * 100)} pts)`).join(", ") || "none"}</div>`
+        : `<div class="empty">Not enough games between Worlds teams in this date range.</div>`);
+  }
   // 1. Series play
   const s1 = teams.filter(t => t.g1[1] >= 8 && t.gN[1] >= 8).map(t => ({
     x: t.g1[0] / t.g1[1] * 100, y: t.gN[0] / t.gN[1] * 100, label: lab(t), color: col(t),
     title: `${lab(t)}: game 1s ${t.g1[0]}-${t.g1[1] - t.g1[0]}, later games ${t.gN[0]}-${t.gN[1] - t.gN[0]}` }));
-  let html = card("Game 1s vs the rest of the series",
+  let html = html0 + card("Game 1s vs the rest of the series",
     "Game 1 is the most prepared draft; games 2–5 are adapting on the go, with fearless shrinking the pool. Right = strong in game 1s, up = strong later in series. Teams need 8+ of each.",
     s1.length >= 3 ? scatterSvg(s1, { xMid: 50, yMid: 50, xRange: [0, 100], yRange: [0, 100], xLabel: "Game 1 win %", yLabel: "Games 2–5 win %",
       quad: ["Adapts, weak prep", "Strong prep and adapts", "Weak both", "Strong prep, fades"] })
@@ -15341,8 +15438,9 @@ function renderScouting() {
     if (academyGame(e)) continue;
     const w = e.lane14.who[r], d = e.lane14[r];
     if (!w || !d) continue;
-    for (const [name, champ, opp, gold] of [[w[0], w[1], w[3], d[0]], [w[2], w[3], w[1], -d[0]]]) {
+    for (const [name, champ, opp, gold, tm] of [[w[0], w[1], w[3], d[0], e.blueTeam], [w[2], w[3], w[1], -d[0], e.redTeam]]) {
       if (!name) continue;
+      if (worldsView && !_scoutWorlds.has(teamKey(tm))) continue;
       const pk = pair.get(r + "|" + champ + "|" + opp) || [0, 0];
       // expected: what this matchup usually gives, without this game, shrunk toward even
       const exp = (pk[0] - gold) / (Math.max(0, pk[1] - 1) + 6);
