@@ -66,6 +66,27 @@
   #screen-draftreview.sheet { max-width: 1500px; }
   .screen.active { display: block; }
 
+  /* 26 pages don't fit in a row of tabs. Wide screens get the grouped menu as a
+     sidebar that is always open; narrower ones the menu button. */
+  .nav-side-head { display: none; }
+  @media (min-width: 1100px) {
+    nav#top-nav { display: none; }
+    .nav-drawer { left: 0; width: 210px; padding: 0 0 20px; transition: none; }
+    .nav-drawer button { padding: 8px 18px; font-size: 13px; }
+    .nav-drawer-title { padding: 12px 18px 4px; }
+    .nav-overlay, .nav-overlay.open { display: none; }
+    body { padding-left: 210px; }
+    .nav-side-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px 10px 18px;
+                     position: sticky; top: 0; background: var(--surface); z-index: 1; border-bottom: 1px solid var(--border); }
+    .nav-side-head b { font-size: 14px; }
+    .nav-side-head button { width: auto; padding: 4px 8px; font-size: 15px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+    #sync-pill { left: 222px !important; }
+  }
+  @media (min-width: 641px) and (max-width: 1099px) {
+    nav#top-nav { display: none; }
+    .hamburger { display: flex; }
+    body { padding-top: 52px; }
+  }
   @media (max-width: 640px) {
     nav { display: none; }
     .hamburger { display: flex; }
@@ -345,6 +366,28 @@
   .db-stat .val { font-weight:700; }
   .db-stats-vs { color:var(--muted);font-size:11px;text-align:center; }
   .db-scoreboard { padding:8px 14px 6px;border-top:1px solid var(--border); }
+
+  /* Schedule match cards */
+  .sch-card { background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden; }
+  .sch-card.is-live { border-color:#ff4d5e; }
+  .sch-card.is-done { opacity:.8; }
+  .sch-main { display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 11px 6px;cursor:pointer; }
+  .sch-team { display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer; }
+  .sch-team.r { flex-direction:row-reverse;text-align:right; }
+  .sch-tn { min-width:0; }
+  .sch-code { font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .sch-rec { font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums; }
+  .sch-mid { text-align:center;min-width:64px; }
+  .sch-time { font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums; }
+  .sch-score { font-size:18px;font-weight:700;font-variant-numeric:tabular-nums; }
+  .sch-score span { color:var(--muted);margin:0 3px; }
+  .sch-bo { display:flex;gap:4px;justify-content:center;margin-top:3px; }
+  .sch-chip { font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:1px 6px;border-radius:4px;background:var(--surface2);color:var(--muted);border:1px solid var(--border); }
+  .sch-badge { font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px; }
+  .sch-badge.live { background:#ff4d5e;color:#fff; } .sch-badge.done { background:var(--surface2);color:var(--muted); }
+  .sch-meta { display:flex;justify-content:space-between;gap:8px;padding:0 11px 8px;font-size:10.5px;color:var(--muted);cursor:pointer; }
+  .sch-meta > span:first-child { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .sch-meta > span:last-child { flex:none;display:flex;gap:6px;align-items:center; }
   /* Scoreboard (Live and Results) */
   .sb { container-type:inline-size; font-size:12px; }
   .sb-empty { color:var(--muted);font-size:12px;padding:10px 0;text-align:center; }
@@ -1799,7 +1842,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.22-b144</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.22-b146</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2321,7 +2364,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.22-b144";
+const BUILD_VERSION = "2026.10.22-b146";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -27617,9 +27660,21 @@ async function loadTodayGames() {
       const matchId = ev.match?.id || ev.id || "";
       const league  = ev.league?.name || "";
       const time    = ev.startTime || "";
+      // Riot says the format outright (match.strategy: best of N). The old code
+      // guessed it from the block name and called everything else a best of 3.
+      const bo = Number(ev.match?.strategy?.count) || 0;
       const blockLower = (ev.blockName || "").toLowerCase();
-      const format  = blockLower.includes("bo1") || blockLower.includes("best of 1") ? "BO1"
+      const format  = bo === 1 ? "BO1" : bo === 5 ? "BO5" : bo === 3 ? "BO3"
+                    : blockLower.includes("bo1") || blockLower.includes("best of 1") ? "BO1"
                     : blockLower.includes("bo5") || blockLower.includes("best of 5") ? "BO5" : "BO3";
+      const mt = ev.match?.teams || [];
+      try { noteTeamLogos(mt); } catch(e) {}
+      const extra = {
+        stage: ev.blockName || "",
+        names: mt.map(t => t.name || t.code || ""),
+        records: mt.map(t => t.record ? `${t.record.wins ?? 0}\u2013${t.record.losses ?? 0}` : ""),
+        score: mt.map(t => t.result ? (t.result.gameWins ?? 0) : null),
+      };
 
       if (teams.length < 2) continue;
       const teamSet = [teams[0], teams[1]].map(t => t.toUpperCase()).sort().join("|");
@@ -27637,10 +27692,16 @@ async function loadTodayGames() {
           // Watch pages ever ran — with the cache empty, every started game
           // looked live.
           state: ev.state || "",
-          slots: buildSlots(format, null)
+          slots: buildSlots(format, null), ...extra
         });
-      } else if (ev.state && alreadyIn.state !== ev.state) {
-        alreadyIn.state = ev.state;      // a game that finished since the last refresh
+      } else {
+        if (ev.state && alreadyIn.state !== ev.state) alreadyIn.state = ev.state;   // finished since the last refresh
+        // Games stored before the format was read correctly: fix it, keeping any odds entered.
+        if (alreadyIn.source === "api" && alreadyIn.format !== format) { alreadyIn.format = format; alreadyIn.slots = buildSlots(format, alreadyIn.slots); }
+        // Score, records and stage move during the day; the first team listed stays first.
+        const flip = (alreadyIn.blueTeam || "").toUpperCase() !== (teams[0] || "").toUpperCase();
+        const fl = a => flip ? [a[1], a[0]] : a;
+        Object.assign(alreadyIn, { stage: extra.stage, names: fl(extra.names), records: fl(extra.records), score: fl(extra.score) });
       }
     }
 
@@ -27762,28 +27823,34 @@ function schedRowHtml(g, now, showDay, showLeague) {
   const live    = started && !done && !unstarted && !stale;
   const assumedDone = done || (stale && !unstarted);
   const open    = _schedOpen.has(g.id);
-  const dayTag  = showDay && t
-    ? `<div style="font-size:10px;color:var(--muted);">${t.toLocaleDateString([], { weekday:"short", month:"short", day:"numeric" })}</div>` : "";
-  return `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;overflow:hidden;">
-    <div onclick="toggleSchedGame('${g.id}')" style="display:flex;align-items:center;gap:10px;padding:9px 11px;cursor:pointer;">
-      <div style="width:62px;flex:none;">
-        <div style="font-size:12px;font-weight:600;color:${live ? "var(--text)" : "var(--muted)"};">${timeStr}</div>
-        ${dayTag}
-        ${live ? `<div style="font-size:9px;font-weight:700;color:var(--red);">LIVE</div>`
-               : assumedDone ? `<div style="font-size:9px;color:var(--muted);">done</div>` : ""}
-      </div>
-      <div style="flex:1;min-width:0;overflow:hidden;">
-        <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-          <span onclick="event.stopPropagation();selectTeam(teamKey('${String(g.blueTeam).replace(/'/g, "\\'")}'))" style="cursor:pointer;">${g.blueTeam}</span>
-          <span style="color:var(--muted);font-weight:400;">vs</span>
-          <span onclick="event.stopPropagation();selectTeam(teamKey('${String(g.redTeam).replace(/'/g, "\\'")}'))" style="cursor:pointer;">${g.redTeam}</span>
-        </div>
-        ${showLeague ? `<div style="font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${g.league || ""}</div>` : ""}
-      </div>
-      <div style="font-size:10px;color:${assumedDone ? "var(--border)" : "var(--muted)"};flex:none;max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${assumedDone ? g.format : (h2hLineHtml(g.blueTeam, g.redTeam) || g.format)}</div>
-      ${schedStatusMark(g)}
-      <div style="font-size:10px;color:var(--muted);flex:none;width:10px;">${open ? "▾" : "▸"}</div>
+  const esc     = x => String(x || "").replace(/'/g, "\\'");
+  const bo      = g.format === "BO1" ? "Bo1" : g.format === "BO5" ? "Bo5" : "Bo3";
+  // A score is shown for a live series, and for a finished one only with
+  // spoilers on — you watch on delay.
+  const sc      = Array.isArray(g.score) && g.score[0] != null && g.score[1] != null ? g.score : null;
+  const showSc  = sc && (live || (assumedDone && spoilersOn()));
+  const aWon    = showSc && assumedDone && sc[0] > sc[1], bWon = showSc && assumedDone && sc[1] > sc[0];
+  const side = (code, name, rec, won, lost, right) => `
+    <div class="sch-team ${right ? "r" : ""}" onclick="event.stopPropagation();selectTeam(teamKey('${esc(code)}'))">
+      ${sbLogoHtml(code, 28)}
+      <div class="sch-tn"><div class="sch-code" style="${won ? "color:var(--text);" : lost ? "color:var(--muted);" : ""}">${code}</div>
+        ${rec ? `<div class="sch-rec">${rec}</div>` : ""}</div>
+    </div>`;
+  const mid = showSc
+    ? `<div class="sch-score">${sc[0]}<span>\u2013</span>${sc[1]}</div>`
+    : `<div class="sch-time" style="${live ? "color:var(--text);" : ""}">${timeStr}</div>`;
+  const status = live ? `<span class="sch-badge live">LIVE</span>`
+    : assumedDone ? `<span class="sch-badge done">${showSc ? "Final" : "Done"}</span>` : "";
+  const meta = [showDay && t ? t.toLocaleDateString([], { weekday:"short", month:"short", day:"numeric" }) : "",
+                showLeague ? g.league : "", g.stage || "", showSc ? timeStr : ""].filter(Boolean).join(" \u00B7 ");
+  const h2h = assumedDone ? "" : h2hLineHtml(g.blueTeam, g.redTeam).replace(/<[^>]+>/g, "");
+  return `<div class="sch-card ${live ? "is-live" : ""} ${assumedDone ? "is-done" : ""}">
+    <div onclick="toggleSchedGame('${g.id}')" class="sch-main">
+      ${side(g.blueTeam, (g.names || [])[0], (g.records || [])[0], aWon, bWon, false)}
+      <div class="sch-mid">${mid}<div class="sch-bo"><span class="sch-chip">${bo}</span>${status}</div></div>
+      ${side(g.redTeam, (g.names || [])[1], (g.records || [])[1], bWon, aWon, true)}
     </div>
+    <div class="sch-meta" onclick="toggleSchedGame('${g.id}')"><span>${[meta, h2h].filter(Boolean).join(" \u00B7 ")}</span><span>${schedStatusMark(g)} <span style="color:var(--muted);">${open ? "\u25BE" : "\u25B8"}</span></span></div>
     ${open ? `<div style="padding:0 11px 10px;">
         ${(g.slots || []).map(s => todaySlotHtml(g, s, now)).join("")}
         <button onclick="removeTodayGame('${g.id}')" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;padding:8px 0 0;">Remove from schedule</button>
@@ -29003,7 +29070,8 @@ function renderNav() {
   const drawer = document.getElementById("nav-drawer");
   const top = document.getElementById("top-nav");
   if (drawer) {
-    drawer.innerHTML = NAV_ITEMS.map(it => it.group
+    drawer.innerHTML = `<div class="nav-side-head"><b>Draft Logger</b><button onclick="openSearch()" title="Search (Ctrl+K)" aria-label="Search">\u{1F50D}</button></div>`
+      + NAV_ITEMS.map(it => it.group
       ? `<div class="nav-drawer-title">${it.group}</div>`
       : `<button data-nav="${it.id}" onclick="show('${it.id}');closeDrawer()">${it.label}</button>`
     ).join("");
@@ -29018,8 +29086,9 @@ function renderNav() {
 function markActiveNav(screen) {
   document.querySelectorAll("[data-nav]").forEach(b =>
     b.classList.toggle("active", b.dataset.nav === screen));
-  // The bar is hidden, so scroll the active tab into view rather than leaving
-  // the user to find it off-screen.
+  // Keep the current page in view in the sidebar and the old tab row.
+  const side = document.querySelector('#nav-drawer [data-nav="' + screen + '"]');
+  if (side && side.scrollIntoView && window.innerWidth >= 1100) { try { side.scrollIntoView({ block: "nearest" }); } catch(e) {} }
   const el = document.querySelector('#top-nav [data-nav="' + screen + '"]');
   if (el && el.scrollIntoView) {
     try { el.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }); } catch(e) {}
