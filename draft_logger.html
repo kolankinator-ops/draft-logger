@@ -367,6 +367,77 @@
   .db-stats-vs { color:var(--muted);font-size:11px;text-align:center; }
   .db-scoreboard { padding:8px 14px 6px;border-top:1px solid var(--border); }
 
+
+  /* Model Lab (scoped) */
+  #screen-lab .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 60px; }
+  #screen-lab header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+  #screen-lab h1 { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+  #screen-lab .ro { font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+  #screen-lab .status { font-size: 12px; color: var(--muted); margin-bottom: 18px; min-height: 18px; }
+  #screen-lab .status b { color: var(--text); font-weight: 600; }
+  #screen-lab h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 26px 0 10px; }
+  #screen-lab .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; }
+  #screen-lab .muted { color: var(--muted); }
+  #screen-lab .small { font-size: 12px; }
+  #screen-lab .tiny { font-size: 11px; }
+  #screen-lab table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  #screen-lab th { font-size: 11px; font-weight: 600; color: var(--muted); text-align: right; padding: 0 0 8px 6px; white-space: nowrap; }
+  #screen-lab th:first-child, #screen-lab td:first-child { text-align: left; padding-left: 0; }
+  #screen-lab td { text-align: right; padding: 9px 0 9px 6px; border-top: 1px solid var(--border); white-space: nowrap; }
+  #screen-lab td:first-child { white-space: normal; }
+  #screen-lab tr.lb { cursor: pointer; }
+  #screen-lab tr.lb.sel td { background: var(--blue-dim); }
+  #screen-lab tr.lb.sel td:first-child { box-shadow: inset 3px 0 0 var(--blue); padding-left: 8px; }
+  #screen-lab .best { color: var(--green); font-weight: 600; }
+  #screen-lab .mname { font-weight: 600; }
+  #screen-lab .match-top { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  #screen-lab .teams { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-bottom: 10px; }
+  #screen-lab .team { font-size: 16px; font-weight: 700; }
+  #screen-lab .team.r { text-align: right; }
+  #screen-lab .vs { font-size: 11px; color: var(--muted); }
+  #screen-lab .bar { position: relative; height: 26px; border-radius: 6px; overflow: hidden; background: var(--surface2); display: flex; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  #screen-lab .bar .a { background: rgba(91,140,255,.35); display: flex; align-items: center; padding-left: 8px; }
+  #screen-lab .bar .b { flex: 1; background: rgba(255,91,91,.28); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  #screen-lab .others { margin-top: 10px; display: grid; grid-template-columns: 1fr auto auto; gap: 3px 10px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  #screen-lab .others .lab { color: var(--muted); }
+  #screen-lab .others .pk { text-align: right; font-weight: 600; }
+  #screen-lab .others .pc { text-align: right; color: var(--muted); }
+  #screen-lab .h2h { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  #screen-lab .sg { border-top: 1px solid var(--border); padding: 6px 0; }
+  #screen-lab .sg:first-of-type { border-top: 0; }
+  #screen-lab .sg summary { list-style: none; cursor: pointer; }
+  #screen-lab .sg summary::-webkit-details-marker { display: none; }
+  #screen-lab .sgl { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  #screen-lab details.sg[open] summary .sgl > span:first-child::after { content: " ▴"; color: var(--muted); }
+  #screen-lab details.sg:not([open]) summary .sgl > span:first-child::after { content: " ▾"; color: var(--muted); }
+  #screen-lab .dsec { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+  #screen-lab .dsec.live { border-top-color: rgba(91,140,255,.5); }
+  #screen-lab .dhead { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  #screen-lab .others.inactive { opacity: .5; }
+  #screen-lab .chip { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  #screen-lab .chip.agree { color: var(--green); border-color: rgba(63,191,111,.4); }
+  #screen-lab .chip.split { color: var(--yellow); border-color: rgba(224,178,63,.4); }
+  #screen-lab .res { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--border); }
+  #screen-lab .res:first-child { border-top: 0; padding-top: 0; }
+  #screen-lab .dots { display: grid; grid-template-columns: repeat(5, 13px); gap: 3px; }
+  #screen-lab .dot { width: 13px; height: 13px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #0c0e14; }
+  #screen-lab .dot.y { background: var(--green); }
+  #screen-lab .dot.n { background: #3a2a30; color: var(--red); }
+  #screen-lab .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  #screen-lab .calib { display: grid; grid-template-columns: 64px 1fr 74px; gap: 6px 10px; align-items: center; font-size: 12px; font-variant-numeric: tabular-nums; }
+  #screen-lab .cbar { position: relative; height: 14px; background: var(--surface2); border-radius: 4px; }
+  #screen-lab .cbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(91,140,255,.55); border-radius: 4px; }
+  #screen-lab .cbar .mark { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); }
+  #screen-lab input, #screen-lab button { font: inherit; }
+  #screen-lab input[type=text], #screen-lab input[type=password] { width: 100%; padding: 9px 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; margin-top: 6px; }
+  #screen-lab button { background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 9px 14px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  #screen-lab button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  #screen-lab .err { color: var(--red); }
+  #screen-lab .empty { color: var(--muted); font-size: 13px; }
+  #screen-lab details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+  #screen-lab details[open] summary { margin-bottom: 8px; }
+  #screen-lab .kv { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  #screen-lab { font-size: 14px; line-height: 1.45; }
   /* Schedule match cards */
   .sch-card { background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden; }
   .sch-card.is-live { border-color:#ff4d5e; }
@@ -1159,6 +1230,7 @@
       </div>
     </div>
 
+    <div id="lab-log-panel"></div>
     <div id="pred-winner-section">
     <span class="advantage-label">Predicted winner — taking everything into account</span>
     <div class="pred-grid">
@@ -1342,6 +1414,37 @@
     Teams are only shown once they have enough games to mean something.</p>
   <div id="scout-content"></div>
 </div>
+
+<!-- MODEL LAB -->
+<div class="screen" id="screen-lab"><div class="wrap">
+  <header><h1>🧪 Model Lab</h1><span class="ro">reads your stored games</span></header>
+  <div class="status" id="lab-status">Loading games…</div>
+
+  <div id="lab-setup" style="display:none"></div>
+
+  <section id="lab-main" style="display:none">
+    <h2>Upcoming</h2>
+    <div id="lab-upcoming"><div class="empty">Loading schedule…</div></div>
+
+    <h2>Scoreboard</h2>
+    <div class="card">
+      <table id="lab-board"></table>
+      <div class="tiny muted" style="margin-top:10px">Every game is predicted using only earlier games, then learned from. “Since Apr 1” is the stretch the settings were never tuned on. Tap a model to see how honest its confidence is.</div>
+    </div>
+
+    <h2 id="lab-calib-title">Confidence check</h2>
+    <div class="card"><div id="lab-calib"></div></div>
+
+    <h2>Original model</h2>
+    <div class="card" id="lab-orig"></div>
+
+    <h2>Recent results</h2>
+    <div class="card"><div class="legend" id="lab-legend"></div><div id="lab-recent"></div></div>
+
+    <h2>Data</h2>
+    <div class="card"><details><summary id="lab-data-sum">Cleaning summary</summary><div id="lab-data"></div></details></div>
+  </section>
+</div></div>
 
 <!-- FINDINGS -->
 <div class="screen" id="screen-findings">
@@ -1842,7 +1945,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.22-b146</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.22-b149</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2364,7 +2467,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.22-b146";
+const BUILD_VERSION = "2026.10.22-b149";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -10097,6 +10200,9 @@ function saveEntry() {
     modelPct: window._lastModelBluePct || null,
     modelSnapshot: window._lastModelSnapshot || null,
     modelDisagreement: (_modelDisagreement && !(getBetData()?.valueBet)) || false,
+    // The Model Lab's call at the moment you logged it, so its picks — and your
+    // bets with or against it — can be scored later.
+    lab: (() => { try { return labSnapshot(); } catch(e) { return null; } })(),
     draftPref,
     draftTags: Object.keys(draftTags).length ? { ...draftTags } : null,
     draftCaveat: draftCaveat || false,
@@ -21096,7 +21202,7 @@ function applyBlindMode() {
     : "Model visible. Hide it to log a read the model can't anchor.";
   // Hide the market-vs-model comparison and the bet sizing it drives too,
   // otherwise the model's number is still readable off the edge figure.
-  ["model-prediction", "model-market-compare", "value-bet-sizing", "model-disagree-wrap"]
+  ["model-prediction", "model-market-compare", "value-bet-sizing", "model-disagree-wrap", "lab-log-panel"]
     .forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.visibility = on ? "hidden" : "";
@@ -21112,6 +21218,82 @@ function applyBlindMode() {
 // per character. Rebuilding the champion maps is 92-94% of a prediction's cost,
 // which at a few thousand imported games is enough to stutter the keyboard on a
 // phone. Coalesce the keystrokes; explicit callers still get it synchronously.
+// ── Model Lab on Log Game ────────────────────────────────────────────────────
+// The lab's call for the game on the form: player ratings for the lineups (from
+// the live feed when the game came from a live card, otherwise each team's
+// latest five), then the draft models once ten champions are in.
+function labFormInput() {
+  const v = id => ((document.getElementById(id) || {}).value || "").trim();
+  return { blueTeam: v("blue-team"), redTeam: v("red-team"), league: v("league"),
+           bluePlayers: (pickedPlayers.blue || []).slice(), redPlayers: (pickedPlayers.red || []).slice(),
+           champs: { blue: (pickedChamps.blue || []).slice(), red: (pickedChamps.red || []).slice() } };
+}
+function labSnapshot() {
+  if (!window.labApi || !labApi.ready() || logMode === "vod") return null;
+  const inp = labFormInput();
+  if (!inp.blueTeam || !inp.redTeam) return null;
+  const r = labApi.gamePick(inp);
+  if (!r || !r.main || r.main.p == null) return null;
+  const out = { at: Date.now(), blue: r.main.p, pick: r.main.p >= 0.5 ? "blue" : "red", agree: r.agree, draft: r.hasDraft, models: {} };
+  for (const m of r.models) if (m.p != null) out.models[m.id] = Math.round(m.p * 1000) / 1000;
+  return out;
+}
+function onLabUpdated() {
+  const a = document.querySelector(".screen.active");
+  if (a && a.id === "screen-log") { try { renderLogLab(); } catch(e) {} }
+}
+function renderLogLab() {
+  const el = document.getElementById("lab-log-panel");
+  if (!el) return;
+  if (logMode === "vod") { el.innerHTML = ""; return; }
+  const inp = labFormInput();
+  const box = inner => `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">\u{1F9EA} Model Lab</span>
+      <span onclick="show('lab')" style="font-size:11px;color:var(--blue);cursor:pointer;">Open lab \u2192</span></div>${inner}</div>`;
+  if (!inp.blueTeam || !inp.redTeam) { el.innerHTML = ""; return; }
+  if (!window.labApi) { el.innerHTML = ""; return; }
+  labApi.start();
+  if (!labApi.ready()) { el.innerHTML = box(`<div style="font-size:12px;color:var(--muted);">Training on your games\u2026 the first time takes a few seconds.</div>`); return; }
+  const r = labApi.gamePick(inp);
+  if (!r || !r.main) {
+    el.innerHTML = box(`<div style="font-size:12px;color:var(--muted);">No games on record for ${(r && r.missing || []).join(" or ") || "these teams"} yet, so no lineup to rate. Open the game from a live card to use the live lineups.</div>`);
+    return;
+  }
+  const B = inp.blueTeam, Rd = inp.redTeam, p = r.main.p;
+  const pc = x => Math.round(x * 100) + "%";
+  const fav = x => x >= 0.5 ? B : Rd, conf = x => Math.max(x, 1 - x);
+  const accTxt = id => r.acc[id] ? `${(r.acc[id].acc * 100).toFixed(1)}% right since Apr 1` : "";
+  const row = m =>
+    `<div style="display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:3px 0;font-size:12px;">
+       <span style="color:var(--muted);">${m.name}${m.postDraft ? ` <span style="font-size:10px;border:1px solid var(--border);border-radius:999px;padding:0 6px;">draft</span>` : ""}</span>
+       <span style="font-weight:600;text-align:right;">${m.p == null ? `<span style="color:var(--muted);font-weight:400;">${m.pending ? `catching up ${Math.round(((labApi.origStatus() || {}).pct || 0) * 100)}%` : "needs all 10 picks"}</span>` : `${fav(m.p)} ${pc(conf(m.p))}`}</span></div>`;
+  // The draft models up front; the other pre-draft variants folded away, best record first.
+  const draftRows = r.models.filter(m => m.postDraft).map(row).join("");
+  const rest = r.models.filter(m => !m.postDraft && m.id !== "players")
+    .sort((x, y) => ((r.acc[y.id] || {}).acc || 0) - ((r.acc[x.id] || {}).acc || 0));
+  const rows = draftRows + (rest.length ? `<details style="margin-top:4px;"><summary style="font-size:11px;color:var(--muted);cursor:pointer;">Other models (${rest.length})</summary>${rest.map(row).join("")}</details>` : "");
+  el.innerHTML = box(`
+    <div style="height:24px;border-radius:6px;overflow:hidden;display:flex;font-size:12px;font-weight:700;">
+      <div style="width:${(p * 100).toFixed(1)}%;background:rgba(91,140,255,.35);display:flex;align-items:center;padding-left:8px;">${B} ${pc(p)}</div>
+      <div style="flex:1;background:rgba(255,91,91,.28);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">${pc(1 - p)} ${Rd}</div></div>
+    <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:6px;">
+      <span>Player ratings \u00B7 this game \u00B7 ${accTxt("players")}</span>
+      <span style="color:${r.agree ? "var(--green)" : "var(--yellow)"};white-space:nowrap;">${r.agree ? "all models agree" : "models split"}</span></div>
+    <div style="margin-top:8px;">${rows}</div>
+    ${r.models.some(m => m.pending) ? `<div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.5;">"Catching up": your original model works through every past game once on this device before it can call a new one. It saves that work, so it only happens the first time.</div>` : ""}
+    <div style="font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.5;">Lineups: ${B} ${r.fromLive.blue ? "(live feed)" : "(latest)"}: ${r.rosters.blue.join(", ")}<br>${Rd} ${r.fromLive.red ? "(live feed)" : "(latest)"}: ${r.rosters.red.join(", ")}<br>
+      Saved with the game when you log it, so the lab's picks and your bets with or against it can be scored.</div>`);
+}
+
+// Every form change that refreshes the prediction refreshes the lab panel too.
+(function () {
+  let t = null;
+  const later = () => { clearTimeout(t); t = setTimeout(() => { try { renderLogLab(); } catch (e) {} }, 300); };
+  const wrap = name => { const f = window[name]; if (typeof f !== "function") return; window[name] = function () { const r = f.apply(this, arguments); later(); return r; }; };
+  ["runPredictionModel", "queueTeamNotes", "clearForm"].forEach(wrap);
+})();
+
 let _predTimer = null;
 function queuePrediction() {
   clearTimeout(_predTimer);
@@ -29054,6 +29236,7 @@ const NAV_ITEMS = [
   { id: "teams",      label: "\u{1F6E1} Teams" },
   { id: "scouting",   label: "\u{1F52D} Scouting" },
   { id: "findings",   label: "\u{1F50E} Findings" },
+  { id: "lab",        label: "\u{1F9EA} Model Lab" },
   { id: "players",    label: "Players" },
   { id: "champions",  label: "Champions" },
   { id: "tiers",      label: "\u2696 Tiers" },
@@ -29304,6 +29487,8 @@ function show(screen) {
     if (screen === "players")    renderPlayerProfiles();
     if (screen === "scouting")   renderScouting();
     if (screen === "findings")   renderFindings();
+    if (["lab", "log", "today", "dashboard"].includes(screen)) { try { window.labApi && labApi.start(); } catch(e) {} }
+    if (screen === "log") { try { renderLogLab(); } catch(e) {} }
     if (screen === "teams")      renderTeamsList();
     if (screen === "tiers")     renderTiers();
     // renderHighConfidence() was removed with its card but the call was left
@@ -29518,6 +29703,1764 @@ if ("serviceWorker" in navigator) {
 
 <!-- Deploy sources. pushToGitHub() writes these out as real files so that
      sw.js and manifest.json travel with every deploy instead of going stale. -->
+<script>
+
+// ── Model Lab core: data cleaning + every model variant ──────────────────────
+// Reads only: date, league, event, game number, team names, player names,
+// winner. Never looks at ratings, predictions, bets or notes.
+
+const LAB = (() => {
+  const SOURCE_RANK = { riot: 0, leaguepedia: 1, unlabelled: 2, oracleselixir: 3 };
+  const INTERNATIONAL = new Set(["Worlds", "MSI", "First Stand", "FST", "Esports World Cup", "EWC"]);
+  const MAJORS = new Set(["LCK", "LPL", "LEC", "LCS", "LCP", "CBLOL", "Worlds", "MSI", "First Stand", "FST", "Esports World Cup"]);
+  const UP = /^[\p{Lu}\d]$/u;
+
+  function tagStarts(n, t) {
+    return n.startsWith(t + " ") || (n.startsWith(t) && n.length > t.length && UP.test(n[t.length]));
+  }
+
+  function stripTagRaw(name, tags) {
+    let n = String(name || "").trim().replace(/\s*\(.*?\)\s*$/, "");
+    const sorted = [...tags].filter(Boolean).sort((a, b) => b.length - a.length);
+    let hit = false;
+    for (const t of sorted) {
+      if (n.startsWith(t + " ")) { n = n.slice(t.length + 1); hit = true; break; }
+      if (n.startsWith(t) && n.length > t.length + 1 && UP.test(n[t.length])) { n = n.slice(t.length); hit = true; break; }
+    }
+    if (!hit) {
+      const i = n.indexOf(" ");
+      if (i > 0 && /^[A-Z0-9]{2,5}$/.test(n.slice(0, i))) n = n.slice(i + 1);
+    }
+    return n.trim();
+  }
+  const stripTag = (name, tags) => stripTagRaw(name, tags).toLowerCase();
+
+  function prefixTeam(names, tags) {
+    const votes = new Map();
+    for (const nm of names) {
+      for (const t of tags) {
+        if (t && tagStarts(nm, t)) { votes.set(t, (votes.get(t) || 0) + 1); break; }
+      }
+    }
+    let best = null, n = 0;
+    for (const [t, c] of votes) if (c > n) { best = t; n = c; }
+    return n >= 3 ? best : null;
+  }
+
+  function clean(bulk, includeOE = true) {
+    const stats = {};
+    const bump = k => { stats[k] = (stats[k] || 0) + 1; };
+    const rows = [];
+    for (const x of bulk || []) {
+      if (!x || !x.id) continue;
+      const src = x.source || null;
+      // "inferred" results from the Draft Logger (b140+) are final-frame reads checked
+      // against the series score, so they're kept.
+      if (src === "oracleselixir" && !includeOE) { bump("dropped: Oracle's Elixir"); continue; }
+      if (x.actualWinner !== "blue" && x.actualWinner !== "red") { bump("dropped: no winner"); continue; }
+      const P = x.players || {};
+      const bp = (P.blue || []).filter(Boolean), rp = (P.red || []).filter(Boolean);
+      if (bp.length !== 5 || rp.length !== 5) { bump("dropped: missing players"); continue; }
+      rows.push({ x, src, bt: x.blueTeam, rt: x.redTeam, bp, rp, fix: null });
+    }
+
+    const handleTeam = new Map();
+    const byDate = rows.map((r, i) => [r, i]).sort((a, b) => (a[0].x.date < b[0].x.date ? -1 : a[0].x.date > b[0].x.date ? 1 : a[1] - b[1])).map(a => a[0]);
+    for (const r of byDate) {
+      const tags = [r.bt, r.rt];
+      const bo = prefixTeam(r.bp, tags), ro = prefixTeam(r.rp, tags);
+      if ((bo === r.rt && (ro === r.bt || ro === null)) || (ro === r.bt && (bo === r.rt || bo === null))) {
+        [r.bp, r.rp] = [r.rp, r.bp]; r.fix = "swapped";
+      } else if (bo === r.bt || ro === r.rt) r.fix = "ok";
+      if (r.fix) {
+        for (const nm of r.bp) handleTeam.set(stripTag(nm, tags), r.bt);
+        for (const nm of r.rp) handleTeam.set(stripTag(nm, tags), r.rt);
+      }
+    }
+
+    let games = [];
+    const display = new Map();
+    for (const r of rows) {
+      const tags = [r.bt, r.rt];
+      if (r.fix === null) {
+        const hb = r.bp.map(n => stripTag(n, tags)), hr = r.rp.map(n => stripTag(n, tags));
+        const same = hb.filter(h => handleTeam.get(h) === r.bt).length + hr.filter(h => handleTeam.get(h) === r.rt).length;
+        const cross = hb.filter(h => handleTeam.get(h) === r.rt).length + hr.filter(h => handleTeam.get(h) === r.bt).length;
+        if (cross >= 3 && cross > same) { [r.bp, r.rp] = [r.rp, r.bp]; r.fix = "swapped"; }
+        else if (same >= 3) r.fix = "ok";
+        else if (r.src === "riot" || r.src === "leaguepedia" || r.src === "oracleselixir") r.fix = "trusted-source";
+        else { bump("dropped: side unverifiable"); continue; }
+      }
+      bump("side " + r.fix);
+      const x = r.x;
+      for (const nm of [...r.bp, ...r.rp]) {
+        const h = stripTag(nm, tags);
+        if (!display.has(h) || x.date >= display.get(h)[1]) display.set(h, [stripTagRaw(nm, tags), x.date]);
+      }
+      games.push({
+        id: x.id, date: x.date, league: x.league || "", event: x.eventContext || "",
+        gnum: x.gameNumber || 0, blue_team: r.bt, red_team: r.rt,
+        blue: r.bp.map(n => stripTag(n, tags)), red: r.rp.map(n => stripTag(n, tags)),
+        blue_won: x.actualWinner === "blue" ? 1 : 0, src: r.src || "unlabelled",
+        // Champions only where the sides are confirmed; in games whose rosters
+        // had to be swapped it's unknown which side the champions belong to.
+        champs: r.fix !== "swapped" && (x.champions?.blue || []).length === 5 && (x.champions?.red || []).length === 5
+          ? { blue: x.champions.blue.map(champKey), red: x.champions.red.map(champKey) } : null
+      });
+    }
+
+    // Duplicates: same day + same rosters (or same team names) + same game number.
+    const fs = a => [...a].sort().join("|");
+    const keyA = g => g.date + "#" + [fs(g.blue), fs(g.red)].sort().join("/") + "#" + g.gnum;
+    const keyB = g => g.date + "#" + [g.blue_team, g.red_team].sort().join("/") + "#" + g.gnum;
+    const seen = new Set(), keep = new Set();
+    const ranked = games.map((g, i) => [g, i]).sort((a, b) => ((SOURCE_RANK[a[0].src] ?? 2) - (SOURCE_RANK[b[0].src] ?? 2)) || a[1] - b[1]).map(a => a[0]);
+    for (const g of ranked) {
+      const a = keyA(g), b = keyB(g);
+      if (seen.has(a) || seen.has(b)) { bump("dropped: duplicate"); continue; }
+      seen.add(a); seen.add(b); keep.add(g.id);
+    }
+    games = games.filter(g => keep.has(g.id));
+
+    // Sources date some games a day apart (time zones), so the same game can
+    // survive the check above. Same ten players, same game number, a day apart,
+    // from different sources, and the same draft — or the same five winning
+    // when a draft is missing — is one game stored twice.
+    {
+      const winners = g => fs(g.blue_won ? g.blue : g.red);
+      const draft = g => g.champs ? [fs(g.champs.blue), fs(g.champs.red)].sort().join("/") : null;
+      const groups = new Map();
+      for (const g of games) { const k = keyA(g).split("#").slice(1).join("#"); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(g); }
+      const drop = new Set();
+      for (const list of groups.values()) {
+        if (list.length < 2) continue;
+        for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
+          const x = list[i], y = list[j];
+          if (drop.has(x.id) || drop.has(y.id) || x.src === y.src) continue;
+          if (Math.abs(Date.parse(x.date) - Date.parse(y.date)) !== 864e5) continue;
+          const dx = draft(x), dy = draft(y);
+          const same = dx && dy ? dx === dy : winners(x) === winners(y);
+          if (!same) continue;
+          const worse = (SOURCE_RANK[x.src] ?? 2) <= (SOURCE_RANK[y.src] ?? 2) ? y : x;
+          drop.add(worse.id); bump("dropped: duplicate");
+        }
+      }
+      if (drop.size) games = games.filter(g => !drop.has(g.id));
+    }
+    const cmp = (p, q) => (p < q ? -1 : p > q ? 1 : 0);
+    games = games.map((g, i) => [g, i]).sort((a, b) =>
+      cmp(a[0].date, b[0].date) || cmp(a[0].event, b[0].event) ||
+      cmp(a[0].blue_team < a[0].red_team ? a[0].blue_team : a[0].red_team, b[0].blue_team < b[0].red_team ? b[0].blue_team : b[0].red_team) ||
+      (a[0].gnum - b[0].gnum) || a[1] - b[1]).map(a => a[0]);
+    return { games, stats, display: new Map([...display].map(([h, v]) => [h, v[0]])) };
+  }
+
+  // One spelling per champion: the feeds say "XinZhao"/"MonkeyKing", Leaguepedia says "Xin Zhao"/"Wukong".
+  // Matched on letters only, so spacing, apostrophes and odd characters can't split a champion.
+  const CHAMP_FIX = { wukong: "monkeyking", nunuwillump: "nunu", nunuandwillump: "nunu", renataglasc: "renata" };
+  function champKey(name) {
+    const l = String(name || "").toLowerCase().normalize("NFKD").replace(/[^a-z]/g, "");
+    return CHAMP_FIX[l] || l;
+  }
+
+  const sig = z => 1 / (1 + Math.exp(-Math.max(-30, Math.min(30, z))));
+
+  class PlayerRatings {
+    constructor(o = {}) {
+      Object.assign(this, { k0: 0.5, k_min: 0.12, k_half: 4, newbie: 0.5, side_lr: 0.01, league_lr: 0.02, scale: 1.2 }, o);
+      this.r = new Map(); this.n = new Map(); this.lm = new Map(); this.side = 0;
+    }
+    rating(p, league, peek) {
+      if (this.r.has(p)) return this.r.get(p);
+      const base = INTERNATIONAL.has(league) ? 0 : (this.lm.get(league) || 0);
+      const v = base - this.newbie;
+      if (!peek) this.r.set(p, v);
+      return v;
+    }
+    strength(players, league, peek) { return players.reduce((s, p) => s + this.rating(p, league, peek), 0) / 5; }
+    predict(g, peek) { return sig(this.scale * (this.strength(g.blue, g.league, peek) - this.strength(g.red, g.league, peek)) + this.side); }
+    learn(g, pb) {
+      const err = g.blue_won - pb;
+      for (const [list, sgn] of [[g.blue, 1], [g.red, -1]]) for (const p of list) {
+        const n = this.n.get(p) || 0;
+        this.r.set(p, this.r.get(p) + sgn * (this.k_min + this.k0 / (1 + n / this.k_half)) * err);
+        this.n.set(p, n + 1);
+      }
+      this.side += this.side_lr * err;
+      if (!INTERNATIONAL.has(g.league)) {
+        const m = [...g.blue, ...g.red].reduce((s, p) => s + this.r.get(p), 0) / 10;
+        const cur = this.lm.get(g.league) || 0;
+        this.lm.set(g.league, cur + this.league_lr * (m - cur));
+      }
+    }
+  }
+
+  class TeamElo {
+    constructor() { this.k = 0.12; this.r = new Map(); this.side = 0; }
+    predict(g) { return sig((this.r.get(g.blue_team) || 0) - (this.r.get(g.red_team) || 0) + this.side); }
+    learn(g, p) {
+      const e = g.blue_won - p;
+      this.r.set(g.blue_team, (this.r.get(g.blue_team) || 0) + this.k * e);
+      this.r.set(g.red_team, (this.r.get(g.red_team) || 0) - this.k * e);
+      this.side += 0.01 * e;
+    }
+  }
+
+  class TeamRecord {
+    constructor() { this.w = new Map(); this.n = new Map(); }
+    wr(t) { return ((this.w.get(t) || 0) + 1) / ((this.n.get(t) || 0) + 2); }
+    predict(g) {
+      const d = this.wr(g.blue_team) - this.wr(g.red_team);
+      return 0.5 + 0.5 * Math.max(-0.9, Math.min(0.9, d)) + (d === 0 ? 0.01 : 0);
+    }
+    learn(g) {
+      for (const [t, won] of [[g.blue_team, g.blue_won], [g.red_team, 1 - g.blue_won]]) {
+        this.n.set(t, (this.n.get(t) || 0) + 1);
+        this.w.set(t, (this.w.get(t) || 0) + won);
+      }
+    }
+  }
+
+  class AlwaysBlue { predict() { return 0.54; } learn() {} }
+
+  // Every variant. "data" says which cleaned game list it trains on.
+  const VARIANTS = [
+    { id: "players", name: "Player ratings", data: "all", make: () => new PlayerRatings(),
+      about: "Rates every player; a team is its five. Learns from each result." },
+    { id: "players_no_oe", name: "Player ratings · no Oracle's Elixir", data: "noOE", make: () => new PlayerRatings(),
+      about: "Same model, ignoring the Jan–Mar 2026 Oracle's Elixir games." },
+    { id: "team_elo", name: "Team Elo", data: "all", make: () => new TeamElo(),
+      about: "Classic Elo on team names. Blind to roster changes." },
+    { id: "team_record", name: "Better record", data: "all", make: () => new TeamRecord(),
+      about: "Picks the team with the better win rate so far." },
+    { id: "blue", name: "Always blue", data: "all", make: () => new AlwaysBlue(),
+      about: "Floor to beat: blue side wins a bit more often." }
+  ];
+
+  // Walk forward: each game predicted from earlier games only, then learned from.
+  function walk(model, games) {
+    const out = new Map();
+    for (const g of games) {
+      const p = model.predict(g);
+      out.set(g.id, p);
+      model.learn(g, p);
+    }
+    return out;
+  }
+
+  function score(pairs) {
+    const n = pairs.length;
+    if (!n) return { n: 0, acc: NaN, logloss: NaN, brier: NaN };
+    let a = 0, ll = 0, br = 0;
+    for (const [g, p0] of pairs) {
+      const p = Math.min(Math.max(p0, 1e-6), 1 - 1e-6);
+      if ((p > 0.5) === !!g.blue_won) a++;
+      ll -= Math.log(g.blue_won ? p : 1 - p);
+      br += (p - g.blue_won) ** 2;
+    }
+    return { n, acc: a / n, logloss: ll / n, brier: br / n };
+  }
+
+  function calibration(pairs) {
+    const edges = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 1.01];
+    const out = [];
+    for (let i = 0; i < edges.length - 1; i++) {
+      const s = pairs.map(([g, p]) => [g, p, Math.max(p, 1 - p)]).filter(x => x[2] >= edges[i] && x[2] < edges[i + 1]);
+      if (!s.length) continue;
+      out.push({ lo: edges[i], hi: Math.min(edges[i + 1], 1), n: s.length,
+        said: s.reduce((t, x) => t + x[2], 0) / s.length,
+        won: s.filter(([g, p]) => (p > 0.5) === !!g.blue_won).length / s.length });
+    }
+    return out;
+  }
+
+  // Chance to win a best-of-N from a per-game chance.
+  function seriesProb(p, bestOf) {
+    const need = Math.ceil((bestOf || 1) / 2);
+    if (need <= 1) return p;
+    let tot = 0;
+    for (let lost = 0; lost < need; lost++) {
+      let c = 1; for (let i = 0; i < lost; i++) c = c * (need - 1 + lost - i) / (i + 1);
+      tot += c * p ** need * (1 - p) ** lost;
+    }
+    return tot;
+  }
+
+  function runAll(bulk) {
+    const all = clean(bulk, true), noOE = clean(bulk, false);
+    const sets = { all, noOE };
+    const results = VARIANTS.map(v => {
+      const model = v.make();
+      const preds = walk(model, sets[v.data].games);
+      return { ...v, model, preds, games: sets[v.data].games };
+    });
+    return { all, noOE, results };
+  }
+
+  return { clean, stripTag, champKey, PlayerRatings, TeamElo, TeamRecord, AlwaysBlue, VARIANTS, walk, score, calibration, seriesProb, runAll, MAJORS, INTERNATIONAL };
+})();
+if (typeof module !== "undefined") module.exports = LAB;
+
+</script>
+<script>
+
+// ── The Draft Logger's original 14-factor model, ported for the Model Lab ────
+// Factor logic follows scoreGame() in draft_logger.html (build b110/b111):
+// same thresholds, shrinkage (SHRINK_K = 3), correlation damping (0.65),
+// averaging, 600-game training window and 0.995/day recency decay.
+// Differences, all because the lab can't see app-only state:
+//   · Factor 14 (swing picks) is left out: it reads a cached stat that was
+//     computed from all games, future ones included.
+//   · Team aliases you combined by hand aren't applied (they live in app settings).
+//   · No draft-rating estimate when you didn't rate a game; Factor 2 abstains,
+//     exactly as scoreGame does when the input is missing.
+//   · Champion names are normalised everywhere ("Wukong" = "MonkeyKing").
+const LAB_ORIGINAL = (() => {
+  const SHRINK_K = 3, FACTOR_CORRELATION = 0.65, WINDOW = 600;
+  const EXEC_LEVEL = { low: 1, medium: 2, high: 3 };
+  // Lower-cased squashed spelling -> one key, so "KSante", "K'Sante", "Ksante" agree.
+  // Letters only, so "Renata Glasc", "RenataGlasc" and "Renata" are one champion.
+  const CHAMP_FIX = { wukong: "monkeyking", nunuwillump: "nunu", nunuandwillump: "nunu", renataglasc: "renata" };
+  const champKey = name => {
+    if (!name) return null;
+    const l = String(name).toLowerCase().normalize("NFKD").replace(/[^a-z]/g, "");
+    return l ? CHAMP_FIX[l] || l : null;
+  };
+  const wRate = (w, t) => (t > 0 ? (w + SHRINK_K * 0.5) / (t + SHRINK_K) : 0.5);
+  const rateToLogOdds = p => { const q = Math.min(0.95, Math.max(0.05, Number(p))); return isFinite(q) ? Math.log(q / (1 - q)) * FACTOR_CORRELATION : 0; };
+  const execDiff = ed => {
+    if (ed == null) return null;
+    if (typeof ed === "number") return ed;
+    if (ed.diff != null) return ed.diff;
+    const b = EXEC_LEVEL[ed.blue], r = EXEC_LEVEL[ed.red];
+    return b && r ? r - b : null;
+  };
+
+  function combos(arr) {
+    const out = [];
+    const a = [...arr].sort();
+    for (let size = 2; size <= a.length; size++) {
+      const rec = (s, cur) => { if (cur.length === size) { out.push(cur.join("|")); return; } for (let i = s; i < a.length; i++) rec(i + 1, [...cur, a[i]]); };
+      rec(0, []);
+    }
+    return out;
+  }
+
+  // Raw per-factor contributions c[1..13]. The app's log-odds is Σ weight_i · c_i.
+  function factorsFor(inp, completed) {
+    const c = new Array(14).fill(0), has = new Array(14).fill(false);
+    if (completed.length < 15) return null;
+    const picks = inp.picks, players = inp.players;
+    const blueTeam = inp.blueTeam, redTeam = inp.redTeam;
+    let _f1B = null, _f1R = null;
+
+    let skillGap = 0;
+    if (inp.blueOdds > 1 && inp.redOdds > 1) {
+      const rb = 1 / inp.blueOdds, rr = 1 / inp.redOdds;
+      skillGap = Math.max(0, Math.abs(rb / (rb + rr) - 0.5) - 0.05);
+    }
+
+    // F1 team win rates
+    for (const [team, sgn] of [[blueTeam, 1], [redTeam, -1]]) {
+      if (!team) continue;
+      const T = team.toUpperCase();
+      let tot = 0, wT = 0, wW = 0;
+      for (const e of completed) {
+        const onB = e.blueTeam.toUpperCase() === T, onR = e.redTeam.toUpperCase() === T;
+        if (!onB && !onR) continue;
+        tot++; wT += e._weight;
+        if ((onB && e.actualWinner === "blue") || (onR && e.actualWinner === "red")) wW += e._weight;
+      }
+      if (tot >= 3) { const wr = wRate(wW, wT); if (sgn > 0) _f1B = wr; else _f1R = wr; c[1] += sgn * (wr - 0.5) * 1.5; has[1] = true; }
+    }
+
+    // F2 your draft preference, scaled by market-implied skill gap
+    if (inp.draftPref != null) {
+      const level = Math.abs(inp.draftPref);
+      const g = completed.filter(e => e.draftPref != null && Math.abs(e.draftPref) === level && e.draftPref !== 0);
+      if (g.length >= 3) {
+        const wT = g.reduce((s, e) => s + e._weight, 0);
+        const wW = g.filter(e => (e.draftPref < 0 && e.actualWinner === "blue") || (e.draftPref > 0 && e.actualWinner === "red")).reduce((s, e) => s + e._weight, 0);
+        c[2] = (inp.draftPref < 0 ? 1 : -1) * rateToLogOdds(wRate(wW, wT)) * Math.max(0.2, 1 - skillGap * 3); has[2] = true;
+      }
+    }
+
+    // F3 skill advantage
+    if (inp.skillAdv && inp.skillAdv !== "unsure") {
+      const g = completed.filter(e => e.skillAdv === inp.skillAdv);
+      if (g.length >= 3) {
+        const wT = g.reduce((s, e) => s + e._weight, 0), wW = g.filter(e => e.actualWinner === inp.skillAdv).reduce((s, e) => s + e._weight, 0);
+        c[3] = (inp.skillAdv === "blue" ? 1 : -1) * rateToLogOdds(wRate(wW, wT)); has[3] = true;
+      }
+    }
+
+    // F4 execution demand
+    const exd = execDiff(inp.execDemand);
+    if (exd != null && exd !== 0) {
+      const g = completed.filter(e => execDiff(e.execDemand) === exd);
+      if (g.length >= 3) {
+        const wT = g.reduce((s, e) => s + e._weight, 0), wW = g.filter(e => e.actualWinner === "blue").reduce((s, e) => s + e._weight, 0);
+        c[4] = rateToLogOdds(wRate(wW, wT)); has[4] = true;
+      }
+    }
+
+    const bP = picks.blue.filter(Boolean), rP = picks.red.filter(Boolean);
+    const sided = [...bP.map(x => [x, "blue"]), ...rP.map(x => [x, "red"])];
+
+    // Per-champion appearance index over the window, used by F5/F6/F13.
+    const champGames = new Map();
+    for (const e of completed) for (const s of ["blue", "red"]) for (const ch of e._ch[s]) {
+      if (!ch) continue;
+      if (!champGames.has(ch)) champGames.set(ch, []);
+      champGames.get(ch).push([e, s]);
+    }
+
+    // F5 champion presence (side-aware win rate)
+    { let sum = 0, n = 0;
+      for (const [ch, side] of sided) {
+        const g = champGames.get(ch) || [];
+        if (g.length < 3) continue;
+        let wT = 0, wW = 0;
+        for (const [e, s] of g) { wT += e._weight; if (e.actualWinner === s) wW += e._weight; }
+        sum += (side === "blue" ? 1 : -1) * (wRate(wW, wT) - 0.5) * 0.5; n++;
+      }
+      if (n >= 3) { c[5] = sum / Math.max(1, n); has[5] = true; } }
+
+    // F6 champion flat-100 ROI on games you bet
+    { let sum = 0, n = 0;
+      for (const [ch, side] of sided) {
+        const g = (champGames.get(ch) || []).filter(([e]) => e.bet && e.bet.odds);
+        if (g.length < 3) continue;
+        let sim = 0;
+        for (const [e, s] of g) {
+          const odds = e.bet.on === s ? e.bet.odds : (e.bet.oppOdds || 1 / Math.max(0.01, 1 - 1 / e.bet.odds));
+          sim += e.actualWinner === s ? (odds - 1) * 100 : -100;
+        }
+        sum += (side === "blue" ? 1 : -1) * sim / (g.length * 100); n++;
+      }
+      if (n >= 2) { c[6] = sum / Math.max(1, n); has[6] = true; } }
+
+    // F7 lane matchups and F8 cross-position pairs, counted from the games each
+    // champion appeared in (same counts as the app's matchupMap / crossMap).
+    const other = s => (s === "blue" ? "red" : "blue");
+    const laneRec = (b, r) => { let wins = 0, total = 0;
+      for (const [e, s] of champGames.get(b) || []) { const j = e._ch[s].indexOf(b); if (e._ch[other(s)][j] === r) { total++; if (e.actualWinner === s) wins++; } }
+      return { wins, total }; };
+    const crossRec = (b, r) => { let wins = 0, total = 0;
+      for (const [e, s] of champGames.get(b) || []) if (e._ch[other(s)].includes(r)) { total++; if (e.actualWinner === s) wins++; }
+      return { wins, total }; };
+    { let sum = 0, w = 0;
+      for (let i = 0; i < 5; i++) {
+        if (!picks.blue[i] || !picks.red[i]) continue;
+        const m = laneRec(picks.blue[i], picks.red[i]);
+        if (m.total < 3) continue;
+        sum += (wRate(m.wins, m.total) - 0.5) * 1.5 * m.total; w += m.total;
+      }
+      if (w > 0) { c[7] = sum / w; has[7] = true; } }
+    { let sum = 0, w = 0;
+      for (const b of bP) for (const r of rP) {
+        const pi = picks.blue.indexOf(b);
+        if (pi >= 0 && picks.red[pi] === r) continue;
+        const m = crossRec(b, r);
+        if (m.total < 4) continue;
+        sum += (wRate(m.wins, m.total) - 0.5) * 1.0 * m.total; w += m.total;
+      }
+      if (w > 0) { c[8] = sum / w; has[8] = true; } }
+
+    // F9 side preference per team
+    { let s = 0;
+      const bb = completed.filter(e => e.blueTeam === blueTeam), br = completed.filter(e => e.redTeam === blueTeam);
+      const rr = completed.filter(e => e.redTeam === redTeam), rb = completed.filter(e => e.blueTeam === redTeam);
+      if (bb.length >= 4) {
+        const sideWR = bb.filter(e => e.actualWinner === "blue").length / bb.length;
+        const all = bb.length + br.length;
+        const ov = all ? (bb.filter(e => e.actualWinner === "blue").length + br.filter(e => e.actualWinner === "red").length) / all : 0.5;
+        s += (sideWR - ov) * 1.2;
+      }
+      if (rr.length >= 4) {
+        const sideWR = rr.filter(e => e.actualWinner === "red").length / rr.length;
+        const all = rr.length + rb.length;
+        const ov = all ? (rr.filter(e => e.actualWinner === "red").length + rb.filter(e => e.actualWinner === "blue").length) / all : 0.5;
+        s += -(sideWR - ov) * 1.2;
+      }
+      if (s !== 0) { c[9] = s; has[9] = true; } }
+
+    // F10 same-team synergy (2–5 champion combos)
+    { const syn = new Map();
+      const tally = list => {
+        const seenSide = new Set();
+        for (const ch of list) for (const [e, s] of champGames.get(ch) || []) {
+          const key = e.id + s;
+          if (seenSide.has(key)) continue;
+          seenSide.add(key);
+          const inter = list.filter(x => e._ch[s].includes(x));
+          if (inter.length < 2) continue;
+          for (const k of combos(inter)) bump(syn, k, e.actualWinner === s);
+        }
+      };
+      const bump = (m, k, won) => { let v = m.get(k); if (!v) m.set(k, v = { wins: 0, total: 0 }); v.total++; if (won) v.wins++; };
+      tally(bP); tally(rP);
+      const score = list => { let t = 0, n = 0; for (const k of combos(list)) { const m = syn.get(k); if (!m || !m.total) continue; const sz = k.split("|").length; t += (m.wins / m.total - 0.5) * sz; n += sz; } return n > 0 ? (t / n) * 0.8 : 0; };
+      const d = score(bP) - score(rP);
+      if (d !== 0) { c[10] = d; has[10] = true; } }
+
+    // F11 cross-team pairs as recorded (blue champ vs red champ, blue's win rate)
+    { let t = 0, w = 0;
+      for (const b of bP) for (const r of rP) {
+        let wins = 0, total = 0;
+        for (const [e, s] of champGames.get(b) || []) if (s === "blue" && e._ch.red.includes(r)) { total++; if (e.actualWinner === "blue") wins++; }
+        if (total < 4) continue;
+        t += (wRate(wins, total) - 0.5) * total; w += total;
+      }
+      if (w > 0) { c[11] = t / w; has[11] = true; } }
+
+    // F12 player on this champion vs this opponent comp
+    const playerGames = new Map();
+    for (const e of completed) for (const pl of [...e.players.blue, ...e.players.red]) {
+      if (!pl) continue;
+      let l = playerGames.get(pl); if (!l) playerGames.set(pl, l = []);
+      if (l[l.length - 1] !== e) l.push(e);
+    }
+    { let t = 0, w = 0;
+      for (let i = 0; i < 5; i++) {
+        for (const [pl, ch, opps, sgn] of [[players.blue[i], picks.blue[i], rP, 1], [players.red[i], picks.red[i], bP, -1]]) {
+          if (!pl || !ch) continue;
+          let tot = 0, wins = 0;
+          for (const e of playerGames.get(pl) || []) {
+            const bi = e.players.blue.indexOf(pl), ri = e.players.red.indexOf(pl);
+            let s = null, pc = null;
+            if (bi !== -1) { s = "blue"; pc = e._ch.blue[bi]; } else if (ri !== -1) { s = "red"; pc = e._ch.red[ri]; }
+            if (!s || pc !== ch) continue;
+            const enemy = s === "blue" ? e._ch.red : e._ch.blue;
+            if (!opps.some(o => enemy.includes(o))) continue;
+            tot++; if (e.actualWinner === s) wins++;
+          }
+          if (tot < 3) continue;
+          t += sgn * (wRate(wins, tot) - 0.5) * 1.2 * tot; w += tot;
+        }
+      }
+      if (w > 0) { c[12] = t / w; has[12] = true; } }
+
+    // F13 champion win rate over the last 7 days before this game
+    { const since = new Date(Date.parse(inp.date) - 7 * 864e5).toISOString().slice(0, 10);
+      let t = 0, n = 0;
+      for (const [ch, side] of sided) {
+        const g = (champGames.get(ch) || []).filter(([e]) => e.date >= since);
+        if (g.length < 3) continue;
+        const wins = g.filter(([e, s]) => e.actualWinner === s).length;
+        t += (side === "blue" ? 1 : -1) * (wRate(wins, g.length) - 0.5) * 0.8; n++;
+      }
+      if (n > 0) { c[13] = t / n; has[13] = true; } }
+
+    if (!has.some(Boolean)) return null;
+    return { c, has };
+  }
+
+  // Turn stored entries (your logged games + imports) into what the model reads.
+  // `ann` = draft ratings you backfilled on the review page, keyed like the app's gameKey().
+  function prepare(personal, bulk, ann) {
+    ann = ann || {};
+    const gk = e => [(e.date || "").slice(0, 10), (e.blueTeam || "").toUpperCase().trim(), (e.redTeam || "").toUpperCase().trim(), e.gameNumber || ""].join("|");
+    const norm = (arr) => (arr || []).map(champKey);
+    const rows = [];
+    const seen = new Map();
+    const alias = new Map();   // imported game id -> your logged copy of the same game
+    const fp = e => {
+      const b = norm(e.champions?.blue).filter(Boolean).sort().join(","), r = norm(e.champions?.red).filter(Boolean).sort().join(",");
+      return b.split(",").length === 5 && r.split(",").length === 5 ? e.date + "|" + b + "|" + r : null;
+    };
+    // Your own entry wins over an imported copy of the same game: it carries your ratings.
+    for (const [list, mine] of [[personal, true], [bulk, false]]) for (const e of list || []) {
+      if (!e || !e.id || !e.actualWinner || e.isStandaloneBet || !e.date) continue;
+      if (e.winnerConfidence === "inferred") continue;
+      const k = fp(e);
+      if (k && seen.has(k)) { alias.set(e.id, seen.get(k)); continue; }
+      if (k) seen.set(k, e.id);
+      const ch = { blue: norm(e.champions?.blue).slice(0, 5), red: norm(e.champions?.red).slice(0, 5) };
+      while (ch.blue.length < 5) ch.blue.push(null);
+      while (ch.red.length < 5) ch.red.push(null);
+      // Backfilled ratings fill gaps only; a rating made live always wins (as in the app).
+      const a = ann[gk(e)];
+      let draftPref = e.draftPref ?? null, skillAdv = e.skillAdv ?? null, execDemand = e.execDemand ?? null;
+      if (a) {
+        if (draftPref == null && a.draftPref != null) draftPref = a.draftPref;
+        if (skillAdv == null && a.skillAdv) skillAdv = a.skillAdv;
+        if ((!execDemand || (!execDemand.blue && !execDemand.red)) && a.execDemand) execDemand = a.execDemand;
+      }
+      rows.push({
+        id: e.id, date: e.date, league: e.league || "", mine, backfilled: !!a,
+        blueTeam: e.blueTeam || "", redTeam: e.redTeam || "", actualWinner: e.actualWinner,
+        draftPref, skillAdv, execDemand,
+        bet: e.bet && e.bet.odds ? e.bet : null,
+        players: { blue: (e.players?.blue || []).slice(0, 5), red: (e.players?.red || []).slice(0, 5) },
+        _ch: ch, _combos: { blue: combos(ch.blue.filter(Boolean)), red: combos(ch.red.filter(Boolean)) },
+        _t: Date.parse(e.date)
+      });
+    }
+    rows.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+    rows.alias = alias;
+    return rows;
+  }
+
+  function inputsOf(e) {
+    let blueOdds = null, redOdds = null;
+    if (e.bet && e.bet.oppOdds) {
+      blueOdds = e.bet.on === "blue" ? e.bet.odds : e.bet.oppOdds;
+      redOdds = e.bet.on === "red" ? e.bet.odds : e.bet.oppOdds;
+    }
+    return { date: e.date, blueTeam: e.blueTeam, redTeam: e.redTeam, picks: e._ch, players: e.players,
+      draftPref: e.draftPref, skillAdv: e.skillAdv, execDemand: e.execDemand, blueOdds, redOdds };
+  }
+
+  // What a game's factor vector depends on: itself and everything before it.
+  const sigOf = e => [e.id, e.date, e.actualWinner, e.blueTeam, e.redTeam, e._ch.blue.join(","), e._ch.red.join(","),
+    e.players.blue.join(","), e.players.red.join(","), e.draftPref, e.skillAdv, JSON.stringify(e.execDemand || null),
+    e.bet ? [e.bet.on, e.bet.odds, e.bet.oppOdds].join(",") : ""].join("~");
+
+  // Walk forward once, recording each game's factor vector from the 600 games before it.
+  // `cache` ({sigs, vecs}) from an earlier run is reused for the unchanged prefix.
+  function factorTrail(rows, onProgress) {
+    const out = new Map();
+    for (let i = 0; i < rows.length; i++) {
+      const g = rows[i];
+      const lo = Math.max(0, i - WINDOW);
+      const win = rows.slice(lo, i);
+      for (const e of win) e._weight = Math.pow(0.995, Math.max(0, (g._t - e._t) / 864e5));
+      const f = factorsFor(inputsOf(g), win);
+      if (f) out.set(g.id, f);
+      if (onProgress && i % 200 === 0) onProgress(i, rows.length);
+    }
+    return out;
+  }
+
+  const sig = z => 1 / (1 + Math.exp(-Math.max(-30, Math.min(30, z))));
+
+  // As in the app: fixed factor weights (your saved sliders).
+  function asIs(rows, trail, weights) {
+    const w = i => (weights && weights["f" + i] != null ? weights["f" + i] : 1);
+    const preds = new Map();
+    for (const g of rows) {
+      const f = trail.get(g.id);
+      if (!f) continue;
+      let z = 0;
+      for (let i = 1; i <= 13; i++) z += w(i) * f.c[i];
+      preds.set(g.id, sig(z));
+    }
+    return preds;
+  }
+
+  // Learning version: starts from your weights, then after every game nudges each
+  // factor's weight, plus an overall bias, by how much it pushed toward the miss.
+  // Factors that keep being wrong fade; ones that keep being right grow.
+  function learning(rows, trail, weights, lr = 0.02) {
+    const w = [0]; for (let i = 1; i <= 13; i++) w.push(weights && weights["f" + i] != null ? weights["f" + i] : 1);
+    let b = 0;
+    const preds = new Map();
+    for (const g of rows) {
+      const f = trail.get(g.id);
+      if (!f) continue;
+      let z = b;
+      for (let i = 1; i <= 13; i++) z += w[i] * f.c[i];
+      const p = sig(z);
+      preds.set(g.id, p);
+      const err = (g.actualWinner === "blue" ? 1 : 0) - p;
+      for (let i = 1; i <= 13; i++) if (f.has[i]) w[i] = Math.max(-1, Math.min(4, w[i] + lr * err * f.c[i]));
+      b += lr * 0.5 * err;
+    }
+    return { preds, weights: w, bias: b };
+  }
+
+  // Same walk, in slices, so a phone stays responsive; reuses a cached prefix.
+  async function factorTrailAsync(rows, cache, onProgress) {
+    const sigs = rows.map(sigOf);
+    let start = 0;
+    const out = new Map();
+    if (cache && cache.version === VERSION && Array.isArray(cache.sigs)) {
+      while (start < sigs.length && start < cache.sigs.length && cache.sigs[start] === sigs[start]) start++;
+      for (let i = 0; i < start; i++) { const v = cache.vecs[i]; if (v) out.set(rows[i].id, v); }
+    }
+    const reused = start;
+    for (let i = start; i < rows.length; i++) {
+      const g = rows[i];
+      const win = rows.slice(Math.max(0, i - WINDOW), i);
+      for (const e of win) e._weight = Math.pow(0.995, Math.max(0, (g._t - e._t) / 864e5));
+      const f = factorsFor(inputsOf(g), win);
+      if (f) out.set(g.id, f);
+      if (i % 40 === 0) { if (onProgress) onProgress(i, rows.length); await new Promise(r => setTimeout(r, 0)); }
+    }
+    const vecs = rows.map(r => out.get(r.id) || null);
+    return { trail: out, cache: { version: VERSION, sigs, vecs }, reused };
+  }
+  const VERSION = "orig-b111-3";
+
+  // A game being played now: factors from the latest 600 games, weighted as of today.
+  function liveFactors(rows, game) {
+    const t = Date.parse(game.date);
+    const win = rows.slice(Math.max(0, rows.length - WINDOW));
+    for (const e of win) e._weight = Math.pow(0.995, Math.max(0, (t - e._t) / 864e5));
+    const norm = a => { const x = (a || []).map(champKey).slice(0, 5); while (x.length < 5) x.push(null); return x; };
+    return factorsFor({ date: game.date, blueTeam: game.blueTeam, redTeam: game.redTeam,
+      picks: { blue: norm(game.champs.blue), red: norm(game.champs.red) },
+      players: { blue: game.players.blue.slice(0, 5), red: game.players.red.slice(0, 5) },
+      draftPref: null, skillAdv: null, execDemand: null, blueOdds: null, redOdds: null }, win);
+  }
+
+  const FACTOR_NAMES = ["", "Team win rate", "Your draft read", "Your skill edge", "Execution demand", "Champion win rates",
+    "Champion bet ROI", "Lane matchups", "Cross-position pairs", "Team side preference", "Champion synergy",
+    "Comp matchup", "Player on champion", "Champion last 7 days"];
+
+  return { prepare, factorTrail, factorTrailAsync, asIs, learning, liveFactors, champKey, WINDOW, FACTOR_NAMES, VERSION };
+})();
+if (typeof module !== "undefined") module.exports = LAB_ORIGINAL;
+
+</script>
+<script>
+
+// Extra model variants. Loaded after lab-core.js; each uses only game data.
+const LAB_EXTRA = ((LAB) => {
+  const sig = z => 1 / (1 + Math.exp(-Math.max(-30, Math.min(30, z))));
+  const logit = p => Math.log(Math.max(1e-6, p) / Math.max(1e-6, 1 - p));
+  const INTL = LAB.INTERNATIONAL;
+  const days = (a, b) => (Date.parse(b) - Date.parse(a)) / 864e5;
+
+  // Ratings that carry their own uncertainty. A player back from a break, or
+  // new, is less certain, so moves faster and counts less until proven.
+  class PlayerUncertain {
+    constructor(o = {}) {
+      Object.assign(this, { s0: 0.6, drift: 0.0015, noise: 0.9, scale: 1.2, newbie: 0.5, side_lr: 0.01, league_lr: 0.02 }, o);
+      this.mu = new Map(); this.v = new Map(); this.last = new Map(); this.lm = new Map(); this.side = 0;
+    }
+    get(p, league, date, peek) {
+      if (!this.mu.has(p)) {
+        const base = INTL.has(league) ? 0 : (this.lm.get(league) || 0);
+        if (peek) return [base - this.newbie, this.s0];
+        this.mu.set(p, base - this.newbie); this.v.set(p, this.s0); this.last.set(p, date);
+      }
+      let v = this.v.get(p);
+      if (date && this.last.get(p)) v = Math.min(this.s0, v + this.drift * Math.max(0, days(this.last.get(p), date)));
+      return [this.mu.get(p), v];
+    }
+    predict(g, peek) {
+      const B = g.blue.map(p => this.get(p, g.league, g.date, peek)), R = g.red.map(p => this.get(p, g.league, g.date, peek));
+      const d = (B.reduce((s, x) => s + x[0], 0) - R.reduce((s, x) => s + x[0], 0)) / 5;
+      const v = (B.reduce((s, x) => s + x[1], 0) + R.reduce((s, x) => s + x[1], 0)) / 25;
+      g._v = v;
+      return sig(this.scale * d / Math.sqrt(1 + 0.5 * v) + this.side);
+    }
+    learn(g, pb) {
+      const err = g.blue_won - pb;
+      for (const [list, sgn] of [[g.blue, 1], [g.red, -1]]) for (const p of list) {
+        let v = this.get(p, g.league, g.date)[1];
+        const gain = v / (v + this.noise * 0.25);
+        this.mu.set(p, this.mu.get(p) + sgn * gain * err);
+        this.v.set(p, v * (1 - 0.5 * gain));
+        this.last.set(p, g.date);
+      }
+      this.side += this.side_lr * err;
+      if (!INTL.has(g.league)) {
+        const m = [...g.blue, ...g.red].reduce((s, p) => s + this.mu.get(p), 0) / 10;
+        const cur = this.lm.get(g.league) || 0;
+        this.lm.set(g.league, cur + this.league_lr * (m - cur));
+      }
+    }
+  }
+
+  // Long-term ratings plus a fast "form" rating that fades within weeks.
+  class PlayerForm {
+    constructor(o = {}) {
+      this.base = new LAB.PlayerRatings();
+      Object.assign(this, { kf: 0.25, fade: 0.93, wf: 0.6 }, o);
+      this.f = new Map(); this.side = 0;
+    }
+    form(p) { return this.f.get(p) || 0; }
+    predict(g, peek) {
+      const pb = this.base.predict(g, peek);
+      const d = (g.blue.reduce((s, p) => s + this.form(p), 0) - g.red.reduce((s, p) => s + this.form(p), 0)) / 5;
+      return sig(logit(pb) + this.wf * d);
+    }
+    learn(g, p) {
+      const pb = this.base.predict(g);
+      this.base.learn(g, pb);
+      const err = g.blue_won - p;
+      for (const [list, sgn] of [[g.blue, 1], [g.red, -1]]) for (const q of list) this.f.set(q, this.form(q) * this.fade + sgn * this.kf * err);
+    }
+  }
+
+  // Player ratings where each role's weight is learned (does mid matter more than support?).
+  class PlayerRoles {
+    constructor(o = {}) {
+      this.base = new LAB.PlayerRatings();
+      Object.assign(this, { lr: 0.002 }, o);
+      this.w = [1, 1, 1, 1, 1];
+    }
+    z(g, peek) {
+      const r = (p) => this.base.rating(p, g.league, peek);
+      let d = 0;
+      for (let i = 0; i < 5; i++) d += this.w[i] * (r(g.blue[i]) - r(g.red[i]));
+      return this.base.scale * d / 5 + this.base.side;
+    }
+    predict(g, peek) { return sig(this.z(g, peek)); }
+    learn(g, p) {
+      const err = g.blue_won - p;
+      for (let i = 0; i < 5; i++) {
+        const d = this.base.r.get(g.blue[i]) - this.base.r.get(g.red[i]);
+        this.w[i] = Math.max(0.2, Math.min(2.5, this.w[i] + this.lr * err * d * 10));
+      }
+      this.base.learn(g, this.base.predict(g));
+    }
+  }
+
+  // After the draft: player ratings plus how each champion has been doing lately.
+  class PlayerChamps {
+    constructor(o = {}) {
+      this.base = new LAB.PlayerRatings();
+      Object.assign(this, { kc: 0.03, wc: 1.0, fade: 0.999 }, o);
+      this.c = new Map(); this.side = 0;
+    }
+    cr(c) { return this.c.get(c) || 0; }
+    predict(g, peek) {
+      const pb = this.base.predict(g, peek);
+      if (!g.champs) return pb;
+      const d = g.champs.blue.reduce((s, c) => s + this.cr(c), 0) - g.champs.red.reduce((s, c) => s + this.cr(c), 0);
+      return sig(logit(pb) + this.wc * d);
+    }
+    learn(g, p) {
+      const pb = this.base.predict(g);
+      this.base.learn(g, pb);
+      if (!g.champs) return;
+      const err = g.blue_won - p;
+      for (const [k, v] of this.c) this.c.set(k, v * this.fade);
+      for (const c of g.champs.blue) this.c.set(c, this.cr(c) + this.kc * err);
+      for (const c of g.champs.red) this.c.set(c, this.cr(c) - this.kc * err);
+    }
+  }
+
+  // Blend: averages player ratings and team Elo.
+  class Blend {
+    constructor() { this.a = new LAB.PlayerRatings(); this.b = new LAB.TeamElo(); }
+    predict(g, peek) { return sig(0.7 * logit(this.a.predict(g, peek)) + 0.3 * logit(this.b.predict(g))); }
+    learn(g) { this.a.learn(g, this.a.predict(g)); this.b.learn(g, this.b.predict(g)); }
+  }
+
+  // Learns how much to trust each of the other models from their past mistakes.
+  class Judge {
+    constructor(members, o = {}) {
+      Object.assign(this, { lr: 0.01 }, o);
+      this.members = members;
+      this.w = members.map((_, i) => (i === 0 ? 1 : 0)); this.b = 0;
+    }
+    feats(g, peek) { return this.members.map(m => logit(m.predict(g, peek))); }
+    predict(g, peek) { const x = this.feats(g, peek); g._jx = x; return sig(this.b + x.reduce((s, v, i) => s + v * this.w[i], 0)); }
+    learn(g, p) {
+      const x = g._jx || this.feats(g);
+      const err = g.blue_won - p;
+      for (let i = 0; i < x.length; i++) this.w[i] += this.lr * err * x[i];
+      this.b += this.lr * err;
+      for (const m of this.members) m.learn(g, m.predict(g));
+    }
+  }
+
+  return { PlayerUncertain, PlayerForm, PlayerRoles, PlayerChamps, Blend, Judge };
+})(LAB);
+if (typeof module !== "undefined") module.exports = LAB_EXTRA;
+
+// Register the extra variants (settings tuned on games before Apr 2026 only).
+LAB.VARIANTS.push(
+  { id: "uncertain", name: "Player ratings · with uncertainty", data: "all", make: () => new LAB_EXTRA.PlayerUncertain({ s0: 0.4, drift: 0.006, noise: 0.5, scale: 1 }),
+    about: "Trusts players less after a break or when new; they move faster until proven." },
+  { id: "form", name: "Player ratings · hot/cold form", data: "all", make: () => new LAB_EXTRA.PlayerForm({ kf: 0.25, fade: 0.8, wf: 0.6 }),
+    about: "Adds a short-memory streak rating that fades within a few games." },
+  { id: "roles", name: "Player ratings · role weights", data: "all", make: () => new LAB_EXTRA.PlayerRoles({ lr: 0.0005 }),
+    about: "Learns how much each role (top, jungle, mid, bot, support) swings games." },
+  { id: "champs", name: "Player ratings · champions", data: "all", make: () => new LAB_EXTRA.PlayerChamps({ kc: 0.01, wc: 1, fade: 1 }), postDraft: true,
+    about: "Adds how each champion has been performing. Only possible once the draft is known." },
+  { id: "blend", name: "Blend · players + team Elo", data: "all", make: () => new LAB_EXTRA.Blend(),
+    about: "70% player ratings, 30% team Elo." },
+  { id: "judge", name: "Judge", data: "all", make: () => new LAB_EXTRA.Judge([
+      new LAB.PlayerRatings(), new LAB_EXTRA.PlayerUncertain({ s0: 0.4, drift: 0.006, noise: 0.5, scale: 1 }),
+      new LAB_EXTRA.PlayerForm({ kf: 0.25, fade: 0.8, wf: 0.6 }), new LAB_EXTRA.PlayerRoles({ lr: 0.0005 }),
+      new LAB.TeamElo(), new LAB.TeamRecord()], { lr: 0.002 }),
+    about: "Watches the other models and learns from their misses how much to trust each one." }
+);
+
+</script>
+<script>
+
+// ── Model Lab page ───────────────────────────────────────────────────────────
+// Built into the Draft Logger: it reads the games already stored here, never
+// writes to them, and keeps only its own working cache (ModelLabCache).
+(() => {
+  const APP_SYNC_URL = "draftlogger_sync_url_v2", APP_SYNC_CODE = "draftlogger_sync_code_v2";
+  const OWN_SYNC_URL = "modellab_sync_url_v1", OWN_SYNC_CODE = "modellab_sync_code_v1";
+  const OWN_SEL = "modellab_selected_v1";
+  const API_KEY = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z";
+  const API_HOSTS = ["https://esports-api.lolesports.com/persisted/gw", "https://prod-relapi.ewp.gg/persisted/gw"];
+  const UNTUNED_FROM = "2026-04-01";
+  const REFRESH_MS = 15 * 60 * 1000;
+
+  const $ = id => document.getElementById("lab-" + id);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const pct = (x, d = 0) => isFinite(x) ? (x * 100).toFixed(d) + "%" : "–";
+  const ls = k => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+
+  let state = { bulk: null, source: "", loadedAt: null, run: null, sel: ls(OWN_SEL) || "players", schedule: null, scheduleErr: null };
+
+  // ── Data: read-only ────────────────────────────────────────────────────────
+  function syncCreds() {
+    const url = (ls(APP_SYNC_URL) || ls(OWN_SYNC_URL)).replace(/\/+$/, "");
+    const code = ls(APP_SYNC_CODE) || ls(OWN_SYNC_CODE);
+    return url && code ? { url, code, own: !ls(APP_SYNC_URL) } : null;
+  }
+
+  // Same request the Draft Logger's test copy makes: send nothing, receive everything.
+  // "bulk" = imported games, "state" = games you logged yourself (with your ratings).
+  async function pullFromServer(c, scope) {
+    const res = await fetch(c.url + "/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Sync-Code": c.code },
+      body: JSON.stringify({ scope, since: 0, records: [], tombstones: {}, full: true })
+    });
+    if (res.status === 401) throw new Error("sync code rejected");
+    if (!res.ok) throw new Error("sync server HTTP " + res.status);
+    const j = await res.json();
+    const tombs = j.tombstones || {};
+    const recs = (j.records || []).filter(r => r && r.id && !(tombs[r.id] && (r.updatedAt || 0) <= tombs[r.id]));
+    const setting = k => { try { const v = j.settings && j.settings[k]; return typeof v === "string" ? JSON.parse(v) : v || null; } catch (e) { return null; } };
+    return { recs, weights: setting("factorWeights"), annotations: setting("annotations") };
+  }
+  const APP_ENTRIES = "draft_logger_entries_v1", APP_WEIGHTS = "draftlogger_factor_weights_v1", APP_ANN = "draftlogger_annotations_v1";
+  const lsJson = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
+
+  // Fallback when deployed next to the app: read its stored games without opening for write.
+  async function readSameSiteStore() {
+    if (!window.indexedDB) return null;
+    if (indexedDB.databases) {
+      const dbs = await indexedDB.databases();
+      if (!dbs.some(d => d.name === "DraftLoggerBulk")) return null;
+    } else return null;
+    return new Promise(resolve => {
+      const req = indexedDB.open("DraftLoggerBulk");
+      req.onupgradeneeded = () => { try { req.transaction.abort(); } catch (e) {} resolve(null); };
+      req.onerror = () => resolve(null);
+      req.onsuccess = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains("bulk")) { db.close(); return resolve(null); }
+        const g = db.transaction("bulk", "readonly").objectStore("bulk").get("all");
+        g.onsuccess = () => { db.close(); resolve(Array.isArray(g.result) && g.result.length ? g.result : null); };
+        g.onerror = () => { db.close(); resolve(null); };
+      };
+    });
+  }
+
+  async function loadData() {
+    if (typeof storeStillLoading === "function" && storeStillLoading()) return null;
+    const bulk = typeof loadBulkEntries === "function" ? loadBulkEntries() : [];
+    if (!bulk.length) return null;
+    let weights = null, annotations = null;
+    try { weights = loadFactorWeights(); } catch (e) {}
+    try { annotations = loadAnnotations(); } catch (e) {}
+    return { bulk: bulk.slice(), personal: (loadEntries() || []).filter(e => !e.isBulkImport), weights, annotations, source: "your stored games" };
+  }
+  const dataSig = () => {
+    const b = loadBulkEntries(), p = loadEntries();
+    let m = 0; for (const e of b) if ((e.updatedAt || 0) > m) m = e.updatedAt;
+    return b.length + ":" + p.length + ":" + m;
+  };
+
+  // ── Schedule ───────────────────────────────────────────────────────────────
+  async function apiGet(path) {
+    let last;
+    for (const h of API_HOSTS) {
+      try {
+        const res = await fetch(h + path + (path.includes("?") ? "&" : "?") + "hl=en-US", { headers: { "x-api-key": API_KEY } });
+        if (!res.ok) throw new Error("schedule HTTP " + res.status);
+        return await res.json();
+      } catch (e) { last = e; }
+    }
+    throw last;
+  }
+
+  async function loadSchedule() {
+    try {
+      const d = await apiGet("/getSchedule");
+      const now = Date.now(), horizon = now + 8 * 864e5;
+      state.allEvents = d.data?.schedule?.events || [];
+      const rank = e => (e.state === "inProgress" ? 0 : e.state === "completed" ? 2 : 1);
+      state.schedule = state.allEvents
+        .filter(e => e.type === "match" && (e.match?.teams || []).length === 2)
+        .filter(e => { const t = Date.parse(e.startTime);
+          // Finished series stay on their card for 12 hours.
+          if (e.state === "inProgress") return true;
+          return e.state === "completed" ? t > now - 12 * 3600e3 : t > now - 6 * 3600e3 && t < horizon; })
+        .sort((a, b) => rank(a) - rank(b) || (rank(a) === 2 ? Date.parse(b.startTime) - Date.parse(a.startTime) : Date.parse(a.startTime) - Date.parse(b.startTime)));
+      state.scheduleErr = null;
+    } catch (e) { state.scheduleErr = e.message || String(e); }
+  }
+
+  // ── Live drafts ────────────────────────────────────────────────────────────
+  // For matches in progress: find the game being played (the live feed is
+  // authoritative; the event's own game states lag) and read its picks.
+  const FEED = "https://feed.lolesports.com/livestats/v1";
+  state.drafts = new Map();
+  async function loadDrafts() {
+    const live = (state.schedule || []).filter(e => e.state === "inProgress");
+    const next = new Map();
+    for (const ev of live) {
+      const mid = ev.match?.id || ev.id;
+      try {
+        const det = await apiGet("/getEventDetails?id=" + encodeURIComponent(mid));
+        const event = det.data?.event; if (!event) continue;
+        const teamById = {}; (event.match?.teams || []).forEach(t => { teamById[t.id] = t.code || t.name || ""; });
+        const games = (event.match?.games || []).filter(g => g.state !== "unneeded").sort((a, b) => (b.number || 0) - (a.number || 0));
+        for (const g of games) {
+          if (g.state === "completed") continue;
+          let fd = null;
+          try { const r = await fetch(`${FEED}/window/${g.id}`); if (r.ok && r.status !== 204) fd = await r.json(); } catch (e) {}
+          const meta = fd && fd.gameMetadata;
+          const bp = meta?.blueTeamMetadata?.participantMetadata || [], rp = meta?.redTeamMetadata?.participantMetadata || [];
+          if (bp.length < 5 || rp.length < 5) continue;
+          const side = s => (g.teams || []).find(t => t.side === s);
+          const bt = teamById[side("blue")?.id] || "", rt = teamById[side("red")?.id] || "";
+          next.set(mid, { gameNumber: g.number || null, blue: bt, red: rt,
+            champs: { blue: bp.map(x => x.championId), red: rp.map(x => x.championId) },
+            names: { blue: bp.map(x => x.summonerName || ""), red: rp.map(x => x.summonerName || "") } });
+          break;
+        }
+      } catch (e) {}
+    }
+    state.drafts = next;
+  }
+
+  // Every model's chance that the blue side wins this specific drafted game.
+  function draftProbs(d) {
+    const R = state.run;
+    const ra = R.roster.get(d.blue), rb = R.roster.get(d.red);
+    const tags = [d.blue, d.red];
+    const g = { date: new Date().toISOString().slice(0, 10), league: (ra || rb || {}).league || "",
+      blue_team: ra ? ra.name : d.blue, red_team: rb ? rb.name : d.red,
+      blue: d.names.blue.map(n => LAB.stripTag(n, tags)), red: d.names.red.map(n => LAB.stripTag(n, tags)),
+      champs: { blue: d.champs.blue.map(LAB.champKey), red: d.champs.red.map(LAB.champKey) } };
+    const sig = z => 1 / (1 + Math.exp(-z)), lg = p => Math.log(p / (1 - p));
+    const out = new Map();
+    for (const r of R.results) {
+      if (r.model) { try { out.set(r.id, r.model.predict({ ...g }, true)); } catch (e) {} }
+    }
+    const o = R.orig;
+    if (o && o.status === "done" && R.origRows) {
+      const f = LAB_ORIGINAL.liveFactors(R.origRows, { date: g.date, blueTeam: d.blue, redTeam: d.red, champs: d.champs, players: d.names });
+      if (f) {
+        const W = state.weights || {};
+        let z1 = 0, z2 = o.bias, z3 = R.hybrid.b + R.hybrid.a * lg(out.get("players"));
+        for (let i = 1; i <= 13; i++) { z1 += (W["f" + i] ?? 1) * f.c[i]; z2 += o.learned[i] * f.c[i]; z3 += R.hybrid.w[i] * f.c[i]; }
+        out.set("orig", sig(z1)); out.set("orig_learn", sig(z2)); out.set("hybrid", sig(z3));
+      }
+    }
+    return out;
+  }
+
+  // ── Live and recent series ─────────────────────────────────────────────────
+  // The Draft Logger only stores a series once it's over, so games from a series
+  // in progress — or from an event it doesn't import — never reach the history.
+  // The lab reads finished games of live and recent series itself, with the same
+  // ids the app uses ("riot_<game id>"), so when the app does import them later
+  // they merge instead of doubling up.
+  state.liveGames = new Map();   // game id -> stored game, same shape as an imported one
+  state.series = new Map();      // match id -> { teams, wins, rows, final }
+  const LIVE_KEY = "liveGames";
+
+  // Same read as the Draft Logger (b140): the side that took inhibitors while
+  // losing none (weight 3), else a clear structure lead (2), else a big gold lead (1).
+  function frameRead(f) {
+    if (!f) return null;
+    const b = f.blueTeam || {}, r = f.redTeam || {};
+    const bi = b.inhibitors || 0, ri = r.inhibitors || 0;
+    if (bi > 0 && !ri) return { side: "blue", w: 3 };
+    if (ri > 0 && !bi) return { side: "red", w: 3 };
+    const bs = (b.towers || 0) + 3 * bi, rs = (r.towers || 0) + 3 * ri;
+    if (bs - rs >= 2) return { side: "blue", w: 2 };
+    if (rs - bs >= 2) return { side: "red", w: 2 };
+    const g = (b.totalGold || 0) - (r.totalGold || 0);
+    if (g >= 4000) return { side: "blue", w: 1 };
+    if (g <= -4000) return { side: "red", w: 1 };
+    return null;
+  }
+  const struct = f => (f.blueTeam?.towers || 0) + (f.redTeam?.towers || 0) + 3 * ((f.blueTeam?.inhibitors || 0) + (f.redTeam?.inhibitors || 0));
+  const roundTs = ms => new Date(Math.floor(ms / 10000) * 10000).toISOString().replace(/\.\d{3}Z$/, "Z");
+  async function getWindow(gid, ms) {
+    try {
+      const r = await fetch(`${FEED}/window/${gid}` + (ms ? `?startingTime=${encodeURIComponent(roundTs(ms))}` : ""));
+      if (!r.ok || r.status === 204) return null;
+      const t = await r.text();
+      return t && t.trim() ? JSON.parse(t) : null;
+    } catch (e) { return null; }
+  }
+  // Asked without a time, the feed returns a game's opening frames — no towers
+  // down yet, so no winner. Walk forward from the start to the last frames.
+  async function endFrame(gid, first, seriesStart) {
+    // Asked after the game ended, the feed returns its last ten seconds (it won't
+    // serve the latest minute, hence the margin) — the Draft Logger's method.
+    const last = await getWindow(gid, Date.now() - 60000);
+    const lf = last?.frames?.[last.frames.length - 1];
+    if (lf && (lf.gameState === "finished" || struct(lf) > 0)) return lf;
+    let best = null, bestS = -1;
+    const take = frames => {
+      for (const f of frames || []) {
+        if (f.gameState === "finished") { best = f; bestS = Infinity; return true; }
+        const sc = struct(f); if (sc >= bestS) { bestS = sc; best = f; }
+      }
+      return false;
+    };
+    if (take(first?.frames)) return best;
+    const f0 = first?.frames?.[0];
+    if (f0 && f0.rfc460Timestamp) {
+      const t0 = Date.parse(f0.rfc460Timestamp);
+      let lo = 0, hi = null;
+      for (let m = 15; m <= 80; m += 5) {
+        const d = await getWindow(gid, t0 + m * 60000);
+        if (!d?.frames?.length) { if (lo) { hi = m; break; } continue; }
+        lo = m;
+        if (take(d.frames)) return best;
+      }
+      // Ran past the end: narrow down to the last minute with frames.
+      while (hi && hi - lo > 1) {
+        const mid = Math.floor((lo + hi) / 2);
+        const d = await getWindow(gid, t0 + mid * 60000);
+        if (d?.frames?.length) { lo = mid; if (take(d.frames)) return best; } else hi = mid;
+      }
+      return best;
+    }
+    // No opening frame to anchor on: sample across the series' broadcast.
+    const s0 = Date.parse(seriesStart || "");
+    if (isFinite(s0)) for (let m = 15; m <= 300; m += 10) {
+      const d = await getWindow(gid, s0 + m * 60000);
+      if (d?.frames?.length && take(d.frames)) return best;
+    }
+    return best;
+  }
+
+  // Each finished game's winner, settled against the series score. A guess from
+  // the live feed is only kept when the whole series adds up to the real score.
+  function settle(rows, wins, final, prev) {
+    const codes = Object.keys(wins);
+    const n = rows.length;
+    // Watched it happen: the score moved by one as one more game finished.
+    if (prev && n === prev.n + 1) {
+      const moved = codes.filter(c => wins[c] === (prev.wins[c] || 0) + 1);
+      const last = rows[n - 1];
+      if (moved.length === 1 && !last.winnerCode) { last.winnerCode = moved[0]; last.conf = "certain"; }
+    }
+    if (codes.length !== 2 || !n || n > 7 || wins[codes[0]] + wins[codes[1]] !== n) return rows;
+    const [A, B] = codes;
+    const top = wins[A] > wins[B] ? A : wins[B] > wins[A] ? B : null;
+    const kept = rows.map(r => (r.conf === "certain" ? r.winnerCode : null));
+    // Every order of results the score allows (a finished series' last game is the
+    // winner's). The feed's reads choose between them; a read that breaks the score
+    // is outvoted rather than trusted, and a game the best orders disagree on stays open.
+    const seqs = [];
+    for (let mask = 0; mask < (1 << n); mask++) {
+      const seq = []; let wa = 0;
+      for (let i = 0; i < n; i++) { const c = mask & (1 << i) ? A : B; seq.push(c); if (c === A) wa++; }
+      if (wa !== wins[A]) continue;
+      if (final && top && seq[n - 1] !== top) continue;
+      if (seq.some((c, i) => kept[i] && kept[i] !== c)) continue;
+      let score = 0;
+      rows.forEach((r, i) => { if (r.feedWinner) { const f = r.feedWinner === "blue" ? r.blue : r.red; score += (f === seq[i] ? 1 : -1) * (r.feedWeight || 1); } });
+      seqs.push({ seq, score });
+    }
+    if (!seqs.length) return rows;
+    const best = Math.max(...seqs.map(x => x.score));
+    const topSeqs = seqs.filter(x => x.score === best);
+    const sweep = codes.some(c => wins[c] === n);
+    rows.forEach((r, i) => {
+      if (r.conf === "certain") return;
+      const vals = new Set(topSeqs.map(x => x.seq[i]));
+      if (vals.size !== 1) { r.winnerCode = null; r.conf = null; return; }
+      const forced = new Set(seqs.map(x => x.seq[i])).size === 1;
+      r.winnerCode = [...vals][0];
+      r.conf = (sweep || (final && i === n - 1)) ? "certain" : forced ? "derived" : "inferred";
+    });
+    return rows;
+  }
+
+
+  async function loadSeries() {
+    if (!state.liveLoaded) {
+      const c = await cacheGet(LIVE_KEY);
+      if (c) for (const [k, v] of Object.entries(c)) state.liveGames.set(k, v);
+      state.liveLoaded = true;
+    }
+    const since = Date.now() - 36 * 3600e3;
+    const evs = (state.allEvents || []).filter(e => e.type === "match" && e.match?.id &&
+      (e.state === "inProgress" || (e.state === "completed" && Date.parse(e.startTime) > since)));
+    let changed = false;
+    for (const ev of evs) {
+      const mid = ev.match.id, final = ev.state === "completed";
+      const known = state.series.get(mid);
+      if (known && known.final && known.rows.every(r => r.winnerCode)) continue;
+      let event;
+      try { event = (await apiGet("/getEventDetails?id=" + encodeURIComponent(mid))).data?.event; } catch (e) { continue; }
+      if (!event?.match) continue;
+      const tById = {}, wins = {};
+      for (const t of event.match.teams || []) { const c = t.code || t.name || ""; tById[t.id] = c; wins[c] = t.result?.gameWins || 0; }
+      const done = (event.match.games || []).filter(g => g.state === "completed").sort((a, b) => (a.number || 0) - (b.number || 0));
+      const date = (ev.startTime || "").slice(0, 10);
+      const rows = [];
+      for (const g of done) {
+        const side = sd => tById[(g.teams || []).find(t => t.side === sd)?.id] || "";
+        const blue = side("blue"), red = side("red");
+        if (!blue || !red) continue;
+        const old = known && known.rows.find(r => r.gameId === g.id);
+        const row = old ? { ...old } : { gameId: g.id, number: g.number || null, blue, red, winnerCode: null, conf: null };
+        if (!row.champs || (!row.winnerCode && !row.endChecked)) {
+          const fd = await getWindow(g.id);
+          const meta = fd?.gameMetadata;
+          const bp = meta?.blueTeamMetadata?.participantMetadata || [], rp = meta?.redTeamMetadata?.participantMetadata || [];
+          if (bp.length === 5 && rp.length === 5) {
+            row.champs = { blue: bp.map(x => x.championId || ""), red: rp.map(x => x.championId || "") };
+            row.players = { blue: bp.map(x => x.summonerName || ""), red: rp.map(x => x.summonerName || "") };
+          }
+          if (fd) {
+            const fr = frameRead(await endFrame(g.id, fd, ev.startTime));
+            row.feedWinner = fr ? fr.side : null; row.feedWeight = fr ? fr.w : 0; row.endChecked = true;
+          }
+        }
+        rows.push(row);
+      }
+      settle(rows, wins, final, known ? { n: known.rows.length, wins: known.wins } : null);
+      state.series.set(mid, { teams: Object.keys(wins), wins, rows, final, league: ev.league?.name || "" });
+      for (const r of rows) {
+        if (!r.winnerCode || !r.players) continue;
+        const id = "riot_" + r.gameId;
+        const rec = {
+          id, date, league: ev.league?.name || "", eventContext: [ev.league?.name, ev.blockName].filter(Boolean).join(" · "),
+          gameNumber: r.number, blueTeam: r.blue, redTeam: r.red, champions: r.champs, players: r.players,
+          actualWinner: r.winnerCode === r.blue ? "blue" : "red", winnerConfidence: r.conf, source: "riot",
+          isBulkImport: true, labTracked: Date.now()
+        };
+        const cur = state.liveGames.get(id);
+        if (!cur || cur.actualWinner !== rec.actualWinner) { state.liveGames.set(id, rec); changed = true; }
+      }
+    }
+    // Drop what the Draft Logger now has, and anything over three weeks old.
+    const have = new Set((state.bulk || []).map(e => e.id));
+    const old = Date.now() - 21 * 864e5;
+    for (const [id, r] of state.liveGames) if (have.has(id) || (r.labTracked || 0) < old) { state.liveGames.delete(id); changed = true; }
+    if (changed) cachePut(LIVE_KEY, Object.fromEntries(state.liveGames));
+    return changed;
+  }
+
+  // ── Compute ────────────────────────────────────────────────────────────────
+  function compute() {
+    const have = new Set(state.bulk.map(e => e.id));
+    const extra = [...state.liveGames.values()].filter(e => !have.has(e.id));
+    state.liveIds = new Set(extra.map(e => e.id));
+    state.merged = state.bulk.concat(extra);
+    const R = LAB.runAll(state.merged);
+    // Latest five for every team name, plus the league they last played in.
+    const roster = new Map();
+    for (const g of R.all.games) {
+      roster.set(g.blue_team, { name: g.blue_team, players: g.blue, league: g.league, date: g.date });
+      roster.set(g.red_team, { name: g.red_team, players: g.red, league: g.league, date: g.date });
+    }
+    // Sources name the same team differently ("JDG" vs "JD GAMING"). A schedule
+    // code follows its lineup to whichever name has played most recently.
+    const latest = new Map();
+    for (const [code, r] of roster) {
+      let best = r;
+      for (const other of roster.values()) {
+        if (other.date > best.date && other.players.filter(p => r.players.includes(p)).length >= 3) best = other;
+      }
+      latest.set(code, best);
+    }
+    state.run = { ...R, roster: latest, rawRoster: roster };
+    startOriginal();
+  }
+
+  // ── Original Draft Logger model ────────────────────────────────────────────
+  // Slow (it re-reads the 600 games before every game), so it runs in slices
+  // after everything else is on screen, and keeps its work in this page's own
+  // storage so only new games cost anything next time.
+  const CACHE_DB = "ModelLabCache";
+  function cacheDb() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open(CACHE_DB, 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("c");
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+  }
+  async function cacheGet(k) { try { const db = await cacheDb(); return await new Promise(res => { const g = db.transaction("c").objectStore("c").get(k); g.onsuccess = () => res(g.result || null); g.onerror = () => res(null); }); } catch (e) { return null; } }
+  async function cachePut(k, v) { try { const db = await cacheDb(); db.transaction("c", "readwrite").objectStore("c").put(v, k); } catch (e) {} }
+
+  let origToken = 0;
+  async function startOriginal() {
+    const token = ++origToken;
+    const run = state.run;
+    run.orig = { status: "starting", pct: 0 };
+    renderOrigStatus();
+    const rows = LAB_ORIGINAL.prepare(state.personal || [], state.merged || state.bulk, state.annotations || {});
+    const cached = await cacheGet("trail");
+    const done = await LAB_ORIGINAL.factorTrailAsync(rows, cached, (i, n) => {
+      if (token !== origToken) return;
+      run.orig = { status: "running", pct: i / n }; renderOrigStatus();
+      if (i % 200 === 0) { try { if (typeof onLabUpdated === "function") onLabUpdated(); } catch (e) {} }
+    });
+    if (token !== origToken) return;
+    cachePut("trail", done.cache);
+    const trail = done.trail, alias = rows.alias;
+    const W = state.weights || {};
+    const asIs = LAB_ORIGINAL.asIs(rows, trail, W);
+    const learn = LAB_ORIGINAL.learning(rows, trail, W, 0.05);
+    const cleanedIds = new Set(run.all.games.map(g => g.id));
+    // Scored on the same cleaned games as every other model; your logged copy of a
+    // game stands in for its imported twin.
+    const lookup = (m, id) => (m.has(id) ? m.get(id) : alias.has(id) ? m.get(alias.get(id)) : undefined);
+    const onClean = m => { const out = new Map(); for (const g of run.all.games) { const p = lookup(m, g.id); if (p != null) out.set(g.id, p); } return out; };
+    // Hybrid: player ratings plus the original factors, weights learned game by game.
+    const pr = run.results.find(r => r.id === "players").preds;
+    const hy = new Map(); { const w = new Array(14).fill(0); let a = 1, b = 0; const lg = p => Math.log(p / (1 - p));
+      for (const g of run.all.games) {
+        const f = lookup(trail, g.id); const lp = lg(pr.get(g.id));
+        let z = a * lp + b; if (f) for (let i = 1; i <= 13; i++) z += w[i] * f.c[i];
+        const p = 1 / (1 + Math.exp(-z)); hy.set(g.id, p);
+        const e = g.blue_won - p; a += 0.01 * e * lp; b += 0.005 * e;
+        if (f) for (let i = 1; i <= 13; i++) if (f.has[i]) w[i] += 0.01 * e * f.c[i];
+      }
+      run.hybrid = { a, b, w }; }
+    const mk = (id, name, about, preds) => ({ id, name, about, postDraft: true, preds, games: run.all.games.filter(g => preds.has(g.id)) });
+    run.results = run.results.filter(r => !r.original).concat([
+      { ...mk("orig", "Original model (as in app)", "Your original model (13 of its 14 factors) with your saved factor weights, unchanged.", onClean(asIs)), original: true },
+      { ...mk("orig_learn", "Original model · learning", "Same factors; after every game each factor's weight moves toward what would have been right.", onClean(learn.preds)), original: true },
+      { ...mk("hybrid", "Player ratings + original factors", "Player ratings with the original factors on top, each weighted by what it's added so far.", hy), original: true }
+    ]);
+    run.origRows = rows;
+    run.orig = { status: "done", learned: learn.weights, bias: learn.bias, reused: done.reused, rows: rows.length, mine: rows.filter(r => r.mine).length,
+      rated: rows.filter(r => r.draftPref != null || (r.skillAdv && r.skillAdv !== "unsure") || (r.execDemand && (r.execDemand.diff != null || (r.execDemand.blue && r.execDemand.red)))).length };
+    renderBoard(); renderCalib(); renderRecent(); renderOrigStatus(); renderUpcoming();
+    try { if (typeof onLabUpdated === "function") onLabUpdated(); } catch (e) {}
+  }
+
+  function renderOrigStatus() {
+    const el = $("orig");
+    if (!el || !state.run) return;
+    const o = state.run.orig || {};
+    if (o.status !== "done") {
+      el.innerHTML = `<div class="small muted">Catching up on past games… ${Math.round((o.pct || 0) * 100)}%. The first run takes a minute or two; after that only new games are worked out.</div>
+        <div class="cbar" style="margin-top:8px"><div class="fill" style="width:${((o.pct || 0) * 100).toFixed(1)}%"></div></div>`;
+      return;
+    }
+    const W = state.weights || {};
+    const names = LAB_ORIGINAL.FACTOR_NAMES;
+    el.innerHTML = `<div class="small muted" style="margin-bottom:10px">Weights the learning version has settled on, next to your saved sliders. Your ratings feed factors 2–4: ${o.rated} games carry them so far${state.annotations ? "" : " (backfilled review ratings weren't in this data source)"}, and those factors start counting once a matching kind of rating has 3+ past games.</div>
+      <div class="kv" style="grid-template-columns:1fr auto auto">
+        <div class="tiny muted">Factor</div><div class="tiny muted" style="text-align:right">Yours</div><div class="tiny muted" style="text-align:right">Learned</div>
+        ${names.slice(1).map((n, i) => { const yours = W["f" + (i + 1)] ?? 1, l = o.learned[i + 1]; const d = l - yours;
+          return `<div>${i + 1}. ${esc(n)}</div><div style="text-align:right">${(+yours).toFixed(2)}</div><div style="text-align:right;color:${Math.abs(d) < 0.05 ? "var(--muted)" : d > 0 ? "var(--green)" : "var(--yellow)"}">${l.toFixed(2)}</div>`; }).join("")}
+      </div>
+      <div class="tiny muted" style="margin-top:10px">Not included: factor 14 (swing picks) — the app computes it from all games, future ones too. Team names you combined by hand aren't applied here. All three original-model rows need the draft, so they're scored on past games only.</div>`;
+  }
+
+  function pairsFor(r, from, to) {
+    return r.games.filter(g => g.date >= from && (!to || g.date < to)).map(g => [g, r.preds.get(g.id)]);
+  }
+
+  // Side-neutral chance that team A beats team B in one game.
+  function matchProb(r, ra, rb) {
+    if (!ra || !rb || r.postDraft) return null;
+    const today = new Date().toISOString().slice(0, 10);
+    const mk = (A, B, ta, tb) => ({ blue: A.players, red: B.players, league: A.league, blue_team: ta, red_team: tb, date: today });
+    const m = r.model;
+    const p1 = m.predict(mk(ra, rb, ra.name, rb.name), true);
+    const p2 = m.predict(mk(rb, ra, rb.name, ra.name), true);
+    return r.id === "blue" ? 0.5 : (p1 + (1 - p2)) / 2;
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function renderStatus() {
+    const R = state.run;
+    const last = R.all.games[R.all.games.length - 1];
+    const t = state.loadedAt ? state.loadedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+    $("status").innerHTML = `<b>${R.all.games.length.toLocaleString()}</b> games · latest <b>${esc(last?.date || "–")}</b> · from ${esc(state.source)} · refreshed ${t}`;
+  }
+
+  function renderBoard() {
+    const R = state.run;
+    const cutoff30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+    const rows = R.results.map(r => {
+      const all = r.games.map(g => [g, r.preds.get(g.id)]);
+      return { r, unt: LAB.score(pairsFor(r, UNTUNED_FROM)), d30: LAB.score(pairsFor(r, cutoff30)), last100: LAB.score(all.slice(-100)),
+        maj: LAB.score(pairsFor(r, UNTUNED_FROM).filter(([g]) => LAB.MAJORS.has(g.league))) };
+    });
+    rows.sort((x, y) => (y.unt.acc - x.unt.acc) || (x.unt.logloss - y.unt.logloss));
+    const best = k => Math.max(...rows.map(x => x[k].acc).filter(isFinite));
+    const b = { unt: best("unt"), d30: best("d30"), last100: best("last100"), maj: best("maj") };
+    const cell = (s, k) => `<td class="${s.acc === b[k] ? "best" : ""}">${pct(s.acc, 1)}</td>`;
+    $("board").innerHTML = `<tr><th>Model</th><th>Since Apr 1</th><th>Majors</th><th>Last 30d</th><th>Last 100</th></tr>` +
+      rows.map(x => `<tr class="lb${x.r.id === state.sel ? " sel" : ""}" data-id="${x.r.id}">
+        <td><div class="mname">${esc(x.r.name)}${x.r.postDraft ? ' <span class="chip">after draft</span>' : ""}</div><div class="tiny muted">${esc(x.r.about)}</div></td>
+        ${cell(x.unt, "unt")}${cell(x.maj, "maj")}${cell(x.d30, "d30")}${cell(x.last100, "last100")}</tr>`).join("") +
+      `<tr><td class="tiny muted">Games counted</td><td class="tiny muted">${rows[0].unt.n}</td><td class="tiny muted">${rows[0].maj.n}</td><td class="tiny muted">${rows[0].d30.n}</td><td class="tiny muted">${rows[0].last100.n}</td></tr>`;
+    $("board").querySelectorAll("tr.lb").forEach(tr => tr.onclick = () => { state.sel = tr.dataset.id; lsSet(OWN_SEL, state.sel); renderBoard(); renderCalib(); });
+  }
+
+  function renderCalib() {
+    const r = state.run.results.find(x => x.id === state.sel) || state.run.results[0];
+    $("calib-title").textContent = "Confidence check · " + r.name;
+    if (r.id === "blue") { $("calib").innerHTML = `<div class="empty">Always says 54%, so there's nothing to check.</div>`; return; }
+    const c = LAB.calibration(pairsFor(r, UNTUNED_FROM));
+    $("calib").innerHTML = `<div class="calib">
+      <div class="tiny muted">It said</div><div class="tiny muted">How often the pick won (line = what it said)</div><div class="tiny muted" style="text-align:right">Games</div>
+      ${c.map(b => `<div>${Math.round(b.lo * 100)}–${b.hi >= 1 ? 100 : Math.round(b.hi * 100)}%</div>
+        <div class="cbar"><div class="fill" style="width:${(b.won * 100).toFixed(1)}%"></div><div class="mark" style="left:calc(${(b.said * 100).toFixed(1)}% - 1px)"></div></div>
+        <div style="text-align:right">${pct(b.won)} · ${b.n}</div>`).join("")}
+    </div><div class="tiny muted" style="margin-top:10px">Bars ending near their line mean its percentages can be taken at face value. Games since Apr 1.</div>`;
+  }
+
+  function renderRecent() {
+    const R = state.run;
+    const models = R.results.filter(r => r.id !== "blue");
+    const num = new Map(models.map((r, i) => [r.id, i + 1]));
+    $("legend").innerHTML = models.map((r, i) => `<span>${i + 1} ${esc(r.name)}</span>`).join("");
+    const byId = new Map(R.all.games.map(g => [g.id, g]));
+    const recent = R.all.games.slice(-20).reverse();
+    $("recent").innerHTML = recent.map(g => {
+      const winner = g.blue_won ? g.blue_team : g.red_team, loser = g.blue_won ? g.red_team : g.blue_team;
+      const dots = models.map(r => { const i = num.get(r.id) - 1;
+        const p = r.preds.get(g.id);
+        if (p == null) return `<span class="dot" title="${esc(r.name)}: not in its data" style="background:var(--surface2)"></span>`;
+        const ok = (p > 0.5) === !!g.blue_won;
+        const conf = Math.max(p, 1 - p);
+        return `<span class="dot ${ok ? "y" : "n"}" title="${esc(r.name)}: ${pct(conf)}">${i + 1}</span>`;
+      }).join("");
+      const main = R.results[0].preds.get(g.id);
+      const mainPick = main > 0.5 ? g.blue_team : g.red_team;
+      return `<div class="res"><div><b>${esc(winner)}</b> <span class="muted">beat</span> ${esc(loser)}
+        <div class="tiny muted">${state.liveIds && state.liveIds.has(g.id) ? '<span class="chip" style="color:var(--blue);border-color:rgba(91,140,255,.4)">tracked live</span> ' : ""}${esc(g.date)} · ${esc(g.league)}${g.gnum ? " · G" + g.gnum : ""} · player ratings had ${esc(mainPick)} ${pct(Math.max(main, 1 - main))}</div></div>
+        <div class="dots">${dots}</div></div>`;
+    }).join("");
+  }
+
+  const openPanels = new Set();
+  function renderUpcoming() {
+    const el = $("upcoming");
+    if (state.scheduleErr && !state.schedule) { el.innerHTML = `<div class="card empty">Couldn't load the schedule (${esc(state.scheduleErr)}). It retries on the next refresh.</div>`; return; }
+    if (!state.schedule) return;
+    const R = state.run;
+    const cards = [];
+    for (const e of state.schedule) {
+      const [A, B] = e.match.teams;
+      const a = A.code || A.name, b = B.code || B.name;
+      const bo = e.match?.strategy?.count || 1;
+      const d = state.drafts.get(e.match?.id || e.id);
+      // A team the data doesn't know yet still has its five on the live feed.
+      const fromDraft = code => {
+        if (!d) return null;
+        const sd = d.blue === code ? "blue" : d.red === code ? "red" : null;
+        if (!sd) return null;
+        const known = R.roster.get(d[sd === "blue" ? "red" : "blue"]);
+        return { name: code, league: known ? known.league : "", date: "", live: true, players: d.names[sd].map(n => LAB.stripTag(n, [d.blue, d.red])) };
+      };
+      const rA = R.roster.get(a) || fromDraft(a), rB = R.roster.get(b) || fromDraft(b);
+      const probs = R.results.map(r => ({ r, p: matchProb(r, rA, rB) }));
+      const seriesHtml = seriesSection(e, R);
+      const main = probs[0];
+      const when = new Date(e.startTime);
+      const whenTxt = when.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+      const final = e.state === "completed";
+      const live = e.state === "inProgress" ? ` · <span style="color:var(--red)">live</span>` : final ? ` · <span style="color:var(--muted)">final</span>` : "";
+      const head = `<div class="match-top"><span>${esc(e.league?.name || "")}${e.blockName ? " · " + esc(e.blockName) : ""}</span><span>${esc(whenTxt)}${live} · Bo${bo}</span></div>
+        <div class="teams"><div class="team">${esc(a)}</div><div class="vs">vs</div><div class="team r">${esc(b)}</div></div>`;
+      if (final) {
+        cards.push(`<div class="card">${head}${seriesHtml || `<div class="small muted">No game results available for this series.</div>`}</div>`);
+        continue;
+      }
+      const h2hHtml = headToHead(e, R, a, b, rA, rB);
+      if (main.p == null) {
+        const miss = [a, b].filter(t => !R.roster.has(t));
+        cards.push(`<div class="card">${head}<div class="small muted">No games on record for ${esc(miss.join(" or "))}. Predictions start once a game's lineups appear on the live feed.</div>${h2hHtml}${seriesHtml}${draftSection(e, R)}</div>`);
+        continue;
+      }
+      // Series chance from the current score, not from 0–0.
+      const ser = state.series.get(e.match?.id || e.id);
+      const wA = ser ? ser.wins[a] || 0 : 0, wB = ser ? ser.wins[b] || 0 : 0;
+      const need = Math.ceil(bo / 2);
+      const fromScore = (p, x, y) => { // A needs x more wins, B needs y more
+        if (x <= 0) return 1; if (y <= 0) return 0;
+        let t = 0; for (let l = 0; l < y; l++) { let c = 1; for (let i = 0; i < l; i++) c = c * (x - 1 + l - i) / (i + 1); t += c * p ** x * (1 - p) ** l; }
+        return t; };
+      const serP = pg => fromScore(pg, need - wA, need - wB);
+      const scoreTxt = wA || wB ? ` from ${wA}–${wB}` : "";
+      const sA = bo > 1 ? serP(main.p) : main.p;
+      const picks = probs.filter(x => x.r.id !== "blue" && x.p != null).map(x => x.p > 0.5 ? a : b);
+      const agree = picks.every(t => t === picks[0]);
+      const others = probs.slice(1).filter(x => x.r.id !== "blue" && !x.r.postDraft && x.p != null).sort((x, y) => Math.max(y.p, 1 - y.p) - Math.max(x.p, 1 - x.p)).map(x => {
+        const fav = x.p >= 0.5 ? a : b, pg = Math.max(x.p, 1 - x.p);
+        const sp = serP(x.p), sf = sp >= 0.5 ? a : b;
+        return `<div class="lab">${esc(x.r.name)}</div><div class="pk">${esc(fav)} ${pct(pg)}</div><div class="pc">${bo > 1 ? "series " + (sf === fav ? "" : esc(sf) + " ") + pct(Math.max(sp, 1 - sp)) : ""}</div>`;
+      }).join("");
+      const rosterOf = { [a]: rA, [b]: rB };
+      const ros = t => rosterOf[t].players.map(h => esc(R.all.display.get(h) || h)).join(", ") + (rosterOf[t].live ? " (from live feed)" : "");
+      const draftHtml = draftSection(e, R);
+      cards.push(`<div class="card">${head}
+        <div class="bar"><div class="a" style="width:${(sA * 100).toFixed(1)}%">${pct(sA)}</div><div class="b">${pct(1 - sA)}</div></div>
+        <div class="tiny muted" style="margin-top:6px;display:flex;justify-content:space-between;gap:8px">
+          <span>Player ratings · ${bo > 1 ? "series" + scoreTxt : "game"}${bo > 1 ? ` (per game ${pct(Math.max(main.p, 1 - main.p))} ${esc(main.p >= .5 ? a : b)})` : ""}</span>
+          <span class="chip ${agree ? "agree" : "split"}">${agree ? "all models agree" : "models split"}</span></div>
+        <div class="others">${others}</div>
+        ${h2hHtml}
+        ${seriesHtml}
+        ${draftHtml}
+        <details style="margin-top:8px" data-k="ros:${esc(e.match?.id || e.id)}"><summary>Rosters used</summary><div class="tiny muted">${esc(a)}: ${ros(a)}<br>${esc(b)}: ${ros(b)}<br>Each team's lineup from its most recent game.</div></details>
+      </div>`);
+    }
+    el.innerHTML = cards.length ? cards.join("") : `<div class="card empty">No matches scheduled in the next week.</div>`;
+    // Panels you opened stay open when the card refreshes.
+    el.querySelectorAll("details[data-k]").forEach(dt => { if (openPanels.has(dt.dataset.k)) dt.open = true; });
+    if (!el._watch) {
+      el._watch = true;
+      el.addEventListener("toggle", ev => { const k = ev.target?.dataset?.k; if (k) { if (ev.target.open) openPanels.add(k); else openPanels.delete(k); } }, true);
+    }
+  }
+
+  // Finished games of a live series, each with how the models called it beforehand.
+  function seriesSection(e, R) {
+    const s = state.series.get(e.match?.id || e.id);
+    if (!s || !s.rows.length) return "";
+    const byId = new Map(R.all.games.map(g => [g.id, g]));
+    // The Draft Logger may have stored the same game under another id.
+    const byKey = new Map(R.all.games.map(g => [g.date + "|" + [g.blue_team, g.red_team].sort().join("/") + "|" + g.gnum, g]));
+    const date = (e.startTime || "").slice(0, 10);
+    const models = R.results.filter(r => r.id !== "blue");
+    const score = s.teams.map(c => `${esc(c)} ${s.wins[c]}`).join(" – ");
+    const lines = s.rows.map(r => {
+      const g = byId.get("riot_" + r.gameId) || byKey.get(date + "|" + [r.blue, r.red].sort().join("/") + "|" + (r.number || 0));
+      const n = `G${r.number || "?"}`;
+      if (!r.winnerCode) return `<div class="sg"><div class="sgl"><span>${n}</span><span class="muted">result pending</span></div></div>`;
+      if (!g) return `<div class="sg"><div class="sgl"><span>${n} · <b>${esc(r.winnerCode)}</b> won</span><span class="muted">no lineups</span></div></div>`;
+      const calls = models.map(m => ({ m, p: m.preds.get(g.id) })).filter(x => x.p != null);
+      const right = calls.filter(x => (x.p > 0.5) === !!g.blue_won).length;
+      const pp = R.results[0].preds.get(g.id), ok = (pp > 0.5) === !!g.blue_won;
+      const champs = sd => (r.champs ? r.champs[sd] : g.champs ? g.champs[sd] : []).map(esc).join(", ") || "–";
+      const body = `<div class="tiny muted" style="margin:6px 0">${esc(r.blue)} (blue): ${champs("blue")}<br>${esc(r.red)} (red): ${champs("red")}</div>
+        <div class="others">${calls.sort((x, y) => (y.m.postDraft ? 1 : 0) - (x.m.postDraft ? 1 : 0)).map(x => {
+          const good = (x.p > 0.5) === !!g.blue_won, fav = x.p > 0.5 ? r.blue : r.red;
+          return `<div class="lab">${esc(x.m.name)}${x.m.postDraft ? ' <span class="chip">draft</span>' : ""}</div><div class="pk" style="color:${good ? "var(--green)" : "var(--red)"}">${good ? "✓" : "✗"} ${esc(fav)} ${pct(Math.max(x.p, 1 - x.p))}</div><div class="pc"></div>`; }).join("")}</div>`;
+      return `<details class="sg" data-k="g:${esc(r.gameId)}"><summary><div class="sgl"><span>${n} · <b>${esc(r.winnerCode)}</b> won</span>
+        <span><span style="color:${ok ? "var(--green)" : "var(--red)"}">${ok ? "✓" : "✗"} ${pct(Math.max(pp, 1 - pp))}</span> <span class="muted">· ${right}/${calls.length} models</span></span></div></summary>${body}</details>`;
+    }).join("");
+    return `<div class="dsec"><div class="dhead">${s.final ? "Final" : "Series so far"} · ${score}</div>${lines}
+      <div class="tiny muted" style="margin-top:4px">✓/✗ and % = player ratings' call before the game. Tap a game for its draft and every model's call.</div></div>`;
+  }
+
+  // Past meetings between these two teams: series and games. A team counts under
+  // any name it has played as (e.g. "JDG" and "JD GAMING"), matched by lineup.
+  function headToHead(e, R, a, b, rA, rB) {
+    const namesFor = (code, ros) => {
+      const out = new Set([String(code).toUpperCase()]);
+      if (ros && ros.name) out.add(String(ros.name).toUpperCase());
+      if (ros && ros.players) for (const [nm, r] of R.rawRoster) if (r.players.filter(p => ros.players.includes(p)).length >= 3) out.add(String(nm).toUpperCase());
+      return out;
+    };
+    const NA = namesFor(a, rA), NB = namesFor(b, rB);
+    for (const x of [...NA]) if (NB.has(x)) { NA.delete(x); NB.delete(x); }
+    const today = (e.startTime || "").slice(0, 10);
+    const games = R.all.games.filter(g => {
+      const bt = g.blue_team.toUpperCase(), rt = g.red_team.toUpperCase();
+      const pair = (NA.has(bt) && NB.has(rt)) || (NB.has(bt) && NA.has(rt));
+      // This series' own games are listed separately.
+      return pair && !(e.state === "inProgress" && g.date === today);
+    });
+    if (!games.length) return `<div class="dsec"><div class="dhead">Head to head <span class="tiny muted">· no meetings on record</span></div></div>`;
+    // Series by game numbers and dates, not event labels (sources word those differently):
+    // a new series starts at game 1, when numbering goes backwards, or after a day's gap.
+    const series = [];
+    let cur = null;
+    for (const g of games) {
+      const aWon = NA.has((g.blue_won ? g.blue_team : g.red_team).toUpperCase());
+      const gap = cur ? (Date.parse(g.date) - Date.parse(cur.lastDate)) / 864e5 : 99;
+      const fresh = !cur || gap > 1 || g.gnum <= 1 || (cur.last && g.gnum <= cur.last);
+      if (fresh) series.push(cur = { date: g.date, league: g.league, a: 0, b: 0, last: 0, lastDate: g.date });
+      cur[aWon ? "a" : "b"]++;
+      cur.last = g.gnum || cur.last; cur.lastDate = g.date;
+    }
+    const gA = series.reduce((t, x) => t + x.a, 0), gB = series.reduce((t, x) => t + x.b, 0);
+    const sA = series.filter(x => x.a > x.b).length, sB = series.filter(x => x.b > x.a).length;
+    const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+    const recent = series.slice(-5).reverse().map(x => {
+      const lead = x.a > x.b ? a : x.b > x.a ? b : null;
+      return `<div class="lab">${esc(fmtDate(x.date))} · ${esc(x.league)}</div><div class="pk">${lead ? `<b>${esc(lead)}</b> ` : ""}${x.a + x.b > 1 ? `${Math.max(x.a, x.b)}–${Math.min(x.a, x.b)}` : ""}</div><div class="pc">${x.a + x.b > 1 ? "series" : "Bo1"}</div>`;
+    }).join("");
+    return `<div class="dsec"><div class="dhead">Head to head <span class="tiny muted">· since ${esc(new Date(R.all.games[0].date + "T12:00:00").toLocaleDateString([], { month: "short", year: "numeric" }))}</span></div>
+      <div class="h2h"><div><div class="tiny muted">Series</div><b>${esc(a)} ${sA} – ${sB} ${esc(b)}</b></div>
+      <div><div class="tiny muted">Games</div><b>${esc(a)} ${gA} – ${gB} ${esc(b)}</b></div></div>
+      <details style="margin-top:6px" data-k="h2h:${esc(e.match?.id || e.id)}"><summary>Last ${Math.min(5, series.length)} meeting${series.length === 1 ? "" : "s"}</summary><div class="others">${recent}</div></details></div>`;
+  }
+
+  // Draft-based models: inactive until a game's picks are in, then every model
+  // re-scores that game with the real sides, lineups and champions.
+  function draftSection(e, R) {
+    const post = R.results.filter(r => r.postDraft);
+    const allPost = [{ id: "champs", name: "Player ratings · champions" }, { id: "orig", name: "Original model (as in app)" },
+      { id: "orig_learn", name: "Original model · learning" }, { id: "hybrid", name: "Player ratings + original factors" }];
+    const d = state.drafts.get(e.match?.id || e.id);
+    if (!d) {
+      const why = e.state === "inProgress" ? "waiting for the next game's picks" : "waiting for draft";
+      return `<div class="dsec"><div class="dhead">Draft-based models <span class="tiny muted">· ${why}</span></div>
+        <div class="others inactive">${allPost.map(m => `<div class="lab">${esc(m.name)}</div><div class="pk">–</div><div class="pc">inactive</div>`).join("")}</div></div>`;
+    }
+    const probs = draftProbs(d);
+    const origPending = !(R.orig && R.orig.status === "done");
+    const rows = R.results.filter(r => r.id !== "blue").map(r => ({ r, p: probs.get(r.id) }))
+      .sort((x, y) => (y.r.postDraft ? 1 : 0) - (x.r.postDraft ? 1 : 0) || (Math.max(y.p ?? 0.5, 1 - (y.p ?? 0.5)) - Math.max(x.p ?? 0.5, 1 - (x.p ?? 0.5))));
+    const pend = origPending ? allPost.filter(m => m.id !== "champs").map(m => `<div class="lab">${esc(m.name)}</div><div class="pk">–</div><div class="pc">catching up</div>`).join("") : "";
+    const champList = s => d.champs[s].map(c => esc(c)).join(", ");
+    return `<div class="dsec live"><div class="dhead">Game ${d.gameNumber || "?"} draft · <span style="color:var(--blue)">${esc(d.blue)}</span> blue vs <span style="color:var(--red)">${esc(d.red)}</span> red</div>
+      <div class="others">${rows.filter(x => x.p != null).map(x => { const fav = x.p >= 0.5 ? d.blue : d.red;
+        return `<div class="lab">${esc(x.r.name)}${x.r.postDraft ? ' <span class="chip">draft</span>' : ""}</div><div class="pk">${esc(fav)} ${pct(Math.max(x.p, 1 - x.p))}</div><div class="pc">this game</div>`; }).join("")}${pend}</div>
+      <div class="tiny muted" style="margin-top:6px">${esc(d.blue)}: ${champList("blue")}<br>${esc(d.red)}: ${champList("red")}</div></div>`;
+  }
+
+  function renderData() {
+    const R = state.run;
+    const s = R.all.stats;
+    const src = {};
+    for (const g of R.all.games) src[g.src] = (src[g.src] || 0) + 1;
+    const names = { riot: "Riot", leaguepedia: "Leaguepedia", unlabelled: "No source tag", oracleselixir: "Oracle's Elixir" };
+    $("data-sum").textContent = `Cleaning summary · ${R.all.games.length.toLocaleString()} usable of ${state.bulk.length.toLocaleString()} imported`;
+    $("data").innerHTML = `<div class="kv">
+      ${Object.entries(src).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<div>${esc(names[k] || k)}</div><div>${v.toLocaleString()}</div>`).join("")}
+      <div style="grid-column:1/-1;height:6px"></div>
+      ${Object.entries(s).sort().map(([k, v]) => `<div class="muted">${esc(k.replace(/^side swapped$/, "rosters on wrong side (fixed)").replace(/^side ok$/, "rosters confirmed on right side").replace(/^side trusted-source$/, "rosters unchecked (Riot/Leaguepedia/OE)"))}</div><div>${v.toLocaleString()}</div>`).join("")}
+    </div><div class="tiny muted" style="margin-top:8px">Uses only teams, players, dates, leagues and winners. Your ratings, draft reads, bets and notes are never read.</div>`;
+  }
+
+  function renderAll() {
+    $("setup").style.display = "none";
+    $("main").style.display = "";
+    renderStatus(); renderBoard(); renderCalib(); renderRecent(); renderUpcoming(); renderData(); renderOrigStatus();
+  }
+
+  function renderSetup() {
+    $("main").style.display = "none";
+    const s = $("setup");
+    s.style.display = "";
+    s.innerHTML = `<div class="card"><div class="small muted">${typeof storeStillLoading === "function" && storeStillLoading()
+      ? "Your games are still loading…" : "No imported games stored yet. The lab starts once games are in."}</div></div>`;
+  }
+
+  let busy = false, lastSig = "";
+  const notify = () => { try { if (typeof onLabUpdated === "function") onLabUpdated(); } catch (e) {} };
+  async function refresh(first) {
+    if (busy || state.fromFile) return;
+    busy = true;
+    try {
+      if (first) $("status").textContent = "Loading games…";
+      const [d] = await Promise.all([loadData(), loadSchedule().then(loadDrafts)]);
+      if (!d) { if (!state.run) { $("status").textContent = "Waiting for your games…"; renderSetup(); } return; }
+      const sig = dataSig();
+      if (state.run && sig === lastSig) { try { if (await loadSeries()) { compute(); renderAll(); notify(); } else renderUpcoming(); } catch (e) {} return; }
+      lastSig = sig;
+      state.bulk = d.bulk;
+      try { await loadSeries(); } catch (e) {} state.personal = d.personal || []; state.weights = d.weights || null; state.annotations = d.annotations || null; state.source = d.source; state.loadedAt = new Date();
+      $("status").textContent = `Training ${state.bulk.length.toLocaleString()} games…`;
+      await new Promise(r => setTimeout(r, 20));
+      compute(); renderAll(); notify();
+    } catch (e) {
+      $("status").innerHTML = `<span class="err">${esc(e.message || e)}</span>`;
+    } finally { busy = false; }
+  }
+
+  let started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    refresh(true);
+    // While a match is live, look for a new draft every minute.
+    let liveBusy = false;
+    setInterval(async () => {
+      if (liveBusy || busy || document.visibilityState !== "visible" || !state.run || !(state.schedule || []).some(e => e.state === "inProgress")) return;
+      liveBusy = true;
+      try {
+        await loadSchedule(); await loadDrafts();
+        // A game just finished: it joins the training data and every model updates.
+        if (await loadSeries()) { compute(); renderAll(); } else renderUpcoming();
+      } catch (e) {} finally { liveBusy = false; }
+    }, 60e3);
+    setInterval(() => { if (document.visibilityState === "visible") refresh(); }, REFRESH_MS);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && state.loadedAt && Date.now() - state.loadedAt > 5 * 60e3) refresh();
+    });
+
+  }
+
+  // ── For the rest of the app ────────────────────────────────────────────────
+  // One game's call from every model: side-aware (blue/red as given), using the
+  // lineups passed in or, failing that, each team's most recent five; the draft
+  // models join once ten champions are in.
+  function findRoster(name) {
+    const R = state.run; if (!R || !name) return null;
+    const tries = [name, String(name).toUpperCase(), String(name).trim()];
+    try { tries.push(resolveTeam(name), String(resolveTeam(name) || "").toUpperCase()); } catch (e) {}
+    for (const t of tries) if (t && R.roster.has(t)) return R.roster.get(t);
+    const up = String(name).toUpperCase().trim();
+    for (const [k, v] of R.roster) if (String(k).toUpperCase() === up) return v;
+    return null;
+  }
+  function gamePick(o) {
+    const R = state.run; if (!R) return null;
+    const tags = [o.blueTeam, o.redTeam];
+    const ra = findRoster(o.blueTeam), rb = findRoster(o.redTeam);
+    const five = a => (a || []).filter(Boolean).length === 5;
+    const bp = five(o.bluePlayers) ? o.bluePlayers.map(n => LAB.stripTag(n, tags)) : ra ? ra.players : null;
+    const rp = five(o.redPlayers) ? o.redPlayers.map(n => LAB.stripTag(n, tags)) : rb ? rb.players : null;
+    if (!bp || !rp) return { missing: [!bp && o.blueTeam, !rp && o.redTeam].filter(Boolean) };
+    const hasDraft = five(o.champs && o.champs.blue) && five(o.champs && o.champs.red);
+    const g = { date: new Date().toISOString().slice(0, 10), league: o.league || (ra || rb || {}).league || "",
+      blue_team: ra ? ra.name : o.blueTeam, red_team: rb ? rb.name : o.redTeam, blue: bp, red: rp,
+      champs: hasDraft ? { blue: o.champs.blue.map(LAB.champKey), red: o.champs.red.map(LAB.champKey) } : null };
+    const models = [];
+    for (const r of R.results) {
+      if (r.id === "blue" || r.original) continue;
+      if (r.postDraft && !hasDraft) { models.push({ id: r.id, name: r.name, postDraft: true, p: null }); continue; }
+      try { models.push({ id: r.id, name: r.name, postDraft: !!r.postDraft, p: r.model.predict({ ...g }, true) }); } catch (e) {}
+    }
+    const orig = R.orig;
+    const origNames = { orig: "Original model (as in app)", orig_learn: "Original model · learning", hybrid: "Player ratings + original factors" };
+    if (hasDraft && orig && orig.status === "done" && R.origRows) {
+      const f = LAB_ORIGINAL.liveFactors(R.origRows, { date: g.date, blueTeam: o.blueTeam, redTeam: o.redTeam, champs: o.champs,
+        players: { blue: five(o.bluePlayers) ? o.bluePlayers : bp, red: five(o.redPlayers) ? o.redPlayers : rp } });
+      if (f) {
+        const sig = z => 1 / (1 + Math.exp(-z)), lg = p => Math.log(p / (1 - p));
+        const W = state.weights || {}, main = models.find(m => m.id === "players");
+        let z1 = 0, z2 = orig.bias, z3 = R.hybrid.b + R.hybrid.a * lg(main.p);
+        for (let i = 1; i <= 13; i++) { z1 += (W["f" + i] ?? 1) * f.c[i]; z2 += orig.learned[i] * f.c[i]; z3 += R.hybrid.w[i] * f.c[i]; }
+        models.push({ id: "hybrid", name: origNames.hybrid, postDraft: true, p: sig(z3) },
+                    { id: "orig_learn", name: origNames.orig_learn, postDraft: true, p: sig(z2) },
+                    { id: "orig", name: origNames.orig, postDraft: true, p: sig(z1) });
+      }
+    } else if (hasDraft) {
+      for (const id of ["hybrid", "orig_learn", "orig"]) models.push({ id, name: origNames[id], postDraft: true, p: null, pending: true });
+    }
+    const main = models.find(m => m.id === "players");
+    const picks = models.filter(m => m.p != null).map(m => m.p > 0.5);
+    // How each model has done since the settings stopped being tuned, for the panel.
+    const acc = {};
+    for (const r of R.results) { const sc = LAB.score(pairsFor(r, UNTUNED_FROM)); if (isFinite(sc.acc)) acc[r.id] = sc; }
+    return { main, models, hasDraft, agree: picks.every(x => x === picks[0]), acc,
+      rosters: { blue: bp.map(h => R.all.display.get(h) || h), red: rp.map(h => R.all.display.get(h) || h) },
+      fromLive: { blue: five(o.bluePlayers), red: five(o.redPlayers) } };
+  }
+  window.labApi = {
+    start,
+    ready: () => !!state.run,
+    origStatus: () => (state.run && state.run.orig) || null,
+    gamePick,
+    seriesProb: (p, bo) => LAB.seriesProb(p, bo),
+    refresh: () => { lastSig = ""; return refresh(); },
+  };
+})();
+
+</script>
 <script type="text/plain" id="sw-src">
 // Draft Logger service worker.
 // VERSION is rewritten with a timestamp every time the app pushes to GitHub,
