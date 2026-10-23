@@ -1477,7 +1477,7 @@
         <option value="support">Support</option>
       </select>
       <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
-        <option value="all">All leagues</option>
+        <option value="all">All games</option>
       </select>
     </div>
   </div>
@@ -1945,7 +1945,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.23-b153</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.23-b154</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2467,7 +2467,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.23-b153";
+const BUILD_VERSION = "2026.10.23-b154";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6694,6 +6694,15 @@ function setGameRanks(entryId, ranks) {
   saveReviews(r);
 }
 
+// Players page filter: "all", a tournament ("t:Worlds|2026" — one league or
+// event in one year) or a league across every year ("l:LCK").
+function profileFilterMatch(e, f) {
+  if (!f || f === "all") return true;
+  const lg = resolveLeague(e.league || "") || e.league || "";
+  if (f.startsWith("t:")) { const [l, y] = f.slice(2).split("|"); return lg === l && String(e.date || "").slice(0, 4) === y; }
+  if (f.startsWith("l:")) return lg === f.slice(2);
+  return e.league === f;                       // older saved value: a raw league name
+}
 // Player average impact across games (higher = more impactful)
 function playerImpactRating(playerName, leagueFilter, entries, reviews) {
   if (!entries) entries = loadEntries();
@@ -6706,7 +6715,7 @@ function playerImpactRating(playerName, leagueFilter, entries, reviews) {
     if (!rank) return null;
     const e = entryById.get(entryId);
     if (!e) return null;
-    if (leagueFilter && leagueFilter !== "all" && e.league !== leagueFilter) return null;
+    if (!profileFilterMatch(e, leagueFilter)) return null;
     const weight = getGameWeight(e);
     return { rank, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
   }).filter(Boolean);
@@ -9205,18 +9214,32 @@ function renderPlayerProfiles() {
   { const _sc = document.getElementById("players-scope"); if (_sc) _sc.innerHTML = loadingNoteHtml() + scopeBannerHtml(); }
   const entries  = loadEntries().filter(entryInScope);
   const reviews  = loadReviews();
-  const leagueFilter = (document.getElementById("profile-league-filter")||{}).value || "all";
+  let leagueFilter = (document.getElementById("profile-league-filter")||{}).value || "all";
   const q = ((document.getElementById("profile-search")||{}).value||"").toLowerCase();
   const el = document.getElementById("player-profiles-list");
   if (!el) return;
 
-  // Update league filter
-  const leagues = [...new Set(entries.map(e=>e.league).filter(Boolean))].sort();
+  // Filter: tournaments (a league or event in one year, newest first), then leagues.
+  // Only games you've ranked players in count towards the list.
+  const rankedIds = new Set(Object.keys(reviews));
+  const tours = new Map(), lgs = new Set();
+  for (const e of entries) {
+    if (!rankedIds.has(e.id)) continue;
+    const lg = resolveLeague(e.league || "") || e.league; if (!lg) continue;
+    const k = lg + "|" + String(e.date || "").slice(0, 4);
+    const t = tours.get(k) || { k, lg, y: String(e.date || "").slice(0, 4), last: "", n: 0 };
+    t.n++; if ((e.date || "") > t.last) t.last = e.date || ""; tours.set(k, t);
+    lgs.add(lg);
+  }
   const lsel = document.getElementById("profile-league-filter");
   if (lsel) {
     const cur = lsel.value;
-    lsel.innerHTML = '<option value="all">All leagues</option>' +
-      leagues.map(l=>`<option value="${l}" ${l===cur?"selected":""}>${l}</option>`).join("");
+    const opt = (v, t) => `<option value="${v}" ${v === cur ? "selected" : ""}>${t}</option>`;
+    lsel.innerHTML = opt("all", "All games")
+      + `<optgroup label="Tournaments">` + [...tours.values()].sort((a, b) => (a.last < b.last ? 1 : -1))
+          .map(t => opt("t:" + t.k, `${t.lg} ${t.y} (${t.n})`)).join("") + `</optgroup>`
+      + `<optgroup label="Leagues, every year">` + [...lgs].sort().map(l => opt("l:" + l, l)).join("") + `</optgroup>`;
+    if (cur && cur !== "all" && lsel.value !== cur) lsel.value = "all";
   }
 
   // Collect all players with at least one impact rank
@@ -9237,9 +9260,12 @@ function renderPlayerProfiles() {
     if (r) ratingCache.set(name, r);
   }
 
-  let players = [...ratingCache.keys()].sort((a,b) =>
-    (ratingCache.get(b)?.avg||0) - (ratingCache.get(a)?.avg||0)
-  );
+  leagueFilter = (document.getElementById("profile-league-filter")||{}).value || "all";
+  const oneTour = leagueFilter.startsWith("t:");
+  // Within one tournament everyone played the same event, so the plain average
+  // ranks them; the league weighting is for comparing across leagues.
+  const score = r => (oneTour ? r.rawAvg : r.avg) || 0;
+  let players = [...ratingCache.keys()].sort((a,b) => score(ratingCache.get(b)) - score(ratingCache.get(a)));
 
   if (!players.length) {
     el.innerHTML = (roleFilter !== "all" || leagueFilter !== "all")
@@ -9251,7 +9277,40 @@ function renderPlayerProfiles() {
 
   const impactColor = avg => avg >= 7.5 ? "var(--green)" : avg >= 5 ? "var(--yellow)" : "#ff4d5e";
 
-  el.innerHTML = players.map(name => {
+  // Your MVP and all-tournament team: highest average among players you've
+  // ranked in enough of the tournament's games to count (40% of the most anyone
+  // has, and at least 2).
+  let mvpHtml = "";
+  if (oneTour && !q && players.length) {
+    const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "");
+    const most = Math.max(...players.map(n => ratingCache.get(n).games));
+    const min = Math.max(2, Math.ceil(most * 0.4));
+    const ok = players.filter(n => ratingCache.get(n).games >= min);
+    if (ok.length) {
+      const mvp = ok[0], mr = ratingCache.get(mvp);
+      const team = ["top", "jungle", "mid", "bottom", "support"].map(role => {
+        const n = ok.find(x => (roleMap[x]?.role || "") === role);
+        return n ? { role, n, r: ratingCache.get(n) } : null;
+      }).filter(Boolean);
+      const post = `My ${tName} MVP: ${mvp} (${mr.rawAvg.toFixed(2)} average impact over ${mr.games} games I ranked).`
+        + (team.length ? ` All-tournament team: ${team.map(t => `${(ROLE_ABBR[t.role] || t.role).toUpperCase()} ${t.n}`).join(", ")}.` : "");
+      window._mvpPost = post;
+      mvpHtml = `<div class="card" style="margin-bottom:12px;border-color:var(--yellow);">
+        <div style="font-size:11px;font-weight:700;color:var(--yellow);letter-spacing:.06em;text-transform:uppercase;">\u{1F3C6} Your ${tName} MVP</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px;">
+          <span style="font-size:20px;font-weight:700;">${mvp}${playerTeamChipsHtml(mvp)}</span>
+          <span style="font-size:20px;font-weight:700;color:${impactColor(mr.rawAvg)};">${mr.rawAvg.toFixed(2)}</span></div>
+        <div style="font-size:11px;color:var(--muted);">${mr.games} games ranked \u00B7 players need ${min}+ ranked games to count</div>
+        ${team.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">All-tournament team</div>
+          ${team.map(t => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--border);font-size:13px;">
+            <span><span style="color:var(--muted);font-size:11px;display:inline-block;width:34px;">${(ROLE_ABBR[t.role] || t.role).toUpperCase()}</span>${t.n}</span>
+            <span style="font-weight:700;color:${impactColor(t.r.rawAvg)};">${t.r.rawAvg.toFixed(2)} <span style="font-weight:400;color:var(--muted);font-size:11px;">\u00B7 ${t.r.games}g</span></span></div>`).join("")}` : ""}
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;margin-top:10px;" onclick="navigator.clipboard.writeText(window._mvpPost||'').then(()=>{this.textContent='Copied'})">Copy</button>
+      </div>`;
+    }
+  }
+
+  el.innerHTML = mvpHtml + players.map(name => {
     const r = ratingCache.get(name);
     if (!r) return "";
 
@@ -9292,8 +9351,8 @@ function renderPlayerProfiles() {
             <div style="font-size:11px;color:var(--muted);">${r.games} game${r.games!==1?"s":""} rated</div>
           </div>
           <div style="text-align:right;margin-right:8px;">
-            <div class="profile-overall" style="color:${impactColor(r.avg)};">${r.avg.toFixed(2)}</div>
-            ${Math.abs(r.avg - r.rawAvg) >= 0.05 ? `<div style="font-size:10px;color:var(--muted);">raw ${r.rawAvg.toFixed(2)}</div>` : ""}
+            <div class="profile-overall" style="color:${impactColor(score(r))};">${score(r).toFixed(2)}</div>
+            ${!oneTour && Math.abs(r.avg - r.rawAvg) >= 0.05 ? `<div style="font-size:10px;color:var(--muted);">raw ${r.rawAvg.toFixed(2)}</div>` : ""}
           </div>
           <span style="color:var(--muted);font-size:11px;">▾</span>
         </div>
