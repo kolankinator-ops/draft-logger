@@ -1198,7 +1198,7 @@
       <button id="blind-mode-btn" class="btn btn-ghost" style="font-size: 12px; padding: 5px 12px; white-space: nowrap;" onclick="toggleBlindMode()">Hide model</button>
     </div>
     <div id="model-prediction" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:none;">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Model prediction</div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Original model <span style="text-transform:none;font-weight:400;letter-spacing:0;">· the 14-factor model; prices and bet suggestions use the Model Lab below</span></div>
       <div id="model-bar" style="height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-bottom:6px;">
         <div id="model-bar-fill" style="height:100%;background:var(--blue);border-radius:4px;transition:width .3s;"></div>
       </div>
@@ -1945,7 +1945,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.22-b151</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.23-b153</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2467,7 +2467,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.22-b151";
+const BUILD_VERSION = "2026.10.23-b153";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -9660,7 +9660,9 @@ function renderValueBetSizing() {
   if (!el) return;
   if (!checked) { el.style.display = "none"; return; }
 
-  const modelBluePct = window._lastModelBluePct;
+  // The Model Lab's number, same as the market comparison.
+  let modelBluePct = null;
+  try { if (window.labApi && labApi.ready()) { const lp = labApi.gamePick(labFormInput()); if (lp && lp.main && lp.main.p != null) modelBluePct = Math.round(lp.main.p * 100); } } catch(e) {}
   const betOn        = document.getElementById("bet-team-on")?.value;
   const betOdds      = parseFloat(document.getElementById("bet-odds")?.value);
   const blueTeam     = document.getElementById("blue-team")?.value.trim();
@@ -11935,17 +11937,23 @@ function renderBacktestResults(results, mode) {
 const PLATT_KEY = "draftlogger_platt_v1";
 
 function loadPlattParams() {
-  try { return JSON.parse(localStorage.getItem(PLATT_KEY) || "null"); }
-  catch(e) { return null; }
+  try {
+    const p = JSON.parse(localStorage.getItem(PLATT_KEY) || "null");
+    return p && (p.n || 0) >= 60 && p.a > 0.2 ? p : null;
+  } catch(e) { return null; }
 }
 function savePlattParams(p) { localStorage.setItem(PLATT_KEY, JSON.stringify(p)); }
 
 function applyPlatt(rawPct) {
   const params = loadPlattParams();
-  if (!params) return rawPct;
+  // A fit on a few dozen games can come out backwards (a negative slope turned
+  // "GEN 58%" into "IG 57%"). Too few games, or a slope that isn't clearly
+  // positive, means no calibration; and a calibrated number never crosses 50%.
+  if (!params || (params.n || 0) < 60 || !(params.a > 0.2)) return rawPct;
   const p = Math.min(0.999, Math.max(0.001, rawPct / 100));
-  const cal = 1 / (1 + Math.exp(-(params.a * Math.log(p/(1-p)) + params.b)));
-  return cal * 100;
+  const cal = 1 / (1 + Math.exp(-(params.a * Math.log(p/(1-p)) + params.b))) * 100;
+  if ((rawPct - 50) * (cal - 50) < 0) return 50;
+  return cal;
 }
 
 // Refits whenever a game is logged. Two things it must not do: fit on the
@@ -21529,13 +21537,22 @@ function runPredictionModel() {
     el.appendChild(mktEl);
   }
 
-  if (blueOddsInput && redOddsInput) {    const rawBlue  = 1 / blueOddsInput;
+  // Prices are compared with the Model Lab (player ratings), the model with the
+  // honest track record — not the number above. No lab yet, no bet suggestion.
+  let labBlue = null;
+  try { if (window.labApi && labApi.ready()) { const lp = labApi.gamePick(labFormInput()); if (lp && lp.main && lp.main.p != null) labBlue = Math.round(lp.main.p * 100); } } catch(e) {}
+  const bluePctM = labBlue, redPctM = labBlue == null ? null : 100 - labBlue;
+  if (blueOddsInput && redOddsInput && labBlue == null) {
+    mktEl.innerHTML = '<div style="font-size:11px;color:var(--muted);">Market comparison waits for the Model Lab to finish training.</div>';
+    mktEl.style.display = "block";
+    const sz = document.getElementById("model-bet-sizing"); if (sz) sz.style.display = "none";
+  } else if (blueOddsInput && redOddsInput) {    const rawBlue  = 1 / blueOddsInput;
     const rawRed   = 1 / redOddsInput;
     const total    = rawBlue + rawRed;
     const mktBlue  = Math.round((rawBlue / total) * 100);
     const mktRed   = 100 - mktBlue;
 
-    const divergence = bluePct - mktBlue; // positive = model more bullish on blue than market
+    const divergence = bluePctM - mktBlue; // positive = model more bullish on blue than market
     const absDiff    = Math.abs(divergence);
     const edgeSide   = divergence > 0 ? blueLabel : redLabel;
     const edgeColor  = absDiff >= 10 ? "var(--green)" : absDiff >= 5 ? "var(--yellow)" : "var(--muted)";
@@ -21551,10 +21568,10 @@ function runPredictionModel() {
           '<span style="color:var(--red);font-weight:700;">' + mktRed + '% ' + redLabel + '</span>' +
         '</div>' +
         '<div style="background:var(--bg);border-radius:5px;padding:6px 8px;">' +
-          '<div style="color:var(--muted);font-size:10px;margin-bottom:2px;">MODEL</div>' +
-          '<span style="color:var(--blue);font-weight:700;">' + blueLabel + ' ' + bluePct + '%</span>' +
+          '<div style="color:var(--muted);font-size:10px;margin-bottom:2px;">MODEL LAB</div>' +
+          '<span style="color:var(--blue);font-weight:700;">' + blueLabel + ' ' + bluePctM + '%</span>' +
           ' <span style="color:var(--muted);">·</span> ' +
-          '<span style="color:var(--red);font-weight:700;">' + redPct + '% ' + redLabel + '</span>' +
+          '<span style="color:var(--red);font-weight:700;">' + redPctM + '% ' + redLabel + '</span>' +
         '</div>' +
       '</div>' +
       '<div style="font-size:11px;color:' + edgeColor + ';">' +
@@ -21566,8 +21583,8 @@ function runPredictionModel() {
         const betSide    = divergence > 0 ? "blue" : "red";
         const betTeam    = betSide === "blue" ? blueLabel : redLabel;
         const betOdds    = betSide === "blue" ? blueOddsInput : redOddsInput;
-        const edgePctVal = betSide === "blue" ? (bluePct - mktBlue) : (redPct - mktRed);
-        const winPct     = betSide === "blue" ? bluePct : redPct;
+        const edgePctVal = betSide === "blue" ? (bluePctM - mktBlue) : (redPctM - mktRed);
+        const winPct     = betSide === "blue" ? bluePctM : redPctM;
         const units      = calcBetUnits(winPct, Math.max(0, edgePctVal));
         const unitDollar = getUnitSize() || 0;
         return '<div style="margin-top:8px;padding:8px 10px;background:rgba(62,207,142,.1);border:1px solid var(--green);border-radius:7px;font-size:12px;">' +
@@ -21578,13 +21595,13 @@ function runPredictionModel() {
     mktEl.style.display = "block";
 
     // Bet sizing — pass model % and edge %
-    const winnerPct  = predWinner === "blue" ? bluePct : redPct;
-    const edgePct    = predWinner === "blue" ? (bluePct - mktBlue) : (redPct - mktRed);
+    const winnerPct  = predWinner === "blue" ? bluePctM : redPctM;
+    const edgePct    = predWinner === "blue" ? (bluePctM - mktBlue) : (redPctM - mktRed);
     updateBetSizing(winnerPct, Math.max(0, edgePct));
   } else {
     mktEl.style.display = "none";
     // Show bet sizing based on model confidence alone (no market odds)
-    const winnerPct = predWinner === "blue" ? bluePct : redPct;
+    const winnerPct = labBlue == null ? 50 : predWinner === "blue" ? labBlue : 100 - labBlue;
     updateBetSizing(winnerPct, 0);
   }
 }
@@ -25195,7 +25212,7 @@ function getUnitSize(overrideBankroll) {
 }
 
 function calcBetUnits(modelPct, edgePct) {
-  // Base units from model confidence
+  // Base units from model confidence (the Model Lab's number since b152)
   let units = 1;
   if (modelPct >= 70) units = 4;
   else if (modelPct >= 65) units = 3;
