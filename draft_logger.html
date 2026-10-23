@@ -1945,7 +1945,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.22-b149</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.22-b151</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2467,7 +2467,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.22-b149";
+const BUILD_VERSION = "2026.10.22-b151";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -2638,7 +2638,11 @@ async function saveBulkToDB(entries, opts) {
   }
   _bulkSig = sig;
   _bulkCache = list;
-  if (touched && typeof requestSync === "function") { try { requestSync(); } catch(e) {} }
+  // Imported games change in the background all day (stats captured every 30
+  // seconds, repairs, imports). Each change used to trigger its own upload, and
+  // every upload is a write on the sync server, which has a daily write limit.
+  // They now go up together, at most every ten minutes.
+  if (touched && !opts.remote && typeof requestBulkSync === "function") { try { requestBulkSync(); } catch(e) {} }
   try {
     const db = await _openBulkDB();
     await new Promise((res, rej) => {
@@ -22672,13 +22676,20 @@ function disconnectSync() {
   updateSyncConnectedUI();
 }
 
-async function syncPost(scope, payload) {
+async function syncPost(scope, payload, what) {
   const url = getSyncUrl();
-  const res = await fetch(url + "/sync", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-Sync-Code": getSyncCode() },
-    body: JSON.stringify({ scope, ...payload })
-  });
+  const body = JSON.stringify({ scope, ...payload });
+  let res;
+  try {
+    res = await fetch(url + "/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Sync-Code": getSyncCode() },
+      body
+    });
+  } catch (e) {
+    // Says which request and how big, so a failure can be traced.
+    throw new Error(`${e.message || "Failed to fetch"} (${what || scope}, ${(body.length / 1048576).toFixed(1)} MB sent)`);
+  }
   if (res.status === 401) throw new Error("sync code rejected");
   if (!res.ok) {
     let detail = "HTTP " + res.status;
@@ -22727,6 +22738,12 @@ function mergeRemoteRecords(scope, incoming, remoteTombs) {
   return changed;
 }
 
+// Pushes go up in batches. A daily reconcile used to send every stored record in
+// one request — over 10 MB once games carried their timelines — and the sync
+// Worker ran out of memory reading it alongside the store, which the browser
+// reports only as "Failed to fetch". Each batch is small; the server merges
+// them exactly as it would one big push.
+const SYNC_BATCH_RECORDS = 400, SYNC_BATCH_TOMBS = 3000;
 async function syncScope(scope, opts) {
   const seqKey = scope === "bulk" ? SYNC_SEQ_BULK : SYNC_SEQ_KEY;
   const since  = Number(localStorage.getItem(seqKey)) || 0;
@@ -22741,19 +22758,39 @@ async function syncScope(scope, opts) {
   // Deletions travel the same way as edits: everything on a full reconcile,
   // otherwise only what is newer than the last successful sync.
   const allTombs = scope === "bulk" ? loadBulkTombstones() : loadTombstones();
-  const tombstones = {};
-  if (!isTestCopy()) for (const [id, ts] of Object.entries(allTombs)) if (full || ts >= wm) tombstones[id] = ts;
-  const payload = { since, records, tombstones, full };
-  if (scope === "state" && !isTestCopy()) {
-    const s = collectChangedSettings(full);
-    payload.settings = s.settings;
-    payload.settingsMeta = s.settingsMeta;
+  const tombList = [];
+  if (!isTestCopy()) for (const [id, ts] of Object.entries(allTombs)) if (full || ts >= wm) tombList.push([id, ts]);
+
+  let changed = false;
+  const take = resp => {
+    if (resp && resp.version) localStorage.setItem(SERVER_VER_KEY, String(resp.version));
+    if (mergeRemoteRecords(scope, resp.records, resp.tombstones)) changed = true;
+  };
+  // 1. Push, a batch at a time. Settings ride with the first state batch.
+  const nBatches = Math.max(Math.ceil(records.length / SYNC_BATCH_RECORDS), Math.ceil(tombList.length / SYNC_BATCH_TOMBS));
+  let settingsSent = false;
+  for (let b = 0; b < nBatches; b++) {
+    // since far ahead: the server takes the batch and sends nothing back but
+    // its acknowledgement; the pull below fetches what's new, once.
+    const payload = { since: 9e15, full: false,
+      records: records.slice(b * SYNC_BATCH_RECORDS, (b + 1) * SYNC_BATCH_RECORDS),
+      tombstones: Object.fromEntries(tombList.slice(b * SYNC_BATCH_TOMBS, (b + 1) * SYNC_BATCH_TOMBS)) };
+    if (scope === "state" && !isTestCopy() && !settingsSent) {
+      const st = collectChangedSettings(full);
+      payload.settings = st.settings; payload.settingsMeta = st.settingsMeta; settingsSent = true;
+    }
+    take(await syncPost(scope, payload, `${scope} upload ${b + 1}/${nBatches}`));
   }
-
-  const resp = await syncPost(scope, payload);
-  if (resp && resp.version) localStorage.setItem(SERVER_VER_KEY, String(resp.version));
-
-  let changed = mergeRemoteRecords(scope, resp.records, resp.tombstones);
+  // 2. Pull what this device hasn't seen. Everything only for a device that has
+  // never synced; a daily reconcile has already pushed everything above, and the
+  // server sends every change since this device's last sync, deletions included.
+  const pull = { since, records: [], tombstones: {}, full: since === 0 };
+  if (scope === "state" && !isTestCopy() && !settingsSent) {
+    const st = collectChangedSettings(full);
+    pull.settings = st.settings; pull.settingsMeta = st.settingsMeta;
+  }
+  const resp = await syncPost(scope, pull, `${scope} download`);
+  take(resp);
   if (scope === "state" && applyIncomingSettings(resp.settings, resp.settingsMeta)) changed = true;
 
   localStorage.setItem(seqKey, String(resp.seq || 0));
@@ -22870,9 +22907,9 @@ function renderSyncQueue() {
     <div style="font-size:12px;color:${tone};font-weight:600;">
       ${off ? "📴 Offline" : "Connected"}${n ? ` · ${n} change${n === 1 ? "" : "s"} waiting to upload` : " · nothing waiting"}</div>
     <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6;">
-      ${n ? "Your work is written to this device the moment you make it. It uploads by itself the next time there's a connection — nothing is lost if the app closes first." : ""}
+      ${n ? "Your work is written to this device the moment you make it. Your own logs and ratings upload within seconds; changes to imported games (captured stats, repairs) go up together every ten minutes. Nothing is lost if the app closes first." : ""}
       Last successful sync: ${last}.</div>
-    ${n && !off ? `<button class="btn btn-primary" style="width:100%;margin-top:8px;font-size:12px;padding:6px;" onclick="syncNow({}).then(renderSyncQueue)">Upload now</button>` : ""}
+    ${n && !off ? `<button class="btn btn-primary" style="width:100%;margin-top:8px;font-size:12px;padding:6px;" onclick="syncNow({bulk:true}).then(renderSyncQueue)">Upload now</button>` : ""}
   </div>`;
 }
 
@@ -22906,13 +22943,20 @@ const BULK_PULL_KEY = "draftlogger_sync_bulk_at_v1";
 const SERVER_VER_KEY = "draftlogger_sync_server_ver_v1";
 const FULL_SYNC_KEY = "draftlogger_sync_full_at_v1";
 let _bulkPullWanted = false, _dedupedThisSession = false;
+const BULK_SYNC_EVERY_MS = 10 * 60 * 1000;
 function bulkSyncDue(opts) {
   if (opts.full || opts.bulk || _bulkPullWanted) return true;
   const wm = Number(localStorage.getItem(SYNC_WM_KEY)) || 0;
   if (!wm) return true;
-  if (loadBulkEntries().some(e => (e.updatedAt || 0) >= wm)) return true;
-  if (Object.values(loadBulkTombstones()).some(t => t >= wm)) return true;
-  return Date.now() - (Number(localStorage.getItem(BULK_PULL_KEY)) || 0) > 10 * 60 * 1000;
+  // Waiting changes go up with the next bulk sync, which runs at most every ten
+  // minutes; until then they are safe on this device.
+  return Date.now() - (Number(localStorage.getItem(BULK_PULL_KEY)) || 0) > BULK_SYNC_EVERY_MS;
+}
+let _bulkSyncTimer = null;
+function requestBulkSync() {
+  if (!syncConfigured() || _bulkSyncTimer) return;
+  const wait = Math.max(2500, (Number(localStorage.getItem(BULK_PULL_KEY)) || 0) + BULK_SYNC_EVERY_MS - Date.now() + 1000);
+  _bulkSyncTimer = setTimeout(() => { _bulkSyncTimer = null; syncNow({}); }, wait);
 }
 
 async function syncNow(opts = {}) {
