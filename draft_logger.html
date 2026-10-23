@@ -1945,7 +1945,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.23-b154</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.23-b155</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2467,7 +2467,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.23-b154";
+const BUILD_VERSION = "2026.10.23-b155";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -10372,6 +10372,21 @@ function backfillResultAck() {
   }
 }
 
+// A mis-tapped predicted winner, fixed before the result is in. The original is
+// kept on the entry so an edited prediction is never mistaken for a first call.
+function switchPendingPred(id) {
+  const entries = loadEntries();
+  const e = entries.find(x => x.id === id);
+  if (!e || e.actualWinner) return;
+  const to = e.predWinner === "blue" ? "red" : "blue";
+  if (!e.predEdited) e.predEdited = { from: e.predWinner, at: Date.now() };
+  else if (e.predEdited.from === to) delete e.predEdited;   // switched back: as first logged
+  e.predWinner = to;
+  saveEntries(entries);
+  autoSync();
+  renderPending();
+}
+
 function renderPending() {
   backfillResultAck();
   const allEntries = loadEntries();
@@ -10458,6 +10473,8 @@ function renderPending() {
               Predicted: <span style="color:${e.predWinner==='blue'?'var(--blue)':'var(--red)'}">
                 ${e.predWinner === 'blue' ? e.blueTeam : e.redTeam}
               </span>
+              <button onclick="switchPendingPred('${e.id}')" title="Picked the wrong team? Switch the prediction"
+                style="background:none;border:none;color:var(--blue);font-size:11px;cursor:pointer;padding:0 4px;">Switch to ${e.predWinner === 'blue' ? e.redTeam : e.blueTeam}</button>
             </div>
             ${betSummary}
           </div>
