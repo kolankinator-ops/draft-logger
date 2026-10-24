@@ -459,6 +459,35 @@
   .sch-meta { display:flex;justify-content:space-between;gap:8px;padding:0 11px 8px;font-size:10.5px;color:var(--muted);cursor:pointer; }
   .sch-meta > span:first-child { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
   .sch-meta > span:last-child { flex:none;display:flex;gap:6px;align-items:center; }
+  /* Match history: rating players */
+  .mh-grow { display:flex;align-items:center;gap:8px;padding:5px 11px;border-top:1px solid var(--border); }
+  .mh-tn { width:52px;flex:none;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .mh-ic { width:28px;height:28px; }
+  .mh-rbtn { padding:3px 8px;margin-left:auto; }
+  .mh-rl-short { display:none; }
+  @media (max-width:560px) {
+    .mh-grow { gap:3px;padding:5px 8px; }
+    .mh-grow > span:first-child { width:16px !important; }
+    .mh-tn { width:30px; }
+    .mh-ic { width:min(24px, calc((100vw - 200px) / 10));height:min(24px, calc((100vw - 200px) / 10)); }
+    .mh-rbtn { padding:3px 5px;min-width:26px; }
+    .mh-rl-long { display:none; } .mh-rl-short { display:inline; }
+    .mh-rrow { gap:4px; }
+    .mh-rname { width:58px !important; }
+    .mh-rval { width:18px !important; }
+    .mh-rnums { flex:1;min-width:0;flex-wrap:nowrap !important; }
+    .mh-rk { flex:1 1 0;min-width:0;width:auto !important;max-width:26px;height:24px !important;font-size:10px !important; }
+    .mh-rate { padding:8px 8px 10px !important; }
+  }
+  .mh-rate { padding:8px 11px 10px;border-top:1px dashed var(--border);background:var(--surface); }
+  .mh-rrow { display:flex;align-items:center;gap:6px;padding:3px 0; }
+  .mh-rrow img, .mh-noimg { width:22px;height:22px;border-radius:4px;flex:none;background:var(--surface2); }
+  .mh-rname { font-size:12px;width:92px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .mh-rval { font-size:15px;font-weight:700;width:22px;text-align:center;flex:none; }
+  .mh-rnums { display:flex;flex-wrap:wrap;gap:2px; }
+  .mh-rk { width:24px;height:24px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);font-size:11px;font-weight:700;cursor:pointer;padding:0; }
+  .mh-rk.on { border-color:var(--blue);background:var(--blue-dim);color:var(--blue); }
+  .mh-rk.taken { color:var(--muted);opacity:.4; }
   /* Scoreboard (Live and Results) */
   .sb { container-type:inline-size; font-size:12px; }
   .sb-empty { color:var(--muted);font-size:12px;padding:10px 0;text-align:center; }
@@ -499,6 +528,28 @@
   .sb-hp.big span { position:absolute;inset:0;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--text); }
   .sb-items { display:flex;gap:2px;margin-top:2px; }
   .sb-items img { width:14px;height:14px;border-radius:2px;background:#1c1f29; }
+  .sb-drag { flex:none; }
+  .sb-drag-img { width:18px;height:18px;object-fit:contain; }
+  .sb-pl { cursor:pointer; }
+  .sb-pl:hover { background:var(--surface2); }
+  .sb-pl.sb-open { background:var(--surface2); }
+  .sb-more { display:none;padding:8px 6px 10px;background:var(--surface2);border-radius:0 0 6px 6px;margin-bottom:2px; }
+  .sb-pl.sb-open + .sb-more { display:block; }
+  .sb-runebox { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+  .sb-tree-h { display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px; }
+  .sb-tree-h img { width:16px;height:16px; }
+  .sb-rune { display:flex;align-items:center;gap:6px;padding:2px 0;font-size:11.5px; }
+  .sb-rune img { width:20px;height:20px;border-radius:50%;background:#14161d; }
+  .sb-rune.key img { width:30px;height:30px; }
+  .sb-rune.key span { font-weight:700; }
+  .sb-shards { display:flex;flex-wrap:wrap;gap:4px;margin-top:6px; }
+  .sb-shard { font-size:10px;padding:1px 6px;border-radius:4px;border:1px solid var(--border);color:var(--muted); }
+  .sb-stats { display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px 10px;margin-top:8px;font-size:11px; }
+  .sb-stats > span { display:flex;justify-content:space-between;gap:6px; }
+  .sb-k { color:var(--muted); }
+  .sb-skills { display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;font-size:11px;font-variant-numeric:tabular-nums;letter-spacing:.03em; }
+  .sb-skills b { color:var(--yellow); }
+  .sb-runes, .sb-runes-none { color:var(--muted);font-size:11px; }
   .sb-wide { display:none !important; }
   .sb-foot { font-size:10px;color:var(--muted);padding:6px 0 0; }
   @container (min-width: 600px) {
@@ -1945,7 +1996,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.23-b155</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.24-b158</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2467,7 +2518,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.23-b155";
+const BUILD_VERSION = "2026.10.24-b158";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -4033,7 +4084,7 @@ function suggestTiers() {
   if (!el) return;
 
   const reviews = loadReviews();
-  const entries = loadEntries().filter(e => e.actualWinner);
+  const entries = ratedGames().filter(e => e.actualWinner);
 
   // ── Bridge 1: players seen in more than one league ──
   // Impact ratings are assigned within a game, so a player's average rating
@@ -6703,9 +6754,19 @@ function profileFilterMatch(e, f) {
   if (f.startsWith("l:")) return lg === f.slice(2);
   return e.league === f;                       // older saved value: a raw league name
 }
+// The games ratings can belong to: everything you logged by hand, plus any
+// imported game you've ranked players in (from Match history).
+function ratedGames() {
+  const reviews = loadReviews(), out = loadEntries().slice(), ids = new Set(out.map(e => e.id));
+  for (const e of loadBulkEntries()) {
+    if (ids.has(e.id) || !Object.keys(reviews[e.id] || {}).length) continue;
+    out.push(e); ids.add(e.id);
+  }
+  return out;
+}
 // Player average impact across games (higher = more impactful)
 function playerImpactRating(playerName, leagueFilter, entries, reviews) {
-  if (!entries) entries = loadEntries();
+  if (!entries) entries = ratedGames();
   if (!reviews) reviews = loadReviews();
   // Build entry lookup map once (caller should pass cached entries/reviews)
   const entryById = new Map(entries.map(e => [e.id, e]));
@@ -7794,8 +7855,8 @@ function mhDraftBlock(champs, dim) {
     champs.map(c => {
       const u = champIconUrl(c);
       return u
-        ? `<img src="${u}" alt="${champDisplay(c)}" title="${champDisplay(c)}" style="width:28px;height:28px;border-radius:4px;display:block;" loading="lazy" />`
-        : `<span style="width:28px;height:28px;border-radius:4px;background:var(--surface2);font-size:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);">${champDisplay(c).slice(0,3)}</span>`;
+        ? `<img class="mh-ic" src="${u}" alt="${champDisplay(c)}" title="${champDisplay(c)}" style="border-radius:4px;display:block;" loading="lazy" />`
+        : `<span class="mh-ic" style="border-radius:4px;background:var(--surface2);font-size:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);">${champDisplay(c).slice(0,3)}</span>`;
     }).join("")}</div>`;
 }
 
@@ -7814,6 +7875,7 @@ function renderMatchHistory() {
   }
 
   const rows = mhGames();
+  _mhById = new Map(rows.map(r => [r.e.id, r.e]));
   const countEl = document.getElementById("mh-count");
   if (countEl) countEl.textContent = rows.length
     ? `${rows.length} game${rows.length === 1 ? "" : "s"}${hide ? " · winners hidden" : ""}`
@@ -7871,18 +7933,111 @@ function renderMatchHistory() {
       ${games.map(({ e, bc, rc, gameNum }) => {
         const blueWon = e.actualWinner === "blue";
         const dimB = !hide && !blueWon, dimR = !hide && blueWon;
-        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 11px;border-top:1px solid var(--border);">
+        return `<div class="mh-grow">
           <span style="width:22px;flex:none;font-size:10px;color:${e.gameNumber ? "var(--muted)" : "var(--border)"};">G${gameNum}</span>
-          <span style="width:52px;flex:none;text-align:right;font-size:10px;color:var(--blue);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.blueTeam}</span>
+          <span class="mh-tn" style="text-align:right;color:var(--blue);">${e.blueTeam}</span>
           ${mhDraftBlock(bc, dimB)}
           <span style="flex:none;font-size:10px;color:var(--muted);">${hide ? "vs" : (blueWon ? "◀" : "▶")}</span>
           ${mhDraftBlock(rc, dimR)}
-          <span style="width:52px;flex:none;font-size:10px;color:var(--red);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.redTeam}</span>
-        </div>`;
+          <span class="mh-tn" style="color:var(--red);">${e.redTeam}</span>
+${mhRateBtnHtml(e)}
+        </div>${_mhRateOpen.has(e.id) ? `<div class="mh-rate" id="mh-rate-${mhSafeId(e.id)}">${mhRatePanelHtml(e)}</div>` : ""}`;
       }).join("")}
     </div>`;
   }).join("") +
   (rows.length > 400 ? `<div style="font-size:11px;color:var(--muted);padding:8px 0;">Showing the most recent ${rows.length} games. Narrow the range or search to see further back.</div>` : "");
+  for (const id of _mhRateOpen) if (_mhById.has(id)) mhFindVod(id);
+}
+
+// ── Rating players from Match history ──────────────────────────────────────
+// The same 1-10 impact ranking as Rate VODs, for any game in the list —
+// imported ones included. Rankings are stored by game id with the rest, so they
+// show up on the Players page and sync like any other rating. Nothing here
+// shows who won, so it works with winners hidden.
+let _mhById = new Map();
+const _mhRateOpen = new Set();
+const mhSafeId = id => String(id).replace(/[^\w-]/g, "_");
+const mhJsId = id => String(id).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+function mhRoster(e) {
+  return ["blue", "red"].flatMap(side => [0, 1, 2, 3, 4].map(i => ({
+    name: (e.players?.[side] || [])[i] || "", champ: (e.champions?.[side] || [])[i] || "", side })))
+    .filter(p => p.name);
+}
+function mhRateBtnHtml(e) {
+  const n = Object.keys(getGameRanks(e.id)).length, open = _mhRateOpen.has(e.id);
+  const done = n >= 10, some = n > 0;
+  const short = done ? "\u2713" : some ? `${n}/10` : "\u2605";
+  return `<button class="mh-rbtn" onclick="mhToggleRate('${mhJsId(e.id)}')" title="Rank the players in this game"
+    style="flex:none;font-size:10.5px;border-radius:5px;cursor:pointer;white-space:nowrap;
+    border:1px solid ${open || some ? "var(--blue)" : "var(--border)"};background:${open ? "var(--blue-dim)" : "none"};
+    color:${done ? "var(--green)" : some ? "var(--blue)" : "var(--muted)"};"><span class="mh-rl-long">${done ? "\u2713 Rated" : some ? `Rated ${n}/10` : "Rate players"}</span><span class="mh-rl-short">${short}</span></button>`;
+}
+function mhToggleRate(id) {
+  if (_mhRateOpen.has(id)) _mhRateOpen.delete(id); else _mhRateOpen.add(id);
+  renderMatchHistory();
+}
+function mhRatePanelHtml(e) {
+  const players = mhRoster(e);
+  if (players.length < 2) return `<div style="font-size:12px;color:var(--muted);">No player names were stored for this game, so there's no one to rank.</div>`;
+  const cur = getGameRanks(e.id), id = mhJsId(e.id);
+  const rankColor = r => r >= 8 ? "var(--green)" : r >= 5 ? "var(--yellow)" : r >= 1 ? "#ff4d5e" : "var(--muted)";
+  const rows = ["blue", "red"].map(side => players.filter(p => p.side === side).map(p => {
+    const rank = cur[p.name] || 0, nm = mhJsId(p.name).replace(/"/g, "&quot;");
+    const nums = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(n => {
+      const taken = Object.entries(cur).some(([who, r]) => r === n && who !== p.name), on = rank === n;
+      return `<button onclick="mhAssignRank('${id}','${nm}',${on ? 0 : n})" class="mh-rk${on ? " on" : ""}${taken && !on ? " taken" : ""}">${n}</button>`;
+    }).join("");
+    const img = p.champ ? championImg(p.champ) : "";
+    return `<div class="mh-rrow">
+      ${img ? `<img src="${img}" alt="" onerror="this.style.visibility='hidden'">` : `<span class="mh-noimg"></span>`}
+      <span class="mh-rname" style="color:${side === "blue" ? "var(--blue)" : "var(--red)"};" title="${p.name}${p.champ ? " \u00B7 " + p.champ : ""}">${p.name.replace(/^[A-Z0-9]{1,5}\s+(?=\S)/, "")}</span>
+      <span class="mh-rval" style="color:${rankColor(rank)};">${rank || "\u2014"}</span>
+      <div class="mh-rnums">${nums}</div></div>`;
+  }).join("")).join(`<div style="height:6px;"></div>`);
+  const n = Object.keys(cur).length;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+      <span style="font-size:11px;color:var(--muted);">Rank each player's game impact 1\u201310, each number once (10 = most). Picking a taken number swaps them.</span>
+      <span id="mh-vod-${mhSafeId(e.id)}" style="font-size:11px;"></span></div>
+    ${rows}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+      <span style="font-size:11px;color:${n >= players.length ? "var(--green)" : "var(--muted)"};">${n}/${players.length} ranked \u00B7 saved as you go</span>
+      ${n ? `<button onclick="mhClearRanks('${id}')" class="btn btn-ghost" style="font-size:11px;padding:3px 9px;">Clear</button>` : ""}
+    </div>`;
+}
+function mhRepaint(id) {
+  const e = _mhById.get(id); if (!e) return;
+  const el = document.getElementById("mh-rate-" + mhSafeId(id));
+  if (el) {
+    const vod = document.getElementById("mh-vod-" + mhSafeId(id)), keep = vod ? vod.innerHTML : "";
+    el.innerHTML = mhRatePanelHtml(e);
+    const v2 = document.getElementById("mh-vod-" + mhSafeId(id)); if (v2) v2.innerHTML = keep;
+    const btn = el.previousElementSibling && el.previousElementSibling.querySelector("button[onclick^='mhToggleRate']");
+    if (btn) btn.outerHTML = mhRateBtnHtml(e);
+  }
+}
+function mhAssignRank(id, name, rank) {
+  const ranks = { ...getGameRanks(id) };
+  if (!rank) delete ranks[name];
+  else {
+    const other = Object.entries(ranks).find(([who, r]) => r === rank && who !== name);
+    if (other) { if (ranks[name]) ranks[other[0]] = ranks[name]; else delete ranks[other[0]]; }
+    ranks[name] = rank;
+  }
+  setGameRanks(id, ranks);
+  mhRepaint(id);
+}
+function mhClearRanks(id) { setGameRanks(id, {}); mhRepaint(id); }
+// Riot's schedule carries a YouTube id for recent games; link it when there is one.
+async function mhFindVod(id) {
+  const e = _mhById.get(id), el = () => document.getElementById("mh-vod-" + mhSafeId(id));
+  if (!e || !el() || el().dataset.done) return;
+  el().dataset.done = "1";
+  let vid = null;
+  try { vid = await findVodId(e); } catch (err) {}
+  const t = el(); if (!t) return;
+  t.innerHTML = vid
+    ? `<a href="https://www.youtube.com/watch?v=${vid}" target="_blank" rel="noopener" style="color:var(--blue);">\u25B6 VOD</a>`
+    : `<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(`${e.blueTeam} vs ${e.redTeam} ${e.league || ""} game ${e.gameNumber || 1}`)}" target="_blank" rel="noopener" style="color:var(--muted);">Search YouTube \u2197</a>`;
 }
 
 // ── Results browser ──────────────────────────────────────────────────────────
@@ -9212,7 +9367,7 @@ function playerTeamChipsHtml(name) {
 
 function renderPlayerProfiles() {
   { const _sc = document.getElementById("players-scope"); if (_sc) _sc.innerHTML = loadingNoteHtml() + scopeBannerHtml(); }
-  const entries  = loadEntries().filter(entryInScope);
+  const entries  = ratedGames().filter(entryInScope);
   const reviews  = loadReviews();
   let leagueFilter = (document.getElementById("profile-league-filter")||{}).value || "all";
   const q = ((document.getElementById("profile-search")||{}).value||"").toLowerCase();
@@ -26251,7 +26406,7 @@ function dbRenderDragonSoul(gameId, frame) {
     dragons.forEach(d => { types[d.toLowerCase()] = (types[d.toLowerCase()]||0)+1; });
     const dominant = Object.entries(types).sort((a,b)=>b[1]-a[1])[0];
     if (!dominant) return "";
-    const name = DRAGON_SOUL_NAMES[dominant[0]] || dominant[0];
+    const name = SB_DRAGON_NAME[dominant[0]] ? `<span style="display:inline-flex;align-items:center;gap:3px;vertical-align:middle;">${sbDragonHtml(dominant[0])}${SB_DRAGON_NAME[dominant[0]]}</span>` : (DRAGON_SOUL_NAMES[dominant[0]] || dominant[0]);
     const count = dragons.length;
     const color = side === "blue" ? "var(--blue)" : "var(--red)";
     const soulEl = count >= SOUL_AT ? `<span style="font-weight:700;color:${color};">SOUL</span>` : `<span style="color:var(--muted);">${count}/${SOUL_AT}</span>`;
@@ -28768,11 +28923,128 @@ const SB_ICON = {
   gold:  `<svg viewBox="0 0 16 16" width="15" height="15"><ellipse cx="8" cy="5.5" rx="5.5" ry="2.6" fill="currentColor"/><path d="M2.5 6v4c0 1.4 2.5 2.6 5.5 2.6s5.5-1.2 5.5-2.6V6c0 1.4-2.5 2.6-5.5 2.6S2.5 7.4 2.5 6z" fill="currentColor" opacity=".65"/></svg>`,
   kills: `<svg viewBox="0 0 16 16" width="15" height="15"><path d="M2 2l6.5 6.5-1.4 1.4L2 4.8zM14 2v2.8L9.6 9.2 8.2 7.8 12.6 2.4zM3.5 10.5l2 2-1.6 1.6-2-2zM12.5 10.5l1.6 1.6-2 2-1.6-1.6z" fill="currentColor"/><path d="M6.8 9.2 14 2" stroke="currentColor" stroke-width="1.6"/></svg>`,
 };
-const SB_DRAGON = { infernal: "#ef6a3a", mountain: "#b88a52", ocean: "#3fa7e0", cloud: "#cfd8e6", hextech: "#33d6c8",
+const SB_DRAGON = { infernal: "#ef6a3a", mountain: "#c49a5e", ocean: "#3fa7e0", cloud: "#cfd8e6", hextech: "#33d6c8",
                     chemtech: "#a3d93a", elder: "#c9b0ff" };
+const SB_DRAGON_NAME = { infernal: "Infernal", mountain: "Mountain", ocean: "Ocean", cloud: "Cloud", hextech: "Hextech",
+                         chemtech: "Chemtech", elder: "Elder" };
+// Each element gets its own shape: flame, peaks, drop, gusts, hexagon, flask, star.
+function sbDragonGlyph(t, c) {
+  const ink = "rgba(10,12,18,.6)";
+  switch (t) {
+    case "infernal": return `<path d="M8 1.2c.7 2.6 4.3 4.2 4.3 8a4.3 4.3 0 0 1-8.6 0c0-1.8.9-3 1.8-3.7.1 1.3.7 2.2 1.5 2.6C6.6 5.9 7.1 3.4 8 1.2z" fill="${c}"/><path d="M8 8.4c.4 1.1 1.6 1.7 1.6 3a1.6 1.6 0 0 1-3.2 0c0-.9.6-1.5 1.6-3z" fill="${ink}"/>`;
+    case "mountain": return `<path d="M.8 14 5.6 4.6l2.6 4.6 2-3.2L15.2 14z" fill="${c}"/><path d="M5.6 4.6 4.2 7.4l1.4-.7 1 .9z" fill="#fff" opacity=".75"/>`;
+    case "ocean": return `<path d="M8 1.2C5.9 4.4 3.5 7 3.5 9.9a4.5 4.5 0 0 0 9 0C12.5 7 10.1 4.4 8 1.2z" fill="${c}"/><path d="M5.2 10.6c.95-.85 1.9-.85 2.8 0s1.9.85 2.8 0" fill="none" stroke="${ink}" stroke-width="1.3" stroke-linecap="round"/>`;
+    case "cloud": return `<g fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round"><path d="M1.5 5.6h7.4a2.1 2.1 0 1 0-2.1-2.1"/><path d="M1.5 9h10.2a2.1 2.1 0 1 1-2.1 2.1"/><path d="M1.5 12.4h4.6"/></g>`;
+    case "hextech": return `<path d="M8 1.3l5.8 3.35v6.7L8 14.7l-5.8-3.35v-6.7z" fill="none" stroke="${c}" stroke-width="1.6"/><path d="M8 5.2l2.4 1.4v2.8L8 10.8 5.6 9.4V6.6z" fill="${c}"/>`;
+    case "chemtech": return `<path d="M5.6 1.6h4.8M6.6 1.6v4.2L2.9 12.4a1.3 1.3 0 0 0 1.1 2h8a1.3 1.3 0 0 0 1.1-2L9.4 5.8V1.6" fill="none" stroke="${c}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M4.4 10h7.2l1.1 2.2a.7.7 0 0 1-.6 1H3.9a.7.7 0 0 1-.6-1z" fill="${c}"/><circle cx="7" cy="8.2" r=".8" fill="${c}"/>`;
+    case "elder": return `<path d="M8 .8l1.7 5.5L15.2 8l-5.5 1.7L8 15.2l-1.7-5.5L.8 8l5.5-1.7z" fill="${c}"/><circle cx="8" cy="8" r="1.6" fill="${ink}"/>`;
+    default: return `<path d="M8 1.5 14 8 8 14.5 2 8z" fill="none" stroke="${c}" stroke-width="2"/>`;
+  }
+}
+// The game's own drake icons (the ones on the in-game Tab scoreboard, then the
+// minimap ones), served by CommunityDragon from the game files. If neither
+// loads, a drawn symbol stands in.
+const SB_DRAGON_SRC = t => [
+  `https://raw.communitydragon.org/latest/game/assets/ux/scoreboard/_${t}drake.png`,
+  `https://raw.communitydragon.org/latest/game/assets/ux/minimap/icons/dragon_${t}.png`,
+];
+function sbDragonSvg(t) {
+  const c = SB_DRAGON[t] || "var(--muted)";
+  return `<svg class="sb-drag" viewBox="0 0 16 16" width="16" height="16"><title>${SB_DRAGON_NAME[t] || t || "Dragon"} drake</title>${sbDragonGlyph(t, c)}</svg>`;
+}
+function sbDragonFail(img) {
+  const t = img.dataset.t, i = Number(img.dataset.i || 0) + 1, src = SB_DRAGON_SRC(t);
+  if (i < src.length) { img.dataset.i = i; img.src = src[i]; }
+  else img.outerHTML = sbDragonSvg(t);
+}
 function sbDragonHtml(type) {
-  const t = String(type || "").toLowerCase(), c = SB_DRAGON[t] || "var(--muted)";
-  return `<svg viewBox="0 0 16 16" width="14" height="14"><title>${t || "dragon"}</title><path d="M8 1.5 14 8 8 14.5 2 8z" fill="none" stroke="${c}" stroke-width="2"/><circle cx="8" cy="8" r="2.2" fill="${c}"/></svg>`;
+  const t = String(type || "").toLowerCase();
+  if (!SB_DRAGON[t]) return sbDragonSvg(t);
+  return `<img class="sb-drag sb-drag-img" src="${SB_DRAGON_SRC(t)[0]}" data-t="${t}" alt="${SB_DRAGON_NAME[t]}" title="${SB_DRAGON_NAME[t]} drake" onerror="sbDragonFail(this)">`;
+}
+
+// Items and runes come from Data Dragon. Items use the game's own patch so a
+// removed item still shows; if that patch isn't there, the latest one is tried.
+function sbDdVer(patch) {
+  const m = String(patch || "").match(/^(\d+)\.(\d+)/);
+  return m ? `${m[1]}.${m[2]}.1` : (_ddVersion || "14.24.1");
+}
+function sbItemImg(id, patch) {
+  const v = sbDdVer(patch), latest = _ddVersion || v;
+  const alt = latest !== v ? `https://ddragon.leagueoflegends.com/cdn/${latest}/img/item/${id}.png` : "";
+  return `<img src="https://ddragon.leagueoflegends.com/cdn/${v}/img/item/${id}.png" alt="" loading="lazy" ` +
+    `onerror="${alt ? `if(!this.dataset.f){this.dataset.f=1;this.src='${alt}'}else ` : ""}this.style.visibility='hidden'">`;
+}
+
+const SB_RUNE_KEY = "draftlogger_runes_v1";
+let _sbRunes = null, _sbRunesLoading = null;
+function sbRunes() {
+  if (!_sbRunes) { try { const c = JSON.parse(localStorage.getItem(SB_RUNE_KEY) || "null"); if (c && c.runes) _sbRunes = c; } catch (e) {} }
+  return _sbRunes;
+}
+function sbLoadRunes() {
+  const have = sbRunes();
+  if (have && (!_ddVersion || have.ver === _ddVersion)) return Promise.resolve(have);
+  if (_sbRunesLoading) return _sbRunesLoading;
+  const ver = _ddVersion || "14.24.1";
+  _sbRunesLoading = fetch(`https://ddragon.leagueoflegends.com/cdn/${ver}/data/en_US/runesReforged.json`)
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(list => {
+      const strip = h => String(h || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+      const out = { ver, runes: {}, styles: {} };
+      for (const st of list || []) {
+        out.styles[st.id] = { name: st.name, icon: st.icon };
+        (st.slots || []).forEach((sl, si) => (sl.runes || []).forEach(r => {
+          out.runes[r.id] = { name: r.name, icon: r.icon, style: st.id, key: si === 0, desc: strip(r.shortDesc) };
+        }));
+      }
+      _sbRunes = out;
+      try { localStorage.setItem(SB_RUNE_KEY, JSON.stringify(out)); } catch (e) {}
+      // Fill any rune panels drawn before the list arrived.
+      document.querySelectorAll(".sb-runes[data-perks]").forEach(el => { el.outerHTML = sbRunesHtml(JSON.parse(el.dataset.perks)); });
+      return out;
+    })
+    .catch(() => have || null)
+    .finally(() => { _sbRunesLoading = null; });
+  return _sbRunesLoading;
+}
+// The three stat shards aren't in the rune list.
+const SB_SHARD = { 5008: "Adaptive Force", 5005: "Attack Speed", 5007: "Ability Haste", 5002: "Armor", 5003: "Magic Resist",
+                   5001: "Health Scaling", 5011: "Health", 5013: "Tenacity & Slow Resist", 5010: "Move Speed" };
+function sbRunesHtml(pm) {
+  if (!pm || !(pm.perks || []).length) return `<div class="sb-runes-none">No rune data for this player.</div>`;
+  const R = sbRunes();
+  if (!R) {
+    sbLoadRunes();
+    return `<div class="sb-runes" data-perks='${JSON.stringify({ styleId: pm.styleId, subStyleId: pm.subStyleId, perks: pm.perks }).replace(/'/g, "&#39;")}'>Loading runes…</div>`;
+  }
+  const img = icon => icon ? `<img src="https://ddragon.leagueoflegends.com/cdn/img/${icon}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : "";
+  const rune = id => { const r = R.runes[id]; return r ? `<div class="sb-rune${r.key ? " key" : ""}" title="${String(r.desc).replace(/"/g, "&quot;")}">${img(r.icon)}<span>${r.name}</span></div>` : ""; };
+  const tree = (styleId, ids) => {
+    const st = R.styles[styleId] || {};
+    return `<div class="sb-tree"><div class="sb-tree-h">${img(st.icon)}<span>${st.name || "—"}</span></div>${ids.map(rune).join("")}</div>`;
+  };
+  const p = pm.perks.map(Number);
+  const prim = p.filter(id => R.runes[id] && R.runes[id].style === pm.styleId);
+  const sec = p.filter(id => R.runes[id] && R.runes[id].style === pm.subStyleId);
+  const shards = p.filter(id => SB_SHARD[id]).map(id => `<span class="sb-shard">${SB_SHARD[id]}</span>`).join("");
+  return `<div class="sb-runebox">${tree(pm.styleId, prim)}${tree(pm.subStyleId, sec)}</div>${shards ? `<div class="sb-shards">${shards}</div>` : ""}`;
+}
+// Skill order as the feed lists it, with the order the basic skills were maxed.
+function sbSkillsHtml(ab) {
+  const a = (ab || []).map(x => String(x).toUpperCase()).filter(x => /^[QWER]$/.test(x));
+  if (!a.length) return "";
+  const n = { Q: 0, W: 0, E: 0 }, maxed = [];
+  for (const k of a) if (k in n && ++n[k] === 5) maxed.push(k);
+  const left = ["Q", "W", "E"].filter(k => !maxed.includes(k)).sort((x, y) => n[y] - n[x]);
+  const order = [...maxed, ...left].filter(k => n[k]).join(" › ");
+  return `<div class="sb-skills"><span class="sb-k">Skills</span><span data-sbv>${a.map(k => k === "R" ? `<b>R</b>` : k).join(" ")}</span>${order ? `<span class="sb-k">· max</span><span data-sbv>${order}</span>` : ""}</div>`;
+}
+const _sbOpen = new Set();
+function sbToggle(el) {
+  el.classList.toggle("sb-open");
+  const k = el.dataset.k;
+  if (el.classList.contains("sb-open")) _sbOpen.add(k); else _sbOpen.delete(k);
 }
 const _fmtN = n => (typeof n === "number" ? n.toLocaleString() : "—");
 const _clock = s => s == null || isNaN(s) || s < 0 ? "" : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
@@ -28784,8 +29056,10 @@ function sbPanelHtml(o) {
   const B = f.blueTeam || {}, R = f.redTeam || {};
   const metaById = {};
   for (const side of ["blue", "red"]) for (const p of (meta[side + "TeamMetadata"] || {}).participantMetadata || []) metaById[p.participantId] = p;
-  const items = {};
-  for (const p of (o.details && o.details.participants) || []) items[p.participantId] = (p.items || []).filter(Boolean);
+  const items = {}, det = {};
+  for (const p of (o.details && o.details.participants) || []) { items[p.participantId] = (p.items || []).filter(Boolean); det[p.participantId] = p; }
+  if (o.details && !sbRunes()) sbLoadRunes();
+  const key = String(o.key || "");
   const roleIdx = p => { const r = (metaById[p.participantId] || {}).role; const i = ROLE_ORDER_FULL.indexOf(r); return i < 0 ? 9 : i; };
   const sortP = arr => [...(arr || [])].sort((a, b) => roleIdx(a) - roleIdx(b));
   const bp = sortP(B.participants), rp = sortP(R.participants);
@@ -28802,9 +29076,21 @@ function sbPanelHtml(o) {
     const m = metaById[p.participantId] || {}, q = opp[i] || {};
     const hp = p.maxHealth ? Math.max(0, Math.min(100, p.currentHealth / p.maxHealth * 100)) : 0;
     const diff = (p.totalGold || 0) - (q.totalGold || 0);
-    const it = (items[p.participantId] || []).map(id => `<img src="https://cdn.communitydragon.org/latest/item/${id}/icon" alt="" onerror="this.style.visibility='hidden'">`).join("");
+    const it = (items[p.participantId] || []).map(id => sbItemImg(id, o.patch)).join("");
     const name = String(m.summonerName || "");
-    return `<div class="sb-row">
+    const d = det[p.participantId], k = key + ":" + p.participantId;
+    const pct = v => typeof v === "number" ? (v * 100).toFixed(0) + "%" : "—";
+    const num = v => typeof v === "number" ? Math.round(v) : "—";
+    const more = `<div class="sb-more">${d ? `${sbRunesHtml(d.perkMetadata)}
+      <div class="sb-stats">
+        <span><span class="sb-k">Damage share</span><span data-sbv>${pct(d.championDamageShare)}</span></span>
+        <span><span class="sb-k">Kill part.</span><span data-sbv>${pct(d.killParticipation)}</span></span>
+        <span><span class="sb-k">Wards</span><span data-sbv>${d.wardsPlaced ?? "—"} placed · ${d.wardsDestroyed ?? "—"} cleared</span></span>
+        <span><span class="sb-k">AD / AP</span><span data-sbv>${num(d.attackDamage)} / ${num(d.abilityPower)}</span></span>
+        <span><span class="sb-k">Armor / MR</span><span data-sbv>${num(d.armor)} / ${num(d.magicResistance)}</span></span>
+        <span><span class="sb-k">Atk speed</span><span data-sbv>${typeof d.attackSpeed === "number" ? d.attackSpeed : "—"}</span></span>
+      </div>${sbSkillsHtml(d.abilities)}` : `<div class="sb-runes-none">Riot's feed hasn't sent runes or items for this game yet.</div>`}</div>`;
+    return `<div class="sb-row sb-pl${_sbOpen.has(k) ? " sb-open" : ""}" data-k="${k}" onclick="sbToggle(this)" title="Show runes and details">
       <div class="sb-champ"><img src="${championImg(m.championId)}" alt="" onerror="this.style.visibility='hidden'"><span class="sb-lv" data-sbv>${p.level ?? ""}</span></div>
       <div class="sb-who"><div class="sb-cn">${m.championId || "—"}</div><div class="sb-pn">${name}</div>
         <div class="sb-hp sb-narrow"><div data-sbw style="width:${hp.toFixed(0)}%;" class="${hp <= 25 ? "crit" : hp <= 50 ? "low" : ""}"></div></div>
@@ -28815,7 +29101,7 @@ function sbPanelHtml(o) {
       <div class="sb-n" data-sbv>${p.deaths ?? 0}</div><div class="sb-n" data-sbv>${p.assists ?? 0}</div>
       <div class="sb-n sb-g" data-sbv>${_fmtN(p.totalGold)}</div>
       <div class="sb-n sb-d ${diff > 0 ? "up" : diff < 0 ? "down" : ""}" data-sbv>${diff > 0 ? "+" : ""}${_fmtN(diff)}</div>
-    </div>`;
+    </div>${more}`;
   }).join("");
   const head = (label, side) => `<div class="sb-row sb-hdr ${side}"><div></div><div class="sb-who">${label}</div><div class="sb-hpcol sb-wide">Health</div>
     <div class="sb-items sb-wide">Items</div><div class="sb-n">CS</div><div class="sb-n">K</div><div class="sb-n">D</div><div class="sb-n">A</div><div class="sb-n sb-g">Gold</div><div class="sb-n sb-d">+/−</div></div>`;
@@ -28830,7 +29116,7 @@ function sbPanelHtml(o) {
     <div class="sb-share"><div data-sbw style="width:${bluePct.toFixed(1)}%;"></div></div>
     <div class="sb-drags"><span>${(B.dragons || []).map(sbDragonHtml).join("")}</span><span>${(R.dragons || []).map(sbDragonHtml).join("")}</span></div>
     <div class="sb-tbl">${head(o.blueName || "Blue", "blue")}${rows(bp, rp, "blue")}${head(o.redName || "Red", "red")}${rows(rp, bp, "red")}</div>
-    ${o.patch ? `<div class="sb-foot">Patch ${o.patch}</div>` : ""}
+    <div class="sb-foot">${o.patch ? `Patch ${o.patch} · ` : ""}Tap a player for runes, skill order and more.</div>
   </div>`;
 }
 
@@ -28839,7 +29125,7 @@ function sbPanelHtml(o) {
 // when something structural changes (an item bought, a dragon taken, the end).
 function sbPaint(el, html) {
   if (!el) return;
-  const sig = html.replace(/data-sbv>[^<]*</g, "data-sbv><").replace(/style="width:[^"]*"/g, "").replace(/class="(crit|low|)"/g, "")
+  const sig = html.replace(/ sb-open/g, "").replace(/data-sbv>[^<]*</g, "data-sbv><").replace(/style="width:[^"]*"/g, "").replace(/class="(crit|low|)"/g, "")
                   .replace(/sb-d (up|down|)/g, "sb-d");
   if (el.dataset.sbsig !== sig) { el.innerHTML = html; el.dataset.sbsig = sig; return; }
   const t = document.createElement("div"); t.innerHTML = html;
@@ -28900,7 +29186,7 @@ function sbFinalPanel(gameId, blueName, redName, winner) {
   const r = sbFinal(gameId);
   if (!r || r.status === "loading") return `<div class="sb-empty">Loading scoreboard…</div>`;
   if (r.status !== "ok") return `<div class="sb-empty">No scoreboard for this game — Riot's feed doesn't have it.</div>`;
-  return sbPanelHtml({ meta: r.meta, frame: r.frame, details: r.details, blueName, redName, status: "ended",
+  return sbPanelHtml({ key: gameId, meta: r.meta, frame: r.frame, details: r.details, blueName, redName, status: "ended",
                        clock: _clock(r.secs), winner: winner || frameWinner(r.frame), patch: r.patch });
 }
 
@@ -28923,7 +29209,7 @@ function dbRenderScoreboard(gameId, cached) {
   const draftEl = document.getElementById("db-draft-" + gameId);
   if (draftEl) draftEl.style.display = cached.lastFrame && cached.meta ? "none" : "";
   const start = dbFirstFrameTime.get(gameId);
-  sbPaint(el, sbPanelHtml({ meta: cached.meta, frame: cached.lastFrame, details: cached.lastDetailsFrame,
+  sbPaint(el, sbPanelHtml({ key: gameId, meta: cached.meta, frame: cached.lastFrame, details: cached.lastDetailsFrame,
     blueName: card.blueCode, redName: card.redCode, status: "live",
     clock: start ? _clock((Date.now() - start.getTime()) / 1000) : "", patch: cached.patch,
     emptyText: cached.meta ? "Waiting for the game to start…" : "Loading…" }));
