@@ -2000,7 +2000,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.24-b162</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.24-b163</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2522,7 +2522,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.24-b162";
+const BUILD_VERSION = "2026.10.24-b163";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -9606,9 +9606,11 @@ function renderPlayerProfiles() {
     const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s\u00A0\u21B3]+/, "");
     const most = Math.max(...players.map(n => ratingCache.get(n).games));
     const min = Math.max(2, Math.ceil(most * 0.4));
-    // A team knocked out early plays only a handful of games, so nobody on it
-    // could reach a bar set by the teams that went deep. Each player's bar is
-    // the usual one or every game their team played in this event, if fewer.
+    // Teams play very different numbers of games in one event (play-in teams
+    // have played far more than seeded ones partway through; teams knocked out
+    // early stop at a few). So the bar is each player's own team: they count
+    // once you've ranked at least half of the games their team has played,
+    // and at least 2. Nobody's bar depends on how many games another team has.
     const teamGames = new Map(), playerTeam = new Map();
     for (const e of loadAllGameData()) {
       if (e.isStandaloneBet || !profileFilterMatch(e, leagueFilter) || !entryInScope(e)) continue;
@@ -9623,10 +9625,10 @@ function renderPlayerProfiles() {
     const barFor = n => {
       const m = playerTeam.get(n); if (!m) return min;
       const k = [...m.entries()].sort((a, b) => b[1] - a[1])[0][0];
-      return Math.max(2, Math.min(min, teamGames.get(k) || min));
+      const tg = teamGames.get(k);
+      return tg ? Math.max(2, Math.ceil(tg / 2)) : min;
     };
     const ok = players.filter(n => ratingCache.get(n).games >= barFor(n));
-    const shortest = Math.min(...players.map(barFor));
     if (ok.length) {
       const mvp = ok[0], mr = ratingCache.get(mvp);
       const team = ["top", "jungle", "mid", "bottom", "support"].map(role => {
@@ -9641,7 +9643,7 @@ function renderPlayerProfiles() {
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px;">
           <span style="font-size:20px;font-weight:700;">${mvp}</span>
           <span style="font-size:20px;font-weight:700;color:${impactColor(mr.rawAvg)};">${mr.rawAvg.toFixed(2)}</span></div>
-        <div style="font-size:11px;color:var(--muted);">${mr.games} games ranked \u00B7 players need ${min}+ ranked games to count${shortest < min ? `, or every game their team played if that's fewer` : ""}</div>
+        <div style="font-size:11px;color:var(--muted);">${mr.games} games ranked \u00B7 players count once you've ranked half their team's games (2+)</div>
         ${team.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">All-tournament team</div>
           ${team.map(t => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--border);font-size:13px;">
             <span><span style="color:var(--muted);font-size:11px;display:inline-block;width:34px;">${(ROLE_ABBR[t.role] || t.role).toUpperCase()}</span>${t.n}</span>
