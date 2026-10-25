@@ -2000,7 +2000,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.24-b164</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.25-b167</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2014,11 +2014,13 @@
   </div>
 
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">☁ Device sync</div>
+    <div class="card-title">☁ Your data on the server</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
-      Keeps your desktop, laptop and phone on the same data. Every change merges
-      per game, so edits on two devices no longer overwrite each other and
-      deleted games stay deleted.
+      Your logged games, bets, rankings and settings live on your server. Every
+      browser loads them from there and sends your changes straight back. A browser
+      only keeps a working copy: if one is wiped, it loads everything again, and it
+      can never overwrite the server with blanks. The server also keeps a dated
+      backup every day for 60 days (below).
     </p>
     <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">
       <b style="color:var(--text);">One-time setup (~10 min, free):</b><br>
@@ -2059,6 +2061,16 @@
         back to the tab, and every 45 seconds while it is open.
       </div>
     </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🗄 Server backups</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
+      One copy of your logged games, rankings and settings per day, kept 60 days.
+      Restoring brings back anything missing now (games, rankings for games you no
+      longer have rankings for, blank settings) and never overwrites what you have.</p>
+    <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="listServerBackups()">Show backups</button>
+    <div id="server-backups" style="margin-top:10px;font-size:12px;"></div>
   </div>
 
   <div class="card" style="margin-bottom:14px;">
@@ -2522,7 +2534,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.24-b164";
+const BUILD_VERSION = "2026.10.25-b167";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -22699,7 +22711,10 @@ function saveTodayPlan(plan) {
   localStorage.setItem(TODAY_PLAN_KEY, JSON.stringify({ games: plan.games || [] }));
 }
 
-function getSyncUrl()  { return (localStorage.getItem(SYNC_URL_KEY)  || "").replace(/\/+$/, ""); }
+// Your data lives on this server; the site always knows where it is. Only the
+// code (your password for it) is entered, once per browser.
+const HOME_SERVER = "https://draft-logger-sync.kolankinator.workers.dev";
+function getSyncUrl()  { return (localStorage.getItem(SYNC_URL_KEY) || HOME_SERVER).replace(/\/+$/, ""); }
 function getSyncCode() { return localStorage.getItem(SYNC_CODE_KEY) || ""; }
 function syncConfigured() { return !!getSyncUrl() && !!getSyncCode(); }
 
@@ -22819,6 +22834,20 @@ function syncSettingsKeys() {
   };
 }
 
+// Your own data, as opposed to preferences. A blank copy of any of these is
+// never uploaded and never written over a real one: a browser whose storage was
+// wiped must not be able to wipe every other device through sync.
+const SYNC_PROTECTED = new Set(["players", "reviews", "tierConfig", "manualStandings", "todayPlan", "bankroll",
+  "factorWeights", "annotations", "champWatch", "favorites", "teamNotes", "manualSchedule", "teamRegistry",
+  "teamAliasLog", "teamLabels"]);
+function syncBlank(raw) {
+  const t = String(raw == null ? "" : raw).trim();
+  return t === "" || t === "{}" || t === "[]" || t === "null" || t === '""';
+}
+// Rankings and draft-review ratings are kept per game, so two copies merge
+// game by game instead of one replacing the other.
+const SYNC_MERGE_BY_GAME = new Set(["reviews", "annotations"]);
+
 function collectChangedSettings(full) {
   // Record which build this device is running so the change-detection hash
   // picks it up and pushes it like any other setting.
@@ -22840,13 +22869,18 @@ function collectChangedSettings(full) {
     // the next pull from another.
     if (raw == null) raw = "";
     const h = _fnv(raw);
-    if (hashes[name] !== h) { hashes[name] = h; meta[name] = now; }
+    // First time this browser has seen this setting (a new or wiped browser):
+    // it is not a change, so it carries no date and can't beat a real copy.
+    if (hashes[name] === undefined) { hashes[name] = h; if (meta[name] === undefined) meta[name] = 0; }
+    else if (hashes[name] !== h) { hashes[name] = h; meta[name] = now; }
+    // Never send a blank copy of your own data.
+    if (SYNC_PROTECTED.has(name) && syncBlank(raw)) continue;
     if (full || (meta[name] || 0) >= wm) {
       // A few preferences are stored as bare words ("week", "list"), which
       // JSON.parse rejects, so they silently never synced. Those travel wrapped.
       try { settings[name] = JSON.parse(raw); }
       catch(e) { settings[name] = { __raw: raw }; }
-      settingsMeta[name] = meta[name] || now;
+      settingsMeta[name] = meta[name] || 0;
     }
   }
   localStorage.setItem(SYNC_SHASH_KEY, JSON.stringify(hashes));
@@ -22854,6 +22888,7 @@ function collectChangedSettings(full) {
   return { settings, settingsMeta };
 }
 
+let _settingsRepush = false;
 function applyIncomingSettings(settings, settingsMeta) {
   const keys   = syncSettingsKeys();
   const hashes = JSON.parse(localStorage.getItem(SYNC_SHASH_KEY) || "{}");
@@ -22902,8 +22937,29 @@ function applyIncomingSettings(settings, settingsMeta) {
       continue;
     }
     const at = Number((settingsMeta || {})[name]) || 0;
-    if ((meta[name] || 0) > at) continue;   // local copy is newer, keep it
     const raw = (val && typeof val === "object" && typeof val.__raw === "string") ? val.__raw : JSON.stringify(val);
+    const localRaw = localStorage.getItem(lsKey);
+    // A blank copy from the server never replaces real data here. The real copy
+    // goes back up instead, which also repairs the server.
+    if (SYNC_PROTECTED.has(name) && syncBlank(raw)) {
+      if (!syncBlank(localRaw)) { meta[name] = Date.now(); delete hashes[name]; _settingsRepush = true; }
+      continue;
+    }
+    // Per-game data: keep every game from both copies; the incoming one wins
+    // only for games both have.
+    if (SYNC_MERGE_BY_GAME.has(name) && !syncBlank(localRaw)) {
+      let mine = {}, theirs = {};
+      try { mine = JSON.parse(localRaw) || {}; } catch (e) {}
+      try { theirs = JSON.parse(raw) || {}; } catch (e) {}
+      const newer = at >= (meta[name] || 0);
+      const merged = newer ? { ...mine, ...theirs } : { ...theirs, ...mine };
+      const out = JSON.stringify(merged);
+      if (out !== localRaw) { try { localStorage.setItem(lsKey, out); changed = true; } catch (e) { continue; } }
+      if (Object.keys(mine).some(k => !(k in theirs)) || !newer) { meta[name] = Date.now(); delete hashes[name]; _settingsRepush = true; }
+      else { meta[name] = at; hashes[name] = _fnv(out); }
+      continue;
+    }
+    if ((meta[name] || 0) > at) continue;   // local copy is newer, keep it
     if (raw === localStorage.getItem(lsKey)) { meta[name] = at; hashes[name] = _fnv(raw); continue; }
     try { localStorage.setItem(lsKey, raw); } catch(e) { continue; }
     meta[name] = at; hashes[name] = _fnv(raw); changed = true;
@@ -22911,6 +22967,11 @@ function applyIncomingSettings(settings, settingsMeta) {
   }
   localStorage.setItem(SYNC_SHASH_KEY, JSON.stringify(hashes));
   localStorage.setItem(SYNC_SMETA_KEY, JSON.stringify(meta));
+  if (_settingsRepush) {
+    _settingsRepush = false;
+    clearTimeout(window._settingsResync);
+    window._settingsResync = setTimeout(() => { try { syncNow({}); } catch (e) {} }, 2000);
+  }
   return changed;
 }
 
@@ -23146,6 +23207,64 @@ function disconnectSync() {
   updateSyncConnectedUI();
 }
 
+async function serverPost(path, payload) {
+  const res = await fetch(getSyncUrl() + path, { method: "POST",
+    headers: { "Content-Type": "application/json", "X-Sync-Code": getSyncCode() }, body: JSON.stringify(payload) });
+  if (res.status === 401) throw new Error("code rejected");
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(j.error || ("HTTP " + res.status));
+  return j;
+}
+async function listServerBackups() {
+  const el = document.getElementById("server-backups"); if (!el) return;
+  if (!syncConfigured()) { el.innerHTML = `<span style="color:var(--muted);">Enter your code first.</span>`; return; }
+  el.innerHTML = `<span style="color:var(--muted);">Loading…</span>`;
+  try {
+    const r = await serverPost("/backups", { action: "list" });
+    const days = r.days || [];
+    el.innerHTML = days.length
+      ? days.map(d => `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-top:1px solid var(--border);">
+          <span>${new Date(d + "T12:00:00").toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</span>
+          <button class="btn btn-ghost" style="font-size:11px;padding:3px 9px;" onclick="restoreServerBackup('${d}', this)">Restore what's missing</button></div>`).join("")
+      : `<span style="color:var(--muted);">No backups yet. The first is taken today and one every day after.</span>`;
+  } catch (e) {
+    el.innerHTML = `<span style="color:#ff4d5e;">${/Not found/i.test(e.message) ? "Update your server (sync-worker.js) to get backups." : e.message}</span>`;
+  }
+}
+async function restoreServerBackup(day, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = "Restoring…"; }
+  try {
+    const r = await serverPost("/backups", { action: "get", day });
+    const now = Date.now();
+    // Logged games you no longer have.
+    const local = loadEntries(), have = new Set(local.map(e => e.id));
+    const add = (r.records || []).filter(e => e && e.id && !have.has(e.id)).map(e => { const c = { ...e }; delete c._s; c.updatedAt = now; return c; });
+    if (add.length) {
+      const tombs = loadTombstones(); add.forEach(e => delete tombs[e.id]); saveTombstones(tombs);
+      writeEntriesRaw([...local, ...add]);
+    }
+    // Rankings and draft ratings: games missing now come back; yours stay.
+    // Other settings: only where yours is blank.
+    const keys = syncSettingsKeys(); let settings = 0;
+    for (const [name, val] of Object.entries(r.settings || {})) {
+      const lsKey = keys[name]; if (!lsKey) continue;
+      const raw = (val && typeof val === "object" && typeof val.__raw === "string") ? val.__raw : JSON.stringify(val);
+      if (syncBlank(raw)) continue;
+      const cur = localStorage.getItem(lsKey);
+      if (SYNC_MERGE_BY_GAME.has(name)) {
+        let mine = {}, theirs = {};
+        try { mine = JSON.parse(cur || "{}") || {}; } catch (e) {}
+        try { theirs = JSON.parse(raw) || {}; } catch (e) {}
+        const merged = { ...theirs, ...mine };
+        if (Object.keys(merged).length > Object.keys(mine).length) { localStorage.setItem(lsKey, JSON.stringify(merged)); settings++; }
+      } else if (syncBlank(cur)) { localStorage.setItem(lsKey, raw); settings++; }
+    }
+    invalidateDerivedCaches();
+    syncNow({});
+    if (btn) btn.textContent = `Restored ${add.length} game${add.length === 1 ? "" : "s"}, ${settings} setting${settings === 1 ? "" : "s"}`;
+  } catch (e) { if (btn) { btn.disabled = false; btn.textContent = "Failed: " + e.message; } }
+}
+
 async function syncPost(scope, payload, what) {
   const url = getSyncUrl();
   const body = JSON.stringify({ scope, ...payload });
@@ -23236,6 +23355,25 @@ async function syncScope(scope, opts) {
     if (resp && resp.version) localStorage.setItem(SERVER_VER_KEY, String(resp.version));
     if (mergeRemoteRecords(scope, resp.records, resp.tombstones)) changed = true;
   };
+  // Downloads come a page at a time (sync server 4+; an older server sends
+  // everything in one reply and never says "more").
+  const pullPaged = async (fromSeq, isFull, label) => {
+    let cursor = "", first = null;
+    for (let page = 1; page <= 500; page++) {
+      const resp = await syncPost(scope, { since: fromSeq, records: [], tombstones: {}, full: isFull, paged: true, cursor },
+        `${label}${page > 1 ? " page " + page : ""}`);
+      take(resp);
+      if (!first) first = resp;
+      if (!resp.more || !resp.cursor) break;
+      cursor = resp.cursor;
+    }
+    return first;
+  };
+  // 0. A device that has never synced, or has lost its data, downloads first,
+  // so its copy is back before it spends anything uploading.
+  let pulledFirst = null;
+  if (scope === "bulk" && since === 0 && (Number(localStorage.getItem(SERVER_VER_KEY)) || 0) >= 4)
+    pulledFirst = await pullPaged(0, true, "bulk download");
   // 1. Push, a batch at a time. Settings ride with the first state batch.
   const nBatches = Math.max(Math.ceil(records.length / SYNC_BATCH_RECORDS), Math.ceil(tombList.length / SYNC_BATCH_TOMBS));
   let settingsSent = false;
@@ -23259,8 +23397,16 @@ async function syncScope(scope, opts) {
     const st = collectChangedSettings(full);
     pull.settings = st.settings; pull.settingsMeta = st.settingsMeta;
   }
-  const resp = await syncPost(scope, pull, `${scope} download`);
-  take(resp);
+  let resp;
+  if (scope === "bulk") {
+    // After a first download, only what changed since then (this device's own
+    // uploads, mostly) needs fetching.
+    const from = pulledFirst ? (pulledFirst.seq || 0) : since;
+    resp = await pullPaged(from, pulledFirst ? false : since === 0, "bulk download");
+  } else {
+    resp = await syncPost(scope, pull, `${scope} download`);
+    take(resp);
+  }
   if (scope === "state" && applyIncomingSettings(resp.settings, resp.settingsMeta)) changed = true;
 
   localStorage.setItem(seqKey, String(resp.seq || 0));
@@ -23365,14 +23511,15 @@ function renderSyncQueue() {
     return;
   }
   const sv = Number(localStorage.getItem(SERVER_VER_KEY)) || 0;
-  const workerNote = sv && sv < 3 ? `<div style="font-size:11px;color:var(--yellow);margin-top:4px;line-height:1.6;">
-    Your sync Worker is version ${sv}. Paste the latest <code>sync-worker.js</code> over it and Deploy so recorded
-    live games are kept on the server too.</div>` : "";
+  const workerNote = sv && sv < 4 ? `<div style="font-size:11px;color:var(--yellow);margin-top:4px;line-height:1.6;">
+    Your sync Worker is version ${sv}. Paste the latest <code>sync-worker.js</code> over it and Deploy: version 4
+    stores imported games in monthly chunks, which the old one-big-record layout has outgrown.</div>` : "";
   if (n === 0 && !off) {
     el.innerHTML = `<div style="font-size:11px;color:var(--green);">✓ Everything is saved to the server. Last sync ${last}.</div>` + workerNote;
     return;
   }
   const tone = off ? "var(--yellow)" : (n ? "var(--blue)" : "var(--muted)");
+  const noteAfter = workerNote;
   el.innerHTML = `<div style="border:1px solid ${tone};border-radius:8px;padding:9px 11px;background:var(--surface2);">
     <div style="font-size:12px;color:${tone};font-weight:600;">
       ${off ? "📴 Offline" : "Connected"}${n ? ` · ${n} change${n === 1 ? "" : "s"} waiting to upload` : " · nothing waiting"}</div>
@@ -23380,7 +23527,7 @@ function renderSyncQueue() {
       ${n ? "Your work is written to this device the moment you make it. Your own logs and ratings upload within seconds; changes to imported games (captured stats, repairs) go up together every ten minutes. Nothing is lost if the app closes first." : ""}
       Last successful sync: ${last}.</div>
     ${n && !off ? `<button class="btn btn-primary" style="width:100%;margin-top:8px;font-size:12px;padding:6px;" onclick="syncNow({bulk:true}).then(renderSyncQueue)">Upload now</button>` : ""}
-  </div>`;
+  </div>` + noteAfter;
 }
 
 // Keep the header pill honest about why a sync isn't happening, and push the
@@ -30268,6 +30415,40 @@ function showTestBanner() {
   document.body.prepend(b);
 }
 showTestBanner();
+// A browser that doesn't have your code yet (new, or wiped) asks for it before
+// anything else, so it loads your data rather than showing an empty app.
+function showUnlock() {
+  if (isTestCopy() || getSyncCode() || document.getElementById("unlock-overlay")) return;
+  const o = document.createElement("div");
+  o.id = "unlock-overlay";
+  o.style.cssText = "position:fixed;inset:0;z-index:20000;background:rgba(8,10,14,.92);display:flex;align-items:center;justify-content:center;padding:16px;";
+  o.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:380px;width:100%;padding:20px;">
+    <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Load your data</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Your games, bets and rankings are on your server. Enter your code (the SYNC_CODE secret) to load them in this browser.</div>
+    <input type="password" id="unlock-code" placeholder="Your code" style="width:100%;margin-bottom:10px;" onkeydown="if(event.key==='Enter')unlockWithCode()">
+    <div id="unlock-msg" style="font-size:12px;min-height:16px;margin-bottom:8px;"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="unlockWithCode()">Load my data</button></div>`;
+  document.body.appendChild(o);
+  setTimeout(() => { const i = document.getElementById("unlock-code"); if (i) i.focus(); }, 50);
+}
+async function unlockWithCode() {
+  const code = ((document.getElementById("unlock-code") || {}).value || "").trim();
+  const msg = document.getElementById("unlock-msg");
+  if (!code) return;
+  if (msg) msg.innerHTML = `<span style="color:var(--muted);">Checking…</span>`;
+  try {
+    const r = await fetch(getSyncUrl() + "/sync", { method: "POST", headers: { "Content-Type": "application/json", "X-Sync-Code": code },
+      body: JSON.stringify({ scope: "state", since: 9e15, records: [], tombstones: {} }) });
+    if (r.status === 401) { if (msg) msg.innerHTML = `<span style="color:#ff4d5e;">That code isn't right.</span>`; return; }
+    if (!r.ok) throw new Error("server answered " + r.status);
+  } catch (e) { if (msg) msg.innerHTML = `<span style="color:#ff4d5e;">Couldn't reach the server: ${e.message}</span>`; return; }
+  localStorage.setItem(SYNC_URL_KEY, getSyncUrl());
+  localStorage.setItem(SYNC_CODE_KEY, code);
+  const o = document.getElementById("unlock-overlay"); if (o) o.remove();
+  updateSyncConnectedUI();
+  syncNow({ full: true, bulk: true, manual: true });
+}
+showUnlock();
 if (syncConfigured()) {
   setSyncStatus("pending", "Connecting…");
   if (isTestCopy()) {
