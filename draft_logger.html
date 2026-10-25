@@ -1516,8 +1516,8 @@
 
 <!-- PLAYER PROFILES -->
 <div class="screen" id="screen-players">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-    <div style="font-size:15px;font-weight:600;">Player profiles</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:15px;font-weight:600;white-space:nowrap;">Player profiles</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <select id="profile-role-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
         <option value="all">All positions</option>
@@ -1529,6 +1529,10 @@
       </select>
       <select id="profile-league-filter" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
         <option value="all">All games</option>
+      </select>
+      <select id="profile-sort" onchange="renderPlayerProfiles()" style="width:auto;padding:6px 10px;">
+        <option value="best">Best first</option>
+        <option value="worst">Worst first</option>
       </select>
     </div>
   </div>
@@ -1996,7 +2000,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.24-b158</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.24-b159</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2518,7 +2522,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.24-b158";
+const BUILD_VERSION = "2026.10.24-b159";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6751,6 +6755,7 @@ function profileFilterMatch(e, f) {
   if (!f || f === "all") return true;
   const lg = resolveLeague(e.league || "") || e.league || "";
   if (f.startsWith("t:")) { const [l, y] = f.slice(2).split("|"); return lg === l && String(e.date || "").slice(0, 4) === y; }
+  if (f.startsWith("s:")) { const [l, , a, b] = f.slice(2).split("|"); const d = String(e.date || "").slice(0, 10); return lg === l && d >= a && d <= b; }
   if (f.startsWith("l:")) return lg === f.slice(2);
   return e.league === f;                       // older saved value: a raw league name
 }
@@ -6763,6 +6768,43 @@ function ratedGames() {
     out.push(e); ids.add(e.id);
   }
   return out;
+}
+// A league's splits, read from when its games were played: a gap of 20+ days
+// without a game ends a split. Named from the event labels when they say
+// Winter/Spring/Summer, otherwise numbered. International events come out as
+// one block, so they get no split options.
+let _splitCache = null, _splitKey = "";
+function leagueSplits(lg, year) {
+  const key = _trainDirty + ":" + loadBulkEntries().length + ":" + teamAliasVersion();
+  if (!_splitCache || _splitKey !== key) {
+    _splitCache = new Map(); _splitKey = key;
+    const by = new Map();
+    for (const e of loadAllGameData()) {
+      const l = resolveLeague(e.league || "") || e.league, d = String(e.date || "").slice(0, 10);
+      if (!l || d.length < 10) continue;
+      const k = l + "|" + d.slice(0, 4);
+      if (!by.has(k)) by.set(k, []);
+      by.get(k).push({ d, ctx: String(e.eventContext || "") });
+    }
+    for (const [k, games] of by) {
+      games.sort((a, b) => (a.d < b.d ? -1 : 1));
+      const out = []; let cur = null;
+      for (const g of games) {
+        if (!cur || (new Date(g.d) - new Date(cur.to)) / 86400000 >= 20) { cur = { from: g.d, to: g.d, words: {} }; out.push(cur); }
+        cur.to = g.d;
+        const w = (g.ctx.match(/\b(winter|spring|summer|fall)\b/i) || [])[1];
+        if (w) cur.words[w.toLowerCase()] = (cur.words[w.toLowerCase()] || 0) + 1;
+      }
+      const mon = d => new Date(d + "T12:00:00").toLocaleDateString([], { month: "short" });
+      out.forEach((sp, i) => {
+        const top = Object.entries(sp.words).sort((a, b) => b[1] - a[1])[0];
+        sp.name = top ? top[0][0].toUpperCase() + top[0].slice(1) : `Split ${i + 1}`;
+        sp.span = mon(sp.from) === mon(sp.to) ? mon(sp.from) : `${mon(sp.from)}\u2013${mon(sp.to)}`;
+      });
+      _splitCache.set(k, out);
+    }
+  }
+  return _splitCache.get(lg + "|" + year) || [];
 }
 // Player average impact across games (higher = more impactful)
 function playerImpactRating(playerName, leagueFilter, entries, reviews) {
@@ -9390,9 +9432,16 @@ function renderPlayerProfiles() {
   if (lsel) {
     const cur = lsel.value;
     const opt = (v, t) => `<option value="${v}" ${v === cur ? "selected" : ""}>${t}</option>`;
+    const ratedIn = (a, b, lg) => entries.filter(e => rankedIds.has(e.id) && (resolveLeague(e.league || "") || e.league) === lg
+      && String(e.date || "").slice(0, 10) >= a && String(e.date || "").slice(0, 10) <= b).length;
     lsel.innerHTML = opt("all", "All games")
       + `<optgroup label="Tournaments">` + [...tours.values()].sort((a, b) => (a.last < b.last ? 1 : -1))
-          .map(t => opt("t:" + t.k, `${t.lg} ${t.y} (${t.n})`)).join("") + `</optgroup>`
+          .map(t => {
+            const sp = leagueSplits(t.lg, t.y);
+            const splits = sp.length > 1 ? sp.map(x => [x, ratedIn(x.from, x.to, t.lg)]).filter(([, n]) => n).reverse()
+              .map(([x, n]) => opt(`s:${t.lg}|${t.y}|${x.from}|${x.to}`, `\u00A0\u00A0\u21B3 ${t.lg} ${t.y} \u00B7 ${x.name} (${x.span}) (${n})`)).join("") : "";
+            return opt("t:" + t.k, `${t.lg} ${t.y} (${t.n})`) + splits;
+          }).join("") + `</optgroup>`
       + `<optgroup label="Leagues, every year">` + [...lgs].sort().map(l => opt("l:" + l, l)).join("") + `</optgroup>`;
     if (cur && cur !== "all" && lsel.value !== cur) lsel.value = "all";
   }
@@ -9416,11 +9465,13 @@ function renderPlayerProfiles() {
   }
 
   leagueFilter = (document.getElementById("profile-league-filter")||{}).value || "all";
-  const oneTour = leagueFilter.startsWith("t:");
+  const oneTour = leagueFilter.startsWith("t:") || leagueFilter.startsWith("s:");
+  const worstFirst = ((document.getElementById("profile-sort") || {}).value || "best") === "worst";
   // Within one tournament everyone played the same event, so the plain average
   // ranks them; the league weighting is for comparing across leagues.
   const score = r => (oneTour ? r.rawAvg : r.avg) || 0;
   let players = [...ratingCache.keys()].sort((a,b) => score(ratingCache.get(b)) - score(ratingCache.get(a)));
+  const listed = worstFirst ? [...players].reverse() : players;
 
   if (!players.length) {
     el.innerHTML = (roleFilter !== "all" || leagueFilter !== "all")
@@ -9437,7 +9488,7 @@ function renderPlayerProfiles() {
   // has, and at least 2).
   let mvpHtml = "";
   if (oneTour && !q && players.length) {
-    const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "");
+    const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s\u00A0\u21B3]+/, "");
     const most = Math.max(...players.map(n => ratingCache.get(n).games));
     const min = Math.max(2, Math.ceil(most * 0.4));
     const ok = players.filter(n => ratingCache.get(n).games >= min);
@@ -9462,10 +9513,37 @@ function renderPlayerProfiles() {
             <span style="font-weight:700;color:${impactColor(t.r.rawAvg)};">${t.r.rawAvg.toFixed(2)} <span style="font-weight:400;color:var(--muted);font-size:11px;">\u00B7 ${t.r.games}g</span></span></div>`).join("")}` : ""}
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;margin-top:10px;" onclick="navigator.clipboard.writeText(window._mvpPost||'').then(()=>{this.textContent='Copied'})">Copy</button>
       </div>`;
+      // The other end: lowest average among the same qualifying players, and
+      // the lowest per position (a position needs two qualifiers, so nobody is
+      // on both teams).
+      if (ok.length >= 2) {
+        const lvp = ok[ok.length - 1], lr = ratingCache.get(lvp);
+        const worst = ["top", "jungle", "mid", "bottom", "support"].map(role => {
+          const inRole = ok.filter(x => (roleMap[x]?.role || "") === role);
+          if (inRole.length < 2) return null;
+          const n = inRole[inRole.length - 1];
+          return { role, n, r: ratingCache.get(n) };
+        }).filter(Boolean);
+        const lpost = `My ${tName} LVP: ${lvp} (${lr.rawAvg.toFixed(2)} average impact over ${lr.games} games I ranked).`
+          + (worst.length ? ` Worst all-tournament team: ${worst.map(t => `${(ROLE_ABBR[t.role] || t.role).toUpperCase()} ${t.n}`).join(", ")}.` : "");
+        window._lvpPost = lpost;
+        mvpHtml += `<div class="card" style="margin-bottom:12px;border-color:#ff4d5e;">
+          <div style="font-size:11px;font-weight:700;color:#ff4d5e;letter-spacing:.06em;text-transform:uppercase;">\u{1F5D1} Your ${tName} LVP</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px;">
+            <span style="font-size:20px;font-weight:700;">${lvp}${playerTeamChipsHtml(lvp)}</span>
+            <span style="font-size:20px;font-weight:700;color:${impactColor(lr.rawAvg)};">${lr.rawAvg.toFixed(2)}</span></div>
+          <div style="font-size:11px;color:var(--muted);">${lr.games} games ranked \u00B7 lowest average of the ${ok.length} players with ${min}+ ranked games</div>
+          ${worst.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">Worst all-tournament team</div>
+            ${worst.map(t => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--border);font-size:13px;">
+              <span><span style="color:var(--muted);font-size:11px;display:inline-block;width:34px;">${(ROLE_ABBR[t.role] || t.role).toUpperCase()}</span>${t.n}</span>
+              <span style="font-weight:700;color:${impactColor(t.r.rawAvg)};">${t.r.rawAvg.toFixed(2)} <span style="font-weight:400;color:var(--muted);font-size:11px;">\u00B7 ${t.r.games}g</span></span></div>`).join("")}` : ""}
+          <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;margin-top:10px;" onclick="navigator.clipboard.writeText(window._lvpPost||'').then(()=>{this.textContent='Copied'})">Copy</button>
+        </div>`;
+      }
     }
   }
 
-  el.innerHTML = mvpHtml + players.map(name => {
+  el.innerHTML = mvpHtml + listed.map(name => {
     const r = ratingCache.get(name);
     if (!r) return "";
 
