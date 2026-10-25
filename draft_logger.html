@@ -2000,7 +2000,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.24-b159</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.24-b161</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2522,7 +2522,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.24-b159";
+const BUILD_VERSION = "2026.10.24-b161";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -2908,6 +2908,121 @@ function preferredHostIndex() {
 }
 
 async function apiGet(path, params = {}) {
+  const data = await apiGetRaw(path, params);
+  if (path === "/getEventDetails") { try { await fixEventSides(data); } catch (e) {} }
+  return data;
+}
+
+// ── Which team was really on blue ──────────────────────────────────────────
+// Riot's event details label each game's teams blue and red, and for some games
+// the labels are the wrong way round. The game's own feed says which team id
+// was on blue, so the event's sides are corrected from that before anything
+// reads them: the import, Live, the Log Game fill and the Model Lab all get the
+// corrected sides. Where the feed has no team id, the players' team tags
+// ("AL Tarzan") decide. A game's sides never change once it starts, so the
+// answer is kept.
+const GAME_SIDES_KEY = "draftlogger_game_sides_v1";
+let _gameSides = null;
+function gameSidesStore() {
+  if (!_gameSides) { try { _gameSides = JSON.parse(localStorage.getItem(GAME_SIDES_KEY) || "{}") || {}; } catch (e) { _gameSides = {}; } }
+  return _gameSides;
+}
+function saveGameSides() {
+  const m = gameSidesStore(), keys = Object.keys(m);
+  if (keys.length > 6000) for (const k of keys.slice(0, keys.length - 5000)) delete m[k];
+  try { localStorage.setItem(GAME_SIDES_KEY, JSON.stringify(m)); } catch (e) {}
+}
+// A player's team tag: the first word of a Riot name ("AL Tarzan" -> "AL").
+function playerTag(name) {
+  const p = String(name || "").trim().split(/\s+/);
+  return p.length >= 2 ? p[0].toUpperCase() : "";
+}
+function tagIsTeam(tag, team) {
+  if (!tag || !team) return false;
+  const t = String(team).toUpperCase().trim();
+  if (tag === t) return true;
+  try { if (teamKey(tag) && teamKey(tag) === teamKey(team)) return true; } catch (e) {}
+  // Academy rosters add a letter to the team code but not to the names.
+  return tag.length >= 2 && (t.startsWith(tag) || tag.startsWith(t)) && Math.abs(t.length - tag.length) <= 1;
+}
+const _sidePending = new Map();
+function feedBlueTeamId(gameId, teams) {
+  const id = String(gameId);
+  if (_sidePending.has(id)) return _sidePending.get(id);
+  const p = (async () => {
+    const r = await fetch(`${FEED_BASE}/window/${id}`);
+    if (!r.ok || r.status === 204) return null;
+    const t = await r.text(); if (!t) return null;
+    const meta = JSON.parse(t).gameMetadata; if (!meta) return null;
+    const known = new Set((teams || []).map(x => x.id));
+    const b = meta.blueTeamMetadata?.esportsTeamId, rd = meta.redTeamMetadata?.esportsTeamId;
+    if (b && known.has(b)) return b;
+    if (rd && known.has(rd)) return (teams.find(x => x.id !== rd) || {}).id || null;
+    // No team ids: go by the blue players' tags.
+    const tags = (meta.blueTeamMetadata?.participantMetadata || []).map(x => playerTag(x.summonerName));
+    for (const tm of teams || []) if (tags.filter(tg => tagIsTeam(tg, tm.code)).length >= 3) return tm.id;
+    return null;
+  })().catch(() => null).finally(() => _sidePending.delete(id));
+  _sidePending.set(id, p);
+  return p;
+}
+async function fixEventSides(det) {
+  const match = det && det.data && det.data.event && det.data.event.match;
+  if (!match || !Array.isArray(match.games) || (match.teams || []).length !== 2) return det;
+  const store = gameSidesStore();
+  let learned = false;
+  await Promise.all(match.games.map(async g => {
+    if (g.state !== "completed" && g.state !== "inProgress") return;
+    const bl = (g.teams || []).find(t => t.side === "blue"), rd = (g.teams || []).find(t => t.side === "red");
+    if (!bl || !rd) return;
+    let truth = store[g.id];
+    if (!truth) {
+      truth = await feedBlueTeamId(g.id, match.teams);
+      if (truth) { store[g.id] = truth; learned = true; }
+    }
+    if (truth && truth === rd.id && truth !== bl.id) { bl.side = "red"; rd.side = "blue"; g.sidesCorrected = true; }
+  }));
+  if (learned) saveGameSides();
+  return det;
+}
+
+// Stored games imported before the sides were checked: where both teams'
+// players carry the other team's tag, the labels were swapped. The players and
+// champions came from the game itself and are right; the team names swap, and
+// the result flips with them so the same team keeps the win. A result that was
+// only worked out (not certain) is marked for the series to be read again.
+function repairSwappedSides() {
+  const bulk = loadBulkEntries();
+  let n = 0;
+  const keys = [];
+  const fixed = bulk.map(e => {
+    const bp = e.players?.blue || [], rp = e.players?.red || [];
+    if (bp.length < 4 || rp.length < 4 || !e.blueTeam || !e.redTeam) return e;
+    const bt = bp.map(playerTag), rt = rp.map(playerTag);
+    const blueLooksRed = bt.filter(t => tagIsTeam(t, e.redTeam)).length, blueLooksBlue = bt.filter(t => tagIsTeam(t, e.blueTeam)).length;
+    const redLooksBlue = rt.filter(t => tagIsTeam(t, e.blueTeam)).length, redLooksRed = rt.filter(t => tagIsTeam(t, e.redTeam)).length;
+    if (!(blueLooksRed >= 3 && redLooksBlue >= 3 && blueLooksBlue <= 1 && redLooksRed <= 1)) return e;
+    n++;
+    keys.push(loggedGameKey(e.date, e.blueTeam, e.redTeam), loggedGameKey(e.date, resolveTeam(e.blueTeam), resolveTeam(e.redTeam)));
+    const flip = w => w === "blue" ? "red" : w === "red" ? "blue" : w;
+    const out = { ...e, blueTeam: e.redTeam, redTeam: e.blueTeam, actualWinner: flip(e.actualWinner), sidesRepaired: Date.now() };
+    if (out.actualWinner && e.winnerConfidence && e.winnerConfidence !== "certain" && e.winnerConfidence !== "verified") out.winnerConfidence = "inferred";
+    return out;
+  });
+  if (!n) return 0;
+  saveBulkToDB(fixed);
+  // Let the series be read again now rather than after the weekly cooldown.
+  try {
+    const k = "draftlogger_recheck_done_v1", done = JSON.parse(localStorage.getItem(k) || "{}") || {};
+    for (const x of keys) delete done[x];
+    localStorage.setItem(k, JSON.stringify(done));
+  } catch (e) {}
+  invalidateDerivedCaches();
+  console.info("[sides] swapped team labels back on", n, "imported games");
+  return n;
+}
+
+async function apiGetRaw(path, params = {}) {
   const build = base => {
     const url = new URL(base + path);
     url.searchParams.set("hl", "en-US");
@@ -9504,7 +9619,7 @@ function renderPlayerProfiles() {
       mvpHtml = `<div class="card" style="margin-bottom:12px;border-color:var(--yellow);">
         <div style="font-size:11px;font-weight:700;color:var(--yellow);letter-spacing:.06em;text-transform:uppercase;">\u{1F3C6} Your ${tName} MVP</div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px;">
-          <span style="font-size:20px;font-weight:700;">${mvp}${playerTeamChipsHtml(mvp)}</span>
+          <span style="font-size:20px;font-weight:700;">${mvp}</span>
           <span style="font-size:20px;font-weight:700;color:${impactColor(mr.rawAvg)};">${mr.rawAvg.toFixed(2)}</span></div>
         <div style="font-size:11px;color:var(--muted);">${mr.games} games ranked \u00B7 players need ${min}+ ranked games to count</div>
         ${team.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">All-tournament team</div>
@@ -9530,7 +9645,7 @@ function renderPlayerProfiles() {
         mvpHtml += `<div class="card" style="margin-bottom:12px;border-color:#ff4d5e;">
           <div style="font-size:11px;font-weight:700;color:#ff4d5e;letter-spacing:.06em;text-transform:uppercase;">\u{1F5D1} Your ${tName} LVP</div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px;">
-            <span style="font-size:20px;font-weight:700;">${lvp}${playerTeamChipsHtml(lvp)}</span>
+            <span style="font-size:20px;font-weight:700;">${lvp}</span>
             <span style="font-size:20px;font-weight:700;color:${impactColor(lr.rawAvg)};">${lr.rawAvg.toFixed(2)}</span></div>
           <div style="font-size:11px;color:var(--muted);">${lr.games} games ranked \u00B7 lowest average of the ${ok.length} players with ${min}+ ranked games</div>
           ${worst.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">Worst all-tournament team</div>
@@ -9580,7 +9695,7 @@ function renderPlayerProfiles() {
                 border:1px solid var(--border);border-radius:4px;padding:1px 5px;vertical-align:middle;"
                 title="${Object.entries(rm.all).map(([k,v]) => `${k}: ${v}`).join(", ")}">${
                   (ROLE_ABBR[rm.role] || rm.role).toUpperCase()}${mixed ? "*" : ""}</span>`;
-            })()}${playerTeamChipsHtml(name)}</div>
+            })()}</div>
             <div style="font-size:11px;color:var(--muted);">${r.games} game${r.games!==1?"s":""} rated</div>
           </div>
           <div style="text-align:right;margin-right:8px;">
@@ -24372,6 +24487,7 @@ function resolveSeriesWinners(rows, seriesWinnerCode, seriesLoserCode, winW, win
 }
 
 async function runAutoLog(silent = true) {
+  try { repairSwappedSides(); } catch (e) {}
   const s = loadAutoLogSettings();
   if (!s.enabled) return;
 
@@ -30082,6 +30198,7 @@ loadBulkFromDB().then(() => {
   // to be opened.
   setTimeout(() => { try { runCoverageReport(); } catch(e) {} }, 1500);
   setTimeout(() => { try { runRepairQueue(); } catch(e) {} }, 6000);
+  setTimeout(() => { try { repairSwappedSides(); } catch(e) {} }, 2500);
   try { updatePendingBadge(); } catch(e) {}
 });
 loadLiveGames();
@@ -31176,7 +31293,9 @@ LAB.VARIANTS.push(
       try {
         const res = await fetch(h + path + (path.includes("?") ? "&" : "?") + "hl=en-US", { headers: { "x-api-key": API_KEY } });
         if (!res.ok) throw new Error("schedule HTTP " + res.status);
-        return await res.json();
+        const data = await res.json();
+        if (path.startsWith("/getEventDetails") && typeof fixEventSides === "function") { try { await fixEventSides(data); } catch (e) {} }
+        return data;
       } catch (e) { last = e; }
     }
     throw last;
