@@ -464,10 +464,12 @@
   .mh-tn { width:52px;flex:none;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
   .mh-ic { width:28px;height:28px; }
   .mh-rbtn { padding:3px 8px;margin-left:auto; }
+  .mh-gfix { width:22px;flex:none;font-size:10px;color:var(--muted);background:none;border:none;padding:0;cursor:pointer;text-align:left;text-decoration:underline dotted;text-underline-offset:2px; }
+  .mh-gfix.on { color:var(--blue); } .mh-gfix.fixed { color:var(--green); }
   .mh-rl-short { display:none; }
   @media (max-width:560px) {
     .mh-grow { gap:3px;padding:5px 8px; }
-    .mh-grow > span:first-child { width:16px !important; }
+    .mh-grow > span:first-child, .mh-gfix { width:16px !important; }
     .mh-tn { width:30px; }
     .mh-ic { width:min(24px, calc((100vw - 200px) / 10));height:min(24px, calc((100vw - 200px) / 10)); }
     .mh-rbtn { padding:3px 5px;min-width:26px; }
@@ -2000,7 +2002,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.28-b170</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.29-b171</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2534,7 +2536,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.28-b170";
+const BUILD_VERSION = "2026.10.29-b171";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -3009,7 +3011,7 @@ function repairSwappedSides() {
   const keys = [];
   const fixed = bulk.map(e => {
     const bp = e.players?.blue || [], rp = e.players?.red || [];
-    if (bp.length < 4 || rp.length < 4 || !e.blueTeam || !e.redTeam) return e;
+    if (e.manual || bp.length < 4 || rp.length < 4 || !e.blueTeam || !e.redTeam) return e;
     const bt = bp.map(playerTag), rt = rp.map(playerTag);
     const blueLooksRed = bt.filter(t => tagIsTeam(t, e.redTeam)).length, blueLooksBlue = bt.filter(t => tagIsTeam(t, e.blueTeam)).length;
     const redLooksBlue = rt.filter(t => tagIsTeam(t, e.blueTeam)).length, redLooksRed = rt.filter(t => tagIsTeam(t, e.redTeam)).length;
@@ -8103,14 +8105,14 @@ function renderMatchHistory() {
         const blueWon = e.actualWinner === "blue";
         const dimB = !hide && !blueWon, dimR = !hide && blueWon;
         return `<div class="mh-grow">
-          <span style="width:22px;flex:none;font-size:10px;color:${e.gameNumber ? "var(--muted)" : "var(--border)"};">G${gameNum}</span>
+          <button class="mh-gfix${_mhEditOpen.has(e.id) ? " on" : ""}${e.manual ? " fixed" : ""}" onclick="mhToggleEdit('${mhJsId(e.id)}')" title="Correct this game">G${gameNum}</button>
           <span class="mh-tn" style="text-align:right;color:var(--blue);">${e.blueTeam}</span>
           ${mhDraftBlock(bc, dimB)}
           <span style="flex:none;font-size:10px;color:var(--muted);">${hide ? "vs" : (blueWon ? "◀" : "▶")}</span>
           ${mhDraftBlock(rc, dimR)}
           <span class="mh-tn" style="color:var(--red);">${e.redTeam}</span>
 ${mhRateBtnHtml(e)}
-        </div>${_mhRateOpen.has(e.id) ? `<div class="mh-rate" id="mh-rate-${mhSafeId(e.id)}">${mhRatePanelHtml(e)}</div>` : ""}`;
+        </div>${_mhEditOpen.has(e.id) ? `<div class="mh-rate">${mhEditPanelHtml(e)}</div>` : ""}${_mhRateOpen.has(e.id) ? `<div class="mh-rate" id="mh-rate-${mhSafeId(e.id)}">${mhRatePanelHtml(e)}</div>` : ""}`;
       }).join("")}
     </div>`;
   }).join("") +
@@ -8125,6 +8127,62 @@ ${mhRateBtnHtml(e)}
 // shows who won, so it works with winners hidden.
 let _mhById = new Map();
 const _mhRateOpen = new Set();
+
+// ── Correcting a game from Match history ───────────────────────────────────
+// Tap a game's number. Riot doesn't say who won each game of a series, so the
+// importer works that out; when it's wrong you set it here. A corrected game is
+// marked yours: imports, repairs and the series checks never change it again,
+// and it syncs like any other edit. A removed game isn't re-imported.
+const _mhEditOpen = new Set();
+function mhToggleEdit(id) {
+  if (_mhEditOpen.has(id)) _mhEditOpen.delete(id); else _mhEditOpen.add(id);
+  renderMatchHistory();
+}
+function mhStored(id) {
+  const p = loadEntries().find(x => x.id === id);
+  if (p) return { e: p, bulk: false };
+  const b = loadBulkEntries().find(x => x.id === id);
+  return b ? { e: b, bulk: true } : null;
+}
+function mhSaveStored(id, change) {
+  const hit = mhStored(id); if (!hit) return;
+  if (hit.bulk) {
+    saveBulkToDB(loadBulkEntries().flatMap(x => x.id !== id ? [x] : change === null ? [] : [change({ ...x })]));
+  } else {
+    const list = loadEntries().flatMap(x => x.id !== id ? [x] : change === null ? [] : [change({ ...x })]);
+    saveEntries(list);
+    if (hit.e.bet) { try { rebuildBankrollFromBets(); } catch (err) {} }
+  }
+  invalidateDerivedCaches();
+  try { autoSync(); } catch (err) {}
+  renderMatchHistory();
+}
+function mhSetWinner(id, side) {
+  mhSaveStored(id, x => ({ ...x, actualWinner: side, winnerConfidence: "verified", winnerSource: "manual", manual: Date.now() }));
+}
+function mhSwapSides(id) {
+  mhSaveStored(id, x => ({ ...x, blueTeam: x.redTeam, redTeam: x.blueTeam, manual: Date.now() }));
+}
+function mhRemoveGame(id) {
+  if (!confirm("Remove this game from your data? It won't be imported again.")) return;
+  _mhEditOpen.delete(id);
+  mhSaveStored(id, null);
+}
+function mhEditPanelHtml(e) {
+  const id = mhJsId(e.id);
+  const btn = (on, label, click) => `<button onclick="${click}" class="btn ${on ? "btn-primary" : "btn-ghost"}" style="font-size:12px;padding:5px 10px;">${label}</button>`;
+  return `<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Correct game ${e.gameNumber || ""}${e.manual ? ` \u00B7 <span style="color:var(--green);">corrected by you</span>` : ""}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px;">
+      <span style="font-size:12px;margin-right:2px;">Winner:</span>
+      ${btn(e.actualWinner === "blue", `${e.blueTeam} (blue)`, `mhSetWinner('${id}','blue')`)}
+      ${btn(e.actualWinner === "red", `${e.redTeam} (red)`, `mhSetWinner('${id}','red')`)}
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      ${btn(false, "\u21C4 Swap team names", `mhSwapSides('${id}')`)}
+      ${btn(false, "Remove game", `mhRemoveGame('${id}')`)}
+    </div>
+    <div style="font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5;">Swap the team names if the drafts are right but the teams are on the wrong side. Your corrections are kept: imports and repairs won't change this game again.</div>`;
+}
 const mhSafeId = id => String(id).replace(/[^\w-]/g, "_");
 const mhJsId = id => String(id).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 function mhRoster(e) {
@@ -24990,6 +25048,7 @@ async function runAutoLog(silent = true) {
 
         for (const r of rows) {
           if (r.stored || !r.winner) continue;
+          if (loadBulkTombstones()["riot_" + r.g.id]) continue;   // you removed it
           if (recheck.has(loggedGameKey(date, r.bc, r.rc)) || date < normalCutoff) repairAdded++;
           unsaved.push({
             id: "riot_" + r.g.id,
