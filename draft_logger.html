@@ -2000,7 +2000,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.28-b169</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.28-b170</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2534,7 +2534,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.28-b169";
+const BUILD_VERSION = "2026.10.28-b170";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -9703,6 +9703,35 @@ function renderPlayerProfiles() {
   // completed best-of-five.
   if (oneTour && !q) { try { mvpHtml += finalsMvpHtml(leagueFilter, reviews); } catch (e) {} }
 
+  // Every ranking for one player, newest first: date, event, who they played,
+  // what they played and the rank you gave them. Results follow the spoiler
+  // setting.
+  const entryMap = new Map(entries.map(e => [e.id, e]));
+  const showResults = spoilersOn();
+  const allRatingsHtml = (name, r) => {
+    const rows = [...r.ranked].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).map(x => {
+      const e = entryMap.get(x.entryId) || {};
+      const side = (e.players?.blue || []).includes(name) ? "blue" : (e.players?.red || []).includes(name) ? "red" : null;
+      const team = side === "blue" ? e.blueTeam : side === "red" ? e.redTeam : "";
+      const opp = side === "blue" ? e.redTeam : side === "red" ? e.blueTeam : `${e.blueTeam || "?"} vs ${e.redTeam || "?"}`;
+      const idx = side ? (e.players[side] || []).indexOf(name) : -1;
+      const champ = idx >= 0 ? ((e.champions?.[side] || [])[idx] || "") : "";
+      const won = side && e.actualWinner ? e.actualWinner === side : null;
+      const img = champ ? championImg(champ) : "";
+      return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--border);font-size:12px;">
+        <span style="width:40px;flex:none;color:var(--muted);font-size:11px;">${x.date ? new Date(String(x.date).slice(0, 10) + "T12:00:00").toLocaleDateString([], { month: "short", day: "numeric" }) : ""}</span>
+        ${img ? `<img src="${img}" alt="" title="${champ}" style="width:20px;height:20px;border-radius:4px;flex:none;" onerror="this.style.visibility='hidden'">` : `<span style="width:20px;flex:none;"></span>`}
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+          ${side ? `vs <b>${opp}</b>` : opp}${champ ? ` <span style="color:var(--muted);">\u00B7 ${champ}</span>` : ""}
+          ${e.gameNumber ? `<span style="color:var(--muted);"> \u00B7 G${e.gameNumber}</span>` : ""}</span>
+        ${showResults && won !== null ? `<span style="flex:none;font-size:10px;font-weight:700;color:${won ? "var(--green)" : "#ff4d5e"};">${won ? "W" : "L"}</span>` : ""}
+        <span style="flex:none;width:22px;text-align:right;font-weight:700;color:${impactColor(x.rank)};">${x.rank}</span></div>`;
+    }).join("");
+    return `<details style="margin-top:10px;" onclick="event.stopPropagation()">
+      <summary style="font-size:11px;color:var(--blue);cursor:pointer;">All ratings (${r.ranked.length})</summary>
+      <div style="margin-top:4px;">${rows}</div></details>`;
+  };
+
   el.innerHTML = mvpHtml + listed.map(name => {
     const r = ratingCache.get(name);
     if (!r) return "";
@@ -9755,6 +9784,7 @@ function renderPlayerProfiles() {
             ${recentHtml}
           </div>
           ${leagueHtml ? `<div style="margin-top:10px;"><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">By league:</div>${leagueHtml}</div>` : ""}
+          ${allRatingsHtml(name, r)}
         </div>
       </div>`;
   }).join("");
