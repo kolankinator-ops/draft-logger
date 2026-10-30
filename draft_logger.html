@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.30-b177</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.30-b178</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.30-b177";
+const BUILD_VERSION = "2026.10.30-b178";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -8006,7 +8006,9 @@ function mhGames() {
   const q = ((document.getElementById("mh-search") || {}).value || "").trim().toLowerCase();
   const out = [];
   for (const e of loadAllGameData()) {
-    if (e.isStandaloneBet || !e.actualWinner) continue;
+    // A game with no known winner is still a game: it's listed (marked ?) so
+    // you can set the result, instead of quietly disappearing.
+    if (e.isStandaloneBet) continue;
     if (!entryInScope(e)) continue;
     if (!matchesPatchFilter(e)) continue;
     const day = localDayKey(e.date);
@@ -8111,6 +8113,7 @@ function renderMatchHistory() {
     const labelA = first.blueTeam, labelB = first.redTeam;
     let wA = 0, wB = 0;
     for (const g of games) {
+      if (g.e.actualWinner !== "blue" && g.e.actualWinner !== "red") continue;
       const winnerKey = g.e.actualWinner === "blue" ? teamKey(g.e.blueTeam) : teamKey(g.e.redTeam);
       if (winnerKey === kA) wA++; else if (winnerKey === kB) wB++;
     }
@@ -8130,13 +8133,13 @@ function renderMatchHistory() {
         <span style="font-size:10px;color:var(--muted);flex:none;">${patchLabel(first)}</span>
       </div>
       ${games.map(({ e, bc, rc, gameNum }) => {
-        const blueWon = e.actualWinner === "blue";
+        const blueWon = e.actualWinner === "blue", noResult = e.actualWinner !== "blue" && e.actualWinner !== "red";
         const dimB = !hide && !blueWon, dimR = !hide && blueWon;
         return `<div class="mh-grow">
           <button class="mh-gfix${_mhEditOpen.has(e.id) ? " on" : ""}${e.manual ? " fixed" : ""}" onclick="mhToggleEdit('${mhJsId(e.id)}')" title="Correct this game">G${gameNum}</button>
           <span class="mh-tn" style="text-align:right;color:var(--blue);">${e.blueTeam}</span>
           ${mhDraftBlock(bc, dimB)}
-          <span style="flex:none;font-size:10px;color:var(--muted);">${hide ? "vs" : (blueWon ? "◀" : "▶")}</span>
+          <span style="flex:none;font-size:10px;color:${noResult ? "var(--yellow)" : "var(--muted)"};" title="${noResult ? "Result unknown \u2014 tap the game number to set it" : ""}">${noResult ? "?" : hide ? "vs" : (blueWon ? "◀" : "▶")}</span>
           ${mhDraftBlock(rc, dimR)}
           <span class="mh-tn" style="color:var(--red);">${e.redTeam}</span>
 ${mhRateBtnHtml(e)}
@@ -8144,7 +8147,7 @@ ${mhRateBtnHtml(e)}
       }).join("")}
     </div>`;
   }).join("") +
-  (rows.length > 400 ? `<div style="font-size:11px;color:var(--muted);padding:8px 0;">Showing the most recent ${rows.length} games. Narrow the range or search to see further back.</div>` : "");
+  (rows.length > 400 ? `<div style="font-size:11px;color:var(--muted);padding:8px 0;">Showing the most recent ${rows.length} games. Narrow the range or search to see further back.</div>` : "") + mhRemovedHtml();
   for (const id of _mhRateOpen) if (_mhById.has(id)) mhFindVod(id);
 }
 
@@ -8194,7 +8197,33 @@ function mhSwapSides(id) {
 function mhRemoveGame(id) {
   if (!confirm("Remove this game from your data? It won't be imported again.")) return;
   _mhEditOpen.delete(id);
+  const hit = mhStored(id);
+  const r = removedByYou();
+  r[id] = { at: Date.now(), label: hit ? `${hit.e.blueTeam} vs ${hit.e.redTeam} \u00B7 G${hit.e.gameNumber || "?"} \u00B7 ${String(hit.e.date || "").slice(0, 10)}` : id };
+  try { localStorage.setItem(REMOVED_KEY, JSON.stringify(r)); } catch (e) {}
   mhSaveStored(id, null);
+}
+// Games you removed by hand (they stay out of imports), plus every imported
+// game deleted recently for any reason, each with a way back.
+const REMOVED_KEY = "draftlogger_removed_games_v1";
+function removedByYou() { try { return JSON.parse(localStorage.getItem(REMOVED_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function restoreRemovedGame(id) {
+  const r = removedByYou(); delete r[id];
+  try { localStorage.setItem(REMOVED_KEY, JSON.stringify(r)); } catch (e) {}
+  const t = loadBulkTombstones(); delete t[id]; saveBulkTombstones(t);
+  try { localStorage.removeItem("draftlogger_autolog_local_run"); } catch (e) {}
+  renderMatchHistory();
+  try { autoLogTick("restore"); } catch (e) {}
+}
+function mhRemovedHtml() {
+  const t = loadBulkTombstones(), mine = removedByYou(), week = Date.now() - 14 * 86400000;
+  const ids = Object.keys(t).filter(id => /^riot_\d/.test(id) && t[id] > week).sort((a, b) => t[b] - t[a]).slice(0, 30);
+  if (!ids.length) return "";
+  return `<details style="margin:12px 0;font-size:12px;"><summary style="cursor:pointer;color:var(--muted);">Recently removed games (${ids.length})</summary>
+    <div style="margin-top:6px;">${ids.map(id => `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--border);">
+      <span>${(mine[id] && mine[id].label) || id}<span style="color:var(--muted);"> \u00B7 ${mine[id] ? "removed by you" : "removed automatically"} ${new Date(t[id]).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span></span>
+      <button class="btn btn-ghost" style="font-size:11px;padding:3px 9px;flex:none;" onclick="restoreRemovedGame('${id}')">Bring back</button></div>`).join("")}
+    <div style="color:var(--muted);font-size:11px;margin-top:6px;">A game you bring back is fetched again from Riot within a minute or two while the site is open.</div></div></details>`;
 }
 function mhEditPanelHtml(e) {
   const id = mhJsId(e.id);
@@ -13318,7 +13347,7 @@ function autoDedupeBulk() {
   try {
     const personal = loadEntries();
     const pKeys = new Set();
-    for (const e of personal) { pKeys.add(dupCleanKey(e)); pKeys.add(dedupKey(e)); }
+    for (const e of personal) { if (e.isStandaloneBet) continue; pKeys.add(dupCleanKey(e)); pKeys.add(dedupKey(e)); }
     const drop = new Set();
     let ofPersonal = 0;
     // Same Riot game under two ids.
@@ -13814,6 +13843,7 @@ function loggedGameKey(date, a, b) {
 function buildLoggedGameIndex() {
   const idx = new Map();
   for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet) continue;
     const b = resolveTeam(e.blueTeam) || "";
     const r = resolveTeam(e.redTeam)  || "";
     const d = String(e.date || "").slice(0, 10);
@@ -23237,7 +23267,8 @@ function syncSettingsKeys() {
     scheduleLeagues: SCHEDULE_LEAGUES_KEY,
     scheduleView:    SCHED_VIEW_KEY,
     notifications:   NOTIF_KEY,
-    coaches:         COACH_KEY
+    coaches:         COACH_KEY,
+    removedGames:    REMOVED_KEY
   };
 }
 
@@ -23246,7 +23277,7 @@ function syncSettingsKeys() {
 // wiped must not be able to wipe every other device through sync.
 const SYNC_PROTECTED = new Set(["players", "reviews", "tierConfig", "manualStandings", "todayPlan", "bankroll",
   "factorWeights", "annotations", "champWatch", "favorites", "teamNotes", "manualSchedule", "teamRegistry",
-  "teamAliasLog", "teamLabels", "coaches"]);
+  "teamAliasLog", "teamLabels", "coaches", "removedGames"]);
 function syncBlank(raw) {
   const t = String(raw == null ? "" : raw).trim();
   return t === "" || t === "{}" || t === "[]" || t === "null" || t === '""';
@@ -25310,7 +25341,7 @@ async function runAutoLog(silent = true) {
 
         for (const r of rows) {
           if (r.stored || !r.winner) continue;
-          if (loadBulkTombstones()["riot_" + r.g.id]) continue;   // you removed it
+          if (removedByYou()["riot_" + r.g.id]) continue;   // you removed it
           if (recheck.has(loggedGameKey(date, r.bc, r.rc)) || date < normalCutoff) repairAdded++;
           unsaved.push({
             id: "riot_" + r.g.id,
