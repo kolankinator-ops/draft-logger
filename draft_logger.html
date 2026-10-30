@@ -464,6 +464,16 @@
   .mh-tn { width:52px;flex:none;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
   .mh-ic { width:28px;height:28px; }
   .mh-rbtn { padding:3px 8px;margin-left:auto; }
+  .td-head, .td-row { display:grid;grid-template-columns:minmax(0,1fr) 76px 76px;gap:8px;align-items:center; }
+  .td-head { font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:0 0 6px; }
+  .td-head span:not(:first-child) { text-align:right; }
+  .td-row { padding:8px 0;border-top:1px solid var(--border); }
+  .td-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end; }
+  .td-num b { font-size:15px;font-variant-numeric:tabular-nums; } .td-num span { font-size:10px;color:var(--muted); }
+  .mh-draft { display:flex;gap:4px;flex-wrap:wrap; }
+  .mh-draft button { flex:1 1 0;min-width:52px;font-size:11px;padding:5px 4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .mh-draft button.b { color:var(--blue); } .mh-draft button.r { color:var(--red); }
+  .mh-draft button.on { background:var(--blue-dim);border-color:var(--blue);font-weight:700; }
   .mh-gfix { width:22px;flex:none;font-size:10px;color:var(--muted);background:none;border:none;padding:0;cursor:pointer;text-align:left;text-decoration:underline dotted;text-underline-offset:2px; }
   .mh-gfix.on { color:var(--blue); } .mh-gfix.fixed { color:var(--green); }
   .mh-rl-short { display:none; }
@@ -650,9 +660,9 @@
 <div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts');closeDrawer()">🎯 Team drafts</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts')">🎯 Team drafts</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -1517,6 +1527,24 @@
 </div>
 
 <!-- PLAYER PROFILES -->
+<div class="screen" id="screen-teamdrafts">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:15px;font-weight:600;white-space:nowrap;">🎯 Team drafts</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <select id="td-filter" onchange="renderTeamDrafts()" style="width:auto;padding:6px 10px;"><option value="all">All games</option></select>
+      <select id="td-view" onchange="renderTeamDrafts()" style="width:auto;padding:6px 10px;">
+        <option value="teams">By team</option><option value="coaches">By coach</option></select>
+      <select id="td-sort" onchange="renderTeamDrafts()" style="width:auto;padding:6px 10px;">
+        <option value="mine">Sort: your ratings</option><option value="model">Sort: model</option></select>
+    </div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px;">
+    <b>Your rating</b>: your draft reads (−2 to +2) from Log Game, Review drafts and Match history, from that team's point of view: +2 means you rated their draft much better.
+    <b>Model</b>: how much the champions moved the Model Lab's win chance for that team, compared with its call before the draft, in percentage points.
+  </div>
+  <div id="td-list"></div>
+</div>
+
 <div class="screen" id="screen-players">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
     <div style="font-size:15px;font-weight:600;white-space:nowrap;">Player profiles</div>
@@ -2002,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.29-b171</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.30-b176</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2536,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.29-b171";
+const BUILD_VERSION = "2026.10.30-b176";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -5084,7 +5112,7 @@ function loadingNoteHtml() {
 function rerenderActiveScreen() {
   const el = document.querySelector(".screen.active");
   const id = el && el.id ? el.id.replace(/^screen-/, "") : "";
-  const fns = { champions: "renderChampions", players: "renderPlayerProfiles", scouting: "renderScouting", findings: "renderFindings", teams: "renderTeamsList",
+  const fns = { champions: "renderChampions", players: "renderPlayerProfiles", teamdrafts: "renderTeamDrafts", scouting: "renderScouting", findings: "renderFindings", teams: "renderTeamsList",
                 scores: "renderScores", mhistory: "renderMatchHistory", home: "renderHome",
                 stats: "renderStats", betstats: "renderBetStats", bets: "renderBets",
                 results: "renderPending", draftreview: "renderReviewCard", today: "renderTodayGames",
@@ -8181,7 +8209,60 @@ function mhEditPanelHtml(e) {
       ${btn(false, "\u21C4 Swap team names", `mhSwapSides('${id}')`)}
       ${btn(false, "Remove game", `mhRemoveGame('${id}')`)}
     </div>
-    <div style="font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5;">Swap the team names if the drafts are right but the teams are on the wrong side. Your corrections are kept: imports and repairs won't change this game again.</div>`;
+    <div style="font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.5;">Swap the team names if the drafts are right but the teams are on the wrong side. Your corrections are kept: imports and repairs won't change this game again.</div>
+    <div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Log a bet on this game</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px;" id="mhbet-team-${mhSafeId(e.id)}">
+        <span style="font-size:12px;">On:</span>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="mhBetPick(this,'${id}','blue')">${e.blueTeam}</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;" onclick="mhBetPick(this,'${id}','red')">${e.redTeam}</button>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <input type="number" step="0.01" min="1.01" placeholder="Odds" id="mhbet-odds-${mhSafeId(e.id)}" style="width:90px;">
+        <input type="number" step="0.01" min="0.01" placeholder="Stake $" id="mhbet-stake-${mhSafeId(e.id)}" style="width:90px;">
+        <button class="btn btn-primary" style="font-size:12px;padding:6px 12px;" onclick="mhSaveBet('${id}')">Save bet</button>
+      </div>
+      <div id="mhbet-msg-${mhSafeId(e.id)}" style="font-size:11px;margin-top:6px;min-height:14px;"></div>
+    </div>`;
+}
+// A bet on a game you didn't log: saved like a standalone bet (it counts in
+// your bankroll and Bet Stats, not in the model), with the result taken from
+// the game when it's known.
+const _mhBetSide = new Map();
+function mhBetPick(btn, id, side) {
+  _mhBetSide.set(id, side);
+  btn.parentElement.querySelectorAll("button").forEach(b => { b.classList.remove("btn-primary"); b.classList.add("btn-ghost"); });
+  btn.classList.remove("btn-ghost"); btn.classList.add("btn-primary");
+}
+function mhSaveBet(id) {
+  const k = mhSafeId(id), msg = document.getElementById("mhbet-msg-" + k);
+  const say = (t, c) => { if (msg) { msg.textContent = t; msg.style.color = c || "var(--muted)"; } };
+  const side = _mhBetSide.get(id);
+  const odds = parseFloat((document.getElementById("mhbet-odds-" + k) || {}).value);
+  const stake = parseFloat((document.getElementById("mhbet-stake-" + k) || {}).value);
+  if (!side) return say("Pick the team you bet on.", "#ff4d5e");
+  if (!odds || odds <= 1) return say("Enter the odds (more than 1).", "#ff4d5e");
+  if (!stake || stake <= 0) return say("Enter the stake.", "#ff4d5e");
+  const e = _mhById.get(id) || (mhStored(id) || {}).e; if (!e) return;
+  const on = side === "blue" ? e.blueTeam : e.redTeam, against = side === "blue" ? e.redTeam : e.blueTeam;
+  const won = e.actualWinner ? e.actualWinner === side : null;
+  const entry = {
+    id: "sb_" + Date.now(), date: String(e.date || "").slice(0, 10) || localDateStr(), league: e.league || "",
+    eventContext: e.eventContext || "", gameNumber: e.gameNumber || null, forGame: e.id,
+    blueTeam: on, redTeam: against, champions: { blue: [], red: [] }, players: { blue: [], red: [] },
+    predWinner: "blue", predConf: null, modelPct: null, draftPref: null, skillAdv: null,
+    execDemand: { blue: null, red: null }, notes: `Game ${e.gameNumber || ""} bet, logged from Match history`.replace("Game  ", "Game "),
+    actualWinner: won === null ? null : (won ? "blue" : "red"), watched: false, isBulkImport: false,
+    isStandaloneBet: true, bet: { on: "blue", against: "red", odds, stake, valueBet: false },
+    winnerConfidence: won === null ? null : "verified",
+  };
+  if (won !== null) { try { applyBetResultToBankroll(entry); } catch (err) {} }
+  const entries = loadEntries(); entries.unshift(entry); saveEntries(entries);
+  try { autoSync(); } catch (err) {}
+  const profit = won === null ? null : won ? stake * (odds - 1) : -stake;
+  say(profit === null ? "\u2713 Saved \u2014 it settles when the result comes in." : `\u2713 Saved \u2014 ${profit >= 0 ? "+" : "\u2212"}$${Math.abs(profit).toFixed(2)}`,
+      profit === null ? "var(--muted)" : profit >= 0 ? "var(--green)" : "#ff4d5e");
+  ["mhbet-odds-", "mhbet-stake-"].forEach(p => { const x = document.getElementById(p + k); if (x) x.value = ""; });
 }
 const mhSafeId = id => String(id).replace(/[^\w-]/g, "_");
 const mhJsId = id => String(id).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
@@ -8203,7 +8284,43 @@ function mhToggleRate(id) {
   if (_mhRateOpen.has(id)) _mhRateOpen.delete(id); else _mhRateOpen.add(id);
   renderMatchHistory();
 }
+// Your draft read for a game: on the game itself if you logged it, otherwise in
+// your draft-review store (the same place Review drafts writes). Negative means
+// blue's draft was better, positive red's, the scale used everywhere else.
+function draftReadOf(e, ann) {
+  if (!e) return null;
+  if (!e.isBulkImport && e.draftPref != null) return e.draftPref;
+  const a = (ann || loadAnnotations())[gameKey(e)];
+  return a && a.draftPref != null ? a.draftPref : null;
+}
+function setDraftRead(id, v) {
+  const p = loadEntries().find(x => x.id === id);
+  if (p) {
+    saveEntries(loadEntries().map(x => x.id === id ? { ...x, draftPref: v } : x));
+  } else {
+    const e = loadBulkEntries().find(x => x.id === id); if (!e) return;
+    const ann = loadAnnotations(), k = gameKey(e);
+    const cur = ann[k] || {};
+    if (v === null) { delete cur.draftPref; }
+    else Object.assign(cur, { draftPref: v, actualWinner: e.actualWinner || cur.actualWinner, knewResult: spoilersOn(), at: Date.now(), via: "history" });
+    ann[k] = cur;
+    saveAnnotations(ann);
+  }
+  invalidateDerivedCaches();
+  try { autoSync(); } catch (err) {}
+  mhRepaint(id);
+}
+function mhDraftRowHtml(e) {
+  const v = draftReadOf(e), id = mhJsId(e.id);
+  const opts = [[-2, `${e.blueTeam} ++`], [-1, `${e.blueTeam} +`], [0, "Even"], [1, `${e.redTeam} +`], [2, `${e.redTeam} ++`]];
+  return `<div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Whose draft was better?</div>
+    <div class="mh-draft">${opts.map(([n, label]) => `<button onclick="setDraftRead('${id}', ${v === n ? "null" : n})"
+      class="${v === n ? "on" : ""} ${n < 0 ? "b" : n > 0 ? "r" : ""}">${label}</button>`).join("")}</div>`;
+}
 function mhRatePanelHtml(e) {
+  return mhDraftRowHtml(e) + `<div style="height:10px;"></div>` + mhPlayerRanksHtml(e);
+}
+function mhPlayerRanksHtml(e) {
   const players = mhRoster(e);
   if (players.length < 2) return `<div style="font-size:12px;color:var(--muted);">No player names were stored for this game, so there's no one to rank.</div>`;
   const cur = getGameRanks(e.id), id = mhJsId(e.id);
@@ -9845,6 +9962,136 @@ function renderPlayerProfiles() {
           ${allRatingsHtml(name, r)}
         </div>
       </div>`;
+  }).join("");
+}
+
+// ── Team drafts ────────────────────────────────────────────────────────────
+// Which team drafts best: your draft reads and, separately, the model's, per
+// team or per head coach, filtered like the Players page.
+const COACH_KEY = "draftlogger_coaches_v1";
+function loadCoaches() { try { return JSON.parse(localStorage.getItem(COACH_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function coachFor(team, date) {
+  const list = (loadCoaches()[teamKey(team)] || []).slice().sort((a, b) => String(a.from || "").localeCompare(String(b.from || "")));
+  let who = "";
+  for (const c of list) if (!c.from || String(date || "") >= c.from) who = c.name;
+  return who;
+}
+function editCoach(team, label) {
+  const k = teamKey(team); if (!k) return;
+  const all = loadCoaches(), list = all[k] || [];
+  const now = list.length ? list[list.length - 1].name : "";
+  const name = prompt(`Head coach of ${label}`, now);
+  if (name === null) return;
+  if (!name.trim()) { delete all[k]; }
+  else {
+    const from = list.length ? (prompt(`Since when? (YYYY-MM-DD, or leave blank if ${name.trim()} coached every game here)`, "") || "") : "";
+    if (from && !/^\d{4}-\d{2}-\d{2}$/.test(from.trim())) { alert("Use the form 2026-10-30."); return; }
+    all[k] = from.trim() ? [...list, { name: name.trim(), from: from.trim() }] : [{ name: name.trim(), from: "" }];
+  }
+  try { localStorage.setItem(COACH_KEY, JSON.stringify(all)); } catch (e) {}
+  try { autoSync(); } catch (e) {}
+  renderTeamDrafts();
+}
+let _tdLabWait = null;
+function renderTeamDrafts() {
+  const el = document.getElementById("td-list"); if (!el) return;
+  const filt = (document.getElementById("td-filter") || {}).value || "all";
+  const view = (document.getElementById("td-view") || {}).value || "teams";
+  const sortBy = (document.getElementById("td-sort") || {}).value || "mine";
+  const games = loadAllGameData().filter(e => !e.isStandaloneBet && e.blueTeam && e.redTeam);
+  const ann = loadAnnotations();
+
+  // Filter menu: tournaments (with splits), then leagues.
+  const sel = document.getElementById("td-filter");
+  if (sel) {
+    const tours = new Map(), lgs = new Set();
+    for (const e of games) {
+      const lg = resolveLeague(e.league || "") || e.league; if (!lg) continue;
+      const y = String(e.date || "").slice(0, 4), k = lg + "|" + y;
+      const t = tours.get(k) || { k, lg, y, last: "" }; if ((e.date || "") > t.last) t.last = e.date || ""; tours.set(k, t); lgs.add(lg);
+    }
+    const cur = sel.value;
+    const opt = (v, t) => `<option value="${v}" ${v === cur ? "selected" : ""}>${t}</option>`;
+    sel.innerHTML = opt("all", "All games") + `<optgroup label="Tournaments">` + [...tours.values()].sort((a, b) => (a.last < b.last ? 1 : -1)).slice(0, 40).map(t => {
+      const sp = typeof leagueSplits === "function" ? leagueSplits(t.lg, t.y) : [];
+      return opt("t:" + t.k, `${t.lg} ${t.y}`) + (sp.length > 1 ? sp.slice().reverse().map(x =>
+        opt(`s:${t.lg}|${t.y}|${x.from}|${x.to}`, `\u00A0\u00A0\u21B3 ${t.lg} ${t.y} \u00B7 ${x.name} (${x.span})`)).join("") : "");
+    }).join("") + `</optgroup><optgroup label="Leagues, every year">` + [...lgs].sort().map(l => opt("l:" + l, l)).join("") + `</optgroup>`;
+    if (cur && cur !== "all" && sel.value !== cur) sel.value = "all";
+  }
+  const f = (sel && sel.value) || "all";
+  const inF = e => profileFilterMatch(e, f);
+
+  // Who a row belongs to: the team, or its coach at the time of the game.
+  const keyOf = (team, date) => {
+    if (view === "coaches") { const c = coachFor(team, date); return c ? "c:" + c.toLowerCase() : null; }
+    return "t:" + teamKey(team);
+  };
+  const rows = new Map();
+  const row = (k, label, team) => { if (!rows.has(k)) rows.set(k, { k, label, team, mine: [], model: [], teams: new Set(), last: "" }); return rows.get(k); };
+  const labelOf = (team, date) => view === "coaches" ? coachFor(team, date) : team;
+
+  for (const e of games) {
+    if (!inF(e)) continue;
+    // Every team that played in this filter is listed, rated or not, so a team
+    // you haven't rated yet (the play-in teams, say) still shows up.
+    for (const team of [e.blueTeam, e.redTeam]) {
+      const k = keyOf(team, e.date); if (!k) continue;
+      const r = row(k, labelOf(team, e.date), team); r.teams.add(team); r.played = (r.played || 0) + 1;
+      (r.ids = r.ids || []).push(e.id);
+      if ((e.date || "") > r.last) { r.last = e.date; r.team = team; }
+    }
+    const v = draftReadOf(e, ann);
+    if (v == null) continue;
+    for (const [team, s] of [[e.blueTeam, -v], [e.redTeam, v]]) {
+      const k = keyOf(team, e.date); if (!k) continue;
+      const r = row(k, labelOf(team, e.date), team); r.mine.push(s); r.teams.add(team); if ((e.date || "") > r.last) { r.last = e.date; r.team = team; }
+    }
+  }
+  const edges = (window.labApi && labApi.ready()) ? labApi.draftEdges() : null;
+  if (!edges && window.labApi) {
+    try { labApi.start(); } catch (e) {}
+    clearTimeout(_tdLabWait);
+    _tdLabWait = setTimeout(() => { if (document.getElementById("screen-teamdrafts")?.classList.contains("active")) renderTeamDrafts(); }, 4000);
+  }
+  for (const g of edges || []) {
+    if (!inF(g)) continue;
+    for (const [team, s] of [[g.blue, g.edge], [g.red, -g.edge]]) {
+      const k = keyOf(team, g.date); if (!k) continue;
+      const r = row(k, labelOf(team, g.date), team); r.model.push(s * 100); r.teams.add(team); if ((g.date || "") > r.last) { r.last = g.date; r.team = team; }
+    }
+  }
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+  const list = [...rows.values()].map(r => ({ ...r, my: avg(r.mine), mo: avg(r.model) }));
+  const by = sortBy === "model" ? "mo" : "my";
+  list.sort((a, b) => ((b[by] ?? -99) - (a[by] ?? -99)) || (b.mine.length - a.mine.length) || ((b.played || 0) - (a.played || 0)) || String(a.label).localeCompare(String(b.label)));
+
+  if (!list.length) {
+    el.innerHTML = view === "coaches"
+      ? `<div class="empty">No coaches entered for teams in this filter yet. Switch to <b>By team</b> and tap a team's coach to add one.</div>`
+      : `<div class="empty">No draft ratings in this filter yet. Rate drafts from Match history (tap Rate on a game), Log Game or Review drafts.</div>`;
+    return;
+  }
+  const myColor = v => v >= 0.5 ? "var(--green)" : v <= -0.5 ? "#ff4d5e" : "var(--yellow)";
+  const moColor = v => v >= 1 ? "var(--green)" : v <= -1 ? "#ff4d5e" : "var(--yellow)";
+  const fmtMy = v => v == null ? "\u2014" : (v > 0 ? "+" : "") + v.toFixed(2);
+  const fmtMo = v => v == null ? "\u2014" : (v > 0 ? "+" : "") + v.toFixed(1);
+  const esc = s => String(s).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  el.innerHTML = `<div class="td-head"><span></span><span>Your rating</span><span>Model</span></div>` + list.map((r, i) => {
+    const sub = view === "coaches"
+      ? [...r.teams].join(", ")
+      : (() => { const c = coachFor(r.team, r.last); return `<a onclick="editCoach('${esc(r.team)}','${esc(r.label)}')" style="cursor:pointer;color:${c ? "var(--muted)" : "var(--blue)"};">${c ? "Coach: " + c + " \u270E" : "+ add coach"}</a>`; })();
+    return `<div class="td-row">
+      <div style="min-width:0;"><div style="font-weight:600;font-size:13px;"><span style="color:var(--muted);font-weight:400;font-size:11px;display:inline-block;width:20px;">${i + 1}</span>${r.label}</div>
+        <div style="font-size:11px;margin-left:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${sub}</div></div>
+      <div class="td-num"><b style="color:${r.my == null ? "var(--muted)" : myColor(r.my)};">${fmtMy(r.my)}</b><span>${r.mine.length ? r.mine.length + "g" : (r.played ? "0 of " + r.played + "g" : "")}</span></div>
+      <div class="td-num"><b style="color:${r.mo == null ? "var(--muted)" : moColor(r.mo)};">${fmtMo(r.mo)}</b><span>${r.model.length ? r.model.length + "g" : (edges ? "" : "loading")}</span></div>
+    </div>${!r.model.length && edges && r.ids ? (() => {
+      // Why the model has nothing for this team.
+      const why = {}; for (const id of r.ids) { const w = labApi.whyNoDraft(id) || "not in the Model Lab"; if (w !== "duplicate") why[w] = (why[w] || 0) + 1; }
+      const txt = Object.entries(why).map(([w, n]) => `${n} game${n === 1 ? "" : "s"}: ${w}`).join(" \u00B7 ");
+      return txt ? `<div style="font-size:10.5px;color:var(--muted);margin:-4px 0 6px 20px;">Model skipped \u2014 ${txt}</div>` : "";
+    })() : ""}`;
   }).join("");
 }
 
@@ -13704,10 +13951,15 @@ async function autoLogTick(reason) {
   // site being open, not hours of it being looked at.
   const s = loadAutoLogSettings();
   if (!s.enabled) return;
-  if (s.lastRun && Date.now() - new Date(s.lastRun).getTime() < 5 * 60 * 1000
+  // The five-minute pause is per device. It used the shared "last run", so once
+  // one device had checked, the others waited for that device's games to come
+  // through sync instead of fetching them from Riot themselves.
+  let localRun = 0; try { localRun = Number(localStorage.getItem("draftlogger_autolog_local_run")) || 0; } catch (e) {}
+  if (localRun && Date.now() - localRun < 5 * 60 * 1000
       && (s.backfillDays || 0) >= AUTOLOG_BACKFILL_DAYS
       && (s.intlBackfillDays || 0) >= AUTOLOG_INTL_DAYS) { lplAutoSync().then(n => { if (n) { invalidateDerivedCaches(); try { rerenderActiveScreen(); } catch(e) {} } }); return; }
   _autoLogBusy = true;
+  try { localStorage.setItem("draftlogger_autolog_local_run", String(Date.now())); } catch (e) {}
   const note = document.getElementById("review-fetch-note");
   if (note) note.textContent = "Checking for new games…";
   try {
@@ -22984,7 +23236,8 @@ function syncSettingsKeys() {
     changeWindow:    CHANGE_WINDOW_KEY,
     scheduleLeagues: SCHEDULE_LEAGUES_KEY,
     scheduleView:    SCHED_VIEW_KEY,
-    notifications:   NOTIF_KEY
+    notifications:   NOTIF_KEY,
+    coaches:         COACH_KEY
   };
 }
 
@@ -22993,7 +23246,7 @@ function syncSettingsKeys() {
 // wiped must not be able to wipe every other device through sync.
 const SYNC_PROTECTED = new Set(["players", "reviews", "tierConfig", "manualStandings", "todayPlan", "bankroll",
   "factorWeights", "annotations", "champWatch", "favorites", "teamNotes", "manualSchedule", "teamRegistry",
-  "teamAliasLog", "teamLabels"]);
+  "teamAliasLog", "teamLabels", "coaches"]);
 function syncBlank(raw) {
   const t = String(raw == null ? "" : raw).trim();
   return t === "" || t === "{}" || t === "[]" || t === "null" || t === '""';
@@ -28605,6 +28858,10 @@ async function fetchScheduleWindow(windowEnd, maxPages = 12, onProgress) {
 // US. Group on the local calendar day instead.
 function localDayKey(iso) {
   if (!iso) return "";
+  // A stored game date ("2026-10-29") is already a day. Read as a moment it
+  // means midnight UTC, which is the evening before in your time zone, so every
+  // game showed a day early.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(iso))) return String(iso);
   const d = new Date(iso);
   return isNaN(d.getTime()) ? "" : localDateStr(d);
 }
@@ -30186,6 +30443,7 @@ const NAV_ITEMS = [
   { id: "findings",   label: "\u{1F50E} Findings" },
   { id: "lab",        label: "\u{1F9EA} Model Lab" },
   { id: "players",    label: "Players" },
+  { id: "teamdrafts", label: "\u{1F3AF} Team drafts" },
   { id: "champions",  label: "Champions" },
   { id: "tiers",      label: "\u2696 Tiers" },
   { id: "model",      label: "\u{1F4CA} Model" },
@@ -30430,9 +30688,10 @@ function show(screen) {
     }
     if (screen === "home")       renderHome();
     if (screen === "scores")     { renderScores(); autoLogTick("open"); }
-    if (screen === "mhistory")   renderMatchHistory();
+    if (screen === "mhistory")   { renderMatchHistory(); autoLogTick("open"); }
     if (screen === "champions")  renderChampions();
     if (screen === "players")    renderPlayerProfiles();
+    if (screen === "teamdrafts") renderTeamDrafts();
     if (screen === "scouting")   renderScouting();
     if (screen === "findings")   renderFindings();
     if (["lab", "log", "today", "dashboard"].includes(screen)) { try { window.labApi && labApi.start(); } catch(e) {} }
@@ -30730,12 +30989,16 @@ const LAB = (() => {
     return n >= 3 ? best : null;
   }
 
+  // Why a stored game has no draft in the lab, by game id (for the Team drafts page).
+  const noDraftWhy = new Map();
   function clean(bulk, includeOE = true) {
     const stats = {};
-    const bump = k => { stats[k] = (stats[k] || 0) + 1; };
+    let curId = null;
+    const bump = k => { stats[k] = (stats[k] || 0) + 1; if (curId && /^dropped/.test(k)) noDraftWhy.set(curId, k.replace(/^dropped: /, "")); };
     const rows = [];
     for (const x of bulk || []) {
       if (!x || !x.id) continue;
+      curId = x.id;
       const src = x.source || null;
       // "inferred" results from the Draft Logger (b140+) are final-frame reads checked
       // against the series score, so they're kept.
@@ -30765,6 +31028,7 @@ const LAB = (() => {
     const display = new Map();
     for (const r of rows) {
       const tags = [r.bt, r.rt];
+      curId = r.x.id;
       if (r.fix === null) {
         const hb = r.bp.map(n => stripTag(n, tags)), hr = r.rp.map(n => stripTag(n, tags));
         const same = hb.filter(h => handleTeam.get(h) === r.bt).length + hr.filter(h => handleTeam.get(h) === r.rt).length;
@@ -30785,10 +31049,14 @@ const LAB = (() => {
         gnum: x.gameNumber || 0, blue_team: r.bt, red_team: r.rt,
         blue: r.bp.map(n => stripTag(n, tags)), red: r.rp.map(n => stripTag(n, tags)),
         blue_won: x.actualWinner === "blue" ? 1 : 0, src: r.src || "unlabelled",
-        // Champions only where the sides are confirmed; in games whose rosters
-        // had to be swapped it's unknown which side the champions belong to.
-        champs: r.fix !== "swapped" && (x.champions?.blue || []).length === 5 && (x.champions?.red || []).length === 5
-          ? { blue: x.champions.blue.map(champKey), red: x.champions.red.map(champKey) } : null
+        // Champions are stored on the same side as the players they were
+        // recorded with (both come from the same game data or the same form),
+        // so when the rosters are swapped onto the right teams the champions
+        // go with them.
+        champs: (x.champions?.blue || []).length === 5 && (x.champions?.red || []).length === 5
+          ? (r.fix === "swapped"
+              ? { blue: x.champions.red.map(champKey), red: x.champions.blue.map(champKey) }
+              : { blue: x.champions.blue.map(champKey), red: x.champions.red.map(champKey) }) : null
       });
     }
 
@@ -30796,12 +31064,16 @@ const LAB = (() => {
     const fs = a => [...a].sort().join("|");
     const keyA = g => g.date + "#" + [fs(g.blue), fs(g.red)].sort().join("/") + "#" + g.gnum;
     const keyB = g => g.date + "#" + [g.blue_team, g.red_team].sort().join("/") + "#" + g.gnum;
-    const seen = new Set(), keep = new Set();
+    const seen = new Map(), keep = new Set();
     const ranked = games.map((g, i) => [g, i]).sort((a, b) => ((SOURCE_RANK[a[0].src] ?? 2) - (SOURCE_RANK[b[0].src] ?? 2)) || a[1] - b[1]).map(a => a[0]);
     for (const g of ranked) {
       const a = keyA(g), b = keyB(g);
-      if (seen.has(a) || seen.has(b)) { bump("dropped: duplicate"); continue; }
-      seen.add(a); seen.add(b); keep.add(g.id);
+      const kept = seen.get(a) || seen.get(b);
+      if (kept) {
+        if (!kept.champs && g.champs) kept.champs = kept.blue_team === g.blue_team ? g.champs : { blue: g.champs.red, red: g.champs.blue };
+        curId = g.id; bump("dropped: duplicate"); continue;
+      }
+      seen.set(a, g); seen.set(b, g); keep.add(g.id);
     }
     games = games.filter(g => keep.has(g.id));
 
@@ -30824,12 +31096,14 @@ const LAB = (() => {
           const dx = draft(x), dy = draft(y);
           const same = dx && dy ? dx === dy : winners(x) === winners(y);
           if (!same) continue;
-          const worse = (SOURCE_RANK[x.src] ?? 2) <= (SOURCE_RANK[y.src] ?? 2) ? y : x;
-          drop.add(worse.id); bump("dropped: duplicate");
+          const worse = (SOURCE_RANK[x.src] ?? 2) <= (SOURCE_RANK[y.src] ?? 2) ? y : x, better = worse === x ? y : x;
+          if (!better.champs && worse.champs) better.champs = better.blue_team === worse.blue_team ? worse.champs : { blue: worse.champs.red, red: worse.champs.blue };
+          drop.add(worse.id); curId = worse.id; bump("dropped: duplicate");
         }
       }
       if (drop.size) games = games.filter(g => !drop.has(g.id));
     }
+    for (const g of games) if (!g.champs) noDraftWhy.set(g.id, "no champions stored");
     const cmp = (p, q) => (p < q ? -1 : p > q ? 1 : 0);
     games = games.map((g, i) => [g, i]).sort((a, b) =>
       cmp(a[0].date, b[0].date) || cmp(a[0].event, b[0].event) ||
@@ -30980,7 +31254,7 @@ const LAB = (() => {
     return { all, noOE, results };
   }
 
-  return { clean, stripTag, champKey, PlayerRatings, TeamElo, TeamRecord, AlwaysBlue, VARIANTS, walk, score, calibration, seriesProb, runAll, MAJORS, INTERNATIONAL };
+  return { clean, noDraftWhy, stripTag, champKey, PlayerRatings, TeamElo, TeamRecord, AlwaysBlue, VARIANTS, walk, score, calibration, seriesProb, runAll, MAJORS, INTERNATIONAL };
 })();
 if (typeof module !== "undefined") module.exports = LAB;
 
@@ -31937,10 +32211,20 @@ LAB.VARIANTS.push(
 
   // ── Compute ────────────────────────────────────────────────────────────────
   function compute() {
-    const have = new Set(state.bulk.map(e => e.id));
+    // Every game the app holds: imported ones and the ones you logged by hand.
+    // The lab used to read imported games only, and the importer skips any game
+    // you've already logged, so your hand-logged games were invisible to every
+    // model here. The app's own combined list already keeps one copy per game
+    // (yours wins), so nothing is counted twice.
+    let all = state.bulk;
+    try { if (typeof loadAllGameData === "function") all = loadAllGameData().filter(e => !e.isStandaloneBet); } catch (e) {}
+    const have = new Set(all.map(e => e.id));
     const extra = [...state.liveGames.values()].filter(e => !have.has(e.id));
     state.liveIds = new Set(extra.map(e => e.id));
-    state.merged = state.bulk.concat(extra);
+    state.merged = all.concat(extra);
+    // The original model pairs your logged games with their imported twins
+    // itself, so it keeps reading the imported list.
+    state.importedPlusLive = state.bulk.concat(extra.filter(e => !state.bulk.some(b => b.id === e.id)));
     const R = LAB.runAll(state.merged);
     // Latest five for every team name, plus the league they last played in.
     const roster = new Map();
@@ -31983,7 +32267,7 @@ LAB.VARIANTS.push(
     const run = state.run;
     run.orig = { status: "starting", pct: 0 };
     renderOrigStatus();
-    const rows = LAB_ORIGINAL.prepare(state.personal || [], state.merged || state.bulk, state.annotations || {});
+    const rows = LAB_ORIGINAL.prepare(state.personal || [], state.importedPlusLive || state.bulk, state.annotations || {});
     const cached = await cacheGet("trail");
     const done = await LAB_ORIGINAL.factorTrailAsync(rows, cached, (i, n) => {
       if (token !== origToken) return;
@@ -32441,6 +32725,21 @@ LAB.VARIANTS.push(
     origStatus: () => (state.run && state.run.orig) || null,
     gamePick,
     seriesProb: (p, bo) => LAB.seriesProb(p, bo),
+    // Per game: the champion model's win chance for blue minus the player
+    // model's (same games, each predicted before it was played).
+    whyNoDraft: id => LAB.noDraftWhy.get(id) || null,
+    draftEdges: () => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players"), post = R.results.find(r => r.id === "champs");
+      if (!pre || !post) return null;
+      const out = [];
+      for (const g of post.games) {
+        const a = pre.preds.get(g.id), b = post.preds.get(g.id);
+        if (a == null || b == null || !g.champs) continue;
+        out.push({ id: g.id, date: g.date, league: g.league, blue: g.blue_team, red: g.red_team, edge: b - a });
+      }
+      return out;
+    },
     refresh: () => { lastSig = ""; return refresh(); },
   };
 })();
