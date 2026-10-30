@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.30-b176</b>
+    Build <b style="color:var(--text);" id="build-label">2026.10.30-b177</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.30-b176";
+const BUILD_VERSION = "2026.10.30-b177";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -23702,15 +23702,24 @@ function mergeRemoteRecords(scope, incoming, remoteTombs) {
   const byId   = new Map(local.map(e => [e.id, e]));
   let changed  = false;
 
+  let repush = false;
   for (const r of incoming || []) {
     if (!r || !r.id) continue;
     const cur = byId.get(r.id);
+    // A game you corrected by hand is never replaced by an automatic change
+    // from another device (an import or repair that ran before that device had
+    // your correction). Your copy wins and goes back up.
+    if (cur && cur.manual && !r.manual) {
+      if ((r.updatedAt || 0) >= (cur.updatedAt || 0)) { byId.set(cur.id, { ...cur, updatedAt: Date.now() }); changed = true; repush = true; }
+      continue;
+    }
     if (!cur || (r.updatedAt || 0) > (cur.updatedAt || 0)) {
       const clean = { ...r }; delete clean._s;
       byId.set(r.id, clean);
       changed = true;
     }
   }
+  if (repush) setTimeout(() => { try { scope === "bulk" ? requestBulkSync() : requestSync(); } catch (e) {} }, 1500);
 
   // Union the tombstone sets, then apply. A delete only beats a record that
   // has not been edited since the delete happened.
@@ -25291,7 +25300,7 @@ async function runAutoLog(silent = true) {
         for (const r of rows) {
           if (!r.stored || !r.winner || !r.conf) continue;
           const old = storedByRiot.get(String(r.g.id));
-          if (!old || (old.winnerConfidence === "verified" && old.winnerSource !== "leaguepedia")) continue;
+          if (!old || old.manual || (old.winnerConfidence === "verified" && old.winnerSource !== "leaguepedia")) continue;
           const rank = { certain: 3, derived: 2, inferred: 1 };
           if (old.actualWinner === r.winner && (rank[old.winnerConfidence] || 0) >= rank[r.conf]) continue;
           if (old.actualWinner && old.actualWinner !== r.winner && (rank[old.winnerConfidence] || 0) > rank[r.conf]) continue;
