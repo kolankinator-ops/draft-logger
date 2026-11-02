@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.10.30-b178</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.02-b179</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.10.30-b178";
+const BUILD_VERSION = "2026.11.02-b179";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -16078,6 +16078,61 @@ async function captureLane14(gameId) {
   return { lane, tl };
 }
 const TL_AT_MIN = [10, 15, 20, 25];
+
+// ── Riot's permanent player IDs ────────────────────────────────────────────
+// A player's name carries the team tag and can change; the ID Riot gives each
+// player doesn't. Stored per game as { name: id } so rankings can follow a
+// player across teams. Games saved before this are filled in quietly in the
+// background: the ones you've ranked players in first, then the newest.
+function playerIdsFromMeta(meta) {
+  const out = {};
+  for (const side of ["blueTeamMetadata", "redTeamMetadata"])
+    for (const p of (meta && meta[side] && meta[side].participantMetadata) || [])
+      if (p && p.summonerName && p.esportsPlayerId) out[p.summonerName] = String(p.esportsPlayerId);
+  return Object.keys(out).length ? out : null;
+}
+const PID_STATUS_KEY = "draftlogger_playerid_fill_v1";
+let _pidBusy = false;
+async function playerIdTick() {
+  if (isTestCopy() || _pidBusy) return;
+  _pidBusy = true;
+  let st = {}; try { st = JSON.parse(localStorage.getItem(PID_STATUS_KEY) || "{}") || {}; } catch (e) {}
+  st.failed = st.failed || {};
+  try {
+    const ranked = new Set(Object.keys(loadReviews()));
+    const riotOf = e => e.isBulkImport ? riotGameId(e.id) : (e.gameId ? String(e.gameId) : null);
+    const need = e => !e.playerIds && riotOf(e) && !e.isStandaloneBet && (e.players?.blue || []).length && (st.failed[e.id] || 0) < 2
+      && String(e.date || "") >= "2026-01-01";
+    const todo = [...loadEntries().filter(need), ...loadBulkEntries().filter(need)]
+      .sort((a, b) => (ranked.has(b.id) - ranked.has(a.id)) || (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    st.pending = todo.length;
+    if (!todo.length) return;
+    const g = todo[0], gid = riotOf(g);
+    let ids = null;
+    try {
+      const r = await fetch(`${FEED_BASE}/window/${gid}`);
+      if (r.ok && r.status !== 204) { const t = await r.text(); ids = t ? playerIdsFromMeta(JSON.parse(t).gameMetadata) : null; }
+    } catch (e) {}
+    if (!ids) { st.failed[g.id] = (st.failed[g.id] || 0) + 1; return; }
+    // Keep only the players stored on this game, matched by name (or by the
+    // name without its team tag).
+    const bare = n => String(n || "").trim().split(/\s+/).slice(-1)[0].toLowerCase();
+    const mine = {};
+    for (const n of [...(g.players.blue || []), ...(g.players.red || [])]) {
+      const hit = ids[n] || Object.entries(ids).find(([k]) => bare(k) === bare(n))?.[1];
+      if (hit) mine[n] = hit;
+    }
+    if (!Object.keys(mine).length) { st.failed[g.id] = 2; return; }
+    // Saved on this device only, without marking the game changed: every device
+    // fills in its own copy, so this never adds to sync.
+    if (g.isBulkImport) await saveBulkToDB(loadBulkEntries().map(e => e.id === g.id ? { ...e, playerIds: mine } : e), { remote: true });
+    else writeEntriesRaw(loadEntries().map(e => e.id === g.id ? { ...e, playerIds: mine } : e));
+    st.filled = (st.filled || 0) + 1; st.pending = Math.max(0, todo.length - 1);
+  } finally {
+    try { localStorage.setItem(PID_STATUS_KEY, JSON.stringify(st)); } catch (e) {}
+    _pidBusy = false;
+  }
+}
 async function laneTick() {
   if (isTestCopy() || _laneBusy) return;
   _laneBusy = true;
@@ -17222,6 +17277,7 @@ function fdSaveImage(id, btn) {
 
 function startAutoLogWatcher() {
   startLaneWatcher();
+  if (!isTestCopy() && !window._pidTimer) window._pidTimer = setInterval(() => { try { playerIdTick(); } catch (e) {} }, 2500);
   if (_autoLogTimer) clearInterval(_autoLogTimer);
   _autoLogTimer = setInterval(() => autoLogTick("timer"), AUTOLOG_EVERY_MS);
   document.addEventListener("visibilitychange", () => {
@@ -25298,7 +25354,7 @@ async function runAutoLog(silent = true) {
           const seen = loggedIdx.get(loggedGameKey(date, bc, rc));
           const stored = !!(seen && (g.number != null ? seen.has(g.number) : seen.has(null)));
 
-          let champions = { blue: [], red: [] }, players = { blue: [], red: [] }, feedWinner = null, feedWeight = 1, patch = null;
+          let champions = { blue: [], red: [] }, players = { blue: [], red: [] }, feedWinner = null, feedWeight = 1, patch = null, playerIds = null;
           try {
             const wBase   = `https://feed.lolesports.com/livestats/v1/window/${g.id}`;
             const feedRes = await fetch(wBase);
@@ -25311,13 +25367,14 @@ async function runAutoLog(silent = true) {
                 patch = normalisePatch(meta.patchVersion);
                 champions = { blue: bp.map(p=>p.championId||"").filter(Boolean), red: rp.map(p=>p.championId||"").filter(Boolean) };
                 players   = { blue: bp.map(p=>p.summonerName||"").filter(Boolean), red: rp.map(p=>p.summonerName||"").filter(Boolean) };
+                playerIds = playerIdsFromMeta(meta);
               }
               // That window is the game's first ten seconds; the result is in its last.
               await new Promise(r => setTimeout(r, 150));
               try { const fr = frameRead((await feedFinalFrame(g.id)).frame); if (fr) { feedWinner = fr.side; feedWeight = fr.w; } } catch(ex) {}
             }
           } catch(ex) {}
-          rows.push({ g, bc, rc, blueCode, redCode, stored, champions, players, patch, feedWinner, feedWeight });
+          rows.push({ g, bc, rc, blueCode, redCode, stored, champions, players, playerIds, patch, feedWinner, feedWeight });
         }
 
         resolveSeriesWinners(rows,
@@ -25349,7 +25406,7 @@ async function runAutoLog(silent = true) {
             eventContext: buildContextLabel(leagueName, blockName, startTime),
             gameNumber: r.g.number || null,
             blueTeam: r.blueCode, redTeam: r.redCode,
-            champions: r.champions, players: r.players, actualWinner: r.winner, patch: r.patch,
+            champions: r.champions, players: r.players, ...(r.playerIds ? { playerIds: r.playerIds } : {}), actualWinner: r.winner, patch: r.patch,
             winnerConfidence: r.conf,
             source: "riot",
             watched: false, isBulkImport: true,
