@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.02-b179</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.02-b180</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.02-b179";
+const BUILD_VERSION = "2026.11.02-b180";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -29007,8 +29007,16 @@ async function loadTodayGames() {
       return t >= now && t <= windowEnd;
     });
 
+    // Matches already on the schedule are refreshed from everything fetched,
+    // not just the look-ahead window. Knockout fixtures go up days early as
+    // TBD vs TBD; the row was stored then and never revisited, so the teams
+    // stayed TBD after Riot filled them in.
+    const inWindow = new Set(evts);
+    const planIds  = new Set(plan.games.map(g => g.matchId).filter(Boolean));
+    const toMerge  = evts.concat(all.filter(e => e.type === "match" && !inWindow.has(e) && planIds.has(e.match?.id || e.id || "")));
+
     // Merge API games into plan (don't overwrite existing plan entries)
-    for (const ev of evts) {
+    for (const ev of toMerge) {
       const teams   = (ev.match?.teams || []).map(t => t.code || t.name || "");
       const matchId = ev.match?.id || ev.id || "";
       const league  = ev.league?.name || "";
@@ -29031,8 +29039,12 @@ async function loadTodayGames() {
 
       if (teams.length < 2) continue;
       const teamSet = [teams[0], teams[1]].map(t => t.toUpperCase()).sort().join("|");
+      // A match whose teams aren't decided yet is a placeholder pairing, so it
+      // must never be matched to another TBD vs TBD row by teams and time alone.
+      const undecided = teams.some(isTbdTeam);
       const alreadyIn = plan.games.find(g => {
         if (matchId && g.matchId === matchId) return true;
+        if (undecided && matchId && g.matchId) return false;
         const gTeamSet = [g.blueTeam||"", g.redTeam||""].map(t => t.toUpperCase()).sort().join("|");
         return gTeamSet === teamSet && g.scheduledTime === time;
       });
@@ -29049,6 +29061,18 @@ async function loadTodayGames() {
         });
       } else {
         if (ev.state && alreadyIn.state !== ev.state) alreadyIn.state = ev.state;   // finished since the last refresh
+        // Riot's teams are the truth for this match. A row stored as TBD (or
+        // with a team Riot has since changed) takes the real pairing; a row that
+        // already has these two teams keeps its order, so odds stay on the side
+        // they were entered for.
+        const storedSet = [alreadyIn.blueTeam||"", alreadyIn.redTeam||""].map(t => t.toUpperCase()).sort().join("|");
+        if (alreadyIn.source === "api" && storedSet !== teamSet) {
+          const keepA = (alreadyIn.blueTeam||"").toUpperCase() === teams[1].toUpperCase() || (alreadyIn.redTeam||"").toUpperCase() === teams[0].toUpperCase();
+          alreadyIn.blueTeam = keepA ? teams[1] : teams[0];
+          alreadyIn.redTeam  = keepA ? teams[0] : teams[1];
+        }
+        if (alreadyIn.source === "api" && time && alreadyIn.scheduledTime !== time) alreadyIn.scheduledTime = time;   // rescheduled
+        if (alreadyIn.source === "api" && league && !alreadyIn.league) alreadyIn.league = league;
         // Games stored before the format was read correctly: fix it, keeping any odds entered.
         if (alreadyIn.source === "api" && alreadyIn.format !== format) { alreadyIn.format = format; alreadyIn.slots = buildSlots(format, alreadyIn.slots); }
         // Score, records and stage move during the day; the first team listed stays first.
@@ -29074,6 +29098,11 @@ async function loadTodayGames() {
   _loadTodayRunning = false;
   renderTodayGames();
   updateLeagueFilterBtn();
+}
+
+function isTbdTeam(code) {
+  const c = String(code || "").trim().toUpperCase();
+  return !c || c === "TBD" || c === "TBA";
 }
 
 function buildSlots(format, existingSlots) {
