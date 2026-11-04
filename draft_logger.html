@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.03-b182</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.03-b183</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.03-b182";
+const BUILD_VERSION = "2026.11.03-b183";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -3165,16 +3165,26 @@ async function loadRecentGames() {
     const events = (data.data?.schedule?.events || [])
       .filter(e => {
         try {
-        if (e.type !== "match" || e.state !== "completed") return false;
-        if ((e.startTime || "").slice(0, 10) !== today) return false;
+        // A series still being played is listed as soon as one of its games is
+        // over — a game missed mid-series was unreachable here until the whole
+        // series ended.
+        const doneGames = (e.match?.teams || []).reduce((n, t) => n + (t.result?.gameWins || 0), 0);
+        if (e.type !== "match") return false;
+        if (e.state !== "completed" && !(e.state === "inProgress" && doneGames > 0)) return false;
+        // Today in your time zone. An evening series starts after midnight UTC
+        // and dropped off the list by its UTC date.
+        const utcDay = (e.startTime || "").slice(0, 10);
+        if (utcDay !== today && localDayKey(e.startTime) !== today) return false;
         const teams = (e.match?.teams || []).map(t => t.code || t.name || "");
         // A BO3 was disappearing after game 1: isGameLogged() was called
         // without a game number, so any single logged game marked the whole
         // series done. Count games instead, and keep the series listed until
         // every one of them is in.
         if (teams.length >= 2) {
-          const played = e.match?.strategy?.count || 0;   // best-of N
-          const logged = loggedGameCount(teams[0], teams[1], today);
+          // Games actually played so far, not the best-of: a 3–1 in a best of
+          // five stayed listed forever waiting for a fifth game.
+          const played = doneGames || e.match?.strategy?.count || 0;
+          const logged = loggedGameCount(teams[0], teams[1], utcDay);
           if (logged > 0 && played && logged >= played) return false;
           if (logged > 0 && !played && logged >= 5) return false;
           e._loggedCount = logged;
@@ -3241,6 +3251,40 @@ function dismissRecentGame(eid) {
 let _recentMatchGames = [];
 let _recentMatchMeta  = {};
 
+function retroGameWinner(event, ev, targetGame, tById) {
+  if (!targetGame || targetGame.state !== "completed") return null;
+  const date = (ev.startTime || "").slice(0, 10);
+  const done = (event.match?.games || []).filter(g => g.state === "completed")
+    .sort((a, b) => (a.number ?? 999) - (b.number ?? 999));
+  const known = new Map();
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet || e.gameNumber == null || String(e.date || "").slice(0, 10) !== date) continue;
+    if (e.actualWinner !== "blue" && e.actualWinner !== "red") continue;
+    if (isRiotImport(e) && !e.manual && e.winnerConfidence !== "certain" && e.winnerConfidence !== "verified") continue;
+    const w = e.actualWinner === "blue" ? e.blueTeam : e.redTeam;
+    known.set(loggedGameKey(date, e.blueTeam, e.redTeam) + "#" + e.gameNumber, String(resolveTeam(w) || w || "").toUpperCase().trim());
+  }
+  const rows = done.map(g => {
+    const sides = g.teams || [];
+    const bc = String(tById[(sides.find(t => t.side === "blue") || {}).id] || "").toUpperCase();
+    const rc = String(tById[(sides.find(t => t.side === "red")  || {}).id] || "").toUpperCase();
+    const rb = String(resolveTeam(bc) || bc).toUpperCase().trim(), rr = String(resolveTeam(rc) || rc).toUpperCase().trim();
+    const kw = g === targetGame ? null : known.get(loggedGameKey(date, rb, rr) + "#" + g.number);
+    return { g, bc, rc, feedWinner: null, feedWeight: 1, known: kw ? (kw === rb ? "blue" : kw === rr ? "red" : null) : null };
+  });
+  const teams = event.match?.teams || [];
+  const over = ev.state === "completed" || teams.some(t => t.result?.outcome === "win");
+  if (over) {
+    const W = teams.reduce((b, t) => (t.result?.gameWins || 0) > (b.result?.gameWins || 0) ? t : b, teams[0]);
+    const L = teams.find(t => t !== W);
+    resolveSeriesWinners(rows, W.code || W.name, L ? (L.code || L.name) : "", W.result?.gameWins || 0, L?.result?.gameWins || 0, !(L?.result?.gameWins));
+  } else {
+    resolveOpenSeriesWinners(rows, teams.map(t => [String(t.code || t.name || "").toUpperCase(), t.result?.gameWins || 0]));
+  }
+  const row = rows.find(r => r.g === targetGame);
+  return row && row.winner ? row.winner : null;
+}
+
 async function loadRecentGame(idx) {
   const events = window._recentEvents || [];
   const ev     = events[idx];
@@ -3299,9 +3343,11 @@ async function _loadRecentGameN(gameIdx, banner) {
   const blueCode  = blueEntry ? (tById[blueEntry.id] || "Blue") : "Blue";
   const redCode   = redEntry  ? (tById[redEntry.id]  || "Red")  : "Red";
 
-  const winnerCode  = winner ? (winner.code || winner.name || "") : "";
-  retroactiveWinner = winnerCode.toUpperCase() === blueCode.toUpperCase() ? "blue"
-                    : winnerCode.toUpperCase() === redCode.toUpperCase()  ? "red" : null;
+  // This game's winner, not the series': game 2 of a series IG won 3–1 may
+  // well be TES's, and was being saved as IG's. Worked out from the score and
+  // the games already stored; left blank when that doesn't settle it.
+  retroactiveWinner = null;
+  try { retroactiveWinner = retroGameWinner(event, ev, targetGame, tById); } catch(e) {}
 
   document.getElementById("blue-team").value     = blueCode;
   document.getElementById("red-team").value      = redCode;
