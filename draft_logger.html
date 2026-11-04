@@ -746,7 +746,8 @@
   </div>
   <div id="mh-scope" style="margin-bottom:8px;"></div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
-    <input type="text" id="mh-search" placeholder="Team or champion…" oninput="queueMatchHistory()" style="flex:1;min-width:150px;font-size:13px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+    <select id="mh-league" onchange="mhPickLeague(this.value)" style="font-size:12px;padding:6px 9px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;max-width:150px;"><option value="">All leagues</option></select>
+    <input type="text" id="mh-search" placeholder="Team, champion or league…" oninput="queueMatchHistory()" style="flex:1;min-width:150px;font-size:13px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
     <select id="mh-range" onchange="renderMatchHistory()" style="font-size:12px;padding:6px 9px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;">
       <option value="7">7 days</option>
       <option value="14">14 days</option>
@@ -2030,7 +2031,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.04-b184</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.04-b185</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2565,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.04-b184";
+const BUILD_VERSION = "2026.11.04-b185";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -8055,25 +8056,77 @@ function digestCardHtml() {
 // is the same idea; this differs in being dense enough to scan a day at a glance,
 // showing which side won, and being filterable.
 let _mhTimer = null;
+// One league at a time, every game it has: pick it from the menu or type its
+// name. Picking a league opens all time (the range can still narrow it), and a
+// league you chose is shown even if the 🏷 filter or data scope hides it.
+let _mhLimit = 400;
+function mhLeagueCounts() {
+  const c = new Map();
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet) continue;
+    const l = resolveLeague(e.league || "");
+    if (!l) continue;
+    c.set(l, (c.get(l) || 0) + 1);
+  }
+  return c;
+}
+function mhLeague() { return (document.getElementById("mh-league") || {}).value || ""; }
+function mhFillLeagues() {
+  const sel = document.getElementById("mh-league");
+  if (!sel) return;
+  const counts = mhLeagueCounts();
+  const cur = sel.value;
+  const MAJ = ["LCK", "LPL", "LEC", "LCS", "LCP", "CBLOL"];
+  const list = [...counts.entries()].sort((a, b) => {
+    const ia = MAJ.indexOf(a[0]), ib = MAJ.indexOf(b[0]);
+    if (ia >= 0 || ib >= 0) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    return b[1] - a[1];
+  });
+  sel.innerHTML = `<option value="">All leagues</option>` +
+    list.map(([l, n]) => `<option value="${l.replace(/"/g, "&quot;")}"${l === cur ? " selected" : ""}>${l} (${n})</option>`).join("");
+  if (cur && !counts.has(cur)) sel.value = "";
+}
+function mhPickLeague(v) {
+  const sel = document.getElementById("mh-league");
+  if (sel && sel.value !== v) sel.value = v;
+  const rg = document.getElementById("mh-range");
+  if (v && rg) rg.value = "0";
+  _mhLimit = 400;
+  renderMatchHistory();
+}
+function mhShowMore() { _mhLimit += 400; renderMatchHistory(); }
+
 function queueMatchHistory() {
   clearTimeout(_mhTimer);
-  _mhTimer = setTimeout(() => { try { renderMatchHistory(); } catch(e) {} }, 220);
+  _mhTimer = setTimeout(() => {
+    try {
+      // Typing a league's whole name picks that league.
+      const q = ((document.getElementById("mh-search") || {}).value || "").trim().toLowerCase();
+      const hit = q ? [...mhLeagueCounts().keys()].find(l => l.toLowerCase() === q) : null;
+      if (hit && hit !== mhLeague()) { mhFillLeagues(); mhPickLeague(hit); return; }
+      _mhLimit = 400;
+      renderMatchHistory();
+    } catch(e) {}
+  }, 220);
 }
 
 function mhGames() {
   const days = parseInt((document.getElementById("mh-range") || {}).value || "30", 10);
   const cutoff = days ? localDateStr(new Date(Date.now() - days * 86400000)) : "";
-  const q = ((document.getElementById("mh-search") || {}).value || "").trim().toLowerCase();
+  let q = ((document.getElementById("mh-search") || {}).value || "").trim().toLowerCase();
+  const lg = mhLeague();
+  if (lg && q === lg.toLowerCase()) q = "";          // the league's own name, already applied
   const out = [], noDraft = [];
   for (const e of loadAllGameData()) {
     // A game with no known winner is still a game: it's listed (marked ?) so
     // you can set the result, instead of quietly disappearing.
     if (e.isStandaloneBet) continue;
-    if (!entryInScope(e)) continue;
+    if (lg) { if (resolveLeague(e.league || "") !== lg) continue; }
+    else if (!entryInScope(e)) continue;
     if (!matchesPatchFilter(e)) continue;
     const day = localDayKey(e.date);
     if (!day || (cutoff && day < cutoff)) continue;
-    if (!isLeagueVisible(e.league || "")) continue;
+    if (!lg && !isLeagueVisible(e.league || "")) continue;
     const bc = (e.champions?.blue || []).map(normChamp).filter(Boolean);
     const rc = (e.champions?.red  || []).map(normChamp).filter(Boolean);
     // No draft: shown only when it fills a gap in a series that's otherwise
@@ -8142,22 +8195,28 @@ function renderMatchHistory() {
     sb.title = hide ? "Winners hidden — tap to show" : "Winners shown — tap to hide";
   }
 
+  try { mhFillLeagues(); } catch(e) {}
   const rows = mhGames();
   _mhById = new Map(rows.map(r => [r.e.id, r.e]));
+  const lg = mhLeague();
   const countEl = document.getElementById("mh-count");
   if (countEl) countEl.textContent = rows.length
-    ? `${rows.length} game${rows.length === 1 ? "" : "s"}${hide ? " · winners hidden" : ""}`
+    ? `${lg ? lg + " \u00B7 " : ""}${rows.length} game${rows.length === 1 ? "" : "s"}${hide ? " · winners hidden" : ""}`
     : "";
 
   if (!rows.length) {
-    el.innerHTML = `<div class="empty">No games match. Widen the range, clear the search, or check 🏷 Leagues.</div>`;
+    el.innerHTML = `<div class="empty">No games match. ${patchFilter() ? `The patch filter (${patchFilter()}) is on \u2014 clear it to see other patches. ` : ""}Widen the range, clear the search${lg ? ", or pick All leagues" : ", or check 🏷 Leagues"}.</div>`;
     return;
   }
 
   // Grouped into series. A flat list of games hides the thing you're looking at:
   // a BO3 is one contest, and its games only make sense next to each other.
   const series = new Map();
-  for (const row of rows.slice(0, 400)) {
+  // Whole series only: the cut falls between series, never inside one.
+  let cutAt = Math.min(rows.length, _mhLimit);
+  while (cutAt < rows.length && cutAt > 0 && rows[cutAt].seriesKey === rows[cutAt - 1].seriesKey) cutAt++;
+  const moreLeft = rows.length - cutAt;
+  for (const row of rows.slice(0, cutAt)) {
     if (!series.has(row.seriesKey)) series.set(row.seriesKey, []);
     series.get(row.seriesKey).push(row);
   }
@@ -8214,7 +8273,7 @@ ${mhRateBtnHtml(e)}
       }).join("")}
     </div>`;
   }).join("") +
-  (rows.length > 400 ? `<div style="font-size:11px;color:var(--muted);padding:8px 0;">Showing the most recent ${rows.length} games. Narrow the range or search to see further back.</div>` : "") + mhRemovedHtml();
+  (moreLeft > 0 ? `<button class="btn btn-ghost" style="width:100%;margin:6px 0 4px;" onclick="mhShowMore()">Show older games (${moreLeft} more)</button>` : "") + mhRemovedHtml();
   for (const id of _mhRateOpen) if (_mhById.has(id)) mhFindVod(id);
 }
 
