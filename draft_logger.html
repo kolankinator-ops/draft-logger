@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.02-b180</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.03-b181</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.02-b180";
+const BUILD_VERSION = "2026.11.03-b181";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -25119,6 +25119,46 @@ const AUTOLOG_OVERLAP_DAYS = 3;
 // from the series result; mid-series games come from the feed; whatever is still
 // unknown is filled from the series score when only one answer is possible
 // (e.g. a 2-1 where game 1 is known — game 2 must be the other team's).
+// The same, for a series still being played: the running score fixes how many
+// games each side has won but not that the last one was the winner's. Every
+// order the score allows is weighed against the feed's reads. A game is
+// "certain" only when the score allows one order (one side hasn't won a game);
+// anything less is settled again by the full check once the series ends.
+function resolveOpenSeriesWinners(rows, wins) {
+  rows.forEach(r => { r.winner = null; r.conf = null; });
+  const n = rows.length;
+  const codeOf = (r, side) => side === "blue" ? r.bc : side === "red" ? r.rc : null;
+  const sideOf = (r, code) => code && code === r.bc ? "blue" : code && code === r.rc ? "red" : null;
+  const [A, wA] = wins[0] || ["", 0], [B, wB] = wins[1] || ["", 0];
+  if (A && B && n >= 1 && n <= 7 && wA + wB === n) {
+    const seqs = [];
+    for (let mask = 0; mask < (1 << n); mask++) {
+      let a = 0; for (let i = 0; i < n; i++) if (mask & (1 << i)) a++;
+      if (a !== wA) continue;
+      const seq = []; for (let i = 0; i < n; i++) seq.push(mask & (1 << i) ? A : B);
+      let score = 0;
+      rows.forEach((r, i) => { const f = r.feedWinner ? codeOf(r, r.feedWinner) : null; if (f) score += (f === seq[i] ? 1 : -1) * (r.feedWeight || 1); });
+      seqs.push({ seq, score });
+    }
+    const best = Math.max(...seqs.map(x => x.score));
+    const top = seqs.filter(x => x.score === best);
+    rows.forEach((r, i) => {
+      const vals = new Set(top.map(x => x.seq[i]));
+      if (vals.size !== 1) return;
+      r.winner = sideOf(r, [...vals][0]);
+      if (!r.winner) return;
+      r.conf = seqs.length === 1 ? "certain" : new Set(seqs.map(x => x.seq[i])).size === 1 ? "derived" : "inferred";
+    });
+    return rows;
+  }
+  // Score and finished games don't line up yet (the score updates a little
+  // after a game ends): the feed's reads, as long as they fit the score.
+  rows.forEach(r => { if (r.feedWinner) { r.winner = r.feedWinner; r.conf = "inferred"; } });
+  const count = code => rows.filter(r => r.winner && codeOf(r, r.winner) === code).length;
+  if (A && B && (count(A) > wA || count(B) > wB)) rows.forEach(r => { r.winner = null; r.conf = null; });
+  return rows;
+}
+
 function resolveSeriesWinners(rows, seriesWinnerCode, seriesLoserCode, winW, winL, isSweep) {
   const W = (seriesWinnerCode || "").toUpperCase(), L = (seriesLoserCode || "").toUpperCase();
   const sideOf = (r, code) => code && code === r.bc ? "blue" : code && code === r.rc ? "red" : null;
@@ -25290,22 +25330,30 @@ async function runAutoLog(silent = true) {
         const isIntl = typeof INTL_EVENT === "function" && INTL_EVENT(ev.league?.name);
         const limit = (deepIntl && isIntl) ? intlCutoff : cutoffDate;
         if (date && date < limit) { if (!deepIntl || date < intlCutoff) reachedCutoff = true; continue; }
-        if (ev.type !== "match" || ev.state !== "completed") continue;
+        // A series still being played has finished games too. Waiting for the
+        // whole series meant a game you missed mid-series (and any bet on it)
+        // couldn't be found until the last game ended.
+        const open = ev.state === "inProgress";
+        if (ev.type !== "match" || (ev.state !== "completed" && !open)) continue;
         if (!wanted(ev.league?.name)) continue;
         if (!ev.match?.id) continue;
         // Skip the detail request entirely when every game of the series is stored.
         const t = ev.match.teams || [];
         const played = t.reduce((n, x) => n + (x.result?.gameWins || 0), 0);
+        if (open && (t.length < 2 || !played)) continue;          // nothing finished yet
         if (t.length >= 2 && played) {
           const lk = loggedGameKey(date, t[0].code || t[0].name, t[1].code || t[1].name);
           const seen = loggedIdx.get(lk);
           if (seen && [...seen].filter(v => v != null).length >= played) {
+            if (open) continue;
             if (!recheck.has(lk) || recheckQueued >= RECHECK_PER_RUN) continue;
             recheckQueued++;
           }
-          if (recheck.has(lk)) recheckDone[lk] = Date.now();
+          // An unfinished series is checked again once it ends, so it doesn't
+          // start the week's wait on re-checks.
+          if (recheck.has(lk) && !open) recheckDone[lk] = Date.now();
         }
-        matchQueue.push({ matchId: ev.match.id, leagueName: leagueOut(ev.league.name), blockName: ev.blockName || "", startTime: ev.startTime || "", date });
+        matchQueue.push({ matchId: ev.match.id, leagueName: leagueOut(ev.league.name), blockName: ev.blockName || "", startTime: ev.startTime || "", date, open });
       }
       if ((deep || deepIntl) && page % 5 === 0) progress(`Backfilling${deepIntl ? " international events" : ""} — reading schedule (page ${page + 1})…`);
       // Enough re-checks for one run, and past what a routine run reads: stop.
@@ -25320,7 +25368,7 @@ async function runAutoLog(silent = true) {
     }
 
     let qi = 0;
-    for (const { matchId, leagueName, blockName, startTime, date } of matchQueue) {
+    for (const { matchId, leagueName, blockName, startTime, date, open } of matchQueue) {
       qi++;
       if (matchQueue.length > 10 && qi % 5 === 0) progress(`Importing games — series ${qi} of ${matchQueue.length} (${added} new so far)…`);
       try {
@@ -25377,7 +25425,8 @@ async function runAutoLog(silent = true) {
           rows.push({ g, bc, rc, blueCode, redCode, stored, champions, players, playerIds, patch, feedWinner, feedWeight });
         }
 
-        resolveSeriesWinners(rows,
+        if (open) resolveOpenSeriesWinners(rows, matchTeams.map(t => [String(t.code || t.name || "").toUpperCase(), t.result?.gameWins || 0]));
+        else resolveSeriesWinners(rows,
           seriesWinner ? (seriesWinner.code || seriesWinner.name) : "",
           seriesLoser  ? (seriesLoser.code  || seriesLoser.name)  : "",
           seriesWinner?.result?.gameWins || 0, seriesLoser?.result?.gameWins || 0, isSweep);
