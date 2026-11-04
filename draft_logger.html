@@ -2030,7 +2030,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.03-b181</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.03-b182</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2564,7 +2564,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.03-b181";
+const BUILD_VERSION = "2026.11.03-b182";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -8004,7 +8004,7 @@ function mhGames() {
   const days = parseInt((document.getElementById("mh-range") || {}).value || "30", 10);
   const cutoff = days ? localDateStr(new Date(Date.now() - days * 86400000)) : "";
   const q = ((document.getElementById("mh-search") || {}).value || "").trim().toLowerCase();
-  const out = [];
+  const out = [], noDraft = [];
   for (const e of loadAllGameData()) {
     // A game with no known winner is still a game: it's listed (marked ?) so
     // you can set the result, instead of quietly disappearing.
@@ -8016,7 +8016,9 @@ function mhGames() {
     if (!isLeagueVisible(e.league || "")) continue;
     const bc = (e.champions?.blue || []).map(normChamp).filter(Boolean);
     const rc = (e.champions?.red  || []).map(normChamp).filter(Boolean);
-    if (!bc.length && !rc.length) continue;
+    // No draft: shown only when it fills a gap in a series that's otherwise
+    // here, so a missed game 2 isn't invisible because Riot's feed had no picks.
+    if (!bc.length && !rc.length) { if (e.gameNumber) noDraft.push({ e, day, bc, rc }); continue; }
     if (q) {
       const hay = [e.blueTeam, e.redTeam, e.league,
                    ...bc.map(champDisplay), ...rc.map(champDisplay)]
@@ -8024,6 +8026,11 @@ function mhGames() {
       if (!hay.includes(q)) continue;
     }
     out.push({ e, day, bc, rc });
+  }
+  if (noDraft.length) {
+    const sk = r => r.day + "|" + [teamKey(r.e.blueTeam), teamKey(r.e.redTeam)].sort().join("~");
+    const have = new Set(out.map(sk));
+    noDraft.forEach(r => { if (have.has(sk(r))) out.push(r); });
   }
   out.sort((a, b) => (a.day === b.day)
     ? ((a.e.gameNumber || 0) - (b.e.gameNumber || 0))
@@ -25119,6 +25126,16 @@ const AUTOLOG_OVERLAP_DAYS = 3;
 // from the series result; mid-series games come from the feed; whatever is still
 // unknown is filled from the series score when only one answer is possible
 // (e.g. a 2-1 where game 1 is known — game 2 must be the other team's).
+// Orders of results that contradict a game whose result is already known are
+// dropped. If none survive (a stored result disagrees with the score), all are
+// kept and the feed decides as before.
+function keepKnownOrders(rows, seqs, codeOf) {
+  if (!rows.some(r => r.known)) return seqs;
+  const ok = seqs.filter(x => rows.every((r, i) => !r.known || codeOf(r, r.known) === x.seq[i]));
+  if (ok.length) { seqs.length = 0; seqs.push(...ok); }
+  return seqs;
+}
+
 // The same, for a series still being played: the running score fixes how many
 // games each side has won but not that the last one was the winner's. Every
 // order the score allows is weighed against the feed's reads. A game is
@@ -25140,6 +25157,8 @@ function resolveOpenSeriesWinners(rows, wins) {
       rows.forEach((r, i) => { const f = r.feedWinner ? codeOf(r, r.feedWinner) : null; if (f) score += (f === seq[i] ? 1 : -1) * (r.feedWeight || 1); });
       seqs.push({ seq, score });
     }
+    const allowed = seqs.length;
+    keepKnownOrders(rows, seqs, codeOf);
     const best = Math.max(...seqs.map(x => x.score));
     const top = seqs.filter(x => x.score === best);
     rows.forEach((r, i) => {
@@ -25147,13 +25166,13 @@ function resolveOpenSeriesWinners(rows, wins) {
       if (vals.size !== 1) return;
       r.winner = sideOf(r, [...vals][0]);
       if (!r.winner) return;
-      r.conf = seqs.length === 1 ? "certain" : new Set(seqs.map(x => x.seq[i])).size === 1 ? "derived" : "inferred";
+      r.conf = allowed === 1 ? "certain" : new Set(seqs.map(x => x.seq[i])).size === 1 ? "derived" : "inferred";
     });
     return rows;
   }
   // Score and finished games don't line up yet (the score updates a little
   // after a game ends): the feed's reads, as long as they fit the score.
-  rows.forEach(r => { if (r.feedWinner) { r.winner = r.feedWinner; r.conf = "inferred"; } });
+  rows.forEach(r => { const w = r.known || r.feedWinner; if (w) { r.winner = w; r.conf = r.known ? "derived" : "inferred"; } });
   const count = code => rows.filter(r => r.winner && codeOf(r, r.winner) === code).length;
   if (A && B && (count(A) > wA || count(B) > wB)) rows.forEach(r => { r.winner = null; r.conf = null; });
   return rows;
@@ -25182,6 +25201,7 @@ function resolveSeriesWinners(rows, seriesWinnerCode, seriesLoserCode, winW, win
       rows.forEach((r, i) => { const f = r.feedWinner ? codeOf(r, r.feedWinner) : null; if (f) score += (f === seq[i] ? 1 : -1) * (r.feedWeight || 1); });
       seqs.push({ seq, score });
     }
+    keepKnownOrders(rows, seqs, codeOf);
     const best = Math.max(...seqs.map(x => x.score));
     const top = seqs.filter(x => x.score === best);
     rows.forEach((r, i) => {
@@ -25200,6 +25220,7 @@ function resolveSeriesWinners(rows, seriesWinnerCode, seriesLoserCode, winW, win
   const last = rows[n - 1];
   for (const r of rows) if (isSweep || r === last) { r.winner = sideOf(r, W); if (r.winner) r.conf = "certain"; }
   const count = code => rows.filter(r => r.winner && codeOf(r, r.winner) === code).length;
+  rows.forEach(r => { if (!r.winner && r.known) { r.winner = r.known; r.conf = "derived"; } });
   rows.forEach(r => { if (!r.winner && r.feedWinner) { r.winner = r.feedWinner; r.conf = "inferred"; } });
   if (W && L && (count(W) > winW || count(L) > winL)) rows.forEach(r => { if (r.conf === "inferred") { r.winner = null; r.conf = null; } });
   return rows;
@@ -25251,6 +25272,20 @@ async function runAutoLog(silent = true) {
 
   let added = 0, unsaved = [];
   const loggedIdx = buildLoggedGameIndex();
+  // Results already known for certain — games you logged or corrected, and
+  // settled imports. The series' other games are worked out around them: with
+  // your games 1 and 3 and the running score, game 2 has only one answer, even
+  // when Riot's end-of-game frames can't tell who won it.
+  const knownWin = new Map();
+  try {
+    for (const e of loadAllGameData()) {
+      if (e.isStandaloneBet || e.gameNumber == null) continue;
+      if (e.actualWinner !== "blue" && e.actualWinner !== "red") continue;
+      if (isRiotImport(e) && !e.manual && e.winnerConfidence !== "certain" && e.winnerConfidence !== "verified") continue;
+      const w = e.actualWinner === "blue" ? e.blueTeam : e.redTeam;
+      knownWin.set(loggedGameKey(e.date, e.blueTeam, e.redTeam) + "#" + e.gameNumber, String(resolveTeam(w) || w || "").toUpperCase().trim());
+    }
+  } catch(e) {}
   // Stored games by Riot game id, and the series whose results were guessed or
   // don't add up — those are fetched again even though every game is stored.
   const storedByRiot = new Map(), storedByRiotId = new Map();
@@ -25422,7 +25457,13 @@ async function runAutoLog(silent = true) {
               try { const fr = frameRead((await feedFinalFrame(g.id)).frame); if (fr) { feedWinner = fr.side; feedWeight = fr.w; } } catch(ex) {}
             }
           } catch(ex) {}
-          rows.push({ g, bc, rc, blueCode, redCode, stored, champions, players, playerIds, patch, feedWinner, feedWeight });
+          let known = null;
+          try {
+            const rb = String(resolveTeam(bc) || bc).toUpperCase().trim(), rr = String(resolveTeam(rc) || rc).toUpperCase().trim();
+            const kw = g.number != null ? knownWin.get(loggedGameKey(date, rb, rr) + "#" + g.number) : null;
+            known = kw ? (kw === rb ? "blue" : kw === rr ? "red" : null) : null;
+          } catch(e) {}
+          rows.push({ g, bc, rc, blueCode, redCode, stored, champions, players, playerIds, patch, feedWinner, feedWeight, known });
         }
 
         if (open) resolveOpenSeriesWinners(rows, matchTeams.map(t => [String(t.code || t.name || "").toUpperCase(), t.result?.gameWins || 0]));
@@ -25446,7 +25487,10 @@ async function runAutoLog(silent = true) {
         rechecked++;
 
         for (const r of rows) {
-          if (r.stored || !r.winner) continue;
+          // A game Riot lists but nobody can call yet is still imported, as "?",
+          // so it's on Match history to set the result and log a bet against.
+          // Skipping it made the game simply not exist.
+          if (r.stored) continue;
           if (removedByYou()["riot_" + r.g.id]) continue;   // you removed it
           if (recheck.has(loggedGameKey(date, r.bc, r.rc)) || date < normalCutoff) repairAdded++;
           unsaved.push({
@@ -25455,8 +25499,8 @@ async function runAutoLog(silent = true) {
             eventContext: buildContextLabel(leagueName, blockName, startTime),
             gameNumber: r.g.number || null,
             blueTeam: r.blueCode, redTeam: r.redCode,
-            champions: r.champions, players: r.players, ...(r.playerIds ? { playerIds: r.playerIds } : {}), actualWinner: r.winner, patch: r.patch,
-            winnerConfidence: r.conf,
+            champions: r.champions, players: r.players, ...(r.playerIds ? { playerIds: r.playerIds } : {}), actualWinner: r.winner || null, patch: r.patch,
+            winnerConfidence: r.conf || null,
             source: "riot",
             watched: false, isBulkImport: true,
             predWinner: null, predConf: null,
