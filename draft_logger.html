@@ -351,6 +351,19 @@
   .match-header .league { color:var(--muted);font-size:12px; }
   .live-badge { background:#ff4d5e;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.5px; }
   .db-draft-board { display:grid;grid-template-columns:1fr 1fr;padding:10px 0 6px; }
+  .wb { padding:8px 14px 10px;border-bottom:1px solid var(--border); }
+  .wb-bar { position:relative;height:22px;border-radius:6px;overflow:hidden;background:var(--red); }
+  .wb-bar > i { position:absolute;inset:0 auto 0 0;background:var(--blue);transition:width .6s ease; }
+  .wb-bar > b { position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--surface);opacity:.7; }
+  .wb-bar > span { position:absolute;top:2px;font-size:12px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums; }
+  .wb-bar > .l { left:8px; } .wb-bar > .r { right:8px; }
+  .wb-meta { display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums; }
+  .wb-lanes { display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px; }
+  .wb-lane { text-align:center;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums; }
+  .wb-lane b { display:block;font-size:11px;color:var(--text);font-weight:600; }
+  .wb-mini { height:3px;background:var(--border);border-radius:2px;position:relative;margin-top:2px; }
+  .wb-mini > i { position:absolute;top:0;bottom:0;border-radius:2px; }
+  .watch-bar .wb { padding:0 10px 8px;border-bottom:none; }
   .db-draft-side { padding:0 14px; }
   .db-draft-side.blue { border-right:1px solid var(--border); }
   .db-draft-side-label { font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:6px; }
@@ -1455,6 +1468,15 @@
     Every team name exactly as it appears in your data, A–Z. Nothing here changes unless you do it: tick names
     to combine them, retire teams that no longer play, or park the ones you're unsure about in Don't know.
     Games are never deleted.</p>
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+      <div class="card-title" style="margin:0;">Team ratings</div>
+      <select id="tr-filter" onchange="_trFilter=this.value;renderTeamRatings()" style="width:auto;max-width:60%;font-size:12px;padding:5px 8px;"></select>
+    </div>
+    <p style="font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 6px;">Each team's five starters' average ratings added up (out of 50),
+      from the games you've ranked in this filter. "Record #" is where its win–loss puts it; ▲/▼ marks a gap of 3 places or more. Tap a team for its players.</p>
+    <div id="tr-list"></div>
+  </div>
   <input type="text" id="tm-search" placeholder="Search names" oninput="renderTeamsList()" autocomplete="off" style="width:100%;font-size:13px;padding:8px 10px;margin-bottom:8px;">
   <div id="tm-tabs" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;"></div>
   <div id="tm-bar" style="display:none;position:sticky;top:0;z-index:5;background:var(--surface);border:1px solid var(--border);
@@ -2031,7 +2053,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.04-b185</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.12-b188</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2042,6 +2064,33 @@
       Worker fetches and caches LPL games, and the app never calls Leaguepedia directly.</p>
     <input type="text" id="lpl-proxy-url" placeholder="https://draft-logger-lpl.yourname.workers.dev" oninput="saveLplProxy(this.value)" autocomplete="off" spellcheck="false" style="width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
     <div id="lpl-proxy-status" style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">📈 Live win bar</div>
+    <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
+      The link to your game recorder (<code>livebar-recorder</code> on Cloudflare). With it set, the
+      Live and Watch pages show a win-probability bar for every game it's recording. Set it once
+      here and it reaches all your devices.</p>
+    <input type="text" id="recorder-url" placeholder="https://livebar-recorder.yourname.workers.dev" oninput="saveRecorderUrl(this.value)" autocomplete="off" spellcheck="false" style="width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+    <div id="recorder-status" style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;"></div>
+    <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px;">🔔 Discord alerts</div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px;">
+        A card in your Discord channel when each game's draft locks (both drafts and the Model Lab's
+        call, with the result added when it ends), and a ping before the first match of the day.
+        Needs the recorder's <code>DISCORD_WEBHOOK</code> and <code>CONTROL_KEY</code> secrets; type the
+        same control key here.</p>
+      <input type="password" id="recorder-key" placeholder="Control key" oninput="saveRecorderKey(this.value)" autocomplete="off" spellcheck="false" style="width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:10px;cursor:pointer;">
+        <input type="checkbox" id="alerts-on" onchange="setAlerts({ notify: this.checked })" style="width:16px;height:16px;"> Send alerts to Discord</label>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px;">Wake-up ping before the first match of the day for:</div>
+      <div id="alerts-leagues" style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:12px;"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px;">Ping
+        <select id="alerts-minutes" onchange="setAlerts({ wakeMinutes: Number(this.value) })" style="width:auto;flex:none;font-size:12px;padding:3px 6px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);">
+          <option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="30">30</option></select> minutes before</div>
+      <div id="alerts-status" style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;"></div>
+    </div>
   </div>
 
   <div class="card" style="margin-bottom:14px;">
@@ -2565,7 +2614,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.04-b185";
+const BUILD_VERSION = "2026.11.12-b188";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -6977,6 +7026,118 @@ function profileFilterMatch(e, f) {
   if (f.startsWith("l:")) return lg === f.slice(2);
   return e.league === f;                       // older saved value: a raw league name
 }
+// The rating filter's choices: tournaments (a league or event in one year,
+// newest first, with its splits), then leagues. Only games you've ranked
+// players in count. Shared by the Players page and the Teams page ratings.
+function profileFilterOptions(entries, reviews, cur) {
+  const rankedIds = new Set(Object.keys(reviews));
+  const tours = new Map(), lgs = new Set();
+  for (const e of entries) {
+    if (!rankedIds.has(e.id)) continue;
+    const lg = resolveLeague(e.league || "") || e.league; if (!lg) continue;
+    const k = lg + "|" + String(e.date || "").slice(0, 4);
+    const t = tours.get(k) || { k, lg, y: String(e.date || "").slice(0, 4), last: "", n: 0 };
+    t.n++; if ((e.date || "") > t.last) t.last = e.date || ""; tours.set(k, t);
+    lgs.add(lg);
+  }
+  const opt = (v, t) => `<option value="${v}" ${v === cur ? "selected" : ""}>${t}</option>`;
+  const ratedIn = (a, b, lg) => entries.filter(e => rankedIds.has(e.id) && (resolveLeague(e.league || "") || e.league) === lg
+    && String(e.date || "").slice(0, 10) >= a && String(e.date || "").slice(0, 10) <= b).length;
+  const sorted = [...tours.values()].sort((a, b) => (a.last < b.last ? 1 : -1));
+  const html = opt("all", "All games")
+    + `<optgroup label="Tournaments">` + sorted.map(t => {
+          const sp = leagueSplits(t.lg, t.y);
+          const splits = sp.length > 1 ? sp.map(x => [x, ratedIn(x.from, x.to, t.lg)]).filter(([, n]) => n).reverse()
+            .map(([x, n]) => opt(`s:${t.lg}|${t.y}|${x.from}|${x.to}`, `\u00A0\u00A0\u21B3 ${t.lg} ${t.y} \u00B7 ${x.name} (${x.span}) (${n})`)).join("") : "";
+          return opt("t:" + t.k, `${t.lg} ${t.y} (${t.n})`) + splits;
+        }).join("") + `</optgroup>`
+    + `<optgroup label="Leagues, every year">` + [...lgs].sort().map(l => opt("l:" + l, l)).join("") + `</optgroup>`;
+  return { html, newest: sorted.length ? "t:" + sorted[0].k : "all" };
+}
+
+// ── Team ratings: each team's five starters' average ratings, added up ───────
+// Starters are the most-rated player in each role for that team within the
+// filter, so a sub who played twice doesn't replace the regular. Ratings are
+// your 1–10 rankings averaged over that team's games only. Shown next to the
+// team's record in the same games, so a strong rating with a weak record (or
+// the reverse) stands out.
+let _trFilter = null;
+function teamRatingsData(f) {
+  const entries = ratedGames().filter(entryInScope), reviews = loadReviews();
+  const teams = new Map();
+  const T = key => { if (!teams.has(key)) teams.set(key, { key, w: 0, l: 0, rated: 0, roles: {} }); return teams.get(key); };
+  for (const e of entries) {
+    if (!profileFilterMatch(e, f)) continue;
+    const ranks = reviews[e.id] || {};
+    const isRated = Object.keys(ranks).length > 0;
+    for (const side of ["blue", "red"]) {
+      const name = side === "blue" ? e.blueTeam : e.redTeam;
+      if (!name) continue;
+      const t = T(String(resolveTeam(name) || name).toUpperCase());
+      if (e.actualWinner === side) t.w++; else if (e.actualWinner === "blue" || e.actualWinner === "red") t.l++;
+      if (!isRated) continue;
+      t.rated++;
+      (e.players?.[side] || []).forEach((pn, i) => {
+        if (!pn || i > 4 || ranks[pn] == null) return;
+        const role = PROFILE_ROLES[i];
+        const byRole = t.roles[role] || (t.roles[role] = {});
+        const p = byRole[pn] || (byRole[pn] = { name: pn, sum: 0, n: 0 });
+        p.sum += Number(ranks[pn]); p.n++;
+      });
+    }
+  }
+  const out = [];
+  for (const t of teams.values()) {
+    if (t.rated < 2) continue;
+    const starters = [], subs = [];
+    for (const role of PROFILE_ROLES.slice(0, 5)) {
+      const ps = Object.values(t.roles[role] || {}).sort((a, b) => b.n - a.n);
+      if (ps[0]) starters.push({ role, ...ps[0], avg: ps[0].sum / ps[0].n });
+      ps.slice(1).forEach(p => subs.push({ role, ...p, avg: p.sum / p.n }));
+    }
+    const total = starters.reduce((s, p) => s + p.avg, 0);
+    out.push({ ...t, starters, subs, total, full: starters.length === 5, pct: (t.w + t.l) ? t.w / (t.w + t.l) : 0 });
+  }
+  out.sort((a, b) => (b.full - a.full) || b.total - a.total);
+  const byRecord = [...out].sort((a, b) => b.pct - a.pct || (b.w - b.l) - (a.w - a.l));
+  out.forEach(t => { t.recRank = byRecord.indexOf(t) + 1; });
+  return out;
+}
+function renderTeamRatings() {
+  const box = document.getElementById("tr-list"), sel = document.getElementById("tr-filter");
+  if (!box || !sel) return;
+  const entries = ratedGames().filter(entryInScope), reviews = loadReviews();
+  const opts = profileFilterOptions(entries, reviews, _trFilter || "");
+  if (!_trFilter) _trFilter = opts.newest;
+  sel.innerHTML = profileFilterOptions(entries, reviews, _trFilter).html;
+  sel.value = _trFilter;
+  const rows = teamRatingsData(_trFilter);
+  if (!rows.length) { box.innerHTML = `<div class="empty">No team has 2 or more games with ranked players in this filter.</div>`; return; }
+  const col = v => v >= 7.5 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "#ff4d5e";
+  const lab = r => ({ top: "Top", jungle: "Jng", mid: "Mid", bot: "Bot", adc: "Bot", bottom: "Bot", support: "Sup" }[r] || r);
+  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  box.innerHTML = rows.map((t, i) => {
+    const gap = t.recRank - (i + 1);
+    const flag = Math.abs(gap) >= 3
+      ? `<span style="font-size:10px;color:${gap > 0 ? "var(--green)" : "#ff4d5e"};" title="${gap > 0 ? "Rated well above its record" : "Record well above its rating"}">${gap > 0 ? "\u25B2" : "\u25BC"} record #${t.recRank}</span>`
+      : `<span style="font-size:10px;color:var(--muted);">record #${t.recRank}</span>`;
+    return `<details style="border-bottom:1px solid var(--border);padding:7px 2px;">
+      <summary style="display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;">
+        <span style="width:22px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#${i + 1}</span>
+        <span style="flex:1;min-width:0;font-size:13px;font-weight:600;">${esc(teamDisplay(t.key, t.key))}
+          <span style="font-weight:400;font-size:11px;"><span style="color:var(--green);">${t.w}</span>\u2013<span style="color:#ff4d5e;">${t.l}</span></span> ${flag}</span>
+        <span style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;">${t.total.toFixed(1)}</span>
+        <span style="font-size:10px;color:var(--muted);width:34px;">${t.full ? "/ 50" : t.starters.length + " of 5"}</span>
+      </summary>
+      <div style="padding:6px 0 2px 30px;font-size:12px;line-height:1.8;">
+        ${t.starters.map(p => `<div style="display:flex;justify-content:space-between;gap:8px;"><span><span style="color:var(--muted);display:inline-block;width:32px;">${lab(p.role)}</span>${esc(p.name)}</span>
+          <span style="font-variant-numeric:tabular-nums;"><b style="color:${col(p.avg)};">${p.avg.toFixed(2)}</b> <span style="color:var(--muted);font-size:11px;">\u00B7 ${p.n}g</span></span></div>`).join("")}
+        ${t.subs.length ? `<div style="color:var(--muted);font-size:11px;margin-top:2px;">Also played: ${t.subs.map(p => `${esc(p.name)} (${lab(p.role)}, ${p.avg.toFixed(1)} \u00B7 ${p.n}g)`).join(", ")} \u2014 not counted</div>` : ""}
+        <div style="color:var(--muted);font-size:11px;">${t.rated} game${t.rated === 1 ? "" : "s"} with ranked players</div>
+      </div></details>`;
+  }).join("");
+}
+
 // The games ratings can belong to: everything you logged by hand, plus any
 // imported game you've ranked players in (from Match history).
 function ratedGames() {
@@ -9873,33 +10034,10 @@ function renderPlayerProfiles() {
   const el = document.getElementById("player-profiles-list");
   if (!el) return;
 
-  // Filter: tournaments (a league or event in one year, newest first), then leagues.
-  // Only games you've ranked players in count towards the list.
-  const rankedIds = new Set(Object.keys(reviews));
-  const tours = new Map(), lgs = new Set();
-  for (const e of entries) {
-    if (!rankedIds.has(e.id)) continue;
-    const lg = resolveLeague(e.league || "") || e.league; if (!lg) continue;
-    const k = lg + "|" + String(e.date || "").slice(0, 4);
-    const t = tours.get(k) || { k, lg, y: String(e.date || "").slice(0, 4), last: "", n: 0 };
-    t.n++; if ((e.date || "") > t.last) t.last = e.date || ""; tours.set(k, t);
-    lgs.add(lg);
-  }
   const lsel = document.getElementById("profile-league-filter");
   if (lsel) {
     const cur = lsel.value;
-    const opt = (v, t) => `<option value="${v}" ${v === cur ? "selected" : ""}>${t}</option>`;
-    const ratedIn = (a, b, lg) => entries.filter(e => rankedIds.has(e.id) && (resolveLeague(e.league || "") || e.league) === lg
-      && String(e.date || "").slice(0, 10) >= a && String(e.date || "").slice(0, 10) <= b).length;
-    lsel.innerHTML = opt("all", "All games")
-      + `<optgroup label="Tournaments">` + [...tours.values()].sort((a, b) => (a.last < b.last ? 1 : -1))
-          .map(t => {
-            const sp = leagueSplits(t.lg, t.y);
-            const splits = sp.length > 1 ? sp.map(x => [x, ratedIn(x.from, x.to, t.lg)]).filter(([, n]) => n).reverse()
-              .map(([x, n]) => opt(`s:${t.lg}|${t.y}|${x.from}|${x.to}`, `\u00A0\u00A0\u21B3 ${t.lg} ${t.y} \u00B7 ${x.name} (${x.span}) (${n})`)).join("") : "";
-            return opt("t:" + t.k, `${t.lg} ${t.y} (${t.n})`) + splits;
-          }).join("") + `</optgroup>`
-      + `<optgroup label="Leagues, every year">` + [...lgs].sort().map(l => opt("l:" + l, l)).join("") + `</optgroup>`;
+    lsel.innerHTML = profileFilterOptions(entries, reviews, cur).html;
     if (cur && cur !== "all" && lsel.value !== cur) lsel.value = "all";
   }
 
@@ -22338,6 +22476,8 @@ function labSnapshot() {
   return out;
 }
 function onLabUpdated() {
+  try { _recJudge.clear(); recPaint(); } catch(e) {}
+  try { if (window.labApi && labApi.ready()) setTimeout(() => sendLabSnapshot(false), 2000); } catch(e) {}
   const a = document.querySelector(".screen.active");
   if (a && a.id === "screen-log") { try { renderLogLab(); } catch(e) {} }
 }
@@ -22376,6 +22516,7 @@ function renderLogLab() {
     <div style="height:24px;border-radius:6px;overflow:hidden;display:flex;font-size:12px;font-weight:700;">
       <div style="width:${(p * 100).toFixed(1)}%;background:rgba(91,140,255,.35);display:flex;align-items:center;padding-left:8px;">${B} ${pc(p)}</div>
       <div style="flex:1;background:rgba(255,91,91,.28);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">${pc(1 - p)} ${Rd}</div></div>
+    ${draftJudgeHtml(draftJudgeOf(r), B, Rd, false)}
     <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:6px;">
       <span>Player ratings \u00B7 this game \u00B7 ${accTxt("players")}</span>
       <span style="color:${r.agree ? "var(--green)" : "var(--yellow)"};white-space:nowrap;">${r.agree ? "all models agree" : "models split"}</span></div>
@@ -23286,6 +23427,274 @@ async function testLplProxy() {
     el.innerHTML = `<span style="color:#ff4d5e;">Can't reach it: ${String(e.message || e)}</span>`;
   }
 }
+// ── Live win bar ──────────────────────────────────────────────────────────────
+// The game recorder (a separate Cloudflare Worker) reads Riot's live feed every
+// minute and stores each game's state. The app only reads from it: one request
+// every 30 seconds while Live or Watch is on screen, however many games are on.
+const RECORDER_KEY = "draftlogger_recorder_v1";
+function recorderUrl() {
+  const v = (localStorage.getItem(RECORDER_KEY) || "").trim().replace(/\/+$/, "");
+  return /^https:\/\//.test(v) ? v : "";
+}
+let _recorderTimer = null;
+function saveRecorderUrl(v) {
+  localStorage.setItem(RECORDER_KEY, String(v || "").trim());
+  clearTimeout(_recorderTimer);
+  _recorderTimer = setTimeout(() => { testRecorder(); recPoll(true); }, 700);
+}
+async function testRecorder() {
+  const el = document.getElementById("recorder-status");
+  if (!el) return;
+  const url = recorderUrl();
+  if (!url) { el.textContent = "Not set \u2014 the Live and Watch pages show no bar."; return; }
+  el.textContent = "Checking\u2026";
+  try {
+    const r = await fetch(url + "/status", { cache: "no-store" });
+    const j = await r.json();
+    if (!j || !j.ok || j.games == null) throw new Error("that URL isn't the game recorder");
+    const running = j.lastRun && Date.now() - j.lastRun < 3 * 60000;
+    el.innerHTML = running
+      ? `<span style="color:var(--green);">\u2713 Recording</span> \u2014 ${j.games} game${j.games === 1 ? "" : "s"} recorded, ${j.labelled} with a result.`
+      : j.lastRun
+        ? `<span style="color:var(--yellow);">Connected, but it last ran ${Math.round((Date.now() - j.lastRun) / 60000)} min ago.</span> Check its Cron trigger on Cloudflare.`
+        : `<span style="color:var(--yellow);">Connected, waiting for its first run</span> (up to 15 minutes after the schedule is added).`;
+  } catch(e) {
+    el.innerHTML = `<span style="color:#ff4d5e;">Can't reach it: ${String(e.message || e)}</span>`;
+  }
+}
+
+// ── Discord alerts (sent by the recorder) ────────────────────────────────────
+const RECORDER_CTL_KEY = "draftlogger_recorder_key_v1";
+const RECORDER_SNAP_KEY = "draftlogger_recorder_snap_v1";   // when the Model Lab's numbers were last sent
+const ALERT_LEAGUE_NAMES = { worlds: "Worlds", msi: "MSI", first_stand: "First Stand", lck: "LCK", lpl: "LPL",
+  lec: "LEC", lcs: "LCS", lck_challengers_league: "LCK CL", cblol: "CBLOL", lcp: "LCP" };
+let _alerts = null;
+function recorderCtlKey() { return (localStorage.getItem(RECORDER_CTL_KEY) || "").trim(); }
+let _recKeyTimer = null;
+function saveRecorderKey(v) {
+  localStorage.setItem(RECORDER_CTL_KEY, String(v || "").trim());
+  clearTimeout(_recKeyTimer);
+  _recKeyTimer = setTimeout(() => { sendLabSnapshot(true); loadAlerts(); }, 800);
+}
+async function loadAlerts() {
+  const st = document.getElementById("alerts-status");
+  const url = recorderUrl();
+  if (!st) return;
+  if (!url) { st.textContent = "Set the recorder link above first."; return; }
+  try {
+    const r = await fetch(url + "/control", { cache: "no-store" });
+    const j = await r.json();
+    if (!j || !j.ok || j.version == null) throw new Error("this recorder is older than 1.3 \u2014 paste the new livebar-worker.js on Cloudflare");
+    _alerts = j;
+    const on = document.getElementById("alerts-on"); if (on) on.checked = !!j.notify;
+    const mins = document.getElementById("alerts-minutes"); if (mins) mins.value = String(j.wakeMinutes || 10);
+    const box = document.getElementById("alerts-leagues");
+    if (box) {
+      const all = Object.assign({}, ALERT_LEAGUE_NAMES, j.leaguesSeen || {});
+      const order = Object.keys(all).sort((a, b) => (a in ALERT_LEAGUE_NAMES ? 0 : 1) - (b in ALERT_LEAGUE_NAMES ? 0 : 1));
+      box.innerHTML = order.map(slug => `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <input type="checkbox" data-wake="${_stEsc(slug)}" ${(j.wakeLeagues || []).includes(slug) ? "checked" : ""} onchange="saveWakeLeagues()"> ${_stEsc(ALERT_LEAGUE_NAMES[slug] || all[slug] || slug)}</label>`).join("");
+    }
+    const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 2 ? "just now" : m < 120 ? m + " min ago" : Math.round(m / 60) + " h ago"; };
+    const bits = [];
+    if (!j.hasWebhook) bits.push(`<span style="color:var(--yellow);">The recorder has no DISCORD_WEBHOOK secret yet.</span>`);
+    if (!j.hasKey) bits.push(`<span style="color:var(--yellow);">The recorder has no CONTROL_KEY secret yet.</span>`);
+    if (!recorderCtlKey()) bits.push(`Type the control key above to change these settings.`);
+    bits.push(j.modelAt ? `Model Lab numbers sent ${ago(j.modelAt)} (${j.modelPlayers.toLocaleString()} players).` : `Model Lab numbers not sent yet \u2014 they go automatically once the lab has trained and the key is set.`);
+    if (j.lastCard) bits.push(`Last card ${ago(j.lastCard)}.`);
+    st.innerHTML = bits.join(" ");
+  } catch(e) {
+    st.innerHTML = `<span style="color:#ff4d5e;">Can't read the alert settings: ${_stEsc(String(e.message || e))}</span>`;
+  }
+}
+async function setAlerts(patch) {
+  const st = document.getElementById("alerts-status");
+  const url = recorderUrl(), key = recorderCtlKey();
+  if (!url || !key) { if (st) st.innerHTML = `<span style="color:var(--yellow);">Set the recorder link and the control key first.</span>`; loadAlerts(); return; }
+  const body = Object.assign({}, patch);
+  // Cards link back to the app: the live site's address, never a test copy's.
+  try { if (!isTestCopy() && /^https:\/\//.test(location.href)) body.appUrl = location.origin + location.pathname; } catch(e) {}
+  try {
+    const r = await fetch(url + "/control", { method: "POST", headers: { "Content-Type": "application/json", "X-Control-Key": key }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) throw new Error(j.error || "HTTP " + r.status);
+    if (patch.notify) sendLabSnapshot(true);
+  } catch(e) {
+    if (st) st.innerHTML = `<span style="color:#ff4d5e;">Not saved: ${_stEsc(String(e.message || e))}</span>`;
+    setTimeout(loadAlerts, 2500);
+    return;
+  }
+  loadAlerts();
+}
+function saveWakeLeagues() {
+  const list = [...document.querySelectorAll("#alerts-leagues [data-wake]")].filter(x => x.checked).map(x => x.dataset.wake);
+  setAlerts({ wakeLeagues: list });
+}
+// The Model Lab's numbers go to the recorder after it trains, at most every
+// three hours, so the Discord cards' calls stay close to the app's.
+let _snapBusy = false;
+async function sendLabSnapshot(force) {
+  const url = recorderUrl(), key = recorderCtlKey();
+  if (!url || !key || _snapBusy || !window.labApi || !labApi.ready() || !labApi.exportSnapshot) return;
+  const last = Number(localStorage.getItem(RECORDER_SNAP_KEY) || 0);
+  if (!force && Date.now() - last < 3 * 3600000) return;
+  const snap = labApi.exportSnapshot();
+  if (!snap) return;
+  _snapBusy = true;
+  try {
+    const r = await fetch(url + "/model", { method: "POST", headers: { "Content-Type": "application/json", "X-Control-Key": key }, body: JSON.stringify(snap) });
+    if (r.ok) localStorage.setItem(RECORDER_SNAP_KEY, String(Date.now()));
+  } catch(e) {} finally { _snapBusy = false; }
+}
+
+// Rough bar: gold lead weighted by game time, plus towers, inhibitors, barons
+// and dragons. A placeholder until enough recorded games exist to fit the real
+// model; the same formula as the recorder's own page.
+// frame.blue / frame.red = [gold, kills, towers, inhibs, barons, dragons[]]
+function roughBlueProb(frame) {
+  const b = frame.blue, r = frame.red;
+  const t = Math.max((frame.gt || 0) / 60, 8);
+  const gd = (b[0] - r[0]) / 1000;
+  const nonElder = d => (d || []).filter(x => x !== "elder").length;
+  const elder = d => (d || []).filter(x => x === "elder").length;
+  let logit = gd * 0.42 * Math.sqrt(15 / t)
+    + 0.15 * (b[2] - r[2])
+    + 0.50 * (b[3] - r[3])
+    + 0.35 * (b[4] - r[4])
+    + 0.15 * (nonElder(b[5]) - nonElder(r[5]))
+    + 0.60 * ((nonElder(b[5]) >= 4) - (nonElder(r[5]) >= 4))
+    + 0.80 * (elder(b[5]) - elder(r[5]));
+  logit = Math.max(-4, Math.min(4, logit));
+  return 1 / (1 + Math.exp(-logit));
+}
+
+// Draft judge: how far the draft moved the Model Lab's call. The player model
+// rates the two lineups before the draft; the champion model rates the same
+// lineups with the draft. The difference is the draft's effect.
+function draftJudgeOf(pick) {
+  if (!pick || !pick.models || !pick.hasDraft) return null;
+  const pre = pick.models.find(m => m.id === "players"), post = pick.models.find(m => m.id === "champs");
+  if (!pre || !post || pre.p == null || post.p == null) return null;
+  return { pre: pre.p, post: post.p, edge: post.p - pre.p };
+}
+function draftJudgeHtml(j, blue, red, compact) {
+  if (!j) return "";
+  const pts = Math.round(Math.abs(j.edge) * 100);
+  const who = j.edge >= 0 ? blue : red, col = j.edge >= 0 ? "var(--blue)" : "var(--red)";
+  const verdict = pts < 2 ? `Even draft` : `<b style="color:${col};">${_stEsc(who)}</b> won the draft <b style="color:${col};">+${pts}%</b>`;
+  if (compact) return `<span>${verdict}</span>`;
+  const fav = p => p >= 0.5 ? `${_stEsc(blue)} ${Math.round(p * 100)}%` : `${_stEsc(red)} ${Math.round((1 - p) * 100)}%`;
+  return `<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:11.5px;margin-top:6px;">
+    <span>\u2696 ${verdict}</span>
+    <span style="color:var(--muted);">Model Lab: ${fav(j.pre)} before the draft \u2192 ${fav(j.post)} after</span></div>`;
+}
+// The judge for a game the recorder is following: its lineups and champions,
+// as the live feed lists them. Cached per game, since a draft doesn't change.
+const _recJudge = new Map();
+function recJudge(g) {
+  if (!g || !Array.isArray(g.players) || g.players.length !== 10) return null;
+  if (_recJudge.has(g.id)) return _recJudge.get(g.id);
+  try {
+    if (!window.labApi) return null;
+    labApi.start();
+    if (!labApi.ready()) return null;          // still training: try again on the next paint
+    const pl = g.players;
+    const pick = labApi.gamePick({ blueTeam: g.blue.code, redTeam: g.red.code, league: "",
+      bluePlayers: pl.slice(0, 5).map(x => x[2]), redPlayers: pl.slice(5).map(x => x[2]),
+      champs: { blue: pl.slice(0, 5).map(x => x[0]), red: pl.slice(5).map(x => x[0]) } });
+    const j = draftJudgeOf(pick);
+    if (j) _recJudge.set(g.id, j);
+    return j;
+  } catch(e) { return null; }
+}
+
+let _recLive = [], _recAt = 0, _recErr = "", _recInterval = null, _recBusy = false;
+function recWanted() {
+  const a = document.querySelector(".screen.active");
+  return !!(a && (a.id === "screen-dashboard" || a.id === "screen-watch"));
+}
+async function recPoll(force) {
+  const url = recorderUrl();
+  if (!url) { _recLive = []; recPaint(); return; }
+  if (_recBusy || (!force && (document.hidden || !recWanted()))) return;
+  _recBusy = true;
+  try {
+    const r = await fetch(url + "/live", { cache: "no-store" });
+    const j = await r.json();
+    if (!j || !j.ok) throw new Error((j && j.error) || "HTTP " + r.status);
+    _recLive = j.games || []; _recAt = Date.now(); _recErr = "";
+  } catch(e) { _recErr = String(e.message || e); }
+  finally { _recBusy = false; }
+  recPaint();
+}
+function recStart() {
+  if (_recInterval) return;
+  _recInterval = setInterval(() => recPoll(false), 30000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && recWanted()) recPoll(true); });
+}
+// The recorder's game for a Riot game id, or for two team codes in either order.
+function recGameById(id) { return _recLive.find(g => String(g.id) === String(id)) || null; }
+function recGameByTeams(a, b) {
+  const A = String(a || "").toUpperCase(), B = String(b || "").toUpperCase();
+  return _recLive.find(g => {
+    const x = String(g.blue.code || "").toUpperCase(), y = String(g.red.code || "").toUpperCase();
+    return (x === A && y === B) || (x === B && y === A);
+  }) || null;
+}
+function recBarHtml(g, opts) {
+  opts = opts || {};
+  const f = g && g.frame;
+  if (!f) return g ? `<div class="wb"><div class="wb-meta"><span>Win bar: waiting for the recorder's first frame\u2026</span></div></div>` : "";
+  const p = roughBlueProb(f), pct = Math.round(p * 100);
+  const B = _stEsc(g.blue.code || "Blue"), R = _stEsc(g.red.code || "Red");
+  const gt = Math.max(0, f.gt | 0), mm = Math.floor(gt / 60) + ":" + String(gt % 60).padStart(2, "0");
+  const gd = f.blue[0] - f.red[0];
+  const lead = gd === 0 ? "even gold" : `${gd > 0 ? B : R} +${(Math.abs(gd) / 1000).toFixed(1)}k gold`;
+  const obj = `towers ${f.blue[2]}\u2013${f.red[2]} \u00B7 drakes ${f.blue[5].length}\u2013${f.red[5].length}${(f.blue[4] || f.red[4]) ? ` \u00B7 barons ${f.blue[4]}\u2013${f.red[4]}` : ""}`;
+  let lanes = "";
+  if (opts.lanes && Array.isArray(g.players) && g.players.length === 10 && Array.isArray(f.p) && f.p.length === 10) {
+    const ROLES = [["top", "Top"], ["jungle", "Jng"], ["mid", "Mid"], ["bottom", "Bot"], ["support", "Sup"]];
+    lanes = `<div class="wb-lanes">` + ROLES.map(([role, lab]) => {
+      const bi = g.players.findIndex((x, i) => i < 5 && x[1] === role);
+      const ri = g.players.findIndex((x, i) => i >= 5 && x[1] === role);
+      if (bi < 0 || ri < 0) return `<div class="wb-lane">${lab}</div>`;
+      const d = f.p[bi][0] - f.p[ri][0];
+      const w = Math.min(50, Math.abs(d) / 3000 * 50);
+      const fill = d >= 0 ? `<i style="left:${50 - w}%;width:${w}%;background:var(--blue)"></i>`
+                          : `<i style="left:50%;width:${w}%;background:var(--red)"></i>`;
+      return `<div class="wb-lane">${lab}<b style="color:${d > 0 ? "var(--blue)" : d < 0 ? "var(--red)" : "var(--text)"}">${d === 0 ? "\u00B1" : d > 0 ? "+" : "\u2212"}${(Math.abs(d) / 1000).toFixed(1)}k</b><div class="wb-mini">${fill}</div></div>`;
+    }).join("") + `</div>`;
+  }
+  const paused = g.state === "paused" ? ` \u00B7 <span style="color:var(--yellow);">paused</span>` : "";
+  const judge = recJudge(g);
+  const judgeHtml = judge ? (opts.lanes ? draftJudgeHtml(judge, g.blue.code || "Blue", g.red.code || "Red", false)
+    : `<div class="wb-meta">${draftJudgeHtml(judge, g.blue.code || "Blue", g.red.code || "Red", true)}</div>`) : "";
+  return `<div class="wb" title="Rough formula until enough recorded games exist to fit the real model">
+    <div class="wb-bar"><i style="width:${(p * 100).toFixed(1)}%"></i><b></b>
+      <span class="l">${B} ${pct}%</span><span class="r">${100 - pct}% ${R}</span></div>
+    <div class="wb-meta"><span>${mm}${paused} \u00B7 ${lead}</span><span>${obj}</span></div>
+    ${lanes}
+    ${judgeHtml}
+  </div>`;
+}
+// Live cards carry Riot's game id; Watch tiles know the teams on each stream.
+function recPaint() {
+  try {
+    document.querySelectorAll("[data-recbar]").forEach(el => {
+      const g = recGameById(el.dataset.recbar) || recGameByTeams(el.dataset.blue, el.dataset.red);
+      const html = recBarHtml(g, { lanes: true });
+      if (el._html !== html) { el.innerHTML = html; el._html = html; }
+    });
+    document.querySelectorAll("#watch-grid [data-ch]").forEach(tile => {
+      const slot = tile.querySelector(".watch-bar");
+      if (!slot) return;
+      const games = (typeof _watchLiveMeta !== "undefined" && _watchLiveMeta[tile.dataset.ch]) || [];
+      const html = games.map(m => recBarHtml(recGameByTeams(m.blue, m.red), { lanes: false })).join("");
+      if (slot._html !== html) { slot.innerHTML = html; slot._html = html; }
+    });
+  } catch(e) {}
+}
+
 const SYNC_CODE_KEY  = "draftlogger_sync_code_v2";
 const SYNC_SEQ_KEY   = "draftlogger_sync_seq_v2";
 const SYNC_SEQ_BULK  = "draftlogger_sync_seq_bulk_v2";
@@ -23422,6 +23831,8 @@ function syncSettingsKeys() {
     teamAliasLog:    TEAM_ALIAS_LOG_KEY,
     teamRegistry:    TEAM_REG_KEY,
     lplProxy:        LPL_PROXY_KEY,
+    recorder:        RECORDER_KEY,
+    recorderKey:     RECORDER_CTL_KEY,
     teamLabels:      TEAM_LABELS_KEY,
     hiddenLeagues:   HIDDEN_LEAGUES_KEY,
     // Import and repair status were kept per browser, so each device showed its
@@ -28877,7 +29288,8 @@ function renderWatchPage() {
              <a href="${isYouTube(ch) ? ch : "https://twitch.tv/" + ch}" target="_blank" rel="noopener"
                 style="color:var(--muted);text-decoration:none;font-size:12px;padding:2px 4px;" title="Open in a new tab">\u2197</a>
              <button class="watch-remove" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px;" title="Remove">\u2715</button>
-           </div>`;
+           </div>
+           <div class="watch-bar"></div>`;
         tile.querySelector(".watch-audio").onclick = () => soloAudio(ch);
         const fb = tile.querySelector(".watch-focus");
         if (fb) fb.onclick = () => setWatchFocus(ch);
@@ -28945,6 +29357,7 @@ function renderWatchPage() {
     updateWatchTileChrome();
   }
 
+  try { recPaint(); } catch(e) {}
   // Anything parked while the page was hidden starts now.
   flushPendingEmbeds();
   autoClearStale();
@@ -30541,6 +30954,7 @@ function dbBuildCard(c) {
     <div class="db-draft-board" id="db-draft-${c.gameId}" data-blue="${c.blueCode}" data-red="${c.redCode}">
       <div class="db-draft-pending">Loading draft…</div>
     </div>
+    <div data-recbar="${c.gameId}" data-blue="${c.blueCode}" data-red="${c.redCode}"></div>
     <div class="db-scoreboard" id="db-score-${c.gameId}">
       <div class="sb-empty">Loading…</div>
     </div>
@@ -30587,6 +31001,7 @@ function dbSyncCards(cards) {
         dbRenderedCards.set(c.gameId, el);
       }
     });
+    try { recPaint(); } catch(e) {}
   }
   // Refresh all live games in parallel — don't await each one serially
   Promise.all(cards.map(c => dbRefreshGame(c.gameId))).catch(()=>{});
@@ -31028,7 +31443,7 @@ function show(screen) {
     .forEach(b => b.classList.add("active"));
   // The watch screen keeps polling too — that is the whole point of watching
   // in here rather than in a background tab.
-  if (screen === "dashboard" || screen === "watch") { dbStartPolling(); }
+  if (screen === "dashboard" || screen === "watch") { dbStartPolling(); try { recStart(); setTimeout(() => recPoll(true), 300); } catch(e) {} }
   else { dbStopPolling(); }
   try {
     if (screen === "results")   {
@@ -31051,7 +31466,7 @@ function show(screen) {
     if (screen === "findings")   renderFindings();
     if (["lab", "log", "today", "dashboard"].includes(screen)) { try { window.labApi && labApi.start(); } catch(e) {} }
     if (screen === "log") { try { renderLogLab(); } catch(e) {} }
-    if (screen === "teams")      renderTeamsList();
+    if (screen === "teams")      { renderTeamRatings(); renderTeamsList(); }
     if (screen === "tiers")     renderTiers();
     // renderHighConfidence() was removed with its card but the call was left
     // behind, throwing on every visit to this screen. Each call is guarded now
@@ -31083,6 +31498,14 @@ function show(screen) {
         const f = document.getElementById("lpl-proxy-url");
         if (f && document.activeElement !== f) f.value = localStorage.getItem(LPL_PROXY_KEY) || "";
         testLplProxy();
+      } catch(e) {}
+      try {
+        const f = document.getElementById("recorder-url");
+        if (f && document.activeElement !== f) f.value = localStorage.getItem(RECORDER_KEY) || "";
+        testRecorder();
+        const k = document.getElementById("recorder-key");
+        if (k && document.activeElement !== k) k.value = localStorage.getItem(RECORDER_CTL_KEY) || "";
+        loadAlerts();
       } catch(e) {}
     }
     if (screen === "settings")  { try { updateErrorBadge(); renderStatesPanel(); } catch(e) {} updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); try { renderSyncQueue(); renderSettingsPanels(); } catch(e) {} loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
@@ -33096,6 +33519,18 @@ LAB.VARIANTS.push(
       return out;
     },
     refresh: () => { lastSig = ""; return refresh(); },
+    // The two models behind the draft judge, as plain numbers, so the game
+    // recorder can make the same calls in its Discord cards with nothing open.
+    exportSnapshot: () => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players"), post = R.results.find(r => r.id === "champs");
+      if (!pre || !post || !pre.model || !post.model || !post.model.base) return null;
+      const r4 = v => Math.round(v * 1e4) / 1e4;
+      const obj = m => Object.fromEntries([...m].map(([k, v]) => [k, r4(v)]));
+      const pr = m => ({ r: obj(m.r), lm: obj(m.lm), side: r4(m.side), scale: m.scale, newbie: m.newbie });
+      return { at: Date.now(), games: R.results.length ? (pre.games || []).length : 0, intl: [...LAB.INTERNATIONAL],
+        players: pr(pre.model), champs: { base: pr(post.model.base), c: obj(post.model.c), wc: post.model.wc } };
+    },
   };
 })();
 
