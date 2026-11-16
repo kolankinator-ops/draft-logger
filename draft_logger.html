@@ -2053,7 +2053,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.16-b189</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.16-b190</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2116,7 +2116,7 @@
     <input type="text" id="sync-url" placeholder="https://draft-logger-sync.you.workers.dev" style="margin-top:4px;">
     <label style="margin-top:10px;">Sync code <span style="color:var(--muted);font-weight:400;">(the SYNC_CODE secret — identical on every device)</span></label>
     <div style="display:flex;gap:8px;margin-top:4px;">
-      <input type="password" id="sync-code" placeholder="your long random string" style="flex:1;">
+      <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" id="sync-code" placeholder="your long random string" style="-webkit-text-security:disc;flex:1;">
       <button class="btn btn-primary" style="white-space:nowrap;" onclick="connectSync()">Connect</button>
     </div>
     <div id="sync-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
@@ -2212,7 +2212,7 @@
       on this device, then pushes the result to the new sync. Existing local
       games are never overwritten.
     </p>
-    <input type="password" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="margin-bottom:8px;">
+    <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" id="legacy-jsonbin-key" placeholder="JSONBin secret key ($2a$10$...)" style="-webkit-text-security:disc;margin-bottom:8px;">
     <input type="text" id="legacy-jsonbin-bin" placeholder="Bin ID" style="margin-bottom:8px;">
     <button class="btn btn-ghost" onclick="importFromJsonBin()">Import once</button>
     <div id="legacy-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
@@ -2346,7 +2346,7 @@
       3. Copy the token (starts with <code>ghp_</code>) and paste below
     </div>
     <label>GitHub personal access token</label>
-    <input type="password" id="gh-token" placeholder="ghp_..." style="margin-bottom:8px;">
+    <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" id="gh-token" placeholder="ghp_..." style="-webkit-text-security:disc;margin-bottom:8px;">
     <label>Repository (owner/repo)</label>
     <input type="text" id="gh-repo" placeholder="kolankinator-ops/draft-logger" style="margin-bottom:8px;">
     <label>File path in repo</label>
@@ -2614,7 +2614,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.16-b189";
+const BUILD_VERSION = "2026.11.16-b190";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -31638,7 +31638,7 @@ function showUnlock() {
   o.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:380px;width:100%;padding:20px;">
     <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Load your data</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Your games, bets and rankings are on your server. Enter your code (the SYNC_CODE secret) to load them in this browser.</div>
-    <input type="password" id="unlock-code" placeholder="Your code" style="width:100%;margin-bottom:10px;" onkeydown="if(event.key==='Enter')unlockWithCode()">
+    <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" id="unlock-code" placeholder="Your code" style="-webkit-text-security:disc;width:100%;margin-bottom:10px;" onkeydown="if(event.key==='Enter')unlockWithCode()">
     <div id="unlock-msg" style="font-size:12px;min-height:16px;margin-bottom:8px;"></div>
     <button class="btn btn-primary" style="width:100%;" onclick="unlockWithCode()">Load my data</button></div>`;
   document.body.appendChild(o);
