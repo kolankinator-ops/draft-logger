@@ -2053,7 +2053,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.12-b188</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.16-b189</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2081,7 +2081,7 @@
         call, with the result added when it ends), and a ping before the first match of the day.
         Needs the recorder's <code>DISCORD_WEBHOOK</code> and <code>CONTROL_KEY</code> secrets; type the
         same control key here.</p>
-      <input type="password" id="recorder-key" placeholder="Control key" oninput="saveRecorderKey(this.value)" autocomplete="off" spellcheck="false" style="width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+      <input type="text" id="recorder-key" name="dl-recorder-ctl" placeholder="Control key" oninput="saveRecorderKey(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" style="-webkit-text-security:disc;width:100%;font-size:13px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);">
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:10px;cursor:pointer;">
         <input type="checkbox" id="alerts-on" onchange="setAlerts({ notify: this.checked })" style="width:16px;height:16px;"> Send alerts to Discord</label>
       <div style="font-size:12px;color:var(--muted);margin-top:10px;">Wake-up ping before the first match of the day for:</div>
@@ -2614,7 +2614,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.12-b188";
+const BUILD_VERSION = "2026.11.16-b189";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -23490,10 +23490,31 @@ async function loadAlerts() {
     const mins = document.getElementById("alerts-minutes"); if (mins) mins.value = String(j.wakeMinutes || 10);
     const box = document.getElementById("alerts-leagues");
     if (box) {
-      const all = Object.assign({}, ALERT_LEAGUE_NAMES, j.leaguesSeen || {});
-      const order = Object.keys(all).sort((a, b) => (a in ALERT_LEAGUE_NAMES ? 0 : 1) - (b in ALERT_LEAGUE_NAMES ? 0 : 1));
-      box.innerHTML = order.map(slug => `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
-        <input type="checkbox" data-wake="${_stEsc(slug)}" ${(j.wakeLeagues || []).includes(slug) ? "checked" : ""} onchange="saveWakeLeagues()"> ${_stEsc(ALERT_LEAGUE_NAMES[slug] || all[slug] || slug)}</label>`).join("");
+      // Majors and anything you've ticked up front; every other league Riot
+      // lists folded underneath, A–Z.
+      // Our guessed slugs give way to Riot's own once its list names the same league.
+      const seenNames = new Set(Object.values(j.leaguesSeen || {}).map(n => String(n).toLowerCase()));
+      const guesses = Object.fromEntries(Object.entries(ALERT_LEAGUE_NAMES).filter(([slug, n]) =>
+        (j.leaguesSeen || {})[slug] || !seenNames.has(n.toLowerCase())));
+      const all = Object.assign({}, guesses, j.leaguesSeen || {});
+      const ticked = new Set(j.wakeLeagues || []);
+      const name = slug => ALERT_LEAGUE_NAMES[slug] || all[slug] || slug;
+      const box1 = (slug) => `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <input type="checkbox" data-wake="${_stEsc(slug)}" ${ticked.has(slug) ? "checked" : ""} onchange="saveWakeLeagues()"> ${_stEsc(name(slug))}</label>`;
+      // Majors by name, using Riot's own slugs once its list has arrived.
+      const seen = j.leaguesSeen || {};
+      const majorNames = Object.values(ALERT_LEAGUE_NAMES).map(n => n.toLowerCase());
+      const majors = Object.keys(seen).length
+        ? Object.keys(all).filter(s => majorNames.includes(String(name(s)).toLowerCase()) && (s in seen || !Object.values(seen).some(n => String(n).toLowerCase() === String(name(s)).toLowerCase())))
+            .sort((a, b) => majorNames.indexOf(String(name(a)).toLowerCase()) - majorNames.indexOf(String(name(b)).toLowerCase()))
+        : Object.keys(ALERT_LEAGUE_NAMES);
+      const front = majors.concat([...ticked].filter(s => !majors.includes(s)));
+      const rest = Object.keys(all).filter(s => !front.includes(s)).sort((a, b) => name(a).localeCompare(name(b)));
+      const open = box.querySelector("details") && box.querySelector("details").open;
+      box.innerHTML = front.map(box1).join("") + (rest.length
+        ? `<details style="width:100%;margin-top:2px;"${open ? " open" : ""}><summary style="cursor:pointer;color:var(--muted);font-size:12px;">More leagues (${rest.length})</summary>
+            <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;">${rest.map(box1).join("")}</div></details>`
+        : `<div style="width:100%;font-size:11px;color:var(--muted);">The full league list arrives from the recorder within a day of updating it to 1.4.</div>`);
     }
     const ago = t => { const m = Math.round((Date.now() - t) / 60000); return m < 2 ? "just now" : m < 120 ? m + " min ago" : Math.round(m / 60) + " h ago"; };
     const bits = [];
