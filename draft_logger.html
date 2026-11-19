@@ -483,6 +483,21 @@
   .td-row { padding:8px 0;border-top:1px solid var(--border); }
   .td-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end; }
   .td-num b { font-size:15px;font-variant-numeric:tabular-nums; } .td-num span { font-size:10px;color:var(--muted); }
+  /* Draft record */
+  .dr-row { display:grid;grid-template-columns:minmax(0,1fr) 62px 58px 74px;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--border); }
+  .dr-headrow { border-top:none;padding:0 0 4px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
+  .dr-headrow span:not(:first-child) { text-align:right; }
+  .dr-n { text-align:right;display:flex;flex-direction:column;align-items:flex-end;min-width:0; }
+  .dr-n b { font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap; } .dr-n span { font-size:10px;color:var(--muted);white-space:nowrap; }
+  .dr-big { font-size:34px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums; }
+  .dr-split { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px; }
+  .dr-split > div { background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column; }
+  .dr-split span { font-size:10.5px;color:var(--muted); } .dr-split b { font-size:18px;font-variant-numeric:tabular-nums; } .dr-split i { font-style:normal;font-size:11px;color:var(--muted); }
+  .dr-sub { font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px; }
+  .dr-chip { font-size:11.5px;padding:5px 9px;margin:0 6px 6px 0;border-radius:14px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer; }
+  .dr-chip span { opacity:.75;margin-left:2px; } .dr-chip.on { border-color:var(--blue);color:var(--text);background:var(--blue-dim); }
+  .dr-chip.locked { cursor:default;opacity:.55;text-decoration:line-through; }
+  .dr-game { display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--border);font-size:13px; }
   .mh-draft { display:flex;gap:4px;flex-wrap:wrap; }
   .mh-draft button { flex:1 1 0;min-width:52px;font-size:11px;padding:5px 4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
   .mh-draft button.b { color:var(--blue); } .mh-draft button.r { color:var(--red); }
@@ -673,9 +688,9 @@
 <div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts');closeDrawer()">🎯 Team drafts</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts');closeDrawer()">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord');closeDrawer()">📋 Draft record</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts')">🎯 Team drafts</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts')">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord')">📋 Draft record</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -1963,6 +1978,16 @@
 </div>
 
 <!-- STATS -->
+<div class="screen" id="screen-draftrecord">
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="font-size:16px;font-weight:700;">📋 Draft record</div>
+      <select id="dr-filter" style="width:auto;flex:none;max-width:100%;" onchange="_drFilter=this.value;renderDraftRecord()"></select>
+    </div>
+    <div id="dr-sources"></div>
+  </div>
+  <div id="dr-body"></div>
+</div>
 <div class="screen" id="screen-stats">
   <div class="stat-grid" id="stat-grid"></div>
   <div class="card" style="margin-bottom:14px;">
@@ -1970,7 +1995,8 @@
     <div id="rolling-accuracy"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">Draft preference accuracy</div>
+    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">Draft preference accuracy
+      <span onclick="show('draftrecord')" style="font-size:11px;color:var(--blue);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:500;">Full draft record →</span></div>
     <div id="draft-pref-stats"></div>
   </div>
   <div class="card" style="margin-bottom:14px;">
@@ -2053,7 +2079,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.16-b190</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.19-b192</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2614,7 +2640,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.16-b190";
+const BUILD_VERSION = "2026.11.19-b192";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -11367,7 +11393,9 @@ function saveEntry() {
     mktRedOdds:  parseFloat((document.getElementById("mkt-red-odds")  || {}).value) || null,
     notes: document.getElementById("notes").value.trim(),
     bet: getBetData(),
-    actualWinner: retroactiveWinner || null  // auto-resolve if retroactive
+    actualWinner: retroactiveWinner || null,  // auto-resolve if retroactive
+    // Logged after the game ended: kept apart from live calls on Draft record.
+    retro: !!retroactiveWinner
   };
 
   const entries = loadEntries();
@@ -15806,6 +15834,401 @@ function exportDraftReadCsv() {
   const blob = new Blob([[head.join(","), ...body].join("\n")], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = "draft-read-predictions.csv"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+// ── Draft record ─────────────────────────────────────────────────────────────
+// Every draft call you've made, scored two ways: did your side win, and did it
+// win more often than team strength alone said it would. The second is the one
+// that separates a draft read from just backing the better team.
+//
+// Calls only count from the sources switched on. The default is the strict set
+// (logged before the result, or rated with results hidden), and the page always
+// says which sources are in, so a number is never quietly padded with reads
+// made after the fact.
+const DR_SRC_KEY = "draftlogger_draftrecord_sources_v1";
+const DR_SOURCES = [
+  { id: "live",   label: "Logged live",              def: true,  about: "saved on Log Game before the result" },
+  { id: "review", label: "Blind reviews",            def: true,  about: "your Review drafts backlog and Match history ratings, made with results hidden" },
+  { id: "after",  label: "Logged after the game",    def: false, about: "the app hid the result, but you may have known it" },
+  { id: "vod",    label: "VOD logs",                 def: false, about: "the result is entered on the same form" },
+  { id: "knew",   label: "Rated knowing the result", def: false, locked: true, about: "never counted as a call" }
+];
+const DR_JUDGE_MIN = 0.02;   // the judge needs a 2-point edge before it counts as a call
+let _drFilter = "all";
+
+function drEsc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function drSources() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(DR_SRC_KEY) || "null"); } catch (e) {}
+  const out = {};
+  for (const d of DR_SOURCES) out[d.id] = d.locked ? false : (s && typeof s[d.id] === "boolean" ? s[d.id] : d.def);
+  return out;
+}
+function drToggleSource(id) {
+  const d = DR_SOURCES.find(x => x.id === id);
+  if (!d || d.locked) return;
+  const s = drSources(); s[id] = !s[id];
+  try { localStorage.setItem(DR_SRC_KEY, JSON.stringify(s)); } catch (e) {}
+  renderDraftRecord();
+}
+function drShiftDay(d, n) {
+  const t = new Date(d + "T12:00:00"); t.setDate(t.getDate() + n);
+  return localDateStr(t);
+}
+
+// The Model Lab's walk-forward predictions: each game predicted by the player
+// model before it was played (team strength, no draft), and by the champion
+// model after the draft. Matched to app games by id, then by day, teams and
+// game number, since a hand-logged game and its import carry different ids.
+function drLabLookup() {
+  if (!window.labApi || !labApi.ready() || !labApi.gamePreds) return null;
+  const list = labApi.gamePreds();
+  if (!list) return null;
+  const T = n => String(resolveTeam(n || "") || n || "").toUpperCase().trim();
+  const byId = new Map(), byKey = new Map();
+  for (const g of list) {
+    byId.set(g.id, g);
+    if (!g.gnum) continue;
+    const k = String(g.date).slice(0, 10) + "|" + [T(g.blue), T(g.red)].sort().join("/") + "|" + g.gnum;
+    if (!byKey.has(k)) byKey.set(k, g);
+  }
+  return { byId, byKey, T };
+}
+function drLabFor(L, e) {
+  if (!L) return null;
+  let g = L.byId.get(e.id);
+  if (!g && e.gameNumber) {
+    const pair = [L.T(e.blueTeam), L.T(e.redTeam)].sort().join("/"), d0 = String(e.date).slice(0, 10);
+    for (const d of [d0, drShiftDay(d0, -1), drShiftDay(d0, 1)]) {
+      g = L.byKey.get(d + "|" + pair + "|" + e.gameNumber);
+      if (g) break;
+    }
+  }
+  if (!g) return null;
+  const flip = L.T(g.blue) !== L.T(e.blueTeam);
+  const o = p => (p == null ? null : flip ? 1 - p : p);
+  return { pre: o(g.pre), post: o(g.post) };
+}
+
+// One row per game you put a draft read on, with everything the page needs.
+function draftRecordRows() {
+  const ann = loadAnnotations(), L = drLabLookup();
+  const rows = [];
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet || !e.date) continue;
+    const win = e.actualWinner;
+    if (win !== "blue" && win !== "red") continue;
+    let v = null, src, tags = null, caveat = false, skill = e.skillAdv || null;
+    if (!e.isBulkImport && e.draftPref != null) {
+      v = e.draftPref; tags = e.draftTags || null; caveat = !!e.draftCaveat;
+      if (e.isVod) src = "vod";
+      else if (e.retro) src = "after";
+      else {
+        // Older entries have no flag; one saved on a later day than the game was
+        // logged after it.
+        const t = Number(e.id);
+        src = (t > 1e12 && localDateStr(new Date(t)) > String(e.date).slice(0, 10)) ? "after" : "live";
+      }
+    } else {
+      const a = ann[gameKey(e)];
+      if (!a || a.draftPref == null) continue;
+      v = a.draftPref; tags = a.draftTags || null; src = a.knewResult ? "knew" : "review";
+      skill = skill || a.skillAdv || null;
+    }
+    v = Number(v);
+    if (!isFinite(v)) continue;
+    const side = v < 0 ? "blue" : v > 0 ? "red" : null;
+    const lab = drLabFor(L, e);
+    let pre = lab && lab.pre != null ? lab.pre : null;
+    if (pre == null && e.lab && e.lab.models && typeof e.lab.models.players === "number") pre = e.lab.models.players;
+    const edge = lab && lab.pre != null && lab.post != null ? lab.post - lab.pre : null;
+    const judge = edge == null ? null : edge >= DR_JUDGE_MIN ? "blue" : edge <= -DR_JUDGE_MIN ? "red" : "none";
+    const { blueOdds, redOdds } = entryOdds(e);
+    const mkt = side && blueOdds && redOdds && blueOdds !== redOdds
+      ? ((side === "blue" ? blueOdds < redOdds : redOdds < blueOdds) ? "fav" : "dog") : null;
+    skill = skill === "blue" || skill === "red" ? skill : null;
+    rows.push({
+      e, v, side, src, tags, caveat, skill, win, judge, edge, mkt,
+      lvl: Math.min(2, Math.abs(Math.round(v))),
+      hit: side ? side === win : null,
+      pSide: side && pre != null ? (side === "blue" ? pre : 1 - pre) : null,
+      better: side && skill ? (skill === side ? "same" : "other") : "none",
+      league: resolveLeague(e.league || "") || e.league || "Unknown",
+      month: String(e.date).slice(0, 7)
+    });
+  }
+  return { rows, labReady: !!L };
+}
+
+// Hit rate, plus won-vs-expected on the games that have a team-strength number.
+function drStat(list) {
+  const n = list.length, w = list.filter(r => r.hit).length;
+  const P = list.filter(r => r.pSide != null);
+  const exp = P.reduce((a, r) => a + r.pSide, 0);
+  const act = P.filter(r => r.hit).length;
+  const vr = P.reduce((a, r) => a + r.pSide * (1 - r.pSide), 0);
+  return {
+    n, w, l: n - w, pct: n ? w / n * 100 : null, seCoin: n ? 50 / Math.sqrt(n) : null,
+    nP: P.length, exp: P.length ? exp / P.length * 100 : null, act: P.length ? act / P.length * 100 : null,
+    above: P.length ? (act - exp) / P.length * 100 : null, se: P.length ? Math.sqrt(vr) / P.length * 100 : null
+  };
+}
+function drVerdict(diff, se, n) {
+  if (diff == null || !n) return ["No games yet", "var(--muted)"];
+  if (n < 20) return ["Too few games to judge", "var(--muted)"];
+  const z = se ? diff / se : 0;
+  if (z >= 1.96) return ["Clear of luck at this sample", "var(--green)"];
+  if (z >= 1)    return ["Leaning real — needs more games", "var(--yellow)"];
+  if (z > -1)    return ["Can't separate from luck yet", "var(--muted)"];
+  return ["Running below expectation", "#ff4d5e"];
+}
+const drPct = v => (v == null ? "—" : v.toFixed(1) + "%");
+const drPts = v => (v == null ? "—" : (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(1) + " pts");
+const drTone = v => (v == null ? "var(--muted)" : v >= 2 ? "var(--green)" : v <= -2 ? "#ff4d5e" : "var(--text)");
+const drMonthName = m => new Date(m + "-15T12:00:00").toLocaleDateString([], { month: "short", year: "numeric" });
+
+// A table row: label, games, record, won, team strength expected, difference.
+function drRow(label, s, note) {
+  return `<div class="dr-row">
+    <div style="min-width:0;"><div style="font-size:13px;font-weight:600;">${label}</div>
+      ${note ? `<div style="font-size:10.5px;color:var(--muted);line-height:1.4;">${note}</div>` : ""}</div>
+    <div class="dr-n"><b>${s.n ? s.w + "–" + s.l : "—"}</b><span>${s.n} game${s.n === 1 ? "" : "s"}</span></div>
+    <div class="dr-n"><b>${drPct(s.pct)}</b><span>${s.nP ? "exp " + drPct(s.exp) : "won"}</span></div>
+    <div class="dr-n"><b style="color:${drTone(s.above)};">${s.nP >= 1 ? drPts(s.above) : "—"}</b><span>${s.nP ? s.nP + " w/ strength" : "no strength"}</span></div>
+  </div>`;
+}
+const drHead = first => `<div class="dr-row dr-headrow"><span>${first || ""}</span><span>Record</span><span>Won</span><span>vs expected</span></div>`;
+
+function renderDraftRecord() {
+  const body = document.getElementById("dr-body");
+  if (!body) return;
+  if (window.labApi) { try { labApi.start(); } catch (e) {} }
+  const on = drSources();
+  const { rows: all, labReady } = draftRecordRows();
+
+  // Filter choices: tournaments and leagues you've made calls in.
+  const counted = all.filter(r => on[r.src] && r.side);
+  const fake = {}; for (const r of counted) fake[r.e.id] = { x: 1 };
+  const fsel = document.getElementById("dr-filter");
+  if (fsel) {
+    const opts = profileFilterOptions(counted.map(r => r.e), fake, _drFilter);
+    fsel.innerHTML = opts.html;
+    if (![...fsel.options].some(o => o.value === _drFilter)) { _drFilter = "all"; fsel.value = "all"; }
+  }
+
+  // Source switches, with how many calls each holds.
+  const srcEl = document.getElementById("dr-sources");
+  if (srcEl) {
+    srcEl.innerHTML = DR_SOURCES.map(d => {
+      const n = all.filter(r => r.src === d.id && r.side && profileFilterMatch(r.e, _drFilter)).length;
+      const isOn = on[d.id];
+      return `<button class="dr-chip${isOn ? " on" : ""}${d.locked ? " locked" : ""}" ${d.locked ? "disabled" : `onclick="drToggleSource('${d.id}')"`}
+        title="${drEsc(d.about)}">${isOn ? "✓ " : ""}${d.label} <span>${n}</span></button>`;
+    }).join("") + `<div style="font-size:10.5px;color:var(--muted);line-height:1.5;margin-top:6px;">
+      Counted: ${DR_SOURCES.filter(d => on[d.id]).map(d => d.label.toLowerCase()).join(", ") || "nothing"}.
+      ${DR_SOURCES.filter(d => !on[d.id]).map(d => `${d.label}: ${d.about}`).join(" · ")}</div>`;
+  }
+
+  const inF = all.filter(r => profileFilterMatch(r.e, _drFilter));
+  const rows = inF.filter(r => on[r.src] && r.side).sort((a, b) => (a.e.date < b.e.date ? -1 : a.e.date > b.e.date ? 1 : 0));
+  const evens = inF.filter(r => on[r.src] && !r.side).length;
+  window._drRows = rows;
+
+  if (!rows.length) {
+    body.innerHTML = `<div class="card"><div class="empty">No draft calls in this filter from the sources switched on.
+      Rate drafts on Log Game, Review drafts or Match history and they appear here once the result is in.</div></div>`;
+    return;
+  }
+
+  const S = drStat(rows);
+  const first = rows[0].e.date, last = rows[rows.length - 1].e.date;
+  const fmtDay = d => new Date(String(d).slice(0, 10) + "T12:00:00").toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+  const card = (title, inner, sub) => `<div class="card" style="margin-bottom:12px;">
+    <div class="card-title">${title}</div>${sub ? `<div style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:-4px 0 10px;">${sub}</div>` : ""}${inner}</div>`;
+  const strengthNote = labReady ? "" : `<div style="font-size:11.5px;color:var(--yellow);margin-top:6px;">Loading the team-strength model… the expected numbers fill in once it's ready.</div>`;
+
+  // 1 · The headline.
+  const vCoin = drVerdict(S.pct - 50, S.seCoin, S.n);
+  const lv = l => drStat(rows.filter(r => r.lvl === l));
+  const s2 = lv(2), s1 = lv(1);
+  let html = `<div class="card dr-hero" style="margin-bottom:12px;">
+    <div class="card-title">Your draft calls</div>
+    <div class="dr-big">${drPct(S.pct)}</div>
+    <div style="font-size:14px;margin-top:2px;">Your better draft won <b>${S.w} of ${S.n}</b> games (${S.w}–${S.l})</div>
+    <div style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:4px;">
+      ${fmtDay(first)} – ${fmtDay(last)} · ±${S.seCoin.toFixed(1)} at this sample ·
+      against a coin flip: <span style="color:${vCoin[1]};">${vCoin[0]}</span>${evens ? ` · ${evens} even draft${evens === 1 ? "" : "s"} not counted` : ""}</div>
+    <div class="dr-split">
+      <div><span>Strong calls (±2)</span><b>${drPct(s2.pct)}</b><i>${s2.w}–${s2.l}</i></div>
+      <div><span>Lean calls (±1)</span><b>${drPct(s1.pct)}</b><i>${s1.w}–${s1.l}</i></div>
+    </div>
+  </div>`;
+
+  // 2 · Beyond team strength: the number that matters for a draft read.
+  if (S.nP) {
+    const vx = drVerdict(S.above, S.se, S.nP);
+    html += card("Beyond team strength",
+      `<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+         <div class="dr-big" style="color:${drTone(S.above)};">${drPts(S.above)}</div>
+         <div style="font-size:12px;color:${vx[1]};">${vx[0]}</div></div>
+       <div style="font-size:13px;line-height:1.6;margin:4px 0 10px;">Your drafts won <b>${drPct(S.act)}</b>.
+         Team strength alone expected <b>${drPct(S.exp)}</b> for the same sides.</div>
+       ${drHead("Call strength")}${drRow("Strong calls (±2)", s2)}${drRow("Lean calls (±1)", s1)}
+       <div style="font-size:10.5px;color:var(--muted);line-height:1.5;margin-top:8px;">±${S.se.toFixed(1)} pts at this sample.
+         Expected = the Model Lab's player model, which predicts each game from the ten players before it's played and never sees the draft.
+         ${S.nP < S.n ? `${S.n - S.nP} call${S.n - S.nP === 1 ? "" : "s"} had no team-strength number (missing lineups) and only count toward the record.` : ""}</div>${strengthNote}`,
+      "If your draft read only picked the better team, this would sit near zero.");
+  } else {
+    html += card("Beyond team strength", `<div class="empty" style="padding:6px 0;">${labReady
+      ? "None of these games could be matched to a team-strength number."
+      : "Loading the team-strength model…"}</div>`);
+  }
+
+  // 3 · Split by who's the better team.
+  const by = f => drStat(rows.filter(f));
+  const yours = [
+    drRow("Better team, better draft", by(r => r.better === "same"), "you liked the draft of the team you called better"),
+    drRow("Worse team, better draft", by(r => r.better === "other"), "you liked the draft of the team you called worse"),
+    drRow("No better-team call", by(r => r.better === "none"), "skill edge left blank or “not sure”")
+  ].join("");
+  const model = [
+    drRow("Stronger team's draft", by(r => r.pSide != null && r.pSide >= 0.5), "team strength had your side as favorite"),
+    drRow("Weaker team's draft", by(r => r.pSide != null && r.pSide < 0.5), "team strength had your side as underdog")
+  ].join("");
+  const mktRows = rows.filter(r => r.mkt);
+  const market = mktRows.length ? [
+    drRow("Market favorite's draft", by(r => r.mkt === "fav"), "lower price in the odds you logged"),
+    drRow("Market underdog's draft", by(r => r.mkt === "dog"), "higher price in the odds you logged")
+  ].join("") : "";
+  html += card("Which team is better",
+    `<div class="dr-sub">By your skill-edge call</div>${drHead()}${yours}
+     <div class="dr-sub" style="margin-top:14px;">By team strength (player model)</div>${drHead()}${model}
+     ${market ? `<div class="dr-sub" style="margin-top:14px;">By the market</div>${drHead()}${market}
+       <div style="font-size:10.5px;color:var(--muted);margin-top:6px;">The odds you logged are often series prices, so only who was favored is used here.</div>` : ""}`,
+    "“Worse team, better draft” is the case a draft read exists for: is the draft good enough for the weaker team to win?");
+
+  // 4 · You vs the data-only draft judge.
+  const J = rows.filter(r => r.judge && r.judge !== "none");
+  if (J.length) {
+    const agree = J.filter(r => r.judge === r.side), dis = J.filter(r => r.judge !== r.side);
+    const youRight = dis.filter(r => r.hit).length;
+    const judgeHit = J.filter(r => r.judge === r.win).length;
+    const noCall = rows.filter(r => r.judge === "none").length;
+    html += card("You vs the draft judge",
+      `<div class="dr-split" style="margin-top:0;">
+         <div><span>You</span><b>${drPct(J.filter(r => r.hit).length / J.length * 100)}</b><i>on these ${J.length}</i></div>
+         <div><span>Draft judge</span><b>${drPct(judgeHit / J.length * 100)}</b><i>on the same games</i></div></div>
+       <div style="font-size:13px;line-height:1.8;margin-top:10px;">
+         Agreed on <b>${agree.length}</b>: that side won ${drPct(agree.length ? agree.filter(r => r.hit).length / agree.length * 100 : null)}<br>
+         Disagreed on <b>${dis.length}</b>: you were right <b>${youRight}</b>, the judge was right <b>${dis.length - youRight}</b></div>
+       <div style="font-size:10.5px;color:var(--muted);line-height:1.5;margin-top:6px;">The judge is the champion model minus the player model, built only from game data.
+         It counts as a call when the gap is at least ${DR_JUDGE_MIN * 100} points${noCall ? `; it had no clear call on ${noCall} of your games` : ""}.</div>`,
+      "Where you and the data disagree is where your read is adding something, or missing something.");
+  }
+
+  // 4b · Each source on its own, so live calls and the review backlog can be
+  // judged separately.
+  const srcIn = DR_SOURCES.filter(d => on[d.id] && rows.some(r => r.src === d.id));
+  if (srcIn.length > 1) {
+    html += card("Where the calls come from", drHead("Source") +
+      srcIn.map(d => drRow(d.label, drStat(rows.filter(r => r.src === d.id)), d.about)).join(""));
+  }
+
+  // 5 · Month by month, with gaps shown rather than skipped.
+  const months = [];
+  for (let m = String(first).slice(0, 7); m <= String(last).slice(0, 7); m = drShiftDay(m + "-15", 31).slice(0, 7)) months.push(m);
+  html += card("Month by month",
+    drHead("Month") + months.map(m => {
+      const mr = rows.filter(r => r.month === m);
+      if (!mr.length) return `<div class="dr-row"><div style="font-size:13px;font-weight:600;">${drMonthName(m)}</div>
+        <div style="grid-column:2 / span 3;text-align:right;font-size:11.5px;color:var(--yellow);">no calls recorded</div></div>`;
+      return drRow(drMonthName(m), drStat(mr));
+    }).join(""),
+    "A month with no calls is a gap in the record, such as games logged on a device that never synced.");
+
+  // 6 · By league.
+  const lg = new Map();
+  for (const r of rows) { if (!lg.has(r.league)) lg.set(r.league, []); lg.get(r.league).push(r); }
+  const lgList = [...lg.entries()].filter(([, l]) => l.length >= 5).sort((a, b) => b[1].length - a[1].length);
+  const smallLg = [...lg.entries()].filter(([, l]) => l.length < 5).reduce((a, [, l]) => a + l.length, 0);
+  if (lgList.length > 1 || (lgList.length === 1 && smallLg)) {
+    html += card("By league", drHead("League") + lgList.map(([name, l]) => drRow(drEsc(name), drStat(l))).join("") +
+      (smallLg ? `<div style="font-size:10.5px;color:var(--muted);margin-top:6px;">${smallLg} call${smallLg === 1 ? "" : "s"} in leagues with fewer than 5 aren't listed.</div>` : ""));
+  }
+
+  // 7 · Draft dimensions: when you marked one side clearly ahead.
+  const dimRows = DRAFT_DIMENSIONS.map(d => {
+    const list = rows.filter(r => r.tags && typeof r.tags[d.id] === "number" && r.tags[d.id] !== 0)
+      .map(r => ({ ...r, side: r.tags[d.id] < 0 ? "blue" : "red", hit: (r.tags[d.id] < 0 ? "blue" : "red") === r.win,
+                   pSide: r.pSide == null ? null : ((r.tags[d.id] < 0 ? "blue" : "red") === r.side ? r.pSide : 1 - r.pSide) }));
+    return list.length ? drRow(d.label, drStat(list), d.hint) : "";
+  }).join("");
+  const cav = rows.filter(r => r.caveat);
+  if (dimRows || cav.length) {
+    html += card("Draft dimensions", drHead("Marked side") + dimRows +
+      (cav.length ? drRow("Drafts you flagged with a caveat", drStat(cav), "your overall call on those games") : ""),
+      "How often the side you marked ahead on each dimension went on to win.");
+  }
+
+  // 8 · Best calls and worst misses.
+  const line = r => {
+    const team = r.side === "blue" ? r.e.blueTeam : r.e.redTeam, opp = r.side === "blue" ? r.e.redTeam : r.e.blueTeam;
+    return `<div class="dr-game"><div style="min-width:0;"><b>${drEsc(team)}</b> <span style="color:var(--muted);">${r.hit ? "beat" : "lost to"} ${drEsc(opp)}</span>
+      <div style="font-size:10.5px;color:var(--muted);">${fmtDay(r.e.date)} · ${drEsc(r.league)}${r.e.gameNumber ? " · G" + r.e.gameNumber : ""} · your call ${r.lvl === 2 ? "±2" : "±1"}</div></div>
+      <div class="dr-n"><b>${r.pSide != null ? Math.round(r.pSide * 100) + "%" : "—"}</b><span>expected</span></div></div>`;
+  };
+  const best = rows.filter(r => r.hit && r.pSide != null && r.pSide < 0.5).sort((a, b) => a.pSide - b.pSide).slice(0, 5);
+  const worst = rows.filter(r => !r.hit && r.pSide != null).sort((a, b) => (b.lvl - a.lvl) || (b.pSide - a.pSide)).slice(0, 5);
+  if (best.length || worst.length) {
+    html += card("Best calls and worst misses",
+      (best.length ? `<div class="dr-sub">Weaker team, your draft, and they won</div>${best.map(line).join("")}` : "") +
+      (worst.length ? `<div class="dr-sub" style="margin-top:12px;">Your strongest calls that lost</div>${worst.map(line).join("")}` : ""));
+  }
+
+  // 9 · Taking it outside the app.
+  html += `<div class="card" style="margin-bottom:12px;"><div class="card-title">Share</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" style="flex:1;font-size:12px;" onclick="drCopyPost(this)">Copy for posting</button>
+      <button class="btn btn-ghost" style="flex:1;font-size:12px;" onclick="drExportCsv()">Download every call (CSV)</button></div>
+    <div style="font-size:10.5px;color:var(--muted);line-height:1.5;margin-top:8px;">The CSV lists each call with its date, teams, source and
+      expected chance, so anyone can check the record line by line.</div></div>`;
+
+  body.innerHTML = html;
+}
+
+function drPostText() {
+  const rows = window._drRows || [];
+  if (!rows.length) return "";
+  const S = drStat(rows), on = drSources();
+  const fmt = d => new Date(String(d).slice(0, 10) + "T12:00:00").toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+  const sl = DR_SOURCES.filter(d => on[d.id]).map(d => d.label.toLowerCase());
+  const srcs = sl.length > 1 ? sl.slice(0, -1).join(", ") + " and " + sl[sl.length - 1] : sl.join("");
+  const lines = [`Draft calls, ${fmt(rows[0].e.date)} to ${fmt(rows[rows.length - 1].e.date)}: ${S.w}-${S.l} (${S.pct.toFixed(1)}%) over ${S.n} games, ${srcs} only.`];
+  if (S.nP) lines.push(`Team strength alone expected those sides to win ${S.exp.toFixed(1)}%. They won ${S.act.toFixed(1)}% (${S.above >= 0 ? "+" : "-"}${Math.abs(S.above).toFixed(1)} pts).`);
+  const o = drStat(rows.filter(r => r.better === "other"));
+  if (o.n >= 5) lines.push(`When I liked the draft of the team I rated worse: ${o.w}-${o.l} (${o.pct.toFixed(1)}%)${o.nP ? `, expected ${o.exp.toFixed(1)}%` : ""}.`);
+  return lines.join("\n");
+}
+function drCopyPost(btn) {
+  const t = drPostText();
+  if (!t) return;
+  navigator.clipboard.writeText(t).then(() => { if (btn) { btn.textContent = "Copied"; setTimeout(() => btn.textContent = "Copy for posting", 1800); } })
+    .catch(() => prompt("Copy this:", t));
+}
+function drExportCsv() {
+  const rows = window._drRows || [];
+  if (!rows.length) return;
+  const esc = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
+  const head = ["date", "league", "game", "blue_team", "red_team", "your_draft_read", "your_draft_side", "your_better_team",
+                "source", "expected_pct_for_your_side", "draft_judge_side", "market", "winner", "hit"];
+  const body = rows.map(r => [r.e.date, r.league, r.e.gameNumber || "", r.e.blueTeam, r.e.redTeam, r.v, r.side, r.skill || "",
+    r.src, r.pSide == null ? "" : (r.pSide * 100).toFixed(1), r.judge || "", r.mkt || "", r.win, r.hit ? 1 : 0].map(esc).join(","));
+  const blob = new Blob([[head.join(","), ...body].join("\n")], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "draft-record.csv"; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
@@ -22480,6 +22903,7 @@ function onLabUpdated() {
   try { if (window.labApi && labApi.ready()) setTimeout(() => sendLabSnapshot(false), 2000); } catch(e) {}
   const a = document.querySelector(".screen.active");
   if (a && a.id === "screen-log") { try { renderLogLab(); } catch(e) {} }
+  if (a && a.id === "screen-draftrecord") { try { renderDraftRecord(); } catch(e) {} }
 }
 function renderLogLab() {
   const el = document.getElementById("lab-log-panel");
@@ -24408,6 +24832,10 @@ async function syncScope(scope, opts) {
   // Delta push normally, everything on a full reconcile. Anything the server
   // does not acknowledge simply gets re-sent next time, so this self-heals.
   const records = isTestCopy() ? [] : full ? all : all.filter(e => (e.updatedAt || 0) >= wm);
+  // In date order, so each upload batch lands in a few of the server's weekly
+  // chunks instead of dozens. The free plan allows 1,000 server writes a day,
+  // and a scattered first upload of every game could have used them all.
+  if (scope === "bulk") records.sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
 
   // Deletions travel the same way as edits: everything on a full reconcile,
   // otherwise only what is newer than the last successful sync.
@@ -24418,6 +24846,10 @@ async function syncScope(scope, opts) {
   let changed = false;
   const take = resp => {
     if (resp && resp.version) localStorage.setItem(SERVER_VER_KEY, String(resp.version));
+    if (scope === "bulk" && resp && resp.epoch && resp.epoch !== localStorage.getItem(SYNC_EPOCH_KEY)) {
+      localStorage.setItem(SYNC_EPOCH_KEY, resp.epoch);
+      _bulkEpochReset = true;
+    }
     if (mergeRemoteRecords(scope, resp.records, resp.tombstones)) changed = true;
   };
   // Downloads come a page at a time (sync server 4+; an older server sends
@@ -24474,6 +24906,16 @@ async function syncScope(scope, opts) {
   }
   if (scope === "state" && applyIncomingSettings(resp.settings, resp.settingsMeta)) changed = true;
 
+  if (scope === "bulk" && _bulkEpochReset && !isTestCopy()) {
+    // New layout on the server: start this device's imported games from zero,
+    // so the next sync (a moment from now) uploads everything and downloads
+    // whatever the other devices have already sent.
+    _bulkEpochReset = false;
+    localStorage.setItem(seqKey, "0");
+    localStorage.removeItem(FULL_SYNC_KEY);
+    setTimeout(() => { try { syncNow({ full: true, bulk: true }); } catch(e) {} }, 3000);
+    return changed;
+  }
   localStorage.setItem(seqKey, String(resp.seq || 0));
   return changed;
 }
@@ -24624,6 +25066,13 @@ function wireOfflineWatch() {
 const BULK_PULL_KEY = "draftlogger_sync_bulk_at_v1";
 const SERVER_VER_KEY = "draftlogger_sync_server_ver_v1";
 const FULL_SYNC_KEY = "draftlogger_sync_full_at_v1";
+// The sync server's storage layout for imported games. When it changes (server
+// 4.2 starts a fresh, chunked store and keeps the old one as a backup), this
+// device uploads everything it holds once, straight away, instead of waiting
+// for the next daily full sync. Until then, other devices could only fetch
+// what had been uploaded since the change.
+const SYNC_EPOCH_KEY = "draftlogger_sync_bulk_epoch_v1";
+let _bulkEpochReset = false;
 let _bulkPullWanted = false, _dedupedThisSession = false;
 const BULK_SYNC_EVERY_MS = 10 * 60 * 1000;
 function bulkSyncDue(opts) {
@@ -31483,6 +31932,7 @@ function show(screen) {
     if (screen === "champions")  renderChampions();
     if (screen === "players")    renderPlayerProfiles();
     if (screen === "teamdrafts") renderTeamDrafts();
+    if (screen === "draftrecord") renderDraftRecord();
     if (screen === "scouting")   renderScouting();
     if (screen === "findings")   renderFindings();
     if (["lab", "log", "today", "dashboard"].includes(screen)) { try { window.labApi && labApi.start(); } catch(e) {} }
@@ -33538,6 +33988,16 @@ LAB.VARIANTS.push(
         out.push({ id: g.id, date: g.date, league: g.league, blue: g.blue_team, red: g.red_team, edge: b - a });
       }
       return out;
+    },
+    // Every game, as each model called it before the game was played: the
+    // player model (team strength, no draft) and the champion model (after the
+    // draft). Sides as stored in the app. For the Draft record page.
+    gamePreds: () => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players"), post = R.results.find(r => r.id === "champs");
+      if (!pre) return null;
+      return pre.games.map(g => ({ id: g.id, date: g.date, gnum: g.gnum || 0, blue: g.blue_team, red: g.red_team,
+        pre: pre.preds.get(g.id) ?? null, post: post && g.champs ? (post.preds.get(g.id) ?? null) : null }));
     },
     refresh: () => { lastSig = ""; return refresh(); },
     // The two models behind the draft judge, as plain numbers, so the game
