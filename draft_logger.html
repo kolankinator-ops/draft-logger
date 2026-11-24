@@ -483,6 +483,22 @@
   .td-row { padding:8px 0;border-top:1px solid var(--border); }
   .td-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end; }
   .td-num b { font-size:15px;font-variant-numeric:tabular-nums; } .td-num span { font-size:10px;color:var(--muted); }
+  /* Rosters */
+  .ro-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:12px; }
+  .ro-card { margin:0 !important; }
+  .ro-row { display:grid;grid-template-columns:54px minmax(0,1fr) 34px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--border);cursor:pointer;font-size:13px; }
+  .ro-row.on { background:var(--surface2); }
+  .ro-role { font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
+  .ro-name { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .ro-rt { text-align:right;font-weight:700;font-variant-numeric:tabular-nums;font-size:12.5px; }
+  .ro-was { font-size:10.5px;color:var(--muted);margin-left:4px; }
+  .ro-st { font-size:9.5px;padding:1px 5px;border-radius:8px;margin-left:3px;vertical-align:1px; }
+  .ro-rumour { border:1px dashed var(--yellow);color:var(--yellow); } .ro-conf { color:var(--green); }
+  .ro-edit { padding:8px 0 10px;border-top:1px dashed var(--border); }
+  .ro-edit input, .ro-edit select { width:100%;font-size:13px;padding:7px 9px;margin-top:4px; }
+  .ro-btn { font-size:12px !important;padding:6px 12px !important;width:auto !important;flex:none; }
+  .ro-sug { display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13px; }
+  @media (max-width:520px) { .ro-sug { flex-wrap:wrap; } }
   /* Draft record */
   .dr-row { display:grid;grid-template-columns:minmax(0,1fr) 62px 58px 74px;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--border); }
   .dr-headrow { border-top:none;padding:0 0 4px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
@@ -688,9 +704,9 @@
 <div id="sync-pill" onclick="syncNow({full:true,bulk:true,manual:true})" title="Tap to sync now" style="display: none; position: fixed; bottom: 12px; left: 12px; z-index: 998; align-items: center; gap: 6px; background: var(--surface); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 999px; padding: 5px 11px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px; opacity: 0.92; color: var(--green);"></div>
 
 <!-- Nav drawer — contents generated from NAV_ITEMS so the two menus cannot drift -->
-<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts');closeDrawer()">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord');closeDrawer()">📋 Draft record</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
+<div class="nav-drawer" id="nav-drawer"><div class="nav-drawer-title">Main</div><button data-nav="home" onclick="show('home');closeDrawer()">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard');closeDrawer()">📡 Live</button><button data-nav="today" onclick="show('today');closeDrawer()">📅 Schedule</button><button data-nav="watch" onclick="show('watch');closeDrawer()">📺 Watch</button><button data-nav="scores" onclick="show('scores');closeDrawer()">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory');closeDrawer()">📜 Match history</button><button data-nav="log" onclick="show('log');closeDrawer()">Log Game</button><button data-nav="results" onclick="show('results');closeDrawer()">Log Results</button><div class="nav-drawer-title">Review</div><button data-nav="draftreview" onclick="show('draftreview');closeDrawer()" class="">🕶 Review drafts</button><button data-nav="vodrate" onclick="show('vodrate');closeDrawer()">🎬 Rate VODs</button><div class="nav-drawer-title">Analysis</div><button data-nav="players" onclick="show('players');closeDrawer()">Players</button><button data-nav="rosters" onclick="show('rosters');closeDrawer()">👥 Rosters</button><button data-nav="teamdrafts" onclick="show('teamdrafts');closeDrawer()">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord');closeDrawer()">📋 Draft record</button><button data-nav="champions" onclick="show('champions');closeDrawer()">Champions</button><button data-nav="tiers" onclick="show('tiers');closeDrawer()">⚖ Tiers</button><button data-nav="model" onclick="show('model');closeDrawer()">📊 Model</button><button data-nav="stats" onclick="show('stats');closeDrawer()">My Stats</button><div class="nav-drawer-title">Betting</div><button data-nav="bets" onclick="show('bets');closeDrawer()">Bets</button><button data-nav="betstats" onclick="show('betstats');closeDrawer()">Bet Stats</button><div class="nav-drawer-title">Settings</div><button data-nav="settings" onclick="show('settings');closeDrawer()" class="active">⚙ Sync</button></div>
 
-<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="teamdrafts" onclick="show('teamdrafts')">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord')">📋 Draft record</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
+<nav id="top-nav"><button data-nav="home" onclick="show('home')">🏠 Home</button><button data-nav="dashboard" onclick="show('dashboard')">📡 Live</button><button data-nav="today" onclick="show('today')">📅 Schedule</button><button data-nav="watch" onclick="show('watch')">📺 Watch</button><button data-nav="scores" onclick="show('scores')">🏁 Results</button><button data-nav="mhistory" onclick="show('mhistory')">📜 History</button><button data-nav="log" onclick="show('log')">Log Game</button><button data-nav="results" onclick="show('results')">Log Results</button><button data-nav="draftreview" onclick="show('draftreview')" class="">🕶 Review</button><button data-nav="vodrate" onclick="show('vodrate')">🎬 Rate VODs</button><button data-nav="players" onclick="show('players')">Players</button><button data-nav="rosters" onclick="show('rosters')">👥 Rosters</button><button data-nav="teamdrafts" onclick="show('teamdrafts')">🎯 Team drafts</button><button data-nav="draftrecord" onclick="show('draftrecord')">📋 Draft record</button><button data-nav="champions" onclick="show('champions')">Champions</button><button data-nav="tiers" onclick="show('tiers')">⚖ Tiers</button><button data-nav="model" onclick="show('model')">📊 Model</button><button data-nav="stats" onclick="show('stats')">My Stats</button><button data-nav="bets" onclick="show('bets')">Bets</button><button data-nav="betstats" onclick="show('betstats')">Bet Stats</button><button data-nav="settings" onclick="show('settings')" class="active">⚙ Sync</button></nav>
 
 <!-- DASHBOARD -->
 <div class="screen" id="screen-dashboard">
@@ -1978,6 +1994,15 @@
 </div>
 
 <!-- STATS -->
+<div class="screen" id="screen-rosters">
+  <div class="card" style="margin-bottom:12px;">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;">👥 Rosters 2027</div>
+    <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:0 0 10px;">Every team starts from its 2026 lineup and changes only when you change it.
+      Tap a player to move or replace them. Ratings are yours and follow the player across teams.</p>
+    <div id="ro-leagues"></div>
+  </div>
+  <div id="ro-body"></div>
+</div>
 <div class="screen" id="screen-draftrecord">
   <div class="card" style="margin-bottom:12px;">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
@@ -2079,7 +2104,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b193</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b194</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2641,7 +2666,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b193";
+const BUILD_VERSION = "2026.11.23-b194";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -15838,6 +15863,470 @@ function exportDraftReadCsv() {
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
+// ── Rosters ──────────────────────────────────────────────────────────────────
+// Your 2027 rosters, one card per team. Every team starts from its 2026 lineup
+// (the players who started its most recent games), and changes only when you
+// make them: by hand, or by accepting a suggestion from Sheep Esports'
+// transfers hub, which the recorder reads. Ratings follow the player, not the
+// name on a game: "G2 Caps" and "MKOI Caps" are one player here.
+const ROSTERS_KEY = "draftlogger_rosters_v1";          // synced: your 2027 rosters
+const SHEEP_CACHE_KEY = "draftlogger_sheep_cache_v1";   // this device: last copy from the recorder
+const ROSTER_LEAGUE_KEY = "draftlogger_rosters_league_v1";
+const ROSTER_ROLES = ["top", "jungle", "mid", "bottom", "support"];
+const ROSTER_ROLE_LABEL = { top: "Top", jungle: "Jungle", mid: "Mid", bottom: "Bot", support: "Support", coach: "Coach" };
+const SHEEP_ROLE = { top: "top", jgl: "jungle", jungle: "jungle", mid: "mid", adc: "bottom", bot: "bottom", sup: "support", support: "support", coach: "coach" };
+const SHEEP_LEAGUES = { lec: "LEC", lcs: "LCS", lck: "LCK", lpl: "LPL", cblol: "CBLOL", lcp: "LCP", lfl: "LFL", les: "LES", prm: "PRM" };
+const SHEEP_STALE_MS = 6 * 3600 * 1000;
+let _rosterLeague = null, _rosterEdit = null, _rosterSign = null, _rosterFaQ = "", _sheepBusy = false, _rosterBase = null;
+
+// ---- players ----
+// One id per player across team tags and sources: "G2 Caps", "Caps" and
+// "Hope (Wang Jie)" become "caps" and "hope".
+function rosterPid(name) {
+  let n = String(name || "").replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  const sp = n.indexOf(" ");
+  if (sp > 0 && /^[A-Z0-9]{2,5}$/.test(n.slice(0, sp)) && n.slice(sp + 1).trim()) n = n.slice(sp + 1);
+  return n.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+function rosterShowName(name) {
+  let n = String(name || "").replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  const sp = n.indexOf(" ");
+  if (sp > 0 && /^[A-Z0-9]{2,5}$/.test(n.slice(0, sp)) && n.slice(sp + 1).trim()) n = n.slice(sp + 1);
+  return n;
+}
+
+// ---- 2026 starting point and ratings, worked out from your games ----
+function rosterBaseline() {
+  const entries = loadAllGameData();
+  const sig = entries.length + "|" + (entries[0] && entries[0].id) + "|" + Object.keys(loadReviews()).length + "|" + teamAliasVersion();
+  if (_rosterBase && _rosterBase.sig === sig) return _rosterBase;
+  const byTeam = new Map();
+  const home = new Map();
+  for (const e of entries) {
+    if (!e.date || String(e.date).slice(0, 4) !== "2026" || !e.players) continue;
+    for (const side of ["blue", "red"]) {
+      const ps = e.players[side] || [];
+      if (ps.filter(Boolean).length < 5) continue;
+      const key = String(resolveTeam(side === "blue" ? e.blueTeam : e.redTeam) || "").toUpperCase().trim();
+      if (!key || isTbdTeam(key)) continue;
+      if (!byTeam.has(key)) byTeam.set(key, { key, games: [], leagues: {} });
+      const t = byTeam.get(key);
+      t.games.push({ date: e.date, ps });
+      if (!isInternationalGame(e) && e.league) { const L = resolveLeague(e.league); t.leagues[L] = (t.leagues[L] || 0) + 1; }
+    }
+  }
+  const teams = {}, seenPlayers = new Map();
+  for (const t of byTeam.values()) {
+    t.games.sort((a, b) => (a.date < b.date ? 1 : -1));
+    const recent = t.games.slice(0, 8);
+    const lineup = {}, subs = [];
+    ROSTER_ROLES.forEach((role, i) => {
+      const c = new Map();
+      for (const g of recent) { const n = g.ps[i]; if (!n) continue; const id = rosterPid(n); const x = c.get(id) || { n: rosterShowName(n), k: 0 }; x.k++; c.set(id, x); }
+      const ranked = [...c.values()].sort((a, b) => b.k - a.k);
+      if (ranked[0]) lineup[role] = { n: ranked[0].n };
+      ranked.slice(1).filter(x => x.k >= 2).forEach(x => subs.push({ n: x.n, r: role }));
+    });
+    const league = Object.entries(t.leagues).sort((a, b) => b[1] - a[1])[0];
+    teams[t.key] = { key: t.key, league: league ? league[0] : null, lineup, subs, last: t.games[0].date, games: t.games.length };
+    for (const [role, s] of Object.entries(lineup)) seenPlayers.set(rosterPid(s.n), { n: s.n, r: role, team: t.key, last: t.games[0].date });
+    for (const s of subs) if (!seenPlayers.has(rosterPid(s.n))) seenPlayers.set(rosterPid(s.n), { n: s.n, r: s.r, team: t.key, last: t.games[0].date });
+  }
+  // Your ratings by player, every name they've played under, weighted by league
+  // the way the Players page weights them.
+  const byId = new Map(entries.map(e => [e.id, e]));
+  const homeOf = new Map();
+  for (const t of Object.values(teams)) if (t.league) homeOf.set(t.key, t.league);
+  const weight = e => {
+    if (!isInternationalGame(e)) return getLeagueWeight(e.league);
+    const k = s => String(resolveTeam(s) || "").toUpperCase();
+    const b = homeOf.get(k(e.blueTeam)), r = homeOf.get(k(e.redTeam));
+    return ((b ? getLeagueWeight(b) : getLeagueWeight(e.league)) + (r ? getLeagueWeight(r) : getLeagueWeight(e.league))) / 2;
+  };
+  const acc = new Map();
+  for (const [id, ranks] of Object.entries(loadReviews())) {
+    const e = byId.get(id);
+    if (!e) continue;
+    const w = weight(e);
+    for (const [name, rank] of Object.entries(ranks || {})) {
+      const v = Number(rank);
+      if (!isFinite(v) || !v) continue;
+      const pid = rosterPid(name);
+      const a = acc.get(pid) || { s: 0, w: 0, n: 0 };
+      a.s += v * w; a.w += w; a.n++;
+      acc.set(pid, a);
+    }
+  }
+  const ratings = new Map([...acc].map(([pid, a]) => [pid, { avg: a.s / a.w, n: a.n }]));
+  _rosterBase = { sig, teams, players: seenPlayers, ratings };
+  return _rosterBase;
+}
+
+// ---- your 2027 rosters ----
+function loadRosters() {
+  let r = null;
+  try { r = JSON.parse(localStorage.getItem(ROSTERS_KEY) || "null"); } catch (e) {}
+  return r && typeof r === "object" ? { teams: {}, links: {}, dismissed: {}, log: [], ...r } : { teams: {}, links: {}, dismissed: {}, log: [] };
+}
+function saveRosters(r) {
+  r.at = Date.now();
+  if (r.log && r.log.length > 60) r.log = r.log.slice(-60);
+  localStorage.setItem(ROSTERS_KEY, JSON.stringify(r));
+  try { requestSync(); } catch (e) {}
+}
+// A team as it stands for 2027: your edits if you've made any, otherwise its
+// 2026 lineup carried over.
+function rosterTeam(r, base, key) {
+  const mine = r.teams[key], b = base.teams[key];
+  if (mine) return { key, league: mine.league || (b && b.league) || null, lineup: mine.lineup || {}, subs: mine.subs || [], coach: mine.coach || null,
+                     name: mine.name || null, edited: true, base: b || null };
+  if (!b) return null;
+  return { key, league: b.league, lineup: Object.fromEntries(Object.entries(b.lineup).map(([k, v]) => [k, { ...v, st: "carry" }])),
+           subs: b.subs.map(s => ({ ...s, st: "carry" })), coach: null, name: null, edited: false, base: b };
+}
+function rosterEditable(r, base, key) {
+  if (!r.teams[key]) {
+    const t = rosterTeam(r, base, key);
+    r.teams[key] = t ? { league: t.league, lineup: t.lineup, subs: t.subs, coach: t.coach } : { league: null, lineup: {}, subs: [], coach: null };
+  }
+  return r.teams[key];
+}
+function rosterAllKeys(r, base) { return [...new Set([...Object.keys(base.teams), ...Object.keys(r.teams)])]; }
+
+// Put a player in a slot. Wherever else they were on your 2027 rosters, they
+// leave; whoever held the slot becomes a free agent unless they're elsewhere.
+function rosterSetSlot(key, role, name, st, article) {
+  const r = loadRosters(), base = rosterBaseline();
+  const pid = name ? rosterPid(name) : null;
+  if (pid) {
+    const here = (k, ro) => k === key && ro === role;
+    for (const k of rosterAllKeys(r, base)) {
+      const t = rosterTeam(r, base, k);
+      if (!t) continue;
+      const hit = Object.entries(t.lineup).some(([ro, s]) => s && rosterPid(s.n) === pid && !here(k, ro))
+        || t.subs.some(s => rosterPid(s.n) === pid)
+        || (t.coach && rosterPid(t.coach.n) === pid && !here(k, "coach"));
+      if (!hit) continue;
+      const ed = rosterEditable(r, base, k);
+      for (const ro of Object.keys(ed.lineup)) if (ed.lineup[ro] && rosterPid(ed.lineup[ro].n) === pid && !here(k, ro)) delete ed.lineup[ro];
+      ed.subs = (ed.subs || []).filter(s => rosterPid(s.n) !== pid);
+      if (ed.coach && rosterPid(ed.coach.n) === pid && !here(k, "coach")) ed.coach = null;
+    }
+  }
+  const ed = rosterEditable(r, base, key);
+  const prev = role === "coach" ? ed.coach : ed.lineup[role];
+  const val = name ? { n: name, st: st || "confirmed", ...(article ? { a: article } : {}) } : null;
+  if (role === "coach") ed.coach = val; else if (val) ed.lineup[role] = val; else delete ed.lineup[role];
+  r.log.push({ at: Date.now(), team: key, role, to: name || null, from: prev ? prev.n : null, st: val ? val.st : null });
+  saveRosters(r);
+}
+function rosterSetStatus(key, role, st) {
+  const r = loadRosters(), base = rosterBaseline();
+  const ed = rosterEditable(r, base, key);
+  const s = role === "coach" ? ed.coach : ed.lineup[role];
+  if (!s) return;
+  s.st = st;
+  saveRosters(r);
+  renderRosters();
+}
+function rosterLinkSheep(sheepId, key) {
+  const r = loadRosters();
+  if (key) r.links[sheepId] = key; else delete r.links[sheepId];
+  saveRosters(r);
+  renderRosters();
+}
+function rosterAddTeam(sheepId, name, league) {
+  const r = loadRosters();
+  const key = String(name || "").toUpperCase().trim();
+  if (!key) return;
+  if (!r.teams[key]) r.teams[key] = { league, lineup: {}, subs: [], coach: null, name, added: Date.now() };
+  r.links[sheepId] = key;
+  saveRosters(r);
+  renderRosters();
+}
+
+// ---- Sheep Esports, through the recorder ----
+function loadSheepCache() {
+  try { return JSON.parse(localStorage.getItem(SHEEP_CACHE_KEY) || "null") || { leagues: {}, at: 0 }; } catch (e) { return { leagues: {}, at: 0 }; }
+}
+async function refreshSheep(force) {
+  const url = recorderUrl();
+  if (!url || _sheepBusy) return;
+  const cache = loadSheepCache();
+  _sheepBusy = true;
+  try {
+    if (force || Date.now() - (cache.at || 0) > 20 * 60000) {
+      const j = await fetch(url + "/sheep", { cache: "no-store" }).then(r => r.json()).catch(() => null);
+      if (j && j.ok && j.leagues) { cache.leagues = j.leagues; cache.at = Date.now(); cache.error = null; }
+      else if (!j || !j.leagues) cache.error = "the recorder is older than 1.5, or unreachable";
+    }
+    // Leagues the recorder hasn't read lately, a few per visit: the one on
+    // screen first.
+    const order = Object.keys(SHEEP_LEAGUES).sort((a, b) => (SHEEP_LEAGUES[b] === _rosterLeague) - (SHEEP_LEAGUES[a] === _rosterLeague));
+    let n = 0;
+    for (const l of order) {
+      const have = cache.leagues[l];
+      if (!cache.error && (force || !have || Date.now() - (have.tried || have.at || 0) > SHEEP_STALE_MS)) {
+        const j = await fetch(url + "/sheep?league=" + l + (force ? "&refresh=1" : ""), { cache: "no-store" }).then(r => r.json()).catch(() => null);
+        if (j && j.ok) cache.leagues[l] = { at: j.at, tried: j.tried, error: j.error || null, data: j.data || (have && have.data) || null };
+        if (++n >= (force ? 9 : 3)) break;
+      }
+    }
+    localStorage.setItem(SHEEP_CACHE_KEY, JSON.stringify(cache));
+  } finally { _sheepBusy = false; }
+  if (document.getElementById("screen-rosters")?.classList.contains("active")) renderRosters(true);
+}
+
+// Which of your teams a Sheep team is: your link if you made one, else the team
+// whose 2026 lineup shares at least three players with Sheep's, else a name match.
+function sheepTeamMatches(sh, r, base) {
+  const out = new Map();
+  const norm = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+  const keys = rosterAllKeys(r, base);
+  const initials = (s, skip) => String(s || "").split(/\s+/).filter(w => w && !(skip && /^(esports?|gaming|team|club)$/i.test(w))).map(w => w[0]).join("").toLowerCase();
+  for (const t of sh.teams) {
+    if (r.links[t.id]) { out.set(t.id, { key: r.links[t.id], how: "link" }); continue; }
+    const nowIds = new Set(sh.entries.filter(e => e.t === t.id && e.s === "now" && e.r !== "coach").map(e => rosterPid(e.n)));
+    const nextIds = new Set(sh.entries.filter(e => e.t === t.id && e.s === "next" && e.r !== "coach").map(e => rosterPid(e.n)));
+    let best = null, bestN = 0;
+    for (const k of keys) {
+      const b = base.teams[k], cur = rosterTeam(r, base, k);
+      const ids2026 = b ? Object.values(b.lineup).map(s => rosterPid(s.n)) : [];
+      const ids2027 = cur ? Object.values(cur.lineup).filter(Boolean).map(s => rosterPid(s.n)) : [];
+      const n = Math.max(ids2026.filter(id => nowIds.has(id)).length, ids2027.filter(id => nextIds.has(id)).length);
+      if (n > bestN) { best = k; bestN = n; }
+    }
+    if (best && bestN >= 3) { out.set(t.id, { key: best, how: "players" }); continue; }
+    const cands = new Set([norm(t.name), initials(t.name), initials(t.name, true)]);
+    const byName = keys.find(k => cands.has(norm(k)) || cands.has(norm(teamDisplay(k, k))));
+    if (byName) out.set(t.id, { key: byName, how: "name" });
+  }
+  return out;
+}
+
+// What Sheep has for 2027 that your rosters don't, for one league.
+function sheepSuggestions(sh, r, base) {
+  const out = [], unmatched = [];
+  if (!sh || !sh.next) return { out, unmatched, matches: new Map() };
+  const matches = sheepTeamMatches(sh, r, base);
+  for (const t of sh.teams) {
+    const next = sh.entries.filter(e => e.t === t.id && e.s === "next" && !e.sub);
+    if (!next.length) continue;
+    const m = matches.get(t.id);
+    if (!m) { unmatched.push({ id: t.id, name: t.name, next }); continue; }
+    const cur = rosterTeam(r, base, m.key) || { lineup: {}, coach: null };
+    for (const e of next) {
+      const role = SHEEP_ROLE[e.r];
+      if (!role) continue;
+      const have = role === "coach" ? cur.coach : cur.lineup[role];
+      if (have && rosterPid(have.n) === rosterPid(e.n)) continue;
+      const sk = `${m.key}|${role}|${rosterPid(e.n)}`;
+      if (r.dismissed[sk]) continue;
+      out.push({ key: m.key, sheep: t.name, role, n: e.n, a: e.a, leak: /^sources-/.test(e.a || ""), from: have ? have.n : null, sk });
+    }
+  }
+  return { out, unmatched, matches };
+}
+function rosterAcceptSuggestion(i) {
+  const s = (window._rosterSugs || [])[i];
+  if (!s) return;
+  rosterSetSlot(s.key, s.role, s.n, s.leak || !s.a ? "rumour" : "confirmed", s.a);
+  renderRosters();
+}
+function rosterAcceptAll() {
+  for (const s of (window._rosterSugs || [])) rosterSetSlot(s.key, s.role, s.n, s.leak || !s.a ? "rumour" : "confirmed", s.a);
+  renderRosters();
+}
+function rosterDismissSuggestion(i) {
+  const s = (window._rosterSugs || [])[i];
+  if (!s) return;
+  const r = loadRosters();
+  r.dismissed[s.sk] = Date.now();
+  saveRosters(r);
+  renderRosters();
+}
+
+// ---- editing ----
+function rosterOpenEdit(key, role) { _rosterEdit = _rosterEdit && _rosterEdit.key === key && _rosterEdit.role === role ? null : { key, role }; _rosterSign = null; renderRosters(); }
+function rosterSaveEdit() {
+  if (!_rosterEdit) return;
+  const name = (document.getElementById("ro-edit-name") || {}).value || "";
+  const st = (document.getElementById("ro-edit-st") || {}).value || "confirmed";
+  const { key, role } = _rosterEdit;
+  _rosterEdit = null;
+  rosterSetSlot(key, role, name.trim() ? rosterShowName(name.trim()) : null, st);
+  renderRosters();
+}
+function rosterClearSlot() {
+  if (!_rosterEdit) return;
+  const { key, role } = _rosterEdit;
+  _rosterEdit = null;
+  rosterSetSlot(key, role, null);
+  renderRosters();
+}
+function rosterOpenSign(pid) { _rosterSign = _rosterSign === pid ? null : pid; _rosterEdit = null; renderRosters(); }
+function rosterSign(pid) {
+  const base = rosterBaseline(), p = base.players.get(pid);
+  const key = (document.getElementById("ro-sign-team") || {}).value, role = (document.getElementById("ro-sign-role") || {}).value;
+  const st = (document.getElementById("ro-sign-st") || {}).value || "rumour";
+  if (!p || !key || !role) return;
+  _rosterSign = null;
+  rosterSetSlot(key, role, p.n, st);
+  renderRosters();
+}
+
+// ---- page ----
+function renderRosters(fromRefresh) {
+  const body = document.getElementById("ro-body");
+  if (!body) return;
+  const r = loadRosters(), base = rosterBaseline(), cache = loadSheepCache();
+  const esc = drEsc;
+  const keys = rosterAllKeys(r, base);
+  const leagueOf = k => (rosterTeam(r, base, k) || {}).league || null;
+
+  // League chips: the majors first, then whatever else has teams.
+  const counts = {};
+  keys.forEach(k => { const L = leagueOf(k); if (L) counts[L] = (counts[L] || 0) + 1; });
+  const majors = ["LCK", "LPL", "LEC", "LCS", "LCP", "CBLOL"];
+  const leagues = [...majors.filter(L => counts[L]), ...Object.keys(counts).filter(L => !majors.includes(L)).sort((a, b) => counts[b] - counts[a])];
+  if (!_rosterLeague) { try { _rosterLeague = localStorage.getItem(ROSTER_LEAGUE_KEY) || null; } catch (e) {} }
+  if (!_rosterLeague || !counts[_rosterLeague]) _rosterLeague = leagues[0] || null;
+  const chipsEl = document.getElementById("ro-leagues");
+  if (chipsEl) chipsEl.innerHTML = leagues.slice(0, 24).map(L =>
+    `<button class="dr-chip${L === _rosterLeague ? " on" : ""}" onclick="_rosterLeague='${esc(L)}';try{localStorage.setItem(ROSTER_LEAGUE_KEY,_rosterLeague)}catch(e){};_rosterEdit=null;renderRosters()">${esc(L)} <span>${counts[L]}</span></button>`).join("");
+
+  if (!keys.length) { body.innerHTML = `<div class="card"><div class="empty">No 2026 games with full lineups yet, so there are no rosters to start from.</div></div>`; return; }
+
+  // Sheep for this league.
+  const sheepKey = Object.keys(SHEEP_LEAGUES).find(l => SHEEP_LEAGUES[l] === _rosterLeague);
+  const shRec = sheepKey ? cache.leagues[sheepKey] : null;
+  const sh = shRec && shRec.data;
+  const { out: sugs, unmatched, matches } = sheepSuggestions(sh, r, base);
+  window._rosterSugs = sugs;
+  const ago = t => { if (!t) return "never"; const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${m} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`; };
+  const sheepUrl = sheepKey ? `https://www.sheepesports.com/en/all/transfers/${sheepKey}` : "https://www.sheepesports.com/en/all/transfers";
+  const art = a => a ? `<a href="https://www.sheepesports.com/en/all/articles/${encodeURIComponent(a)}/en" target="_blank" rel="noopener" style="color:var(--blue);">article</a>` : "";
+  let status;
+  if (!recorderUrl()) status = `Set the recorder link in Settings to compare with Sheep Esports.`;
+  else if (cache.error) status = `<span style="color:var(--yellow);">Sheep: ${esc(cache.error)}.</span>`;
+  else if (!sheepKey) status = `Sheep Esports doesn't cover ${esc(_rosterLeague)}.`;
+  else if (!shRec) status = `Sheep: checking ${esc(_rosterLeague)}…`;
+  else if (shRec.error && !sh) status = `<span style="color:#ff4d5e;">Sheep: ${esc(shRec.error)}</span> · rosters still work by hand.`;
+  else if (sh && !sh.next) status = `Sheep has no ${esc(_rosterLeague)} 2027 rosters posted yet (read ${ago(shRec.at)}).`;
+  else status = `Compared with <a href="${sheepUrl}" target="_blank" rel="noopener" style="color:var(--blue);">Sheep's ${esc(sh.next.name)} rosters</a>, read ${ago(shRec.at)}${shRec.error ? ` <span style="color:var(--yellow);">(last try: ${esc(shRec.error)})</span>` : ""}.`;
+  let html = `<div style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:-4px 0 12px;">${status}
+    ${recorderUrl() ? ` <a href="#" onclick="refreshSheep(true);this.textContent='checking…';return false;" style="color:var(--muted);">Check now</a>` : ""}</div>`;
+
+  // Suggestions.
+  if (sugs.length) {
+    const teamName = k => teamDisplay(k, (r.teams[k] && r.teams[k].name) || k);
+    html += `<div class="card" style="margin-bottom:12px;"><div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        Sheep's changes for ${esc(_rosterLeague)} (${sugs.length})
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;width:auto;" onclick="rosterAcceptAll()">Accept all</button></div>
+      ${sugs.map((s, i) => `<div class="ro-sug">
+        <div style="min-width:0;"><b>${esc(teamName(s.key))}</b> · ${ROSTER_ROLE_LABEL[s.role]}: <b>${esc(s.n)}</b>${s.from ? ` <span style="color:var(--muted);">replaces ${esc(s.from)}</span>` : ""}
+          <div style="font-size:10.5px;color:var(--muted);">${s.leak ? "Leak" : s.a ? "Announced" : "Listed by Sheep, no article"}${s.a ? " · " + art(s.a) : ""}</div></div>
+        <div style="display:flex;gap:6px;flex:none;"><button class="btn btn-ghost ro-btn" onclick="rosterAcceptSuggestion(${i})">Accept</button>
+          <button class="btn btn-ghost ro-btn" style="color:var(--muted);" onclick="rosterDismissSuggestion(${i})">Dismiss</button></div></div>`).join("")}
+      <div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Leaks go in as rumoured, announcements as confirmed. A dismissed change doesn't come back.</div></div>`;
+  }
+
+  // Team cards.
+  const rating = n => base.ratings.get(rosterPid(n));
+  const col = v => v >= 7.5 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "#ff4d5e";
+  const badge = st => st === "rumour" ? `<span class="ro-st ro-rumour" title="Rumoured">rumour</span>`
+    : st === "confirmed" ? `<span class="ro-st ro-conf" title="Confirmed">✓</span>` : "";
+  const allNames = [...base.players.values()].map(p => p.n);
+  const inLeague = keys.filter(k => leagueOf(k) === _rosterLeague);
+  const teamTotal = t => { const vals = ROSTER_ROLES.map(ro => t.lineup[ro] && rating(t.lineup[ro].n)).filter(Boolean); return { sum: vals.reduce((a, b) => a + b.avg, 0), n: vals.length }; };
+  const cards = inLeague.map(k => ({ k, t: rosterTeam(r, base, k) })).filter(x => x.t)
+    .map(x => ({ ...x, tot: teamTotal(x.t) })).sort((a, b) => (b.tot.n - a.tot.n) || (b.tot.sum - a.tot.sum));
+  html += `<div class="ro-grid">` + cards.map(({ k, t, tot }) => {
+    const b = t.base;
+    const baseTot = b ? (() => { const v = ROSTER_ROLES.map(ro => b.lineup[ro] && rating(b.lineup[ro].n)).filter(Boolean); return v.length === tot.n ? v.reduce((a, x) => a + x.avg, 0) : null; })() : null;
+    const delta = baseTot != null && tot.n === 5 ? tot.sum - baseTot : null;
+    const shName = [...matches.entries()].filter(([, m]) => m.key === k).map(([id]) => (sh.teams.find(x => x.id === id) || {}).name).filter(Boolean)[0];
+    const row = (role, s) => {
+      const editing = _rosterEdit && _rosterEdit.key === k && _rosterEdit.role === role;
+      const was = role !== "coach" && b && b.lineup[role] && (!s || rosterPid(b.lineup[role].n) !== rosterPid(s.n)) ? b.lineup[role].n : null;
+      const rt = s && role !== "coach" ? rating(s.n) : null;
+      return `<div class="ro-row${editing ? " on" : ""}" onclick="rosterOpenEdit('${esc(k)}','${role}')">
+          <span class="ro-role">${ROSTER_ROLE_LABEL[role]}</span>
+          <span class="ro-name">${s ? esc(s.n) : `<span style="color:var(--muted);">—</span>`} ${s ? badge(s.st) : ""}${s && s.a ? ` <span onclick="event.stopPropagation()">${art(s.a)}</span>` : ""}
+            ${was ? `<span class="ro-was">was ${esc(was)}</span>` : ""}</span>
+          <span class="ro-rt" style="color:${rt ? col(rt.avg) : "var(--muted)"};">${rt ? rt.avg.toFixed(1) : ""}</span></div>` +
+        (editing ? `<div class="ro-edit" onclick="event.stopPropagation()">
+          <input id="ro-edit-name" list="ro-names" value="${s ? esc(s.n) : ""}" placeholder="Player name" autocomplete="off" spellcheck="false">
+          <select id="ro-edit-st"><option value="confirmed"${s && s.st === "confirmed" ? " selected" : ""}>Confirmed</option><option value="rumour"${!s || s.st !== "confirmed" ? " selected" : ""}>Rumoured</option></select>
+          <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary ro-btn" onclick="rosterSaveEdit()">Save</button>
+            ${s ? `<button class="btn btn-ghost ro-btn" onclick="rosterClearSlot()">${role === "coach" ? "Remove" : "Make free agent"}</button>` : ""}
+            <button class="btn btn-ghost ro-btn" style="color:var(--muted);" onclick="_rosterEdit=null;renderRosters()">Cancel</button></div></div>` : "");
+    };
+    return `<div class="card ro-card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;">
+        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;">${esc(teamDisplay(k, t.name || k))}</div>
+          ${shName && norm2(shName) !== norm2(teamDisplay(k, t.name || k)) ? `<div style="font-size:10.5px;color:var(--muted);">Sheep: ${esc(shName)}</div>` : ""}</div>
+        <div style="text-align:right;flex:none;"><div style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;">${tot.n ? tot.sum.toFixed(1) : "—"}<span style="font-size:10px;color:var(--muted);font-weight:400;">${tot.n === 5 ? " /50" : tot.n ? ` (${tot.n} rated)` : ""}</span></div>
+          ${delta != null && Math.abs(delta) >= 0.05 ? `<div style="font-size:10.5px;color:${delta > 0 ? "var(--green)" : "#ff4d5e"};">${delta > 0 ? "+" : "−"}${Math.abs(delta).toFixed(1)} vs 2026</div>` : ""}</div></div>
+      ${ROSTER_ROLES.map(ro => row(ro, t.lineup[ro])).join("")}
+      ${row("coach", t.coach)}
+      ${t.subs.length ? `<div style="font-size:10.5px;color:var(--muted);margin-top:4px;">Subs: ${t.subs.map(s => esc(s.n) + " (" + ROSTER_ROLE_LABEL[s.r] + ")").join(", ")}</div>` : ""}
+    </div>`;
+  }).join("") + `</div>`;
+
+  // Sheep teams that aren't one of yours yet (new orgs, or names that didn't match).
+  if (unmatched.length) {
+    const opts = keys.slice().sort().map(k => `<option value="${esc(k)}">${esc(teamDisplay(k, k))}</option>`).join("");
+    html += `<div class="card" style="margin-bottom:12px;"><div class="card-title">On Sheep, not matched to your teams</div>
+      ${unmatched.map(u => `<div class="ro-sug"><div style="min-width:0;"><b>${esc(u.name)}</b>
+          <div style="font-size:10.5px;color:var(--muted);">${u.next.map(e => esc(e.n)).join(", ")}</div></div>
+        <div style="display:flex;gap:6px;flex:none;align-items:center;">
+          <select style="width:auto;font-size:11px;padding:4px 6px;" onchange="if(this.value)rosterLinkSheep('${esc(u.id)}',this.value)"><option value="">Same team as…</option>${opts}</select>
+          <button class="btn btn-ghost ro-btn" onclick="rosterAddTeam('${esc(u.id)}','${esc(u.name).replace(/'/g, "\\'")}','${esc(_rosterLeague)}')">New team</button></div></div>`).join("")}
+      <div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Teams are matched on shared players. Link a team once and it stays linked.</div></div>`;
+  }
+
+  // Free agents: on a 2026 roster, on no 2027 roster.
+  const signed = new Set();
+  for (const k of keys) { const t = rosterTeam(r, base, k); if (!t) continue; Object.values(t.lineup).forEach(s => s && signed.add(rosterPid(s.n))); t.subs.forEach(s => signed.add(rosterPid(s.n))); if (t.coach) signed.add(rosterPid(t.coach.n)); }
+  const fa = [...base.players.entries()].filter(([pid]) => !signed.has(pid))
+    .map(([pid, p]) => ({ pid, ...p, rt: base.ratings.get(pid), league: leagueOf(p.team) }))
+    .sort((a, b) => ((b.league === _rosterLeague) - (a.league === _rosterLeague)) || ((b.rt ? b.rt.avg : 0) - (a.rt ? a.rt.avg : 0)));
+  const q = _rosterFaQ.toLowerCase();
+  const faShown = fa.filter(p => !q || p.n.toLowerCase().includes(q) || teamDisplay(p.team, p.team).toLowerCase().includes(q)).slice(0, 80);
+  const signOpts = keys.filter(k => leagueOf(k) === _rosterLeague).concat(keys.filter(k => leagueOf(k) !== _rosterLeague))
+    .map(k => `<option value="${esc(k)}">${esc(teamDisplay(k, k))}${leagueOf(k) ? " (" + esc(leagueOf(k)) + ")" : ""}</option>`).join("");
+  html += `<details class="card" style="margin-bottom:12px;"${q ? " open" : ""}><summary class="card-title" style="cursor:pointer;list-style:none;margin:0;">Free agents (${fa.length})</summary>
+    <div style="margin-top:10px;"><input type="text" placeholder="Search players or their 2026 team" value="${esc(_rosterFaQ)}" oninput="_rosterFaQ=this.value;clearTimeout(window._roFaT);window._roFaT=setTimeout(()=>{renderRosters();const i=document.querySelector('#ro-body details input');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},250)" style="width:100%;font-size:13px;padding:8px 10px;margin-bottom:6px;">
+    ${faShown.map(p => `<div class="ro-row" onclick="rosterOpenSign('${esc(p.pid)}')"><span class="ro-role">${ROSTER_ROLE_LABEL[p.r] || ""}</span>
+        <span class="ro-name">${esc(p.n)} <span class="ro-was">${esc(teamDisplay(p.team, p.team))}${p.league ? " · " + esc(p.league) : ""}</span></span>
+        <span class="ro-rt" style="color:${p.rt ? col(p.rt.avg) : "var(--muted)"};">${p.rt ? p.rt.avg.toFixed(1) : ""}</span></div>` +
+      (_rosterSign === p.pid ? `<div class="ro-edit" onclick="event.stopPropagation()">
+        <select id="ro-sign-team">${signOpts}</select>
+        <div style="display:flex;gap:6px;margin-top:6px;"><select id="ro-sign-role">${ROSTER_ROLES.concat("coach").map(ro => `<option value="${ro}"${ro === p.r ? " selected" : ""}>${ROSTER_ROLE_LABEL[ro]}</option>`).join("")}</select>
+          <select id="ro-sign-st"><option value="rumour">Rumoured</option><option value="confirmed">Confirmed</option></select></div>
+        <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary ro-btn" onclick="rosterSign('${esc(p.pid)}')">Sign</button>
+          <button class="btn btn-ghost ro-btn" style="color:var(--muted);" onclick="_rosterSign=null;renderRosters()">Cancel</button></div></div>` : "")).join("")}
+    ${fa.length > faShown.length ? `<div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Showing ${faShown.length} of ${fa.length}; search to find the rest.</div>` : ""}
+    ${!fa.length ? `<div class="empty" style="padding:6px 0;">Everyone from 2026 is on a 2027 roster.</div>` : ""}</div></details>`;
+
+  // Recent changes.
+  const log = (r.log || []).slice(-8).reverse();
+  if (log.length) {
+    html += `<div class="card" style="margin-bottom:12px;"><div class="card-title">Recent changes</div>
+      ${log.map(x => `<div style="font-size:12px;line-height:1.7;"><span style="color:var(--muted);">${new Date(x.at).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
+        ${esc(teamDisplay(x.team, x.team))} ${ROSTER_ROLE_LABEL[x.role] || x.role}: ${x.to ? `<b>${esc(x.to)}</b>` : "empty"}${x.from ? ` <span style="color:var(--muted);">(was ${esc(x.from)})</span>` : ""}${x.st === "rumour" ? " · rumour" : ""}</div>`).join("")}</div>`;
+  }
+
+  html += `<datalist id="ro-names">${[...new Set(allNames)].sort((a, b) => a.localeCompare(b)).map(n => `<option value="${esc(n)}">`).join("")}</datalist>`;
+  body.innerHTML = html;
+  const ed = document.getElementById("ro-edit-name");
+  if (ed && !fromRefresh) { ed.focus(); ed.select(); }
+  if (!fromRefresh && !_sheepBusy) refreshSheep(false);
+}
+function renderRostersQuiet() { renderRosters(true); }
+function norm2(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, ""); }
+
 // ── Draft record ─────────────────────────────────────────────────────────────
 // Every draft call you've made, scored two ways: did your side win, and did it
 // win more often than team strength alone said it would. The second is the one
@@ -24280,6 +24769,7 @@ function syncSettingsKeys() {
     recorder:        RECORDER_KEY,
     recorderKey:     RECORDER_CTL_KEY,
     teamLabels:      TEAM_LABELS_KEY,
+    rosters:         ROSTERS_KEY,
     hiddenLeagues:   HIDDEN_LEAGUES_KEY,
     // Import and repair status were kept per browser, so each device showed its
     // own version of "catching up" and redid work another had already done.
@@ -27956,7 +28446,7 @@ async function pushToGitHub(force) {
      "scope-summary","dimfit-results","patch-coverage","bankroll-display","pnl-display",
      "comp-readiness","states-panel","lpl-proxy-status","caveat-results","delivery-results",
      "noteconsist-results","sync-queue","review-breakdown","gh-status","league-filter-list",
-     "auto-log-status","bl-count","build-checks","dr-body","dr-sources","dr-filter"]
+     "auto-log-status","bl-count","build-checks","ro-body","ro-leagues","dr-body","dr-sources","dr-filter"]
       .forEach(id => { const el = clone.querySelector("#" + id); if (el) el.innerHTML = ""; });
     // Any stray iframe or transient pill, wherever it ended up.
     clone.querySelectorAll("iframe").forEach(f => f.remove());
@@ -31946,6 +32436,7 @@ function show(screen) {
     if (screen === "players")    renderPlayerProfiles();
     if (screen === "teamdrafts") renderTeamDrafts();
     if (screen === "draftrecord") renderDraftRecord();
+    if (screen === "rosters") renderRosters();
     if (screen === "scouting")   renderScouting();
     if (screen === "findings")   renderFindings();
     if (["lab", "log", "today", "dashboard"].includes(screen)) { try { window.labApi && labApi.start(); } catch(e) {} }
@@ -32171,6 +32662,21 @@ function _checkCases() {
     const s = drStat([{ hit: true, pSide: 0.4 }, { hit: false, pSide: 0.6 }, { hit: true, pSide: null }]);
     return eq([s.n, s.w, s.l, s.nP, Math.round(s.exp), Math.round(s.act), Math.round(s.above)], [3, 2, 1, 2, 50, 50, 0]);
   });
+  t("Rosters: one player across team tags", () =>
+    eq([rosterPid("G2 Caps"), rosterPid("Caps"), rosterPid("MKOI Caps"), rosterPid("Hope (Wang Jie)"), rosterPid("Hans Sama"), rosterPid("G2 Hans Sama")],
+       ["caps", "caps", "caps", "hope", "hanssama", "hanssama"]));
+  t("Rosters: Sheep's 2027 changes become suggestions", () => {
+    const base = { teams: { FNC: { key: "FNC", league: "LEC", lineup: { top: { n: "Oscarinin" }, jungle: { n: "Razork" }, mid: { n: "Humanoid" }, bottom: { n: "Upset" }, support: { n: "Mikyx" } }, subs: [] } }, players: new Map(), ratings: new Map() };
+    const r = { teams: {}, links: {}, dismissed: { "FNC|support|labrov": 1 }, log: [] };
+    const sh = { next: { name: "LEC Winter" }, teams: [{ id: "team-fnatic", name: "Fnatic" }], entries: [
+      ...["Oscarinin:top", "Razork:jgl", "Humanoid:mid", "Upset:adc", "Mikyx:sup"].map(x => ({ n: x.split(":")[0], r: x.split(":")[1], t: "team-fnatic", s: "now" })),
+      { n: "Oscarinin", r: "top", t: "team-fnatic", s: "next" }, { n: "Yike", r: "jgl", t: "team-fnatic", s: "next", a: "sources-yike" },
+      { n: "Labrov", r: "sup", t: "team-fnatic", s: "next", a: "sources-labrov" }, { n: "Bench", r: "mid", t: "team-fnatic", s: "next", sub: true },
+      { n: "GrabbZ", r: "coach", t: "team-fnatic", s: "next", a: "fnatic-announces" }] };
+    const { out } = sheepSuggestions(sh, r, base);
+    return eq(out.map(x => `${x.key} ${x.role} ${x.n} ${x.leak ? "leak" : "official"} ${x.from || "-"}`),
+      ["FNC jungle Yike leak Razork", "FNC coach GrabbZ official -"]);
+  });
   t("Build number is stamped", () => /^\d{4}\.\d{2}\.\d{2}-b\d+$/.test(BUILD_VERSION) || "bad build number: " + BUILD_VERSION);
   return out;
 }
@@ -32179,7 +32685,7 @@ function _checkCases() {
 // to it. Pages that stream video or start imports are left out.
 const CHECK_RENDERS = [
   ["Home", "renderHome"], ["Match history", "renderMatchHistory"], ["Champions", "renderChampions"],
-  ["Players", "renderPlayerProfiles"], ["Team drafts", "renderTeamDrafts"], ["Draft record", "renderDraftRecord"],
+  ["Players", "renderPlayerProfiles"], ["Team drafts", "renderTeamDrafts"], ["Draft record", "renderDraftRecord"], ["Rosters", "renderRostersQuiet"],
   ["Scouting", "renderScouting"], ["Findings", "renderFindings"], ["Team ratings", "renderTeamRatings"],
   ["Teams", "renderTeamsList"], ["Tiers", "renderTiers"], ["Model", "renderModelPage"], ["My stats", "renderStats"],
   ["Bets", "renderBets"], ["Bet stats", "renderBetStats"], ["Scores", "renderScores"], ["Log game", "renderLogLab"],
