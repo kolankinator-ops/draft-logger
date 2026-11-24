@@ -483,6 +483,14 @@
   .td-row { padding:8px 0;border-top:1px solid var(--border); }
   .td-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end; }
   .td-num b { font-size:15px;font-variant-numeric:tabular-nums; } .td-num span { font-size:10px;color:var(--muted); }
+  /* Teams: league table */
+  .tr-row { display:grid;grid-template-columns:22px minmax(0,1fr) 82px 58px;gap:8px;align-items:center;padding:7px 0;font-size:13px;list-style:none;cursor:pointer; }
+  .tr-head { cursor:default;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:0 0 4px; }
+  .tr-head span:nth-child(n+3) { text-align:right; }
+  .tr-det { border-top:1px solid var(--border); }
+  .tr-det > summary::-webkit-details-marker { display:none; }
+  .tr-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end;font-variant-numeric:tabular-nums; }
+  .tr-num b { font-size:14px; } .tr-num i { font-style:normal;font-size:10px;color:var(--muted);white-space:nowrap; }
   /* Rosters */
   .ro-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:12px; }
   .ro-card { margin:0 !important; }
@@ -1491,28 +1499,29 @@
 
 <!-- TEAMS -->
 <div class="screen" id="screen-teams">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <div style="font-size:15px;font-weight:600;">Teams</div>
-    <div id="tm-count" style="font-size:11px;color:var(--muted);"></div>
-  </div>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;">
-    Every team name exactly as it appears in your data, A–Z. Nothing here changes unless you do it: tick names
-    to combine them, retire teams that no longer play, or park the ones you're unsure about in Don't know.
-    Games are never deleted.</p>
-  <div class="card" style="margin-bottom:14px;">
+  <div style="font-size:15px;font-weight:600;margin-bottom:8px;">Teams</div>
+  <div class="card" style="margin-bottom:12px;">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
-      <div class="card-title" style="margin:0;">Team ratings</div>
+      <div class="card-title" style="margin:0;">League table</div>
       <select id="tr-filter" onchange="_trFilter=this.value;renderTeamRatings()" style="width:auto;max-width:60%;font-size:12px;padding:5px 8px;"></select>
     </div>
-    <p style="font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 6px;">Each team's five starters' average ratings added up (out of 50),
-      from the games you've ranked in this filter. "Record #" is where its win–loss puts it; ▲/▼ marks a gap of 3 places or more. Tap a team for its players.</p>
+    <p style="font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 6px;">Standings from every game in the filter. "You" is the five starters' ratings added up (out of 50) and where that ranks;
+      "Model" is where the Model Lab's player model ranks the same five. ▲/▼ marks a rank 3 or more places from the record. Tap a team for its roster.</p>
     <div id="tr-list"></div>
   </div>
+  <div id="tr-awards"></div>
+  <details class="card" style="margin-bottom:14px;">
+    <summary class="card-title" style="cursor:pointer;list-style:none;margin:0;display:flex;justify-content:space-between;">Team names <span id="tm-count" style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;"></span></summary>
+    <p style="font-size:12px;color:var(--muted);margin:10px 0;line-height:1.6;">
+      Every team name exactly as it appears in your data, A–Z. Nothing here changes unless you do it: tick names
+      to combine them, retire teams that no longer play, or park the ones you're unsure about in Don't know.
+      Games are never deleted. Retired teams leave the league table.</p>
   <input type="text" id="tm-search" placeholder="Search names" oninput="renderTeamsList()" autocomplete="off" style="width:100%;font-size:13px;padding:8px 10px;margin-bottom:8px;">
   <div id="tm-tabs" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;"></div>
   <div id="tm-bar" style="display:none;position:sticky;top:0;z-index:5;background:var(--surface);border:1px solid var(--border);
     border-radius:10px;padding:8px 10px;margin-bottom:8px;"></div>
   <div id="tm-list"></div>
+  </details>
 </div>
 
 <!-- SCOUTING -->
@@ -2104,7 +2113,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b201</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b203</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2666,7 +2675,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b201";
+const BUILD_VERSION = "2026.11.23-b203";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -7115,80 +7124,129 @@ function profileFilterOptions(entries, reviews, cur) {
 // the reverse) stands out.
 let _trFilter = null;
 function teamRatingsData(f) {
-  const entries = ratedGames().filter(entryInScope), reviews = loadReviews();
+  // Every game in the filter counts for the record; games you've ranked
+  // players in also count for your ratings.
+  const games = loadAllGameData().filter(e => !e.isStandaloneBet && e.date && entryInScope(e) && profileFilterMatch(e, f));
+  const reviews = loadReviews(), reg = loadTeamRegistry();
   const teams = new Map();
-  const T = key => { if (!teams.has(key)) teams.set(key, { key, w: 0, l: 0, rated: 0, roles: {} }); return teams.get(key); };
-  for (const e of entries) {
-    if (!profileFilterMatch(e, f)) continue;
+  const T = key => { if (!teams.has(key)) teams.set(key, { key, w: 0, l: 0, games: 0, rated: 0, roles: {}, raw: {}, leagues: {}, last: "" }); return teams.get(key); };
+  for (const e of games) {
     const ranks = reviews[e.id] || {};
     const isRated = Object.keys(ranks).length > 0;
     for (const side of ["blue", "red"]) {
       const name = side === "blue" ? e.blueTeam : e.redTeam;
       if (!name) continue;
-      const t = T(String(resolveTeam(name) || name).toUpperCase());
+      const key = String(resolveTeam(name) || name).toUpperCase();
+      if (isTbdTeam(key) || (reg[key] && reg[key].inactive)) continue;
+      const t = T(key);
+      t.games++;
       if (e.actualWinner === side) t.w++; else if (e.actualWinner === "blue" || e.actualWinner === "red") t.l++;
-      if (!isRated) continue;
-      t.rated++;
+      if (String(e.date) > t.last) t.last = String(e.date);
+      if (!isInternationalGame(e) && e.league) { const L = resolveLeague(e.league); t.leagues[L] = (t.leagues[L] || 0) + 1; }
       (e.players?.[side] || []).forEach((pn, i) => {
-        if (!pn || i > 4 || ranks[pn] == null) return;
-        const role = PROFILE_ROLES[i], cn = canonPlayer(pn);
+        if (!pn || i > 4) return;
+        const role = PROFILE_ROLES[i];
+        const m = t.raw[role] || (t.raw[role] = new Map());
+        m.set(pn, (m.get(pn) || 0) + 1);
+        if (!isRated || ranks[pn] == null) return;
+        const cn = canonPlayer(pn);
         const byRole = t.roles[role] || (t.roles[role] = {});
-        const p = byRole[cn] || (byRole[cn] = { name: cn, sum: 0, n: 0 });
+        const p = byRole[cn] || (byRole[cn] = { name: cn, sum: 0, w: 0, n: 0 });
         const w = ratingAge(e);
-        p.sum += Number(ranks[pn]) * w; p.w = (p.w || 0) + w; p.n++;
+        p.sum += Number(ranks[pn]) * w; p.w += w; p.n++;
       });
+      if (isRated) t.rated++;
     }
   }
   const out = [];
   for (const t of teams.values()) {
-    if (t.rated < 2) continue;
     const starters = [], subs = [];
     for (const role of PROFILE_ROLES.slice(0, 5)) {
       const ps = Object.values(t.roles[role] || {}).sort((a, b) => b.n - a.n);
       if (ps[0]) starters.push({ role, ...ps[0], avg: ps[0].sum / ps[0].w });
       ps.slice(1).forEach(p => subs.push({ role, ...p, avg: p.sum / p.w }));
     }
+    // The five who played most often, for the model.
+    const lineup = PROFILE_ROLES.slice(0, 5).map(role => { const m = t.raw[role]; return m ? [...m.entries()].sort((a, b) => b[1] - a[1])[0][0] : null; });
+    const league = Object.entries(t.leagues).sort((a, b) => b[1] - a[1])[0];
     const total = starters.reduce((s, p) => s + p.avg, 0);
-    out.push({ ...t, starters, subs, total, full: starters.length === 5, pct: (t.w + t.l) ? t.w / (t.w + t.l) : 0 });
+    out.push({ ...t, starters, subs, lineup, league: league ? league[0] : null, total, full: starters.length === 5,
+               pct: (t.w + t.l) ? t.w / (t.w + t.l) : 0 });
   }
-  out.sort((a, b) => (b.full - a.full) || b.total - a.total);
-  const byRecord = [...out].sort((a, b) => b.pct - a.pct || (b.w - b.l) - (a.w - a.l));
-  out.forEach(t => { t.recRank = byRecord.indexOf(t) + 1; });
+  // Standings order: win rate, then wins minus losses, then games played.
+  out.sort((a, b) => b.pct - a.pct || (b.w - b.l) - (a.w - a.l) || b.games - a.games);
+  out.forEach((t, i) => { t.recRank = i + 1; });
+  const rated = out.filter(t => t.rated >= 2 && t.starters.length).sort((a, b) => (b.full - a.full) || b.total - a.total);
+  rated.forEach((t, i) => { t.myRank = i + 1; });
+  // The Model Lab's player model: each team's five as the model rates them.
+  let modelReady = false;
+  try {
+    if (window.labApi && labApi.ready() && labApi.strengthOf) {
+      modelReady = true;
+      out.forEach(t => { t.model = t.lineup.every(Boolean) ? labApi.strengthOf(t.lineup, t.key, t.league) : null; });
+      out.filter(t => t.model != null).sort((a, b) => b.model - a.model).forEach((t, i) => { t.modelRank = i + 1; });
+    }
+  } catch (e) {}
+  out.modelReady = modelReady;
   return out;
 }
 function renderTeamRatings() {
   const box = document.getElementById("tr-list"), sel = document.getElementById("tr-filter");
   if (!box || !sel) return;
-  const entries = ratedGames().filter(entryInScope), reviews = loadReviews();
-  const opts = profileFilterOptions(entries, reviews, _trFilter || "");
+  if (window.labApi) { try { labApi.start(); } catch (e) {} }
+  const reviews = loadReviews();
+  const scoped = loadAllGameData().filter(e => !e.isStandaloneBet && entryInScope(e));
+  const all = {}; for (const e of scoped) all[e.id] = { x: 1 };
+  const opts = profileFilterOptions(scoped, all, _trFilter || "");
   if (!_trFilter) _trFilter = opts.newest;
-  sel.innerHTML = profileFilterOptions(entries, reviews, _trFilter).html;
+  sel.innerHTML = profileFilterOptions(scoped, all, _trFilter).html;
   sel.value = _trFilter;
   const rows = teamRatingsData(_trFilter);
-  if (!rows.length) { box.innerHTML = `<div class="empty">No team has 2 or more games with ranked players in this filter.</div>`; return; }
+  const awardsBox = document.getElementById("tr-awards");
+  if (!rows.length) { box.innerHTML = `<div class="empty">No games in this filter.</div>`; if (awardsBox) awardsBox.innerHTML = ""; return; }
   const col = v => v >= 7.5 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "#ff4d5e";
   const lab = r => ({ top: "Top", jungle: "Jng", mid: "Mid", bot: "Bot", adc: "Bot", bottom: "Bot", support: "Sup" }[r] || r);
-  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  box.innerHTML = rows.map((t, i) => {
-    const gap = t.recRank - (i + 1);
-    const flag = Math.abs(gap) >= 3
-      ? `<span style="font-size:10px;color:${gap > 0 ? "var(--green)" : "#ff4d5e"};" title="${gap > 0 ? "Rated well above its record" : "Record well above its rating"}">${gap > 0 ? "\u25B2" : "\u25BC"} record #${t.recRank}</span>`
-      : `<span style="font-size:10px;color:var(--muted);">record #${t.recRank}</span>`;
-    return `<details style="border-bottom:1px solid var(--border);padding:7px 2px;">
-      <summary style="display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;">
-        <span style="width:22px;flex:none;font-size:11px;color:var(--muted);text-align:right;">#${i + 1}</span>
-        <span style="flex:1;min-width:0;font-size:13px;font-weight:600;">${esc(teamDisplay(t.key, t.key))}
-          <span style="font-weight:400;font-size:11px;"><span style="color:var(--green);">${t.w}</span>\u2013<span style="color:#ff4d5e;">${t.l}</span></span> ${flag}</span>
-        <span style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;">${t.total.toFixed(1)}</span>
-        <span style="font-size:10px;color:var(--muted);width:34px;">${t.full ? "/ 50" : t.starters.length + " of 5"}</span>
+  const esc = drEsc;
+  const nRated = rows.filter(t => t.myRank).length, nModel = rows.filter(t => t.modelRank).length;
+  const gapFlag = (rank, label) => {
+    return t => {
+      if (!t[rank]) return "";
+      const gap = t.recRank - t[rank];
+      return Math.abs(gap) >= 3 ? `<span style="font-size:10px;color:${gap > 0 ? "var(--green)" : "#ff4d5e"};" title="${label} ${gap > 0 ? "well above" : "well below"} its record">${gap > 0 ? "▲" : "▼"}</span>` : "";
+    };
+  };
+  const myFlag = gapFlag("myRank", "Your rating is"), mdFlag = gapFlag("modelRank", "The model has it");
+  // Keep open rows open when the table redraws (the model finishing, say).
+  const wasOpen = new Set([...box.querySelectorAll("details.tr-det[open]")].map(d => d.dataset.k));
+  box.innerHTML = `<div class="tr-row tr-head"><span>#</span><span>Team</span><span>You</span><span>Model</span></div>` + rows.map(t => {
+    const coach = (() => { try { return coachFor(t.key, t.last); } catch (e) { return ""; } })();
+    return `<details class="tr-det" data-k="${esc(t.key)}"${wasOpen.has(t.key) ? " open" : ""}>
+      <summary class="tr-row">
+        <span style="color:var(--muted);font-size:11px;">${t.recRank}</span>
+        <span style="min-width:0;"><b>${esc(teamDisplay(t.key, t.key))}</b>
+          <span style="font-size:11px;"><span style="color:var(--green);">${t.w}</span>–<span style="color:#ff4d5e;">${t.l}</span></span></span>
+        <span class="tr-num">${t.myRank ? `<b>${t.total.toFixed(1)}</b> ${myFlag(t)}<i>${t.full ? "#" + t.myRank + " of " + nRated : t.starters.length + " of 5 rated"}</i>` : `<i>not rated</i>`}</span>
+        <span class="tr-num">${t.modelRank ? `<b>#${t.modelRank}</b> ${mdFlag(t)}<i>of ${nModel}</i>` : `<i>${rows.modelReady ? "—" : "loading"}</i>`}</span>
       </summary>
-      <div style="padding:6px 0 2px 30px;font-size:12px;line-height:1.8;">
-        ${t.starters.map(p => `<div style="display:flex;justify-content:space-between;gap:8px;"><span><span style="color:var(--muted);display:inline-block;width:32px;">${lab(p.role)}</span>${esc(p.name)}</span>
-          <span style="font-variant-numeric:tabular-nums;"><b style="color:${col(p.avg)};">${p.avg.toFixed(2)}</b> <span style="color:var(--muted);font-size:11px;">\u00B7 ${p.n}g</span></span></div>`).join("")}
-        ${t.subs.length ? `<div style="color:var(--muted);font-size:11px;margin-top:2px;">Also played: ${t.subs.map(p => `${esc(p.name)} (${lab(p.role)}, ${p.avg.toFixed(1)} \u00B7 ${p.n}g)`).join(", ")} \u2014 not counted</div>` : ""}
-        <div style="color:var(--muted);font-size:11px;">${t.rated} game${t.rated === 1 ? "" : "s"} with ranked players</div>
+      <div style="padding:4px 0 6px 26px;font-size:12px;line-height:1.8;">
+        ${t.starters.length ? t.starters.map(p => `<div style="display:flex;justify-content:space-between;gap:8px;"><span><span style="color:var(--muted);display:inline-block;width:32px;">${lab(p.role)}</span>${esc(p.name)}</span>
+          <span style="font-variant-numeric:tabular-nums;"><b style="color:${col(p.avg)};">${p.avg.toFixed(2)}</b> <span style="color:var(--muted);font-size:11px;">· ${p.n}g</span></span></div>`).join("")
+          : t.lineup.filter(Boolean).map((n, i) => `<div><span style="color:var(--muted);display:inline-block;width:32px;">${lab(PROFILE_ROLES[i])}</span>${esc(canonPlayer(n))}</div>`).join("")}
+        ${t.subs.length ? `<div style="color:var(--muted);font-size:11px;margin-top:2px;">Also played: ${t.subs.map(p => `${esc(p.name)} (${lab(p.role)}, ${p.avg.toFixed(1)} · ${p.n}g)`).join(", ")} — not counted</div>` : ""}
+        ${coach ? `<div style="color:var(--muted);font-size:11px;">Coach: ${esc(coach)}</div>` : ""}
+        <div style="color:var(--muted);font-size:11px;">${t.games} game${t.games === 1 ? "" : "s"}, ${t.rated} with ranked players</div>
       </div></details>`;
   }).join("");
+  // Awards for one tournament or split: the same MVP, LVP, all-league teams and
+  // Finals MVP as the Players page.
+  if (awardsBox) {
+    const one = _trFilter.startsWith("t:") || _trFilter.startsWith("s:");
+    const tName = (sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s ↳]+/, "");
+    let h = "";
+    if (one) { try { h = awardsHtml(_trFilter, reviews, tName) + finalsMvpHtml(_trFilter, reviews, tName); } catch (e) { h = ""; } }
+    awardsBox.innerHTML = one ? (h || `<div class="card" style="margin-bottom:12px;"><div class="empty">No players ranked in enough of this event's games for awards yet.</div></div>`)
+      : `<div style="font-size:11.5px;color:var(--muted);margin:0 0 12px;">Pick a tournament or split above to see its MVP, LVP and all-league teams.</div>`;
+  }
 }
 
 // The games ratings can belong to: everything you logged by hand, plus any
@@ -10196,6 +10254,101 @@ function playerTeamChipsHtml(name) {
     style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:10px;color:var(--blue);cursor:pointer;margin-left:4px;">${t.label}</button>`).join("");
 }
 
+// Your MVP, LVP, all-league teams for one tournament or split, from the
+// players you've ranked in enough of it. Shared by the Players and Teams pages.
+function awardsHtml(filter, reviews, tName) {
+  const entries = ratedGames().filter(entryInScope);
+  const roleMap = canonRoleMap();
+  const ratingCache = new Map();
+  for (const name of reviewsByPlayer(reviews).keys()) { const r = playerImpactRating(name, filter, entries, reviews); if (r) ratingCache.set(name, r); }
+  const players = [...ratingCache.keys()].sort((a, b) => ratingCache.get(b).rawAvg - ratingCache.get(a).rawAvg);
+  if (!players.length) return "";
+  const impactColor = avg => avg >= 7.5 ? "var(--green)" : avg >= 5 ? "var(--yellow)" : "#ff4d5e";
+  let mvpHtml = "";
+    const most = Math.max(...players.map(n => ratingCache.get(n).games));
+  const min = Math.max(2, Math.ceil(most * 0.4));
+  // Teams play very different numbers of games in one event (play-in teams
+  // have played far more than seeded ones partway through; teams knocked out
+  // early stop at a few). So the bar is each player's own team: they count
+  // once you've ranked at least half of the games their team has played,
+  // and at least 2. Nobody's bar depends on how many games another team has.
+  const teamGames = new Map(), playerTeam = new Map();
+  for (const e of loadAllGameData()) {
+    if (e.isStandaloneBet || !profileFilterMatch(e, filter) || !entryInScope(e)) continue;
+    for (const side of ["blue", "red"]) {
+      const k = teamKey(side === "blue" ? e.blueTeam : e.redTeam); if (!k) continue;
+      teamGames.set(k, (teamGames.get(k) || 0) + 1);
+      for (const raw of e.players?.[side] || []) { const n = canonPlayer(raw); if (ratingCache.has(n)) {
+        const m = playerTeam.get(n) || new Map(); m.set(k, (m.get(k) || 0) + 1); playerTeam.set(n, m);
+      } }
+    }
+  }
+  const barFor = n => {
+    const m = playerTeam.get(n); if (!m) return min;
+    const k = [...m.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const tg = teamGames.get(k);
+    return tg ? Math.max(2, Math.ceil(tg / 2)) : min;
+  };
+  const ok = players.filter(n => ratingCache.get(n).games >= barFor(n));
+  if (ok.length) {
+    // Ties: anyone level with the top (or bottom) at the two decimals shown.
+    const cents = n => Math.round(ratingCache.get(n).rawAvg * 100);
+    const tiedWith = (list, n) => list.filter(x => cents(x) === cents(n));
+    const and = a => a.length <= 1 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+    const ROLES5 = ["top", "jungle", "mid", "bottom", "support"];
+    const inRole = role => ok.filter(x => (roleMap[x]?.role || "") === role);
+    const lab = role => (ROLE_ABBR[role] || role).toUpperCase();
+    const gamesLine = names => names.length === 1 ? `${ratingCache.get(names[0]).games} games ranked`
+      : `tied · ${names.map(n => `${n} ${ratingCache.get(n).games}g`).join(", ")}`;
+    const teamRows = rows => rows.map(t => `<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-top:1px solid var(--border);font-size:13px;">
+          <span><span style="color:var(--muted);font-size:11px;display:inline-block;width:34px;">${lab(t.role)}</span>${t.names.join(" / ")}</span>
+          <span style="font-weight:700;white-space:nowrap;color:${impactColor(t.v)};">${t.v.toFixed(2)} <span style="font-weight:400;color:var(--muted);font-size:11px;">· ${t.names.map(n => ratingCache.get(n).games + "g").join(" / ")}</span></span></div>`).join("");
+    const card = (o) => `<div class="card" style="margin-bottom:12px;border-color:${o.color};">
+      <div style="font-size:11px;font-weight:700;color:${o.color};letter-spacing:.06em;text-transform:uppercase;">${o.icon} Your ${tName} ${o.title}${o.names.length > 1 ? "s · tied" : ""}</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:6px 0 2px;">
+        <span style="font-size:20px;font-weight:700;">${o.names.join("<br>")}</span>
+        <span style="font-size:20px;font-weight:700;color:${impactColor(o.v)};">${o.v.toFixed(2)}</span></div>
+      <div style="font-size:11px;color:var(--muted);">${gamesLine(o.names)} · ${o.note}</div>
+      ${o.team.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">${o.teamTitle}</div>${teamRows(o.team)}` : ""}
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;margin-top:10px;" onclick="navigator.clipboard.writeText(window.${o.postVar}||'').then(()=>{this.textContent='Copied'})">Copy</button>
+    </div>`;
+    const postOf = (title, names, team, teamTitle) => {
+      const v = ratingCache.get(names[0]).rawAvg;
+      const who = names.length === 1
+        ? `${names[0]} (${v.toFixed(2)} average impact over ${ratingCache.get(names[0]).games} games I ranked)`
+        : `${and(names)}, tied (${v.toFixed(2)} average impact)`;
+      return `My ${tName} ${title}${names.length > 1 ? "s" : ""}: ${who}.`
+        + (team.length ? ` ${teamTitle}: ${team.map(t => `${lab(t.role)} ${t.names.join("/")}`).join(", ")}.` : "");
+    };
+
+    const mvps = tiedWith(ok, ok[0]);
+    const team = ROLES5.map(role => {
+      const r = inRole(role); if (!r.length) return null;
+      return { role, names: tiedWith(r, r[0]), v: ratingCache.get(r[0]).rawAvg };
+    }).filter(Boolean);
+    window._mvpPost = postOf("MVP", mvps, team, "All-tournament team");
+    mvpHtml = card({ color: "var(--yellow)", icon: "\u{1F3C6}", title: "MVP", names: mvps, v: ratingCache.get(mvps[0]).rawAvg,
+      note: "players count once you've ranked half their team's games (2+)", team, teamTitle: "All-tournament team", postVar: "_mvpPost" });
+
+    // The other end: lowest average among the same qualifying players, and
+    // the lowest per position. A position needs two qualifiers and the
+    // bottom can't be level with the top, so nobody is on both teams.
+    const lvps = tiedWith(ok, ok[ok.length - 1]);
+    if (ok.length >= 2 && !lvps.some(n => mvps.includes(n))) {
+      const worst = ROLES5.map(role => {
+        const r = inRole(role); if (r.length < 2) return null;
+        const names = tiedWith(r, r[r.length - 1]);
+        if (names.includes(r[0])) return null;
+        return { role, names, v: ratingCache.get(r[r.length - 1]).rawAvg };
+      }).filter(Boolean);
+      window._lvpPost = postOf("LVP", lvps, worst, "Worst all-tournament team");
+      mvpHtml += card({ color: "#ff4d5e", icon: "\u{1F5D1}", title: "LVP", names: lvps, v: ratingCache.get(lvps[0]).rawAvg,
+        note: `lowest average of the ${ok.length} players who qualify`, team: worst, teamTitle: "Worst all-tournament team", postVar: "_lvpPost" });
+    }
+  }
+  return mvpHtml;
+}
+
 function renderPlayerProfiles() {
   { const _sc = document.getElementById("players-scope"); if (_sc) _sc.innerHTML = loadingNoteHtml() + scopeBannerHtml(); }
   const entries  = ratedGames().filter(entryInScope);
@@ -10252,87 +10405,7 @@ function renderPlayerProfiles() {
   let mvpHtml = "";
   if (oneTour && !q && players.length) {
     const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s\u00A0\u21B3]+/, "");
-    const most = Math.max(...players.map(n => ratingCache.get(n).games));
-    const min = Math.max(2, Math.ceil(most * 0.4));
-    // Teams play very different numbers of games in one event (play-in teams
-    // have played far more than seeded ones partway through; teams knocked out
-    // early stop at a few). So the bar is each player's own team: they count
-    // once you've ranked at least half of the games their team has played,
-    // and at least 2. Nobody's bar depends on how many games another team has.
-    const teamGames = new Map(), playerTeam = new Map();
-    for (const e of loadAllGameData()) {
-      if (e.isStandaloneBet || !profileFilterMatch(e, leagueFilter) || !entryInScope(e)) continue;
-      for (const side of ["blue", "red"]) {
-        const k = teamKey(side === "blue" ? e.blueTeam : e.redTeam); if (!k) continue;
-        teamGames.set(k, (teamGames.get(k) || 0) + 1);
-        for (const raw of e.players?.[side] || []) { const n = canonPlayer(raw); if (ratingCache.has(n)) {
-          const m = playerTeam.get(n) || new Map(); m.set(k, (m.get(k) || 0) + 1); playerTeam.set(n, m);
-        } }
-      }
-    }
-    const barFor = n => {
-      const m = playerTeam.get(n); if (!m) return min;
-      const k = [...m.entries()].sort((a, b) => b[1] - a[1])[0][0];
-      const tg = teamGames.get(k);
-      return tg ? Math.max(2, Math.ceil(tg / 2)) : min;
-    };
-    const ok = players.filter(n => ratingCache.get(n).games >= barFor(n));
-    if (ok.length) {
-      // Ties: anyone level with the top (or bottom) at the two decimals shown.
-      const cents = n => Math.round(ratingCache.get(n).rawAvg * 100);
-      const tiedWith = (list, n) => list.filter(x => cents(x) === cents(n));
-      const and = a => a.length <= 1 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
-      const ROLES5 = ["top", "jungle", "mid", "bottom", "support"];
-      const inRole = role => ok.filter(x => (roleMap[x]?.role || "") === role);
-      const lab = role => (ROLE_ABBR[role] || role).toUpperCase();
-      const gamesLine = names => names.length === 1 ? `${ratingCache.get(names[0]).games} games ranked`
-        : `tied · ${names.map(n => `${n} ${ratingCache.get(n).games}g`).join(", ")}`;
-      const teamRows = rows => rows.map(t => `<div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-top:1px solid var(--border);font-size:13px;">
-            <span><span style="color:var(--muted);font-size:11px;display:inline-block;width:34px;">${lab(t.role)}</span>${t.names.join(" / ")}</span>
-            <span style="font-weight:700;white-space:nowrap;color:${impactColor(t.v)};">${t.v.toFixed(2)} <span style="font-weight:400;color:var(--muted);font-size:11px;">· ${t.names.map(n => ratingCache.get(n).games + "g").join(" / ")}</span></span></div>`).join("");
-      const card = (o) => `<div class="card" style="margin-bottom:12px;border-color:${o.color};">
-        <div style="font-size:11px;font-weight:700;color:${o.color};letter-spacing:.06em;text-transform:uppercase;">${o.icon} Your ${tName} ${o.title}${o.names.length > 1 ? "s · tied" : ""}</div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:6px 0 2px;">
-          <span style="font-size:20px;font-weight:700;">${o.names.join("<br>")}</span>
-          <span style="font-size:20px;font-weight:700;color:${impactColor(o.v)};">${o.v.toFixed(2)}</span></div>
-        <div style="font-size:11px;color:var(--muted);">${gamesLine(o.names)} · ${o.note}</div>
-        ${o.team.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:10px;">${o.teamTitle}</div>${teamRows(o.team)}` : ""}
-        <button class="btn btn-ghost" style="font-size:12px;padding:5px 10px;margin-top:10px;" onclick="navigator.clipboard.writeText(window.${o.postVar}||'').then(()=>{this.textContent='Copied'})">Copy</button>
-      </div>`;
-      const postOf = (title, names, team, teamTitle) => {
-        const v = ratingCache.get(names[0]).rawAvg;
-        const who = names.length === 1
-          ? `${names[0]} (${v.toFixed(2)} average impact over ${ratingCache.get(names[0]).games} games I ranked)`
-          : `${and(names)}, tied (${v.toFixed(2)} average impact)`;
-        return `My ${tName} ${title}${names.length > 1 ? "s" : ""}: ${who}.`
-          + (team.length ? ` ${teamTitle}: ${team.map(t => `${lab(t.role)} ${t.names.join("/")}`).join(", ")}.` : "");
-      };
-
-      const mvps = tiedWith(ok, ok[0]);
-      const team = ROLES5.map(role => {
-        const r = inRole(role); if (!r.length) return null;
-        return { role, names: tiedWith(r, r[0]), v: ratingCache.get(r[0]).rawAvg };
-      }).filter(Boolean);
-      window._mvpPost = postOf("MVP", mvps, team, "All-tournament team");
-      mvpHtml = card({ color: "var(--yellow)", icon: "\u{1F3C6}", title: "MVP", names: mvps, v: ratingCache.get(mvps[0]).rawAvg,
-        note: "players count once you've ranked half their team's games (2+)", team, teamTitle: "All-tournament team", postVar: "_mvpPost" });
-
-      // The other end: lowest average among the same qualifying players, and
-      // the lowest per position. A position needs two qualifiers and the
-      // bottom can't be level with the top, so nobody is on both teams.
-      const lvps = tiedWith(ok, ok[ok.length - 1]);
-      if (ok.length >= 2 && !lvps.some(n => mvps.includes(n))) {
-        const worst = ROLES5.map(role => {
-          const r = inRole(role); if (r.length < 2) return null;
-          const names = tiedWith(r, r[r.length - 1]);
-          if (names.includes(r[0])) return null;
-          return { role, names, v: ratingCache.get(r[r.length - 1]).rawAvg };
-        }).filter(Boolean);
-        window._lvpPost = postOf("LVP", lvps, worst, "Worst all-tournament team");
-        mvpHtml += card({ color: "#ff4d5e", icon: "\u{1F5D1}", title: "LVP", names: lvps, v: ratingCache.get(lvps[0]).rawAvg,
-          note: `lowest average of the ${ok.length} players who qualify`, team: worst, teamTitle: "Worst all-tournament team", postVar: "_lvpPost" });
-      }
-    }
+    mvpHtml = awardsHtml(leagueFilter, reviews, tName);
   }
 
   // Finals MVP: the same impact ranks, counting only the tournament's last
@@ -10580,11 +10653,13 @@ function finalsSeries(filter) {
   }
   return best;
 }
-function finalsMvpHtml(filter, reviews) {
+function finalsMvpHtml(filter, reviews, tName) {
   const fin = finalsSeries(filter);
   if (!fin) return "";
-  const lsel = document.getElementById("profile-league-filter");
-  const tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s\u00A0\u21B3]+/, "");
+  if (tName == null) {
+    const lsel = document.getElementById("profile-league-filter");
+    tName = (lsel && lsel.selectedOptions[0] ? lsel.selectedOptions[0].textContent : "").replace(/\s*\(\d+\)$/, "").replace(/^[\s\u00A0\u21B3]+/, "");
+  }
   const [a, b] = fin.pair, wa = fin.wins[a] || 0, wb = fin.wins[b] || 0;
   const win = wa > wb ? a : b, lose = win === a ? b : a;
   const series = `${fin.labels[win]} ${Math.max(wa, wb)}\u2013${Math.min(wa, wb)} ${fin.labels[lose]}`;
@@ -10596,7 +10671,7 @@ function finalsMvpHtml(filter, reviews) {
   for (const g of fin.games) {
     const r = reviews[g.id]; if (!r || !Object.keys(r).length) continue;
     ranked++;
-    for (const [n, v] of Object.entries(r)) { const x = per.get(n) || { s: 0, n: 0 }; x.s += v; x.n++; per.set(n, x); }
+    for (const [raw, v] of Object.entries(r)) { const n = canonPlayer(raw); const x = per.get(n) || { s: 0, n: 0 }; x.s += v; x.n++; per.set(n, x); }
   }
   const box = inner => `<div class="card" style="margin-bottom:12px;border-color:#e6b04a;">${head}${inner}</div>`;
   if (!ranked) return box(`<div style="font-size:12px;color:var(--muted);margin-top:6px;">${sub}. Rank the players in this series in Match history to see your Finals MVP.</div>`);
@@ -23525,6 +23600,7 @@ function onLabUpdated() {
   const a = document.querySelector(".screen.active");
   if (a && a.id === "screen-log") { try { renderLogLab(); } catch(e) {} }
   if (a && a.id === "screen-draftrecord") { try { renderDraftRecord(); } catch(e) {} }
+  if (a && a.id === "screen-teams") { try { renderTeamRatings(); } catch(e) {} }
 }
 function renderLogLab() {
   const el = document.getElementById("lab-log-panel");
@@ -34860,6 +34936,14 @@ LAB.VARIANTS.push(
       if (!pre) return null;
       return pre.games.map(g => ({ id: g.id, date: g.date, gnum: g.gnum || 0, blue: g.blue_team, red: g.red_team,
         pre: pre.preds.get(g.id) ?? null, post: post && g.champs ? (post.preds.get(g.id) ?? null) : null }));
+    },
+    // How the player model rates five players as a team (its average player
+    // rating), read without changing anything. For the Teams page's model rank.
+    strengthOf: (names, team, league) => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players");
+      if (!pre || !pre.model) return null;
+      return pre.model.strength(names.map(n => LAB.stripTag(n, [team])), league || "", true);
     },
     refresh: () => { lastSig = ""; return refresh(); },
     // The two models behind the draft judge, as plain numbers, so the game
