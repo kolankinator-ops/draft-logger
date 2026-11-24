@@ -505,6 +505,11 @@
   .ro-edit { padding:8px 0 10px;border-top:1px dashed var(--border); }
   .ro-edit input, .ro-edit select { width:100%;font-size:13px;padding:7px 9px;margin-top:4px; }
   .ro-btn { font-size:12px !important;padding:6px 12px !important;width:auto !important;flex:none; }
+  .ro-wi { background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin:6px 0 8px; }
+  .ro-wi-row { display:grid;grid-template-columns:54px minmax(0,1fr) 62px 52px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--border);font-size:13px; }
+  .ro-wi-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end;font-variant-numeric:tabular-nums; }
+  .ro-wi-num i { font-style:normal;font-size:10px;color:var(--muted); }
+  .ro-mini { font-size:11px;line-height:1;padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer; }
   .ro-sug { display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13px; }
   @media (max-width:520px) { .ro-sug { flex-wrap:wrap; } }
   /* Draft record */
@@ -2113,7 +2118,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b203</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b204</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2675,7 +2680,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b203";
+const BUILD_VERSION = "2026.11.23-b204";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -16383,6 +16388,131 @@ function rosterAddTeam() {
   renderRosters();
 }
 
+// ---- what-if ----
+// Try a lineup on a team without changing anything: your ratings and the
+// Model Lab's side by side, where the team would rank in its league and
+// overall, and its chances against a team you pick. "Apply" puts the lineup on
+// the roster as rumoured.
+let _rosterWI = null, _roWiT = null;
+function rosterOpenWhatIf(key) {
+  if (_rosterWI && _rosterWI.key === key) { _rosterWI = null; renderRosters(); return; }
+  const r = loadRosters(), base = rosterBaseline(), t = rosterTeam(r, base, key);
+  if (!t) return;
+  _rosterWI = { key, names: Object.fromEntries(ROSTER_ROLES.map(ro => [ro, t.lineup[ro] ? t.lineup[ro].n : ""])), adj: {}, vs: null };
+  _rosterEdit = null; _rosterTeamEdit = null; _rosterSign = null;
+  renderRosters();
+}
+function rosterWhatIfSet(role, v) {
+  if (!_rosterWI) return;
+  _rosterWI.names[role] = String(v || "").trim();
+  delete _rosterWI.adj[role];
+  clearTimeout(_roWiT);
+  _roWiT = setTimeout(rosterWhatIfPaint, 200);
+}
+function rosterWhatIfAdj(role, d) {
+  if (!_rosterWI) return;
+  const v = Math.round(((_rosterWI.adj[role] || 0) + d) * 2) / 2;
+  if (v) _rosterWI.adj[role] = Math.max(-3, Math.min(3, v)); else delete _rosterWI.adj[role];
+  rosterWhatIfPaint();
+}
+function rosterWhatIfVs(k) { if (_rosterWI) { _rosterWI.vs = k || null; rosterWhatIfPaint(); } }
+function rosterWhatIfApply() {
+  if (!_rosterWI) return;
+  const r = loadRosters(), base = rosterBaseline(), t = rosterTeam(r, base, _rosterWI.key);
+  for (const ro of ROSTER_ROLES) {
+    const n = _rosterWI.names[ro], cur = t && t.lineup[ro] ? t.lineup[ro].n : "";
+    if (n && rosterPid(n) !== rosterPid(cur)) rosterSetSlot(_rosterWI.key, ro, rosterShowName(n), "rumour");
+  }
+  _rosterWI = null;
+  renderRosters();
+}
+function rosterWhatIfPaint() { const el = document.getElementById("ro-wi-out"); if (el) el.innerHTML = rosterWhatIfOut(); }
+
+function rosterWhatIfOut() {
+  const W = _rosterWI;
+  if (!W) return "";
+  const esc = drEsc, r = loadRosters(), base = rosterBaseline();
+  const teamOf = k => rosterTeam(r, base, k);
+  const active = rosterAllKeys(r, base).filter(k => teamOf(k) && !teamOf(k).out);
+  const me = teamOf(W.key), league = me.league;
+  const lineupOf = k => k === W.key ? ROSTER_ROLES.map(ro => W.names[ro] || null) : ROSTER_ROLES.map(ro => (teamOf(k).lineup[ro] || {}).n || null);
+  const nowLineup = ROSTER_ROLES.map(ro => (me.lineup[ro] || {}).n || null);
+  const rate = n => { const x = n ? base.ratings.get(rosterPid(n)) : null; return x ? x.avg : null; };
+  const lab = window.labApi && labApi.ready() && labApi.playerRating ? labApi : null;
+  const model = (n, k) => (lab && n ? lab.playerRating(n, k, teamOf(k).league) : null);
+  // Everyone starting for a 2027 team, by role: what the percentiles compare against.
+  const pool = { you: {}, model: {} };
+  const inWi = new Set(ROSTER_ROLES.map(ro => W.names[ro]).filter(Boolean).map(rosterPid));
+  for (const k of active) {
+    if (k === W.key) continue;
+    lineupOf(k).forEach((n, i) => {
+      const ro = ROSTER_ROLES[i]; if (!n || inWi.has(rosterPid(n))) return;
+      const y = rate(n); if (y != null) (pool.you[ro] = pool.you[ro] || []).push(y);
+      const m = model(n, k); if (m != null) (pool.model[ro] = pool.model[ro] || []).push(m);
+    });
+  }
+  const pct = (v, arr) => { if (v == null || !arr || arr.length < 3) return null; const below = arr.filter(x => x < v).length, eq = arr.filter(x => x === v).length; return Math.round(100 * (below + eq / 2) / arr.length); };
+  const col = v => v >= 7.5 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "#ff4d5e";
+  const lgOfPlayer = n => { const p = base.players.get(rosterPid(n)); return p && base.teams[p.team] ? base.teams[p.team].league : null; };
+  const roleOfPlayer = n => { const p = base.players.get(rosterPid(n)); return p ? p.r : null; };
+
+  // Team totals and ranks: your ratings (needs all five rated) and the model's.
+  const total = (names, adj) => { const v = names.map((n, i) => { const y = rate(n); return y == null ? null : y + ((adj && adj[ROSTER_ROLES[i]]) || 0); }); return v.every(x => x != null) ? v.reduce((a, b) => a + b, 0) : null; };
+  const mStr = (names, k) => (lab && names.every(Boolean) ? lab.strengthOf(names, k, teamOf(k).league) : null);
+  const others = active.filter(k => k !== W.key);
+  const rankOf = (val, list, higher = true) => val == null ? null : 1 + list.filter(x => x != null && (higher ? x > val : x < val)).length;
+  const wiNames = lineupOf(W.key);
+  const youWi = total(wiNames, W.adj), youNow = total(nowLineup);
+  const youOthers = others.map(k => ({ k, v: total(lineupOf(k)) })).filter(x => x.v != null);
+  const mWi = mStr(wiNames, W.key), mNow = mStr(nowLineup, W.key);
+  const mOthers = others.map(k => ({ k, v: mStr(lineupOf(k), k) })).filter(x => x.v != null);
+  const inLg = list => list.filter(x => teamOf(x.k).league === league).map(x => x.v);
+  const rankLine = (val, list) => val == null ? "—" : `#${rankOf(val, inLg(list))} of ${inLg(list).length + 1} in ${esc(league || "league")} · #${rankOf(val, list.map(x => x.v))} of ${list.length + 1} overall`;
+
+  // Against a named team.
+  const vsOpts = others.slice().sort((a, b) => ((teamOf(b).league === league) - (teamOf(a).league === league)) || rosterTeamName(r, base, a).localeCompare(rosterTeamName(r, base, b)));
+  if (!W.vs) W.vs = (mOthers.filter(x => teamOf(x.k).league === league).sort((a, b) => b.v - a.v)[0] || {}).k || vsOpts[0] || null;
+  let vsHtml = "";
+  if (W.vs && lab && lab.matchProb) {
+    const vsNames = lineupOf(W.vs);
+    const ok = a => a.every(Boolean);
+    const pWi = ok(wiNames) && ok(vsNames) ? lab.matchProb(wiNames, W.key, vsNames, W.vs, league) : null;
+    const pNow = ok(nowLineup) && ok(vsNames) ? lab.matchProb(nowLineup, W.key, vsNames, W.vs, league) : null;
+    const f = p => p == null ? "—" : Math.round(p * 100) + "%";
+    vsHtml = `<div style="margin-top:10px;font-size:12.5px;line-height:1.7;">vs <select onchange="rosterWhatIfVs(this.value)" style="width:auto;font-size:12px;padding:3px 6px;">${vsOpts.map(k => `<option value="${esc(k)}"${k === W.vs ? " selected" : ""}>${esc(rosterTeamName(r, base, k))}</option>`).join("")}</select>
+      <div>Model, one game: <b>${f(pWi)}</b>${pNow != null && pWi != null && Math.round(pNow * 100) !== Math.round(pWi * 100) ? ` <span style="color:var(--muted);">(now ${f(pNow)})</span>` : ""}
+        · Bo5: <b>${f(pWi == null ? null : lab.seriesProb(pWi, 5))}</b>${pNow != null && pWi != null && Math.round(lab.seriesProb(pNow, 5) * 100) !== Math.round(lab.seriesProb(pWi, 5) * 100) ? ` <span style="color:var(--muted);">(now ${f(lab.seriesProb(pNow, 5))})</span>` : ""}</div></div>`;
+  } else if (!lab) vsHtml = `<div style="margin-top:8px;font-size:11.5px;color:var(--muted);">The Model Lab is still loading; its numbers fill in when it's ready.</div>`;
+
+  const rows = ROSTER_ROLES.map((ro, i) => {
+    const n = wiNames[i];
+    if (!n) return `<div class="ro-wi-row"><span class="ro-role">${ROSTER_ROLE_LABEL[ro]}</span><span style="color:var(--muted);">empty</span><span></span><span></span></div>`;
+    const y = rate(n), a = W.adj[ro] || 0, yv = y == null ? null : y + a, m = model(n, W.key);
+    const yp = pct(yv, pool.you[ro]), mp = pct(m, pool.model[ro]);
+    const tags = [];
+    const pl = lgOfPlayer(n);
+    if (pl && league && pl !== league) tags.push(`from ${esc(pl)}, less certain`);
+    const usual = roleOfPlayer(n);
+    if (usual && usual !== ro) tags.push(`new role (was ${ROSTER_ROLE_LABEL[usual] || usual})`);
+    if (a) tags.push(`adjusted ${a > 0 ? "+" : ""}${a}`);
+    if (y == null) tags.push("you haven't rated him");
+    if (W.names[ro] && rosterPid(W.names[ro]) !== rosterPid(nowLineup[i] || "")) tags.push(nowLineup[i] ? `instead of ${esc(nowLineup[i])}` : "new");
+    return `<div class="ro-wi-row">
+      <span class="ro-role">${ROSTER_ROLE_LABEL[ro]}</span>
+      <span style="min-width:0;"><b>${esc(n)}</b>${tags.length ? `<div style="font-size:10.5px;color:${a || (pl && league && pl !== league) || (usual && usual !== ro) ? "var(--yellow)" : "var(--muted)"};">${tags.join(" · ")}</div>` : ""}</span>
+      <span class="ro-wi-num">${yv != null ? `<b style="color:${col(yv)};">${yv.toFixed(1)}</b><i>${yp != null ? "pct " + yp : ""}</i>` : "<i>—</i>"}
+        <span style="display:flex;gap:2px;margin-top:2px;"><button class="ro-mini" onclick="rosterWhatIfAdj('${ro}',-0.5)">−</button><button class="ro-mini" onclick="rosterWhatIfAdj('${ro}',0.5)">+</button></span></span>
+      <span class="ro-wi-num">${m != null ? `<b>${mp != null ? "pct " + mp : "—"}</b><i>model</i>` : "<i>—</i>"}</span></div>`;
+  }).join("");
+  const delta = (a, b, d = 1) => a != null && b != null && Math.abs(a - b) >= 0.05 ? ` <span style="color:${a > b ? "var(--green)" : "#ff4d5e"};">${a > b ? "+" : "−"}${Math.abs(a - b).toFixed(d)}</span>` : "";
+  return `${rows}
+    <div style="margin-top:10px;font-size:12.5px;line-height:1.7;">
+      <div><b>You:</b> ${youWi != null ? youWi.toFixed(1) + " /50" + delta(youWi, youNow) : "needs all five rated"} · ${rankLine(youWi, youOthers)}</div>
+      <div><b>Model:</b> ${rankLine(mWi, mOthers)}${mWi != null && mNow != null && rankOf(mWi, mOthers.map(x => x.v)) !== rankOf(mNow, mOthers.map(x => x.v)) ? ` <span style="color:var(--muted);">(now #${rankOf(mNow, mOthers.map(x => x.v))} overall)</span>` : ""}</div>
+    </div>${vsHtml}
+    <div style="font-size:10.5px;color:var(--muted);line-height:1.5;margin-top:8px;">Percentiles compare each player with the other starters in his role on this season's rosters. −/+ adjust your rating for this what-if only and are labelled.</div>`;
+}
+
 // ---- page ----
 function renderRosters() {
   const body = document.getElementById("ro-body");
@@ -16473,9 +16603,17 @@ function renderRosters() {
         <div style="text-align:right;flex:none;"><div style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;">${tot.n ? tot.sum.toFixed(1) : "—"}<span style="font-size:10px;color:var(--muted);font-weight:400;">${tot.n === 5 ? " /50" : tot.n ? ` (${tot.n} rated)` : ""}</span></div>
           ${delta != null && Math.abs(delta) >= 0.05 ? `<div style="font-size:10.5px;color:${delta > 0 ? "var(--green)" : "#ff4d5e"};">${delta > 0 ? "+" : "−"}${Math.abs(delta).toFixed(1)} vs ${P}</div>` : ""}</div></div>
       ${teamPanel}
+      ${_rosterWI && _rosterWI.key === k ? `<div class="ro-wi">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">What if</div>
+        ${ROSTER_ROLES.map(ro => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span class="ro-role" style="width:54px;flex:none;">${ROSTER_ROLE_LABEL[ro]}</span>
+          <input list="ro-names" value="${esc(_rosterWI.names[ro] || "")}" oninput="rosterWhatIfSet('${ro}',this.value)" autocomplete="off" spellcheck="false" style="flex:1;font-size:13px;padding:6px 8px;"></div>`).join("")}
+        <div id="ro-wi-out" style="margin-top:8px;">${rosterWhatIfOut()}</div>
+        <div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-primary ro-btn" onclick="rosterWhatIfApply()">Apply to roster (as rumoured)</button>
+          <button class="btn btn-ghost ro-btn" style="color:var(--muted);" onclick="_rosterWI=null;renderRosters()">Close</button></div></div>` : ""}
       ${ROSTER_ROLES.map(ro => row(ro, t.lineup[ro])).join("")}
       ${row("coach", t.coach)}
       ${t.subs.length ? `<div style="font-size:10.5px;color:var(--muted);margin-top:4px;">Subs: ${t.subs.map(s => esc(s.n) + " (" + ROSTER_ROLE_LABEL[s.r] + ")").join(", ")}</div>` : ""}
+      ${_rosterWI && _rosterWI.key === k ? "" : `<div style="margin-top:6px;"><a href="#" onclick="rosterOpenWhatIf('${esc(k)}');return false;" style="font-size:12px;color:var(--blue);">What if…</a></div>`}
     </div>`;
   }).join("") + `</div>`;
 
@@ -16527,7 +16665,7 @@ function renderRosters() {
   html += `<datalist id="ro-names">${[...new Set(allNames)].sort((a, b) => a.localeCompare(b)).map(n => `<option value="${esc(n)}">`).join("")}</datalist>`;
   body.innerHTML = html;
   const ed = document.getElementById("ro-edit-name");
-  if (ed) { ed.focus(); ed.select(); }
+  if (ed && !_rosterWI) { ed.focus(); ed.select(); }
   if (_rosterTeamEdit) { const tm = document.getElementById("ro-t-mode"); const t = team(_rosterTeamEdit); if (tm && t && t.out) tm.value = t.out.kind; rosterTeamMode(); }
 }
 function renderRostersQuiet() { renderRosters(); }
@@ -23601,6 +23739,7 @@ function onLabUpdated() {
   if (a && a.id === "screen-log") { try { renderLogLab(); } catch(e) {} }
   if (a && a.id === "screen-draftrecord") { try { renderDraftRecord(); } catch(e) {} }
   if (a && a.id === "screen-teams") { try { renderTeamRatings(); } catch(e) {} }
+  if (a && a.id === "screen-rosters") { try { renderRosters(); } catch(e) {} }
 }
 function renderLogLab() {
   const el = document.getElementById("lab-log-panel");
@@ -34939,6 +35078,23 @@ LAB.VARIANTS.push(
     },
     // How the player model rates five players as a team (its average player
     // rating), read without changing anything. For the Teams page's model rank.
+    // One player as the player model rates him (a newcomer gets his league's
+    // starting value), and one team's game win chance against another on
+    // neutral sides. Both read-only. For the Rosters what-if card.
+    playerRating: (name, team, league) => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players");
+      return pre && pre.model ? pre.model.rating(LAB.stripTag(name, [team]), league || "", true) : null;
+    },
+    matchProb: (a, aTeam, b, bTeam, league) => {
+      const R = state.run; if (!R) return null;
+      const pre = R.results.find(r => r.id === "players");
+      if (!pre || !pre.model) return null;
+      const A = a.map(n => LAB.stripTag(n, [aTeam])), B = b.map(n => LAB.stripTag(n, [bTeam]));
+      const p1 = pre.model.predict({ blue: A, red: B, league: league || "" }, true);
+      const p2 = pre.model.predict({ blue: B, red: A, league: league || "" }, true);
+      return (p1 + (1 - p2)) / 2;
+    },
     strengthOf: (names, team, league) => {
       const R = state.run; if (!R) return null;
       const pre = R.results.find(r => r.id === "players");
