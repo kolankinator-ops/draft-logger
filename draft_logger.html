@@ -2079,7 +2079,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.19-b192</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b193</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2382,6 +2382,7 @@
       <button class="btn btn-ghost" onclick="saveGitHubConfig()">Save config</button>
     </div>
     <div id="gh-status" style="font-size:12px;margin-top:10px;min-height:18px;"></div>
+    <div id="build-checks" style="font-size:11.5px;line-height:1.5;margin-top:8px;"></div>
   </div>
 
   <div class="card" style="margin-top:14px;">
@@ -2630,7 +2631,7 @@ window.__pristineMark = document.currentScript;
 // the background work (imports, draft fills, repairs, clean-ups, live game
 // recording). Whatever you do in it stays in that copy and is thrown away the
 // next time it opens.
-function isTestCopy() { return !/\.github\.io$/i.test(location.hostname || ""); }
+function isTestCopy(h) { if (h === undefined) h = location.hostname; return !/\.github\.io$/i.test(h || ""); }
 function localDateStr(d) {
   d = d || new Date();
   return d.getFullYear() + "-" +
@@ -2640,7 +2641,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.19-b192";
+const BUILD_VERSION = "2026.11.23-b193";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -27895,7 +27896,7 @@ async function pushToGitHubSilent() {
   return;
 }
 
-async function pushToGitHub() {
+async function pushToGitHub(force) {
   const token = (document.getElementById("gh-token")||{}).value.trim() || localStorage.getItem(GH_TOKEN_KEY) || "";
   const repo  = (document.getElementById("gh-repo") ||{}).value.trim() || localStorage.getItem(GH_REPO_KEY)  || "";
   const path  = (document.getElementById("gh-path") ||{}).value.trim() || localStorage.getItem(GH_PATH_KEY)  || "draft_logger.html";
@@ -27906,6 +27907,18 @@ async function pushToGitHub() {
   const msg     = `Update draft logger — ${new Date().toLocaleString()}`;
   const owner   = repo.split("/")[0];
   const repoName = repo.split("/")[1];
+
+  // A build that fails its checks doesn't go out. "Push anyway" is there for a
+  // check that's wrong, not for a build that is.
+  if (force !== true) {
+    setGhStatus("Running build checks\u2026", "var(--muted)");
+    const chk = await runBuildChecks();
+    if (!chk.pass) {
+      setGhStatus(`Not pushed: ${chk.failed.length} build check${chk.failed.length === 1 ? "" : "s"} failed (listed below). ` +
+        `<a href="#" onclick="pushToGitHub(true);return false;" style="color:var(--muted);">Push anyway</a>`, "#ff4d5e");
+      return;
+    }
+  }
 
   try {
     // 1. Push the app HTML
@@ -27943,7 +27956,7 @@ async function pushToGitHub() {
      "scope-summary","dimfit-results","patch-coverage","bankroll-display","pnl-display",
      "comp-readiness","states-panel","lpl-proxy-status","caveat-results","delivery-results",
      "noteconsist-results","sync-queue","review-breakdown","gh-status","league-filter-list",
-     "auto-log-status","bl-count"]
+     "auto-log-status","bl-count","build-checks","dr-body","dr-sources","dr-filter"]
       .forEach(id => { const el = clone.querySelector("#" + id); if (el) el.innerHTML = ""; });
     // Any stray iframe or transient pill, wherever it ended up.
     clone.querySelectorAll("iframe").forEach(f => f.remove());
@@ -31979,7 +31992,7 @@ function show(screen) {
         loadAlerts();
       } catch(e) {}
     }
-    if (screen === "settings")  { try { updateErrorBadge(); renderStatesPanel(); } catch(e) {} updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); try { renderSyncQueue(); renderSettingsPanels(); } catch(e) {} loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); }
+    if (screen === "settings")  { try { updateErrorBadge(); renderStatesPanel(); } catch(e) {} updateSyncConnectedUI(); loadGitHubConfig(); renderManualScheduleList(); renderNotifSettings(); renderBulkLeagueChecks(); loadBankrollSettingsUI(); renderAliasList(); try { renderSyncQueue(); renderSettingsPanels(); } catch(e) {} loadAutoLogSettingsUI(); renderPnLSummary(); renderStreamsList(); try { renderBuildChecks(); } catch(e) {} }
   } catch(e) {
     console.error("Error rendering screen", screen, ":", e);
   }
@@ -32066,6 +32079,211 @@ async function resetTestCopy() {
     await new Promise(res => { const tx = db.transaction("states", "readwrite"); tx.objectStore("states").clear(); tx.oncomplete = res; tx.onerror = res; });
   } catch(e) {}
 }
+// ── Build checks ─────────────────────────────────────────────────────────────
+// Run on their own whenever a new build is opened as a test copy, and again
+// before every deploy: a build that fails them doesn't go out. Two kinds:
+//   · fixed cases for the logic that has broken before (series results, keys,
+//     odds, draft reads, the test-copy guard), with known right answers;
+//   · every page rendered against your real data, then every button and box on
+//     them checked for a handler that no longer exists.
+// Nothing here saves anything.
+let _checksLast = null, _checksBusy = null;
+
+function _checkCases() {
+  const out = [];
+  const t = (name, fn) => {
+    try { const r = fn(); out.push(r === true ? { name, ok: true } : { name, ok: false, why: typeof r === "string" ? r : "wrong answer" }); }
+    catch (e) { out.push({ name, ok: false, why: "threw: " + (e && e.message || e) }); }
+  };
+  const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b) || `got ${JSON.stringify(a)}, expected ${JSON.stringify(b)}`;
+  const winners = rows => rows.map(r => r.winner);
+
+  // Series results: the cases behind the missed IG vs TES games.
+  t("Series: 2-0 sweep, both games to the winner", () => {
+    const rows = [{ bc: "GEN", rc: "T1" }, { bc: "T1", rc: "GEN" }];
+    resolveSeriesWinners(rows, "GEN", "T1", 2, 0, true);
+    return eq(winners(rows), ["blue", "red"]);
+  });
+  t("Series: 2-1 with game 1 known fills game 2", () => {
+    const rows = [{ bc: "GEN", rc: "T1", known: "blue" }, { bc: "T1", rc: "GEN" }, { bc: "GEN", rc: "T1" }];
+    resolveSeriesWinners(rows, "GEN", "T1", 2, 1, false);
+    return eq(winners(rows).concat(rows[1].conf), ["blue", "blue", "blue", "derived"]);
+  });
+  t("Series: 3-1 decided by the feed's reads", () => {
+    const rows = [{ bc: "IG", rc: "TES", feedWinner: "blue" }, { bc: "TES", rc: "IG", feedWinner: "blue" },
+                  { bc: "IG", rc: "TES", feedWinner: "blue" }, { bc: "TES", rc: "IG" }];
+    resolveSeriesWinners(rows, "IG", "TES", 3, 1, false);
+    return eq(winners(rows), ["blue", "blue", "blue", "red"]);
+  });
+  t("Series: an impossible read doesn't force a guess", () => {
+    const rows = [{ bc: "IG", rc: "TES", feedWinner: "blue" }, { bc: "IG", rc: "TES", feedWinner: "blue" },
+                  { bc: "IG", rc: "TES", feedWinner: "blue" }, { bc: "IG", rc: "TES" }];
+    resolveSeriesWinners(rows, "IG", "TES", 3, 1, false);
+    return eq(winners(rows), [null, null, null, "blue"]);
+  });
+  t("Series: a game missing from the list keeps only what's certain", () => {
+    const rows = [{ bc: "FLY", rc: "TL" }, { bc: "TL", rc: "FLY" }];
+    resolveSeriesWinners(rows, "FLY", "TL", 2, 1, false);
+    return eq(winners(rows), [null, "red"]);
+  });
+  t("Series in progress: 1-1 with game 1 known fills game 2", () => {
+    const rows = [{ bc: "G2", rc: "FNC", known: "blue" }, { bc: "FNC", rc: "G2" }];
+    resolveOpenSeriesWinners(rows, [["G2", 1], ["FNC", 1]]);
+    return eq(winners(rows), ["blue", "blue"]);
+  });
+  t("Series in progress: 2-0 is certain", () => {
+    const rows = [{ bc: "G2", rc: "FNC" }, { bc: "FNC", rc: "G2" }];
+    resolveOpenSeriesWinners(rows, [["G2", 2], ["FNC", 0]]);
+    return eq(winners(rows).concat(rows.map(r => r.conf)), ["blue", "red", "certain", "certain"]);
+  });
+  t("Series: a stored result that contradicts the score is outvoted, not trusted", () => {
+    const rows = [{ bc: "A", rc: "B", known: "red" }, { bc: "A", rc: "B", known: "red" }];
+    const seqs = [{ seq: ["A", "A"] }];
+    keepKnownOrders(rows, seqs, (r, s) => s === "blue" ? r.bc : r.rc);
+    return eq(seqs.length, 1);
+  });
+
+  // Keys and small helpers that everything else counts by.
+  t("Game key: same game matches, game number separates", () => {
+    const a = gameKey({ date: "2026-03-01T10:00", blueTeam: "GEN", redTeam: "T1", gameNumber: 2 });
+    const b = gameKey({ date: "2026-03-01", blueTeam: "GEN", redTeam: "T1", gameNumber: 2 });
+    const c = gameKey({ date: "2026-03-01", blueTeam: "GEN", redTeam: "T1", gameNumber: 3 });
+    return a === b && a !== c && a.startsWith("2026-03-01|") ? true : `${a} / ${b} / ${c}`;
+  });
+  t("Riot game ids are read from stored ids", () =>
+    eq([riotGameId("riot_113475798_2"), riotGameId("bulk_1134757"), riotGameId("1731900000000")], ["113475798", "1134757", null]));
+  t("TBD teams are recognised", () => eq([isTbdTeam("tbd"), isTbdTeam(""), isTbdTeam(" TBA "), isTbdTeam("GEN")], [true, true, true, false]));
+  t("Odds fall back to the bet's prices", () =>
+    eq(entryOdds({ bet: { on: "red", odds: "2.5", oppOdds: "1.55" } }), { blueOdds: 1.55, redOdds: 2.5 }));
+  t("Logged odds win over the bet's prices", () =>
+    eq(entryOdds({ mktBlueOdds: "1.4", mktRedOdds: "2.9", bet: { on: "red", odds: "3.1", oppOdds: "1.3" } }), { blueOdds: 1.4, redOdds: 2.9 }));
+  t("Draft read: your logged read first, then a review", () => {
+    const ann = { [gameKey({ date: "2026-05-02", blueTeam: "KC", redTeam: "VIT", gameNumber: 1 })]: { draftPref: 2 } };
+    return eq([
+      draftReadOf({ draftPref: -1, date: "2026-05-02", blueTeam: "KC", redTeam: "VIT", gameNumber: 1 }, ann),
+      draftReadOf({ isBulkImport: true, draftPref: -1, date: "2026-05-02", blueTeam: "KC", redTeam: "VIT", gameNumber: 1 }, ann),
+      draftReadOf({ isBulkImport: true, date: "2026-05-03", blueTeam: "KC", redTeam: "VIT", gameNumber: 1 }, ann)
+    ], [-1, 2, null]);
+  });
+  t("Test copies never count as the live site", () =>
+    eq([isTestCopy("kolankinator-ops.github.io"), isTestCopy("localhost"), isTestCopy(""), isTestCopy("127.0.0.1")], [false, true, true, true]));
+  t("Draft record maths", () => {
+    const s = drStat([{ hit: true, pSide: 0.4 }, { hit: false, pSide: 0.6 }, { hit: true, pSide: null }]);
+    return eq([s.n, s.w, s.l, s.nP, Math.round(s.exp), Math.round(s.act), Math.round(s.above)], [3, 2, 1, 2, 50, 50, 0]);
+  });
+  t("Build number is stamped", () => /^\d{4}\.\d{2}\.\d{2}-b\d+$/.test(BUILD_VERSION) || "bad build number: " + BUILD_VERSION);
+  return out;
+}
+
+// Every page the menu opens, drawn into its (hidden) screen without switching
+// to it. Pages that stream video or start imports are left out.
+const CHECK_RENDERS = [
+  ["Home", "renderHome"], ["Match history", "renderMatchHistory"], ["Champions", "renderChampions"],
+  ["Players", "renderPlayerProfiles"], ["Team drafts", "renderTeamDrafts"], ["Draft record", "renderDraftRecord"],
+  ["Scouting", "renderScouting"], ["Findings", "renderFindings"], ["Team ratings", "renderTeamRatings"],
+  ["Teams", "renderTeamsList"], ["Tiers", "renderTiers"], ["Model", "renderModelPage"], ["My stats", "renderStats"],
+  ["Bets", "renderBets"], ["Bet stats", "renderBetStats"], ["Scores", "renderScores"], ["Log game", "renderLogLab"],
+  ["Log backlog", "renderBacklog"], ["Results", "renderPending"]
+];
+const CHECK_NOT_HANDLERS = new Set(["if", "for", "while", "switch", "return", "typeof", "function", "catch", "new", "await",
+  "setTimeout", "clearTimeout", "setInterval", "alert", "confirm", "prompt", "parseInt", "parseFloat", "Number", "String",
+  "Boolean", "encodeURIComponent", "decodeURIComponent", "isNaN", "isFinite", "open", "fetch", "event", "void"]);
+
+async function _checkPages() {
+  const out = [];
+  const errs = [];
+  const origLog = window.logAppError;
+  window.logAppError = function (kind, message, detail) { errs.push(String(message)); try { return origLog.apply(this, arguments); } catch (e) {} };
+  const onErr = ev => errs.push(String((ev && (ev.message || (ev.reason && ev.reason.message))) || "error"));
+  window.addEventListener("error", onErr);
+  window.addEventListener("unhandledrejection", onErr);
+  try {
+    for (const [label, fn] of CHECK_RENDERS) {
+      const f = window[fn];
+      if (typeof f !== "function") { out.push({ name: `Page renders: ${label}`, ok: false, why: `${fn} is missing` }); continue; }
+      const before = errs.length;
+      try { await Promise.resolve(f()); await new Promise(r => setTimeout(r, 0)); }
+      catch (e) { out.push({ name: `Page renders: ${label}`, ok: false, why: "threw: " + (e && e.message || e) }); continue; }
+      out.push(errs.length > before
+        ? { name: `Page renders: ${label}`, ok: false, why: errs.slice(before).join("; ").slice(0, 200) }
+        : { name: `Page renders: ${label}`, ok: true });
+    }
+  } finally {
+    window.logAppError = origLog;
+    window.removeEventListener("error", onErr);
+    window.removeEventListener("unhandledrejection", onErr);
+  }
+
+  // Every menu entry has a page to open.
+  const missingScreens = [];
+  document.querySelectorAll("nav button[onclick], .nav-drawer button[onclick]").forEach(b => {
+    const m = /show\('([\w-]+)'\)/.exec(b.getAttribute("onclick") || "");
+    if (m && !document.getElementById("screen-" + m[1])) missingScreens.push(m[1]);
+  });
+  out.push(missingScreens.length
+    ? { name: "Every menu entry opens a page", ok: false, why: "no page for: " + [...new Set(missingScreens)].join(", ") }
+    : { name: "Every menu entry opens a page", ok: true });
+
+  // Every button, box and link on the drawn pages calls something that exists.
+  const missing = new Map();
+  const re = /(?<![.\w$])([A-Za-z_$][\w$]*)\s*\(/g;
+  document.querySelectorAll("[onclick],[onchange],[oninput],[onkeydown],[onkeyup],[onsubmit],[onblur],[onfocus]").forEach(el => {
+    for (const a of ["onclick", "onchange", "oninput", "onkeydown", "onkeyup", "onsubmit", "onblur", "onfocus"]) {
+      // Quoted text ('var(--blue)', a message) isn't code.
+      const code = (el.getAttribute(a) || "").replace(/'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`/g, "''");
+      if (!code) continue;
+      let m; re.lastIndex = 0;
+      while ((m = re.exec(code))) {
+        const name = m[1];
+        if (CHECK_NOT_HANDLERS.has(name)) continue;
+        if (typeof window[name] !== "function" && !missing.has(name)) missing.set(name, a);
+      }
+    }
+  });
+  out.push(missing.size
+    ? { name: "Every button calls something that exists", ok: false, why: "missing: " + [...missing.keys()].slice(0, 8).join(", ") }
+    : { name: "Every button calls something that exists", ok: true });
+  return out;
+}
+
+function runBuildChecks() {
+  if (_checksBusy) return _checksBusy;
+  _checksBusy = (async () => {
+    const t0 = performance.now();
+    const results = [..._checkCases(), ...(await _checkPages())];
+    const failed = results.filter(r => !r.ok);
+    _checksLast = { build: BUILD_VERSION, at: Date.now(), ms: Math.round(performance.now() - t0), results, failed, pass: !failed.length };
+    _checksBusy = null;
+    try { renderBuildChecks(); } catch (e) {}
+    return _checksLast;
+  })();
+  return _checksBusy;
+}
+
+function buildChecksSummary(r) {
+  if (!r) return "";
+  return r.pass ? `✓ All ${r.results.length} build checks passed`
+                : `✗ ${r.failed.length} of ${r.results.length} build checks failed`;
+}
+function renderBuildChecks() {
+  const r = _checksLast;
+  const tb = document.getElementById("test-checks");
+  if (tb) {
+    tb.innerHTML = !r ? " · running build checks…"
+      : ` · <span style="color:${r.pass ? "#7ee2a8" : "#ff8a95"};font-weight:700;cursor:${r.pass ? "default" : "pointer"};"
+          ${r.pass ? "" : `onclick="show('settings');setTimeout(()=>{const c=document.getElementById('build-checks');if(c)c.scrollIntoView({block:'center'});},200)"`}>${buildChecksSummary(r)}</span>`;
+  }
+  const el = document.getElementById("build-checks");
+  if (!el) return;
+  if (!r) { el.innerHTML = `<span style="color:var(--muted);">Build checks run when a new build is opened as a test copy, and before every push.</span>`; return; }
+  el.innerHTML = `<div style="color:${r.pass ? "var(--green)" : "#ff4d5e"};font-weight:600;">${buildChecksSummary(r)}</div>
+    <div style="color:var(--muted);">Build ${drEsc(r.build)} · ${new Date(r.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })} · ${r.ms} ms</div>
+    ${r.failed.map(f => `<div style="margin-top:4px;"><b>${drEsc(f.name)}</b><br><span style="color:var(--muted);">${drEsc(f.why || "")}</span></div>`).join("")}`;
+}
+
+// A test copy checks itself once your data has had a moment to load.
+if (isTestCopy()) setTimeout(() => { renderBuildChecks(); runBuildChecks(); }, 8000);
+
 function showTestBanner() {
   if (!isTestCopy() || document.getElementById("test-copy-banner")) return;
   const b = document.createElement("div");
@@ -32073,8 +32291,8 @@ function showTestBanner() {
   b.style.cssText = "position:sticky;top:0;z-index:10000;background:#3a2f0b;color:#ffd666;font-size:12px;" +
     "text-align:center;padding:6px 10px;border-bottom:1px solid #6b5412;line-height:1.5;";
   b.innerHTML = syncConfigured()
-    ? "\u{1F9EA} <b>Test copy</b> \u2014 showing your real data, read-only. Nothing you do here is saved, and no imports run. The website is the real app."
-    : "\u{1F9EA} <b>Test copy</b> \u2014 connect sync under Settings to load your real data (read-only).";
+    ? "\u{1F9EA} <b>Test copy</b> \u2014 showing your real data, read-only. Nothing you do here is saved, and no imports run. The website is the real app.<span id=\"test-checks\"></span>"
+    : "\u{1F9EA} <b>Test copy</b> \u2014 connect sync under Settings to load your real data (read-only).<span id=\"test-checks\"></span>";
   document.body.prepend(b);
 }
 showTestBanner();
