@@ -2104,7 +2104,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b199</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b201</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2666,7 +2666,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b199";
+const BUILD_VERSION = "2026.11.23-b201";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -7131,10 +7131,11 @@ function teamRatingsData(f) {
       t.rated++;
       (e.players?.[side] || []).forEach((pn, i) => {
         if (!pn || i > 4 || ranks[pn] == null) return;
-        const role = PROFILE_ROLES[i];
+        const role = PROFILE_ROLES[i], cn = canonPlayer(pn);
         const byRole = t.roles[role] || (t.roles[role] = {});
-        const p = byRole[pn] || (byRole[pn] = { name: pn, sum: 0, n: 0 });
-        p.sum += Number(ranks[pn]); p.n++;
+        const p = byRole[cn] || (byRole[cn] = { name: cn, sum: 0, n: 0 });
+        const w = ratingAge(e);
+        p.sum += Number(ranks[pn]) * w; p.w = (p.w || 0) + w; p.n++;
       });
     }
   }
@@ -7144,8 +7145,8 @@ function teamRatingsData(f) {
     const starters = [], subs = [];
     for (const role of PROFILE_ROLES.slice(0, 5)) {
       const ps = Object.values(t.roles[role] || {}).sort((a, b) => b.n - a.n);
-      if (ps[0]) starters.push({ role, ...ps[0], avg: ps[0].sum / ps[0].n });
-      ps.slice(1).forEach(p => subs.push({ role, ...p, avg: p.sum / p.n }));
+      if (ps[0]) starters.push({ role, ...ps[0], avg: ps[0].sum / ps[0].w });
+      ps.slice(1).forEach(p => subs.push({ role, ...p, avg: p.sum / p.w }));
     }
     const total = starters.reduce((s, p) => s + p.avg, 0);
     out.push({ ...t, starters, subs, total, full: starters.length === 5, pct: (t.w + t.l) ? t.w / (t.w + t.l) : 0 });
@@ -7238,19 +7239,137 @@ function leagueSplits(lg, year) {
   return _splitCache.get(lg + "|" + year) || [];
 }
 // Player average impact across games (higher = more impactful)
+// Ratings age by season: a game from last season counts half as much as one
+// from this season, the season before a quarter, and so on. "This season" is
+// the year of the newest game you have, so nothing ages until the new year's
+// games arrive, and then last year's ratings fade in favour of the new ones.
+const RATING_SEASON_AGE = 0.5;
+let _curSeason = null;
+function currentRatingSeason() {
+  const all = loadAllGameData();
+  if (_curSeason && _curSeason.n === all.length) return _curSeason.y;
+  let y = 0;
+  for (const e of all) { const v = Number(String(e.date || "").slice(0, 4)); if (v > y && !e.isStandaloneBet) y = v; }
+  _curSeason = { n: all.length, y: y || new Date().getFullYear() };
+  return _curSeason.y;
+}
+function ratingAge(e, cur) {
+  const c = cur || currentRatingSeason();
+  const y = Number(String((e && e.date) || "").slice(0, 4)) || c;
+  return Math.pow(RATING_SEASON_AGE, Math.max(0, c - y));
+}
+// ── One player, every name ───────────────────────────────────────────────────
+// A player's name on a game carries his team tag ("G2 Caps"), so a move made a
+// new player and his ratings started from nothing. Riot gives every player a
+// permanent ID, collected for each game; a player is that ID wherever a game
+// has it. A name with no ID (older or LPL games) joins the ID its tag-less name
+// belongs to, when only one player has used that name. Shown under the last
+// name he played under, without the tag; two different players with the same
+// name get their team added.
+let _pidCache = null;
+function playerIdentity() {
+  const all = loadAllGameData();
+  let withIds = 0;
+  for (const e of all) if (e.playerIds) withIds++;
+  const sig = all.length + "|" + withIds + "|" + (all[0] && all[0].id) + "|" + teamAliasVersion();
+  if (_pidCache && _pidCache.sig === sig) return _pidCache;
+  const ridOf = new Map(), ridsByName = new Map();
+  for (const e of all) {
+    if (!e.playerIds) continue;
+    for (const [n, id] of Object.entries(e.playerIds)) {
+      ridOf.set(n, String(id));
+      const s = rosterPid(n);
+      if (!ridsByName.has(s)) ridsByName.set(s, new Set());
+      ridsByName.get(s).add(String(id));
+    }
+  }
+  const memo = new Map();
+  const keyOf = n => {
+    if (memo.has(n)) return memo.get(n);
+    let k = ridOf.has(n) ? "r" + ridOf.get(n) : null;
+    if (!k) { const s = rosterPid(n), set = ridsByName.get(s); k = set && set.size === 1 ? "r" + [...set][0] : "n" + s; }
+    memo.set(n, k);
+    return k;
+  };
+  const latest = new Map();
+  for (const e of all) {
+    for (const side of ["blue", "red"]) {
+      for (const n of (e.players && e.players[side]) || []) {
+        if (!n) continue;
+        const k = keyOf(n), cur = latest.get(k), d = String(e.date || "");
+        if (!cur || d > cur.date) latest.set(k, { name: rosterShowName(n), date: d, team: side === "blue" ? e.blueTeam : e.redTeam });
+      }
+    }
+  }
+  const byName = new Map();
+  for (const [k, v] of latest) { const l = v.name.toLowerCase(); byName.set(l, (byName.get(l) || 0) + 1); }
+  const display = new Map();
+  for (const [k, v] of latest) display.set(k, byName.get(v.name.toLowerCase()) > 1 ? `${v.name} (${String(resolveTeam(v.team) || v.team || "?").toUpperCase()})` : v.name);
+  const canonMemo = new Map();
+  const canon = n => {
+    if (canonMemo.has(n)) return canonMemo.get(n);
+    const c = display.get(keyOf(n)) || rosterShowName(n);
+    canonMemo.set(n, c);
+    return c;
+  };
+  _pidCache = { sig, keyOf, canon };
+  return _pidCache;
+}
+function canonPlayer(n) { return playerIdentity().canon(n); }
+// Your ratings grouped by player (one list per player, every name he's had).
+let _revIdx = null;
+function reviewsByPlayer(reviews) {
+  const id = playerIdentity();
+  if (_revIdx && _revIdx.src === reviews && _revIdx.sig === id.sig) return _revIdx.map;
+  const map = new Map();
+  for (const [entryId, ranks] of Object.entries(reviews || {})) {
+    for (const [n, rank] of Object.entries(ranks || {})) {
+      if (!rank) continue;
+      const c = id.canon(n);
+      if (!map.has(c)) map.set(c, []);
+      map.get(c).push({ entryId, rank, raw: n });
+    }
+  }
+  _revIdx = { src: reviews, sig: id.sig, map };
+  return map;
+}
+// The role each player plays, from every game (most common one, and the split).
+let _canonRoles = null;
+function canonRoleMap() {
+  const id = playerIdentity();
+  if (_canonRoles && _canonRoles.sig === id.sig) return _canonRoles.map;
+  const counts = {};
+  for (const e of loadAllGameData()) {
+    for (const side of ["blue", "red"]) {
+      (e.players?.[side] || []).forEach((name, i) => {
+        if (!name || i > 4) return;
+        const c = id.canon(name), r = PROFILE_ROLES[i];
+        (counts[c] = counts[c] || {})[r] = (counts[c][r] || 0) + 1;
+      });
+    }
+  }
+  const out = {};
+  for (const [name, roles] of Object.entries(counts)) {
+    const sorted = Object.entries(roles).sort((a, b) => b[1] - a[1]);
+    const total = sorted.reduce((a, [, n]) => a + n, 0);
+    out[name] = { role: sorted[0][0], games: sorted[0][1], total, share: sorted[0][1] / total, all: roles };
+  }
+  _canonRoles = { sig: id.sig, map: out };
+  return out;
+}
+let _entryIdx = null;
 function playerImpactRating(playerName, leagueFilter, entries, reviews) {
   if (!entries) entries = ratedGames();
   if (!reviews) reviews = loadReviews();
-  // Build entry lookup map once (caller should pass cached entries/reviews)
-  const entryById = new Map(entries.map(e => [e.id, e]));
-  // Iterate only reviewed games (not all 500+ entries)
-  const ranked = Object.entries(reviews).map(([entryId, ranks]) => {
-    const rank = ranks[playerName];
-    if (!rank) return null;
+  // One lookup map per list of games, not one per player.
+  if (!_entryIdx || _entryIdx.src !== entries) _entryIdx = { src: entries, map: new Map(entries.map(e => [e.id, e])) };
+  const entryById = _entryIdx.map;
+  // Every game this player was rated in, under any name he's had.
+  const ranked = (reviewsByPlayer(reviews).get(playerName) || []).map(({ entryId, rank }) => {
     const e = entryById.get(entryId);
     if (!e) return null;
     if (!profileFilterMatch(e, leagueFilter)) return null;
-    const weight = getGameWeight(e);
+    const weight = getGameWeight(e) * ratingAge(e);
     return { rank, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
   }).filter(Boolean);
   if (!ranked.length) return null;
@@ -10094,13 +10213,10 @@ function renderPlayerProfiles() {
   }
 
   // Collect all players with at least one impact rank
-  const playerSet = new Set();
-  Object.entries(reviews).forEach(([entryId, ranks]) => {
-    Object.keys(ranks).forEach(n => playerSet.add(n));
-  });
+  const playerSet = new Set(reviewsByPlayer(reviews).keys());
 
   const roleFilter = (document.getElementById("profile-role-filter") || {}).value || "all";
-  const roleMap = playerRoleMap();
+  const roleMap = canonRoleMap();
 
   // Pre-compute all ratings once — avoids recomputing N log N times during sort
   const ratingCache = new Map();
@@ -10149,9 +10265,9 @@ function renderPlayerProfiles() {
       for (const side of ["blue", "red"]) {
         const k = teamKey(side === "blue" ? e.blueTeam : e.redTeam); if (!k) continue;
         teamGames.set(k, (teamGames.get(k) || 0) + 1);
-        for (const n of e.players?.[side] || []) if (ratingCache.has(n)) {
+        for (const raw of e.players?.[side] || []) { const n = canonPlayer(raw); if (ratingCache.has(n)) {
           const m = playerTeam.get(n) || new Map(); m.set(k, (m.get(k) || 0) + 1); playerTeam.set(n, m);
-        }
+        } }
       }
     }
     const barFor = n => {
@@ -10231,10 +10347,11 @@ function renderPlayerProfiles() {
   const allRatingsHtml = (name, r) => {
     const rows = [...r.ranked].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).map(x => {
       const e = entryMap.get(x.entryId) || {};
-      const side = (e.players?.blue || []).includes(name) ? "blue" : (e.players?.red || []).includes(name) ? "red" : null;
+      const bi = (e.players?.blue || []).findIndex(n => canonPlayer(n) === name), ri = (e.players?.red || []).findIndex(n => canonPlayer(n) === name);
+      const side = bi >= 0 ? "blue" : ri >= 0 ? "red" : null;
       const team = side === "blue" ? e.blueTeam : side === "red" ? e.redTeam : "";
       const opp = side === "blue" ? e.redTeam : side === "red" ? e.blueTeam : `${e.blueTeam || "?"} vs ${e.redTeam || "?"}`;
-      const idx = side ? (e.players[side] || []).indexOf(name) : -1;
+      const idx = side === "blue" ? bi : side === "red" ? ri : -1;
       const champ = idx >= 0 ? ((e.champions?.[side] || [])[idx] || "") : "";
       const won = side && e.actualWinner ? e.actualWinner === side : null;
       const img = champ ? championImg(champ) : "";
@@ -15950,7 +16067,7 @@ function rosterBaseline() {
   for (const [id, ranks] of Object.entries(loadReviews())) {
     const e = byId.get(id);
     if (!e) continue;
-    const w = weight(e);
+    const w = weight(e) * ratingAge(e);
     for (const [name, rank] of Object.entries(ranks || {})) {
       const v = Number(rank);
       if (!isFinite(v) || !v) continue;
@@ -32689,6 +32806,8 @@ function _checkCases() {
     return eq([plain.lineup.top.n, plain.lineup.top.st, !!plain.out, dig.out.kind, opt.from.key, opt.lineup.top.n, rosterFindTeam(r, base, "optic gaming")],
               ["Photon", "carry", false, "rented", "DIG", "Photon", "OPTIC GAMING"]);
   });
+  t("Ratings age by season", () =>
+    eq([ratingAge({ date: "2027-02-01" }, 2027), ratingAge({ date: "2026-10-01" }, 2027), ratingAge({ date: "2025-05-01" }, 2027), ratingAge({ date: "2026-10-01" }, 2026)], [1, 0.5, 0.25, 1]));
   t("Build number is stamped", () => /^\d{4}\.\d{2}\.\d{2}-b\d+$/.test(BUILD_VERSION) || "bad build number: " + BUILD_VERSION);
   return out;
 }
