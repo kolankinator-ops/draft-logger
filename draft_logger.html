@@ -1996,8 +1996,8 @@
 <!-- STATS -->
 <div class="screen" id="screen-rosters">
   <div class="card" style="margin-bottom:12px;">
-    <div style="font-size:16px;font-weight:700;margin-bottom:4px;">👥 Rosters 2027</div>
-    <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:0 0 10px;">Every team starts from its 2026 lineup and changes only when you change it.
+    <div id="ro-title" style="font-size:16px;font-weight:700;margin-bottom:4px;">👥 Rosters</div>
+    <p id="ro-intro" style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:0 0 10px;">Every team starts from its 2026 lineup and changes only when you change it.
       Tap a player to move or replace them. Ratings are yours and follow the player across teams.</p>
     <div id="ro-leagues"></div>
   </div>
@@ -2104,7 +2104,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b197</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b199</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2666,7 +2666,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b197";
+const BUILD_VERSION = "2026.11.23-b199";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -15864,18 +15864,21 @@ function exportDraftReadCsv() {
 }
 
 // ── Rosters ──────────────────────────────────────────────────────────────────
-// Your 2027 rosters, one card per team. Every team starts from its 2026 lineup
-// (the players who started its most recent games) and changes only when you
+// Next season's rosters, one card per team. Every team starts from its lineup
+// the season before (the players who started its most recent games) and changes only when you
 // change it: players moved, signed or released, and teams renamed, sold or
 // rented to another org, or out for the year. Ratings follow the player, not
 // the name on a game: "G2 Caps" and "MKOI Caps" are one player here.
-const ROSTERS_KEY = "draftlogger_rosters_v1";          // synced: your 2027 rosters
+const ROSTERS_KEY = "draftlogger_rosters_v1";          // synced: your rosters, by season
 const ROSTER_LEAGUE_KEY = "draftlogger_rosters_league_v1";
 const ROSTER_ROLES = ["top", "jungle", "mid", "bottom", "support"];
 const ROSTER_ROLE_LABEL = { top: "Top", jungle: "Jungle", mid: "Mid", bottom: "Bot", support: "Support", coach: "Coach" };
 // Sheep Esports' transfers hub, one tap away. Sheep turns away automated
 // readers, so the app links to it rather than reading it.
 const SHEEP_PAGES = { LEC: "lec", LCS: "lcs", LCK: "lck", LPL: "lpl", CBLOL: "cblol", LCP: "lcp", LFL: "lfl", LES: "les", PRM: "prm" };
+// The season being built: from October (Worlds onward) it's next year's, built
+// from this year's lineups; before that it's this year's, built from last year's.
+function rosterSeason(now = new Date()) { return now.getMonth() >= 9 ? now.getFullYear() + 1 : now.getFullYear(); }
 let _rosterLeague = null, _rosterEdit = null, _rosterSign = null, _rosterTeamEdit = null, _rosterFaQ = "", _rosterBase = null;
 try { localStorage.removeItem("draftlogger_sheep_cache_v1"); } catch (e) {}
 
@@ -15895,15 +15898,15 @@ function rosterShowName(name) {
   return n;
 }
 
-// ---- 2026 starting point and ratings, worked out from your games ----
+// ---- last season's starting point and ratings, worked out from your games ----
 function rosterBaseline() {
   const entries = loadAllGameData();
-  const sig = entries.length + "|" + (entries[0] && entries[0].id) + "|" + Object.keys(loadReviews()).length + "|" + teamAliasVersion();
+  const sig = rosterSeason() + "|" + entries.length + "|" + (entries[0] && entries[0].id) + "|" + Object.keys(loadReviews()).length + "|" + teamAliasVersion();
   if (_rosterBase && _rosterBase.sig === sig) return _rosterBase;
   const byTeam = new Map();
   const home = new Map();
   for (const e of entries) {
-    if (!e.date || String(e.date).slice(0, 4) !== "2026" || !e.players) continue;
+    if (!e.date || String(e.date).slice(0, 4) !== String(rosterSeason() - 1) || !e.players) continue;
     for (const side of ["blue", "red"]) {
       const ps = e.players[side] || [];
       if (ps.filter(Boolean).length < 5) continue;
@@ -15963,15 +15966,25 @@ function rosterBaseline() {
 }
 
 // ---- your 2027 rosters ----
+// Stored per season, so next offseason starts fresh from that year's lineups
+// and this year's rosters stay as they were.
+function _rosterStore() {
+  let raw = null;
+  try { raw = JSON.parse(localStorage.getItem(ROSTERS_KEY) || "null"); } catch (e) {}
+  if (!raw || typeof raw !== "object") raw = {};
+  if (!raw.seasons) raw = { seasons: raw.teams ? { 2027: { teams: raw.teams, log: raw.log || [] } } : {} };
+  return raw;
+}
 function loadRosters() {
-  let r = null;
-  try { r = JSON.parse(localStorage.getItem(ROSTERS_KEY) || "null"); } catch (e) {}
+  const r = _rosterStore().seasons[rosterSeason()];
   return r && typeof r === "object" ? { teams: {}, log: [], ...r } : { teams: {}, log: [] };
 }
 function saveRosters(r) {
-  r.at = Date.now();
+  const raw = _rosterStore();
   if (r.log && r.log.length > 60) r.log = r.log.slice(-60);
-  localStorage.setItem(ROSTERS_KEY, JSON.stringify(r));
+  raw.seasons[rosterSeason()] = { teams: r.teams, log: r.log || [] };
+  raw.at = Date.now();
+  localStorage.setItem(ROSTERS_KEY, JSON.stringify(raw));
   try { requestSync(); } catch (e) {}
 }
 // A team as it stands for 2027: your edits if you've made any, otherwise its
@@ -16015,18 +16028,21 @@ function rosterSetSlot(key, role, name, st, article) {
   const r = loadRosters(), base = rosterBaseline();
   const pid = name ? rosterPid(name) : null;
   if (pid) {
+    // Coaches and players are kept apart: naming a coach only moves that coach
+    // off another bench, and never touches a player who shares the handle.
     const here = (k, ro) => k === key && ro === role;
+    const isCoach = role === "coach";
     for (const k of rosterAllKeys(r, base)) {
       const t = rosterTeam(r, base, k);
       if (!t) continue;
-      const hit = Object.entries(t.lineup).some(([ro, s]) => s && rosterPid(s.n) === pid && !here(k, ro))
-        || t.subs.some(s => rosterPid(s.n) === pid)
-        || (t.coach && rosterPid(t.coach.n) === pid && !here(k, "coach"));
+      const hit = isCoach
+        ? (t.coach && rosterPid(t.coach.n) === pid && !here(k, "coach"))
+        : Object.entries(t.lineup).some(([ro, s]) => s && rosterPid(s.n) === pid && !here(k, ro)) || t.subs.some(s => rosterPid(s.n) === pid);
       if (!hit) continue;
       const ed = rosterEditable(r, base, k);
+      if (isCoach) { ed.coach = null; continue; }
       for (const ro of Object.keys(ed.lineup)) if (ed.lineup[ro] && rosterPid(ed.lineup[ro].n) === pid && !here(k, ro)) delete ed.lineup[ro];
       ed.subs = (ed.subs || []).filter(s => rosterPid(s.n) !== pid);
-      if (ed.coach && rosterPid(ed.coach.n) === pid && !here(k, "coach")) ed.coach = null;
     }
   }
   const ed = rosterEditable(r, base, key);
@@ -16095,10 +16111,10 @@ function rosterSaveTeam() {
   const was = ed.out;
   if (mode === "playing") {
     delete ed.out;
-    if (was) r.log.push({ at: Date.now(), team: key, role: "team", text: "back in for 2027" });
+    if (was) r.log.push({ at: Date.now(), team: key, role: "team", text: "back in for " + rosterSeason() });
   } else if (mode === "gone") {
     ed.out = { kind: "gone", at: Date.now() };
-    r.log.push({ at: Date.now(), team: key, role: "team", text: "not playing in 2027" });
+    r.log.push({ at: Date.now(), team: key, role: "team", text: "not playing in " + rosterSeason() });
   } else if (mode === "rented" || mode === "sold") {
     const toName = val("ro-t-to");
     if (!toName) { if (msg) msg.textContent = "Type the team taking the spot."; return; }
@@ -16157,7 +16173,7 @@ function rosterRestoreTeam(key) {
       if (t2.coach && ids.has(rosterPid(t2.coach.n))) t2.coach = null;
     }
   }
-  r.log.push({ at: Date.now(), team: key, role: "team", text: "back in for 2027" });
+  r.log.push({ at: Date.now(), team: key, role: "team", text: "back in for " + rosterSeason() });
   saveRosters(r);
   renderRosters();
 }
@@ -16179,6 +16195,9 @@ function rosterAddTeam() {
 function renderRosters() {
   const body = document.getElementById("ro-body");
   if (!body) return;
+  const Y = rosterSeason(), P = Y - 1;
+  const ttl = document.getElementById("ro-title"); if (ttl) ttl.textContent = "\u{1F465} Rosters " + Y;
+  const intro = document.getElementById("ro-intro"); if (intro) intro.textContent = `Every team starts from its ${P} lineup and changes only when you change it. Tap a player to move or replace them. Ratings are yours and follow the player across teams.`;
   const r = loadRosters(), base = rosterBaseline();
   const esc = drEsc;
   const keys = rosterAllKeys(r, base);
@@ -16198,12 +16217,12 @@ function renderRosters() {
   if (chipsEl) chipsEl.innerHTML = leagues.slice(0, 24).map(L =>
     `<button class="dr-chip${L === _rosterLeague ? " on" : ""}" onclick="_rosterLeague='${esc(L)}';try{localStorage.setItem(ROSTER_LEAGUE_KEY,_rosterLeague)}catch(e){};_rosterEdit=null;_rosterTeamEdit=null;renderRosters()">${esc(L)} <span>${counts[L]}</span></button>`).join("");
 
-  if (!keys.length) { body.innerHTML = `<div class="card"><div class="empty">No 2026 games with full lineups yet, so there are no rosters to start from.</div></div>`; return; }
+  if (!keys.length) { body.innerHTML = `<div class="card"><div class="empty">No ${P} games with full lineups yet, so there are no rosters to start from.</div></div>`; return; }
 
   const sheep = SHEEP_PAGES[_rosterLeague];
   let html = `<div style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:-4px 0 12px;">${sheep
     ? `Rumours and signings: <a href="https://www.sheepesports.com/en/all/transfers/${sheep}" target="_blank" rel="noopener" style="color:var(--blue);">Sheep's ${esc(_rosterLeague)} transfers</a>. `
-    : ""}Tap a team's name to rename it, change its league, or mark its spot as rented, sold or empty for 2027.</div>`;
+    : ""}Tap a team's name to rename it, change its league, or mark its spot as rented, sold or empty for ${Y}.</div>`;
 
   const rating = n => base.ratings.get(rosterPid(n));
   const col = v => v >= 7.5 ? "var(--green)" : v >= 5 ? "var(--yellow)" : "#ff4d5e";
@@ -16239,11 +16258,11 @@ function renderRosters() {
     };
     const teamEditing = _rosterTeamEdit === k;
     const teamPanel = teamEditing ? `<div class="ro-edit" style="border-top:none;padding-top:0;">
-        <label style="font-size:11px;color:var(--muted);">Name for 2027</label>
+        <label style="font-size:11px;color:var(--muted);">Name for ${Y}</label>
         <input id="ro-t-name" value="${esc(nameOf(k))}" autocomplete="off" spellcheck="false">
         <label style="font-size:11px;color:var(--muted);display:block;margin-top:6px;">League</label>
         <input id="ro-t-league" list="ro-leagues-dl" value="${esc(t.league || "")}" autocomplete="off" spellcheck="false">
-        <label style="font-size:11px;color:var(--muted);display:block;margin-top:6px;">In 2027</label>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-top:6px;">In ${Y}</label>
         <select id="ro-t-mode" onchange="rosterTeamMode()">
           <option value="playing">Playing</option><option value="rented">Spot rented to another team</option>
           <option value="sold">Spot sold to another team</option><option value="gone">Not playing (disbanded or left the league)</option></select>
@@ -16260,7 +16279,7 @@ function renderRosters() {
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;">
         <div style="min-width:0;cursor:pointer;" onclick="rosterOpenTeam('${esc(k)}')"><div style="font-size:15px;font-weight:700;">${esc(nameOf(k))} <span style="font-size:11px;color:var(--muted);font-weight:400;">✎</span></div>${fromNote}</div>
         <div style="text-align:right;flex:none;"><div style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;">${tot.n ? tot.sum.toFixed(1) : "—"}<span style="font-size:10px;color:var(--muted);font-weight:400;">${tot.n === 5 ? " /50" : tot.n ? ` (${tot.n} rated)` : ""}</span></div>
-          ${delta != null && Math.abs(delta) >= 0.05 ? `<div style="font-size:10.5px;color:${delta > 0 ? "var(--green)" : "#ff4d5e"};">${delta > 0 ? "+" : "−"}${Math.abs(delta).toFixed(1)} vs 2026</div>` : ""}</div></div>
+          ${delta != null && Math.abs(delta) >= 0.05 ? `<div style="font-size:10.5px;color:${delta > 0 ? "var(--green)" : "#ff4d5e"};">${delta > 0 ? "+" : "−"}${Math.abs(delta).toFixed(1)} vs ${P}</div>` : ""}</div></div>
       ${teamPanel}
       ${ROSTER_ROLES.map(ro => row(ro, t.lineup[ro])).join("")}
       ${row("coach", t.coach)}
@@ -16273,7 +16292,7 @@ function renderRosters() {
   html += `<div class="card" style="margin-bottom:12px;"><div class="card-title">Teams in ${esc(_rosterLeague)}</div>
     <div style="display:flex;gap:6px;"><input id="ro-new-team" list="ro-teams-dl" placeholder="Add a team, e.g. a new org" autocomplete="off" spellcheck="false" style="flex:1;font-size:13px;padding:7px 9px;">
       <button class="btn btn-ghost ro-btn" onclick="rosterAddTeam()">Add</button></div>
-    ${outHere.length ? `<div class="dr-sub" style="margin-top:12px;">Not playing in 2027</div>` + outHere.map(k => {
+    ${outHere.length ? `<div class="dr-sub" style="margin-top:12px;">Not playing in ${Y}</div>` + outHere.map(k => {
       const o = team(k).out;
       const why = o.kind === "rented" ? `spot rented to ${esc(nameOf(o.to))}` : o.kind === "sold" ? `spot sold to ${esc(nameOf(o.to))}` : "disbanded or left the league";
       return `<div class="ro-sug"><div style="min-width:0;"><b>${esc(nameOf(k))}</b> <span style="color:var(--muted);">${why}</span></div>
@@ -16281,9 +16300,10 @@ function renderRosters() {
     }).join("") : ""}</div>`;
 
   // Free agents: on a 2026 roster, on no 2027 roster.
-  const signed = new Set();
-  for (const k of active) { const t = team(k); Object.values(t.lineup).forEach(s => s && signed.add(rosterPid(s.n))); t.subs.forEach(s => signed.add(rosterPid(s.n))); if (t.coach) signed.add(rosterPid(t.coach.n)); }
-  const fa = [...base.players.entries()].filter(([pid]) => !signed.has(pid))
+  const signed = new Set(), coaching = new Set();
+  for (const k of active) { const t = team(k); Object.values(t.lineup).forEach(s => s && signed.add(rosterPid(s.n))); t.subs.forEach(s => signed.add(rosterPid(s.n))); if (t.coach) coaching.add(rosterPid(t.coach.n)); }
+  // A player you've named as a coach has moved on, so isn't listed as a free agent.
+  const fa = [...base.players.entries()].filter(([pid]) => !signed.has(pid) && !coaching.has(pid))
     .map(([pid, p]) => ({ pid, ...p, rt: base.ratings.get(pid), league: base.teams[p.team] ? base.teams[p.team].league : null }))
     .sort((a, b) => ((b.league === _rosterLeague) - (a.league === _rosterLeague)) || ((b.rt ? b.rt.avg : 0) - (a.rt ? a.rt.avg : 0)));
   const q = _rosterFaQ.toLowerCase();
@@ -16291,7 +16311,7 @@ function renderRosters() {
   const signOpts = active.filter(k => leagueOf(k) === _rosterLeague).concat(active.filter(k => leagueOf(k) !== _rosterLeague))
     .map(k => `<option value="${esc(k)}">${esc(nameOf(k))}${leagueOf(k) ? " (" + esc(leagueOf(k)) + ")" : ""}</option>`).join("");
   html += `<details class="card" style="margin-bottom:12px;"${q || _rosterSign ? " open" : ""}><summary class="card-title" style="cursor:pointer;list-style:none;margin:0;">Free agents (${fa.length})</summary>
-    <div style="margin-top:10px;"><input type="text" placeholder="Search players or their 2026 team" value="${esc(_rosterFaQ)}" oninput="_rosterFaQ=this.value;clearTimeout(window._roFaT);window._roFaT=setTimeout(()=>{renderRosters();const i=document.querySelector('#ro-body details input');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},250)" style="width:100%;font-size:13px;padding:8px 10px;margin-bottom:6px;">
+    <div style="margin-top:10px;"><input type="text" placeholder="Search players or their ${P} team" value="${esc(_rosterFaQ)}" oninput="_rosterFaQ=this.value;clearTimeout(window._roFaT);window._roFaT=setTimeout(()=>{renderRosters();const i=document.querySelector('#ro-body details input');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}},250)" style="width:100%;font-size:13px;padding:8px 10px;margin-bottom:6px;">
     ${faShown.map(p => `<div class="ro-row" onclick="rosterOpenSign('${esc(p.pid)}')"><span class="ro-role">${ROSTER_ROLE_LABEL[p.r] || ""}</span>
         <span class="ro-name">${esc(p.n)} <span class="ro-was">${esc(nameOf(p.team))}${p.league ? " · " + esc(p.league) : ""}</span></span>
         <span class="ro-rt" style="color:${p.rt ? col(p.rt.avg) : "var(--muted)"};">${p.rt ? p.rt.avg.toFixed(1) : ""}</span></div>` +
@@ -16302,7 +16322,7 @@ function renderRosters() {
         <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary ro-btn" onclick="rosterSign('${esc(p.pid)}')">Sign</button>
           <button class="btn btn-ghost ro-btn" style="color:var(--muted);" onclick="_rosterSign=null;renderRosters()">Cancel</button></div></div>` : "")).join("")}
     ${fa.length > faShown.length ? `<div style="font-size:10.5px;color:var(--muted);margin-top:6px;">Showing ${faShown.length} of ${fa.length}; search to find the rest.</div>` : ""}
-    ${!fa.length ? `<div class="empty" style="padding:6px 0;">Everyone from 2026 is on a 2027 roster.</div>` : ""}</div></details>`;
+    ${!fa.length ? `<div class="empty" style="padding:6px 0;">Everyone from ${P} is on a ${Y} roster.</div>` : ""}</div></details>`;
 
   // Recent changes.
   const log = (r.log || []).slice(-8).reverse();
