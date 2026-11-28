@@ -2690,7 +2690,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.27-b206";
+const BUILD_VERSION = "2026.11.28-b208";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -4166,7 +4166,7 @@ const INTL_KEYWORDS = ["msi", "worlds", "first stand", "international", "all-sta
 // which matches none of the words above, so it was being treated as a domestic
 // league: teams picked it up as their home league and it earned its own strength
 // offset. These are matched whole, never as substrings.
-const INTL_CODES = new Set(["FS", "MSI", "WLDS", "WCS", "WC", "EWC", "ASE", "ASIA", "IWC"]);
+const INTL_CODES = new Set(["FS", "FST", "MSI", "WLDS", "WCS", "WC", "EWC", "ASE", "ASIA", "IWC"]);
 const INTL_CODE_NAMES = { FS: "First Stand", MSI: "MSI", WLDS: "Worlds", WCS: "Worlds", WC: "Worlds",
                           EWC: "Esports World Cup", ASE: "All-Star Event" };
 
@@ -4306,7 +4306,9 @@ function getLeagueWeight(league) {
 function isInternationalGame(entry) {
   const l = ((entry.league || "").toLowerCase());
   const e = ((entry.eventContext || "").toLowerCase());
-  return INTL_KEYWORDS.some(k => l.includes(k) || e.includes(k));
+  // Riot's short codes ("FS", "FST" for First Stand) only count as a whole name.
+  if (INTL_CODES.has(l.trim().toUpperCase()) || INTL_CODES.has(e.trim().toUpperCase())) return true;
+  return INTL_KEYWORDS.some(k => l.includes(k) || e.includes(k)) || /world championship|mid-season/.test(l + " " + e);
 }
 
 function getTeamHomeLeague(teamCode) {
@@ -4324,14 +4326,14 @@ function getTeamHomeLeague(teamCode) {
   return Object.entries(counts).sort((a,b) => b[1]-a[1])[0]?.[0] || null;
 }
 
+// Every game at an international event counts in full, whoever is playing:
+// the event is the level, not the teams in it. Weighting by the teams' home
+// leagues made games against LCK and LPL sides count more than the rest, so a
+// player from a smaller region who stood out against the field was dragged
+// down by the games he lost to the giants.
+const INTL_GAME_WEIGHT = 1.0;
 function getGameWeight(entry) {
-  if (isInternationalGame(entry)) {
-    const blueHome = getTeamHomeLeague(entry.blueTeam);
-    const redHome  = getTeamHomeLeague(entry.redTeam);
-    const bw = blueHome ? getLeagueWeight(blueHome) : getLeagueWeight(entry.league);
-    const rw = redHome  ? getLeagueWeight(redHome)  : getLeagueWeight(entry.league);
-    return (bw + rw) / 2;
-  }
+  if (isInternationalGame(entry)) return INTL_GAME_WEIGHT;
   return getLeagueWeight(entry.league);
 }
 
@@ -16324,14 +16326,7 @@ function rosterBaseline() {
   // Your ratings by player, every name they've played under, weighted by league
   // the way the Players page weights them.
   const byId = new Map(entries.map(e => [e.id, e]));
-  const homeOf = new Map();
-  for (const t of Object.values(teams)) if (t.league) homeOf.set(t.key, t.league);
-  const weight = e => {
-    if (!isInternationalGame(e)) return getLeagueWeight(e.league);
-    const k = s => String(resolveTeam(s) || "").toUpperCase();
-    const b = homeOf.get(k(e.blueTeam)), r = homeOf.get(k(e.redTeam));
-    return ((b ? getLeagueWeight(b) : getLeagueWeight(e.league)) + (r ? getLeagueWeight(r) : getLeagueWeight(e.league))) / 2;
-  };
+  const weight = e => getGameWeight(e);
   const acc = new Map();
   for (const [id, ranks] of Object.entries(loadReviews())) {
     const e = byId.get(id);
@@ -33224,6 +33219,10 @@ function _checkCases() {
                closenessDelta(g, { v: 3, why: ["B2"] }, "B2"), closenessDelta({ ...g, date: "2026-10-01" }, { v: 1 }, "A1")],
               [0.5, 0, 0.5, 0, 0, 0, 0]);
   });
+  t("International games count in full, whoever plays", () =>
+    eq([getGameWeight({ league: "Worlds", blueTeam: "GAM", redTeam: "GEN" }), getGameWeight({ league: "MSI", blueTeam: "T1", redTeam: "BLG" }),
+        getGameWeight({ league: "First Stand", blueTeam: "GEN", redTeam: "TSW" }), getGameWeight({ league: "FS" }), getGameWeight({ league: "FST" }),
+        isInternationalGame({ league: "LFL" }), isInternationalGame({ league: "LCS" })], [1, 1, 1, 1, 1, false, false]));
   t("Build number is stamped", () => /^\d{4}\.\d{2}\.\d{2}-b\d+$/.test(BUILD_VERSION) || "bad build number: " + BUILD_VERSION);
   return out;
 }
