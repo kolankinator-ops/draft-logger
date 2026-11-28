@@ -483,6 +483,16 @@
   .td-row { padding:8px 0;border-top:1px solid var(--border); }
   .td-num { text-align:right;display:flex;flex-direction:column;align-items:flex-end; }
   .td-num b { font-size:15px;font-variant-numeric:tabular-nums; } .td-num span { font-size:10px;color:var(--muted); }
+  /* Context tags */
+  .tag-row { display:flex;flex-wrap:wrap;gap:4px;padding:2px 0 8px 30px;align-items:center; }
+  .tag-chip { font-size:10.5px;padding:2px 7px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer; }
+  .tag-chip.sugg { border-style:dashed;border-color:var(--yellow);color:var(--yellow); }
+  .tag-chip.on.up { background:rgba(52,199,89,.15);border-color:var(--green);color:var(--green); }
+  .tag-chip.on.down { background:rgba(255,77,94,.12);border-color:#ff4d5e;color:#ff4d5e; }
+  .tag-more { border-style:dotted; }
+  .tag-adj { font-size:11px;font-weight:700;margin-left:4px; }
+  .mh-draft.mh-close button { font-size:10px;white-space:normal;line-height:1.25;padding:5px 1px;min-width:0;overflow:visible;text-overflow:clip; }
+  .mh-close-note { font-size:11px;color:var(--muted);margin:6px 0 3px; }
   /* Teams: league table */
   .tr-row { display:grid;grid-template-columns:22px minmax(0,1fr) 82px 58px;gap:8px;align-items:center;padding:7px 0;font-size:13px;list-style:none;cursor:pointer; }
   .tr-head { cursor:default;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:0 0 4px; }
@@ -2118,7 +2128,7 @@
   <div id="build-note" style="display:none;font-size:12px;line-height:1.6;background:var(--surface2);
        border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin-bottom:14px;"></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;">
-    Build <b style="color:var(--text);" id="build-label">2026.11.23-b204</b>
+    Build <b style="color:var(--text);" id="build-label">2026.11.23-b205</b>
   </div>
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🇨🇳 LPL source</div>
@@ -2680,7 +2690,7 @@ function localDateStr(d) {
 // ── Storage ──────────────────────────────────────────────────────────────────
 // Bumped on every build. Published through the existing settings sync, so a
 // device running an older file can notice that a newer one is deployed.
-const BUILD_VERSION = "2026.11.23-b204";
+const BUILD_VERSION = "2026.11.27-b206";
 const BUILD_KEY = "draftlogger_build_v1";
 const ERRLOG_KEY = "draftlogger_errors_v1";
 
@@ -7158,7 +7168,7 @@ function teamRatingsData(f) {
         const byRole = t.roles[role] || (t.roles[role] = {});
         const p = byRole[cn] || (byRole[cn] = { name: cn, sum: 0, w: 0, n: 0 });
         const w = ratingAge(e);
-        p.sum += Number(ranks[pn]) * w; p.w += w; p.n++;
+        p.sum += adjustedRank(e.id, pn, ranks[pn]) * w; p.w += w; p.n++;
       });
       if (isRated) t.rated++;
     }
@@ -7383,17 +7393,18 @@ function canonPlayer(n) { return playerIdentity().canon(n); }
 let _revIdx = null;
 function reviewsByPlayer(reviews) {
   const id = playerIdentity();
-  if (_revIdx && _revIdx.src === reviews && _revIdx.sig === id.sig) return _revIdx.map;
+  const tg = (localStorage.getItem(TAGS_KEY) || "") + "|" + (localStorage.getItem(CLOSE_KEY) || "") + "|" + _allGamesKey;
+  if (_revIdx && _revIdx.src === reviews && _revIdx.sig === id.sig && _revIdx.tg === tg) return _revIdx.map;
   const map = new Map();
   for (const [entryId, ranks] of Object.entries(reviews || {})) {
     for (const [n, rank] of Object.entries(ranks || {})) {
       if (!rank) continue;
       const c = id.canon(n);
       if (!map.has(c)) map.set(c, []);
-      map.get(c).push({ entryId, rank, raw: n });
+      map.get(c).push({ entryId, rank: adjustedRank(entryId, n, rank), r0: Number(rank), raw: n });
     }
   }
-  _revIdx = { src: reviews, sig: id.sig, map };
+  _revIdx = { src: reviews, sig: id.sig, tg, map };
   return map;
 }
 // The role each player plays, from every game (most common one, and the split).
@@ -7428,19 +7439,21 @@ function playerImpactRating(playerName, leagueFilter, entries, reviews) {
   if (!_entryIdx || _entryIdx.src !== entries) _entryIdx = { src: entries, map: new Map(entries.map(e => [e.id, e])) };
   const entryById = _entryIdx.map;
   // Every game this player was rated in, under any name he's had.
-  const ranked = (reviewsByPlayer(reviews).get(playerName) || []).map(({ entryId, rank }) => {
+  const ranked = (reviewsByPlayer(reviews).get(playerName) || []).map(({ entryId, rank, r0 }) => {
     const e = entryById.get(entryId);
     if (!e) return null;
     if (!profileFilterMatch(e, leagueFilter)) return null;
     const weight = getGameWeight(e) * ratingAge(e);
-    return { rank, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
+    return { rank, r0, weight, date: e.date, league: e.league, entryId: e.id, isIntl: isInternationalGame(e) };
   }).filter(Boolean);
   if (!ranked.length) return null;
   const totalWeight = ranked.reduce((s,x) => s + x.weight, 0);
   const weightedSum = ranked.reduce((s,x) => s + x.rank * x.weight, 0);
   const avg    = weightedSum / totalWeight;
   const rawAvg = ranked.reduce((s,x) => s + x.rank, 0) / ranked.length;
-  return { avg, rawAvg, games: ranked.length, ranked };
+  // The same games with no context tags: shown beside the tagged number.
+  const untagged = ranked.reduce((s, x) => s + (x.r0 != null ? x.r0 : x.rank) * x.weight, 0) / totalWeight;
+  return { avg, rawAvg, untagged, tagged: ranked.some(x => x.r0 != null && x.r0 !== x.rank), games: ranked.length, ranked };
 }
 
 // ── Game Review ───────────────────────────────────────────────────────────────
@@ -8867,8 +8880,188 @@ function mhDraftRowHtml(e) {
     <div class="mh-draft">${opts.map(([n, label]) => `<button onclick="setDraftRead('${id}', ${v === n ? "null" : n})"
       class="${v === n ? "on" : ""} ${n < 0 ? "b" : n > 0 ? "r" : ""}">${label}</button>`).join("")}</div>`;
 }
+// ── Context tags ─────────────────────────────────────────────────────────────
+// Half-point nudges on a player's 1–10 for one game, for what the ranking alone
+// can't say: he was drafted out, or he got a free win handed to him. Each tag is
+// worth half a point, the total is capped at ±2 per player per game, and the raw
+// rank is always kept. Tags start with the 2027 season's games.
+const TAGS_KEY = "draftlogger_player_tags_v1";   // synced: { gameId: { playerName: [tagId] } }
+const TAGS_FROM = "2027-01-01";
+const CONTEXT_TAGS = [
+  { id: "draftedOut", up: true,  label: "Drafted out",    hint: "only if a typical pro on that pick wouldn't have done meaningfully better" },
+  { id: "weakSide",   up: true,  label: "Weak side",      hint: "left on an island, resources went elsewhere" },
+  { id: "starved",    up: true,  label: "Starved",        hint: "starved of gold and attention" },
+  { id: "teamThrew",  up: true,  label: "Team threw",     hint: "his team threw around him" },
+  { id: "freeDraft",  up: false, label: "Free-win draft", hint: "the draft did the work" },
+  { id: "freeLane",   up: false, label: "Free matchup",   hint: "a lane matchup handed to him" },
+  { id: "gotAll",     up: false, label: "Got everything", hint: "every resource went his way" },
+  { id: "carried",    up: false, label: "Carried",        hint: "carried by teammates" }
+];
+const TAG_STEP = 0.5, TAG_CAP = 2;
+function loadTags() { try { return JSON.parse(localStorage.getItem(TAGS_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function saveTags(t) { localStorage.setItem(TAGS_KEY, JSON.stringify(t)); try { requestSync(); } catch (e) {} }
+function tagsAllowed(e) { return !!e && String(e.date || "").slice(0, 10) >= TAGS_FROM; }
+// What the tags add to one player's rank in one game (±0.5 each, capped).
+function tagSum(list) {
+  if (!list || !list.length) return 0;
+  return list.reduce((s, id) => { const t = CONTEXT_TAGS.find(x => x.id === id); return s + (t ? (t.up ? TAG_STEP : -TAG_STEP) : 0); }, 0);
+}
+function tagAdjust(list) { return Math.max(-TAG_CAP, Math.min(TAG_CAP, tagSum(list))); }
+let _tagsCache = null;
+function adjustedRank(entryId, name, rank) {
+  const raw = localStorage.getItem(TAGS_KEY) || "";
+  if (!_tagsCache || _tagsCache.raw !== raw) { let t = {}; try { t = JSON.parse(raw || "{}") || {}; } catch (e) {} _tagsCache = { raw, t }; }
+  const g = _tagsCache.t[entryId];
+  // Tags and closeness share the one cap: never more than two points either way.
+  const v = (g && g[name] ? tagSum(g[name]) : 0) + closenessAdjust(entryId, name);
+  return Number(rank) + Math.max(-TAG_CAP, Math.min(TAG_CAP, v));
+}
+function toggleTag(entryId, name, tagId) {
+  const t = loadTags();
+  const g = t[entryId] || (t[entryId] = {});
+  const list = new Set(g[name] || []);
+  if (list.has(tagId)) list.delete(tagId); else list.add(tagId);
+  if (list.size) g[name] = [...list]; else delete g[name];
+  if (!Object.keys(g).length) delete t[entryId];
+  saveTags(t);
+}
+// The tag chips under one player's row. The draft read suggests "drafted out"
+// for the side you rated worse; a suggestion is dashed and does nothing until
+// tapped.
+const _tagOpen = new Set();
+function tagChipsHtml(e, p, onToggle) {
+  if (!tagsAllowed(e)) return "";
+  const mine = ((loadTags()[e.id] || {})[p.name]) || [];
+  const read = typeof draftReadOf === "function" ? draftReadOf(e) : null;
+  const worse = read == null || read === 0 ? null : read < 0 ? "red" : "blue";
+  const adj = adjustedRank(e.id, p.name, 0);
+  const chip = t => {
+    const on = mine.includes(t.id), sugg = !on && t.id === "draftedOut" && worse === p.side;
+    return `<button class="tag-chip${on ? " on" : ""}${t.up ? " up" : " down"}${sugg ? " sugg" : ""}" title="${t.hint}${sugg ? " (your draft read had this side worse)" : ""}"
+      onclick="${onToggle}('${t.id}')">${t.up ? "\u25B2" : "\u25BC"} ${t.label}</button>`;
+  };
+  // Only the tags in use and the suggestion show; "+ tag" opens the rest.
+  const open = _tagOpen.has(e.id + "|" + p.name);
+  const shown = CONTEXT_TAGS.filter(t => open || mine.includes(t.id) || (t.id === "draftedOut" && worse === p.side));
+  return `<div class="tag-row">${shown.map(chip).join("")}<button class="tag-chip tag-more" onclick="${onToggle}('__open')">${open ? "done" : "+ tag"}</button>${adj ? `<span class="tag-adj" title="Tags and closeness together, capped at two" style="color:${adj > 0 ? "var(--green)" : "#ff4d5e"};">${adj > 0 ? "+" : "\u2212"}${Math.abs(adj)}</span>` : ""}</div>`;
+}
+function mhToggleTag(id, name, tagId) {
+  if (tagId === "__open") { const k = id + "|" + name; if (_tagOpen.has(k)) _tagOpen.delete(k); else _tagOpen.add(k); }
+  else toggleTag(id, name, tagId);
+  mhRepaint(id);
+}
+
+// ── Closeness ────────────────────────────────────────────────────────────────
+// How close a game was, on any game (logged or imported), and what it does to
+// the ratings from 2027 on: a Stomp lifts every winning player half a point,
+// and a Close game or a Squeaker lets you say who kept it close. Each losing
+// player you tap gets half a point; "The draft" credits the losing side's coach
+// instead and nudges no player. These share the ±2 cap with context tags.
+const CLOSE_KEY = "draftlogger_closeness_v1";   // synced: { gameId: { v: 1-5, why: [playerName], draft: bool } }
+const CLOSE_LABELS = [["Stomp", "\u{1F634}"], ["Comfortable", "\u{1F44D}"], ["Competitive", "⚔️"], ["Close", "\u{1F62C}"], ["Squeaker", "\u{1F525}"]];
+const CLOSE_STEP = 0.5;
+function loadCloseness() { try { return JSON.parse(localStorage.getItem(CLOSE_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function saveCloseness(c) { localStorage.setItem(CLOSE_KEY, JSON.stringify(c)); try { requestSync(); } catch (e) {} }
+// A game's closeness: the shared store first, then what the Log game form kept
+// on the entry itself before the store existed.
+function closenessOf(e, store) {
+  if (!e) return null;
+  const c = (store || loadCloseness())[e.id];
+  if (c && c.v) return { v: c.v, why: c.why || [], draft: !!c.draft };
+  return e.gameCloseness ? { v: e.gameCloseness, why: [], draft: false } : null;
+}
+function setCloseness(id, v) {
+  const store = loadCloseness();
+  const e = loadAllGameData().find(x => x.id === id);
+  const cur = closenessOf(e || { id }, store);
+  const next = cur && cur.v === v ? null : v;          // tapping the lit one clears it
+  if (!next) delete store[id];
+  else store[id] = { v: next, why: next >= 4 && cur ? cur.why : [], draft: next >= 4 && cur ? cur.draft : false, at: Date.now() };
+  saveCloseness(store);
+  // A logged game keeps its own copy too, for the screens that read the entry.
+  const entries = loadEntries(), p = entries.find(x => x.id === id);
+  if (p) { p.gameCloseness = next; saveEntries(entries); }
+  return next;
+}
+function toggleCloseWhy(id, name) {
+  const store = loadCloseness(), c = store[id];
+  if (!c || c.v < 4) return;
+  if (name === "__draft") c.draft = !c.draft;
+  else { const w = new Set(c.why || []); if (w.has(name)) w.delete(name); else w.add(name); c.why = [...w]; }
+  c.at = Date.now();
+  saveCloseness(store);
+}
+// What closeness adds to one player's rank in one game.
+function closenessDelta(e, c, name) {
+  if (!e || !c || !tagsAllowed(e)) return 0;
+  const win = e.actualWinner;
+  if (win !== "blue" && win !== "red") return 0;
+  const lose = win === "blue" ? "red" : "blue";
+  const on = side => (e.players?.[side] || []).slice(0, 5).includes(name);
+  if (c.v === 1) return on(win) ? CLOSE_STEP : 0;
+  if (c.v >= 4) return on(lose) && (c.why || []).includes(name) ? CLOSE_STEP : 0;
+  return 0;
+}
+let _closeAdj = null;
+function closenessAdjust(entryId, name) {
+  const raw = localStorage.getItem(CLOSE_KEY) || "";
+  if (!_closeAdj || _closeAdj.raw !== raw || !_allGamesKey || _closeAdj.gk !== _allGamesKey) {
+    let store = {}; try { store = JSON.parse(raw || "{}") || {}; } catch (e) {}
+    const map = new Map();
+    for (const e of loadAllGameData()) {
+      if (!store[e.id] && !e.gameCloseness) continue;
+      const c = closenessOf(e, store);
+      if (!c || !tagsAllowed(e)) continue;
+      const per = {};
+      for (const side of ["blue", "red"]) for (const n of (e.players?.[side] || []).slice(0, 5)) { const d = n ? closenessDelta(e, c, n) : 0; if (d) per[n] = d; }
+      if (Object.keys(per).length) map.set(e.id, per);
+    }
+    _closeAdj = { raw, gk: _allGamesKey, map };
+  }
+  const g = _closeAdj.map.get(entryId);
+  return g && g[name] ? g[name] : 0;
+}
+// Games where you said the draft kept it close, by the losing side: the coach's
+// share of the credit, for the coach draft records to come.
+function closeDraftCredits() {
+  const store = loadCloseness(), out = [];
+  for (const e of loadAllGameData()) {
+    const c = store[e.id];
+    if (!c || !c.draft || c.v < 4 || (e.actualWinner !== "blue" && e.actualWinner !== "red")) continue;
+    const side = e.actualWinner === "blue" ? "red" : "blue";
+    out.push({ id: e.id, date: e.date, side, team: side === "blue" ? e.blueTeam : e.redTeam });
+  }
+  return out;
+}
+function mhCloseRowHtml(e) {
+  if (e.actualWinner !== "blue" && e.actualWinner !== "red") return "";
+  const c = closenessOf(e), v = c ? c.v : 0, id = mhJsId(e.id);
+  const btns = CLOSE_LABELS.map(([label, icon], i) => `<button onclick="mhSetCloseness('${id}',${i + 1})" class="${v === i + 1 ? "on" : ""}">${icon}<br>${label}</button>`).join("");
+  const counts = tagsAllowed(e);
+  let more = "";
+  if (v === 1) more = `<div class="mh-close-note">${counts ? "Every player on the winning side gets +0.5." : "Ratings nudges from closeness start with 2027 games."}</div>`;
+  else if (v >= 4) {
+    // With results hidden, list all ten so the losing side isn't given away;
+    // only the losing players you tap count.
+    const sides = spoilersOn() ? [e.actualWinner === "blue" ? "red" : "blue"] : ["blue", "red"];
+    const why = new Set(c.why || []);
+    const chips = mhRoster(e).filter(p => sides.includes(p.side)).map(p => {
+      const nm = mhJsId(p.name).replace(/"/g, "&quot;");
+      return `<button class="tag-chip${why.has(p.name) ? " on up" : ""}" style="color:${why.has(p.name) ? "" : p.side === "blue" ? "var(--blue)" : "var(--red)"};" onclick="mhCloseWhy('${id}','${nm}')">${p.name.replace(/^[A-Z0-9]{1,5}\s+(?=\S)/, "")}</button>`;
+    }).join("");
+    more = `<div class="mh-close-note">Reason it was close${spoilersOn() ? " (tap the losing players who kept it close)" : " (tap who kept it close on the losing side; only the losing side counts)"}:</div>
+      <div class="tag-row" style="padding-left:0;">${chips}<button class="tag-chip${c.draft ? " on up" : ""}" title="Credits the losing side's coach, not a player" onclick="mhCloseWhy('${id}','__draft')">\u{1F4CB} The draft</button></div>
+      ${counts ? "" : `<div class="mh-close-note">Ratings nudges from closeness start with 2027 games.</div>`}`;
+  }
+  return `<div style="font-size:11px;color:var(--muted);margin-bottom:4px;">How close was it?</div>
+    <div class="mh-draft mh-close">${btns}</div>${more}`;
+}
+function mhSetCloseness(id, v) { setCloseness(id, v); mhRepaint(id); }
+function mhCloseWhy(id, name) { toggleCloseWhy(id, name); mhRepaint(id); }
+
 function mhRatePanelHtml(e) {
-  return mhDraftRowHtml(e) + `<div style="height:10px;"></div>` + mhPlayerRanksHtml(e);
+  const close = mhCloseRowHtml(e);
+  return mhDraftRowHtml(e) + `<div style="height:10px;"></div>` + (close ? close + `<div style="height:10px;"></div>` : "") + mhPlayerRanksHtml(e);
 }
 function mhPlayerRanksHtml(e) {
   const players = mhRoster(e);
@@ -8886,7 +9079,7 @@ function mhPlayerRanksHtml(e) {
       ${img ? `<img src="${img}" alt="" onerror="this.style.visibility='hidden'">` : `<span class="mh-noimg"></span>`}
       <span class="mh-rname" style="color:${side === "blue" ? "var(--blue)" : "var(--red)"};" title="${p.name}${p.champ ? " \u00B7 " + p.champ : ""}">${p.name.replace(/^[A-Z0-9]{1,5}\s+(?=\S)/, "")}</span>
       <span class="mh-rval" style="color:${rankColor(rank)};">${rank || "\u2014"}</span>
-      <div class="mh-rnums">${nums}</div></div>`;
+      <div class="mh-rnums">${nums}</div></div>${tagChipsHtml(e, p, `mhToggleTag.bind(null,'${id}','${nm}')`)}`;
   }).join("")).join(`<div style="height:6px;"></div>`);
   const n = Object.keys(cur).length;
   return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
@@ -10490,6 +10683,7 @@ function renderPlayerProfiles() {
           <div style="text-align:right;margin-right:8px;">
             <div class="profile-overall" style="color:${impactColor(score(r))};">${score(r).toFixed(2)}</div>
             ${!oneTour && Math.abs(r.avg - r.rawAvg) >= 0.05 ? `<div style="font-size:10px;color:var(--muted);">raw ${r.rawAvg.toFixed(2)}</div>` : ""}
+            ${r.tagged && Math.abs(r.avg - r.untagged) >= 0.005 ? `<div style="font-size:10px;color:var(--muted);" title="Your rankings without context tags and closeness">before tags ${r.untagged.toFixed(2)}</div>` : ""}
           </div>
           <span style="color:var(--muted);font-size:11px;">▾</span>
         </div>
@@ -10676,7 +10870,7 @@ function finalsMvpHtml(filter, reviews, tName) {
   for (const g of fin.games) {
     const r = reviews[g.id]; if (!r || !Object.keys(r).length) continue;
     ranked++;
-    for (const [raw, v] of Object.entries(r)) { const n = canonPlayer(raw); const x = per.get(n) || { s: 0, n: 0 }; x.s += v; x.n++; per.set(n, x); }
+    for (const [raw, v0] of Object.entries(r)) { const v = adjustedRank(g.id, raw, v0); const n = canonPlayer(raw); const x = per.get(n) || { s: 0, n: 0 }; x.s += v; x.n++; per.set(n, x); }
   }
   const box = inner => `<div class="card" style="margin-bottom:12px;border-color:#e6b04a;">${head}${inner}</div>`;
   if (!ranked) return box(`<div style="font-size:12px;color:var(--muted);margin-top:6px;">${sub}. Rank the players in this series in Match history to see your Finals MVP.</div>`);
@@ -12108,18 +12302,13 @@ function expandRankForm(id, winner) {
 }
 
 function setGameCloseness(id, val) {
-  const entries = loadEntries();
-  const entry   = entries.find(e => e.id === id);
-  if (!entry) return;
-  entry.gameCloseness = entry.gameCloseness === val ? null : val; // toggle
-  saveEntries(entries);
+  const now = setCloseness(id, val);
   // Re-render just the closeness buttons
   const btns = document.getElementById("closeness-btns-" + id);
   if (btns) {
-    const labels = [["Stomp","😴"],["Comfortable","👍"],["Competitive","⚔️"],["Close","😬"],["Squeaker","🔥"]];
-    btns.innerHTML = labels.map(([label,icon],i) => {
+    btns.innerHTML = CLOSE_LABELS.map(([label,icon],i) => {
       const v = i + 1;
-      const active = entry.gameCloseness === v;
+      const active = now === v;
       return `<button onclick="setGameCloseness('${id}',${v})"
         style="padding:7px 3px;border-radius:7px;border:2px solid ${active?"var(--blue)":"var(--border)"};
         background:${active?"var(--blue-dim)":"none"};color:${active?"var(--blue)":"var(--muted)"};
@@ -16149,7 +16338,7 @@ function rosterBaseline() {
     if (!e) continue;
     const w = weight(e) * ratingAge(e);
     for (const [name, rank] of Object.entries(ranks || {})) {
-      const v = Number(rank);
+      const v = rank ? adjustedRank(id, name, rank) : 0;
       if (!isFinite(v) || !v) continue;
       const pid = rosterPid(name);
       const a = acc.get(pid) || { s: 0, w: 0, n: 0 };
@@ -21359,7 +21548,7 @@ function renderModelPage() {
           <div style="font-size:11px;color:var(--muted);">${e.date} · ${e.league}</div>
           <div style="font-size:12px;margin-top:4px;">Predicted <span style="color:${e.predWinner==="blue"?"var(--blue)":"var(--red)"};">${e.predWinner==="blue"?e.blueTeam:e.redTeam}</span> · <span style="color:var(--green);">Actually won: ${winner}</span></div>
           ${factors.length ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;">${factors.join(" · ")}</div>` : ""}
-          ${e.gameCloseness ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">Closeness: ${["😴 Stomp","👍 Comfortable","⚔️ Competitive","😬 Close","🔥 Squeaker"][e.gameCloseness-1]}</div>` : ""}
+          ${(() => { const c = closenessOf(e); return c ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">Closeness: ${["😴 Stomp","👍 Comfortable","⚔️ Competitive","😬 Close","🔥 Squeaker"][c.v-1]}</div>` : ""; })()}
         </div>`;
       }).join("");
     }
@@ -25116,6 +25305,8 @@ function syncSettingsKeys() {
     recorderKey:     RECORDER_CTL_KEY,
     teamLabels:      TEAM_LABELS_KEY,
     rosters:         ROSTERS_KEY,
+    playerTags:      TAGS_KEY,
+    closeness:       CLOSE_KEY,
     hiddenLeagues:   HIDDEN_LEAGUES_KEY,
     // Import and repair status were kept per browser, so each device showed its
     // own version of "catching up" and redid work another had already done.
@@ -33023,6 +33214,16 @@ function _checkCases() {
   });
   t("Ratings age by season", () =>
     eq([ratingAge({ date: "2027-02-01" }, 2027), ratingAge({ date: "2026-10-01" }, 2027), ratingAge({ date: "2025-05-01" }, 2027), ratingAge({ date: "2026-10-01" }, 2026)], [1, 0.5, 0.25, 1]));
+  t("Context tags: half a point each, capped at two", () =>
+    eq([tagAdjust(["draftedOut"]), tagAdjust(["draftedOut", "carried"]), tagAdjust(["draftedOut", "weakSide", "starved", "teamThrew", "x"]), tagAdjust(["freeDraft", "freeLane", "gotAll", "carried", "draftedOut"]), tagsAllowed({ date: "2026-11-02" }), tagsAllowed({ date: "2027-01-15" })],
+       [0.5, 0, 2, -1.5, false, true]));
+  t("Closeness: a stomp lifts winners, a close game credits who you tap", () => {
+    const g = { id: "x", date: "2027-02-01", actualWinner: "blue", players: { blue: ["A1", "A2", "A3", "A4", "A5"], red: ["B1", "B2", "B3", "B4", "B5"] } };
+    return eq([closenessDelta(g, { v: 1 }, "A1"), closenessDelta(g, { v: 1 }, "B1"), closenessDelta(g, { v: 4, why: ["B2", "A2"] }, "B2"),
+               closenessDelta(g, { v: 4, why: ["B2", "A2"] }, "A2"), closenessDelta(g, { v: 5, why: [], draft: true }, "B1"),
+               closenessDelta(g, { v: 3, why: ["B2"] }, "B2"), closenessDelta({ ...g, date: "2026-10-01" }, { v: 1 }, "A1")],
+              [0.5, 0, 0.5, 0, 0, 0, 0]);
+  });
   t("Build number is stamped", () => /^\d{4}\.\d{2}\.\d{2}-b\d+$/.test(BUILD_VERSION) || "bad build number: " + BUILD_VERSION);
   return out;
 }
